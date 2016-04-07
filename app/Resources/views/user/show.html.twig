@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>User</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Forename</th>
+                <td>{{ user.forename }}</td>
+            </tr>
+            <tr>
+                <th>Surname</th>
+                <td>{{ user.surname }}</td>
+            </tr>
+            <tr>
+                <th>Sex</th>
+                <td>{{ user.sex }}</td>
+            </tr>
+            <tr>
+                <th>Date of birth</th>
+                <td>{{ user.dateOfBirth|date('d. M. Y') }}</td>
+            </tr>
+            <tr>
+                <th>Street</th>
+                <td>{{ user.street }}</td>
+            </tr>
+            <tr>
+                <th>Zip</th>
+                <td>{{ user.zip }}</td>
+            </tr>
+            <tr>
+                <th>City</th>
+                <td>{{ user.city }}</td>
+            </tr>
+            <tr>
+                <th>Country</th>
+                <td>{{ user.country }}</td>
+            </tr>
+            <tr>
+                <th>Phone</th>
+                <td>{{ user.phone }}</td>
+            </tr>
+            <tr>
+                <th>Mail</th>
+                <td>{{ user.mail }}</td>
+            </tr>
+            <tr>
+                <th>Occupation</th>
+                <td>{{ user.occupation }}</td>
+            </tr>
+            <tr>
+                <th>Passwordhash</th>
+                <td>{{ user.passwordHash }}</td>
+            </tr>
+            <tr>
+                <th>Verified</th>
+                <td>{% if user.verified %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Isadmin</th>
+                <td>{% if user.isAdmin %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Id</th>
+                <td>{{ user.id }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('user_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('user_edit', { 'id': user.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

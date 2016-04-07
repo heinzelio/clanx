@@ -1,0 +1,4 @@
+#regForm input.error {
+    border:1px solid red;
+    background: salmon;
+}

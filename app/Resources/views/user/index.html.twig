@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+{% block title %} Benutzerliste {% endblock %}
+
+{% block stylesheets %}
+    <!--
+    <link rel="stylesheet" href="??" integrity="??" crossorigin="??">
+    -->
+{% endblock %}
+
+{% block body %}
+    <h1>User list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Forename</th>
+                <th>Surname</th>
+                <th>Mail</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id='userbody'>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('user_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}
+
+{# JAVASCRIPT FILES ARE IN /web/js #}
+{% block javascripts %}
+<!-- define global var for dirty hacks. (later use FOSJsRoutingBundle)
+     (we can not use "path('route') within a js-File" at the moment)-->
+     <script>
+        var ajaxRoutes = {
+            "user_getVerified": "{{ path('user_getVerified') }}",
+            "user_show": "{{ path('user_show',{'id':'0'}) }}" // the id will be added later. See userIndex.js
+            //,'key2':'value2'
+            };
+    </script>
+
+   <!-- put jquery on the top -->
+   <script
+     src="https://code.jquery.com/jquery-2.2.2.min.js"
+     integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="
+     crossorigin="anonymous">
+   </script>
+   <!-- next include jquery plugins -->
+   <script
+       src="http://cdn.jsdelivr.net/jquery.validation/1.15.0/jquery.validate.min.js">
+   </script>
+   <!-- finally your own scripts-->
+   <script src="{{ asset('js/userIndex.js') }}" ></script>
+
+<script type="text/javascript">
+
+</script>
+{% endblock %}
