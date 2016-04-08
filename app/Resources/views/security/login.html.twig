@@ -1,23 +1,74 @@
-{% if error %}
-    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-{% endif %}
+{% extends 'base.html.twig' %}
 
-{#
-	- The form must POST to the login route, since that's what you configured under the form_login key in security.yml.
-	- The username must have the name _username and the password must have the name _password.
-#}
-<form action="{{ path('_login') }}" method="post">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="_username" value="{{ last_username }}" />
-<br/>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="_password" />
+{% block title %}
+    Hölfer Login
+{% endblock %}
+{% block description %}
+    Login für registrierte Hölfer
+{% endblock %}
+{% block stylesheets %}
+<!-- no custom styles at the moment -->
+{% endblock %}
 
-    {#
-        If you want to control the URL the user
-        is redirected to on success (more details below)
-        <input type="hidden" name="_target_path" value="/admin" />
-    #}
-<br/>
-    <button type="submit">login</button>
-</form>
+{% block body %}
+
+    {% if error %}
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Fehler:</span>
+            {{ error.messageKey|trans(error.messageData, 'security') }}
+        </div>
+    {% endif %}
+
+    <div class="container">
+        <div class="row">
+    		<div class="span12">
+
+                {#
+                	- The form must POST to the login route, since that's what
+                      you configured under the form_login key in security.yml.
+                	- The username must have the name _username and the
+                      password must have the name _password.
+                #}
+                <form class="form-horizontal" action="{{ path('_login') }}" method="POST">
+    			  <fieldset>
+    			    <div id="legend">
+    			      <legend class="">Login</legend>
+    			    </div>
+    			    <div class="control-group">
+    			      <!-- Username -->
+    			      <label class="control-label" for="txtUsername">EMail</label>
+    			      <div class="controls">
+    			        <input type="text" id="txtUsername" name="_username"
+                        placeholder="" value="{{ last_username }}" class="input-xlarge">
+    			      </div>
+    			    </div>
+    			    <div class="control-group">
+    			      <!-- Password-->
+    			      <label class="control-label" for="txtPassword">Passwort</label>
+    			      <div class="controls">
+    			        <input type="password" id="txtPassword" name="_password" placeholder="" class="input-xlarge">
+    			      </div>
+    			    </div>
+    			    <div class="control-group">
+    			      <!-- Button -->
+    			      <div class="controls">
+    			        <button class="btn btn-success">Login</button>
+    			      </div>
+    			    </div>
+    			  </fieldset>
+                  {#
+                      If you want to control the URL the user
+                      is redirected to on success
+                     <input type="hidden" name="_target_path" value="/admin" />
+                  #}
+    			</form>
+    		</div>
+    	</div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+<!-- no custom scripts at the moment -->
+{% endblock %}
