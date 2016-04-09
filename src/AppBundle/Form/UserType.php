@@ -6,6 +6,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+
+use AppBundle\Form\GenderType;
 
 class UserType extends AbstractType
 {
@@ -19,7 +22,7 @@ class UserType extends AbstractType
         $builder
             ->add('forename')
             ->add('surname')
-            ->add('sex')
+            ->add('sex', GenderType::class)
             // ->add('dateOfBirth',DateType::class, array(
             //         'widget' => 'choice',
             //         'years' => range(1900,$ctYear)))
@@ -31,9 +34,7 @@ class UserType extends AbstractType
             ->add('phone')
             ->add('mail')
             ->add('occupation')
-            ->add('passwordHash')
-            ->add('verified')
-            ->add('isAdmin')
+            ->add('passwordHash',PasswordType::class)
         ;
 		//Symfony\Component\Debug\Debug::debug($builder->get('verified'));
     }
