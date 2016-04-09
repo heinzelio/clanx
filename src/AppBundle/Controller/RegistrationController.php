@@ -25,7 +25,7 @@ class RegistrationController extends Controller
     {
         if($request->getMethod()=="POST"){
             $user = new User();
-            $user->setSex($request->request->get('sex', ''));
+            $user->setGender($request->request->get('gender', ''));
             $user->setForename($request->request->get('forename', ''));
             $user->setSurname($request->request->get('surname', ''));
             $user->setStreet($request->request->get('street',''));

@@ -83,9 +83,9 @@ class User implements UserInterface, \Serializable
 
     /**
      * @var string
-     * @ORM\Column(name="sex", type="string", length=1, nullable=false)
+     * @ORM\Column(name="gender", type="string", length=1, nullable=false)
      */
-    private $sex='';
+    private $gender='';
 
     /**
      * @var string
@@ -341,21 +341,21 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set sex
-     * @param string $sex
+     * Set gender
+     * @param string $gender
      * @return User
      */
-    public function setSex($sex){
-        $this->sex=$sex;
+    public function setGender($gender){
+        $this->gender=$gender;
         return $this;
     }
 
     /**
-     * Get sex
+     * Get gender
      * @return string
      */
-    public function getSex(){
-        return $this->sex;
+    public function getGender(){
+        return $this->gender;
     }
 
     /**

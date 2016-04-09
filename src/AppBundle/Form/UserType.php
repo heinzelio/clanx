@@ -22,7 +22,7 @@ class UserType extends AbstractType
         $builder
             ->add('forename')
             ->add('surname')
-            ->add('sex', GenderType::class)
+            ->add('gender', GenderType::class)
             // ->add('dateOfBirth',DateType::class, array(
             //         'widget' => 'choice',
             //         'years' => range(1900,$ctYear)))

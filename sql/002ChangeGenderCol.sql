@@ -1,0 +1,6 @@
+
+SHOW COLUMNS FROM USER LIKE 'sex';
+ALTER TABLE user CHANGE sex gender VARCHAR(1);
+SHOW COLUMNS FROM USER LIKE 'gender';
+
+UPDATE dbinfo SET version = 2;
