@@ -41,7 +41,6 @@ class RegistrationController extends Controller
             $password = $request->request->get('password','');
             $encoder = $this->container->get('security.password_encoder');
             $hash = $encoder->encodePassword($user, $password);
-            //$user->setPasswordHash($hash);
             $user->setPasswordHash($hash);
             $user->setVerified(false); // an account must be verified by email.
 
