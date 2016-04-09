@@ -18,9 +18,8 @@ security:
         db_provider:
             entity:
                 class: AppBundle:User
-                property: mail # this is our column name in the db
-                # if you're using multiple entity managers
-                # manager_name: customer
+                # removed "property" to enable custom Userloader
+                # property: mail # this is our column name in the db
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
