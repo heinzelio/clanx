@@ -47,7 +47,7 @@ class UserController extends Controller
           $user = array(
               'forename' => $u->getForename(),
               'surname' => $u->getSurname(),
-              'mail'=> $u->getMail(),
+              'mail'=> $u->getEmail(),
               'id' => $u->getId()
           );
           array_push($data,$user);

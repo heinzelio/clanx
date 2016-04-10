@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 5.5.47, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.29, for Win32 (AMD64)
 --
--- Host: localhost    Database: sym
+-- Host: localhost    Database: clanx
 -- ------------------------------------------------------
--- Server version	5.5.47-0ubuntu0.14.04.1
+-- Server version	5.6.29
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES UTF8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -24,14 +24,14 @@ DROP TABLE IF EXISTS `commitment`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `commitment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `event_id` int(11) NOT NULL,
-  `department_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `event_id` int(11) DEFAULT NULL,
+  `department_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_key` (`user_id`),
   KEY `event_key` (`event_id`),
   KEY `department_key` (`department_id`),
-  CONSTRAINT `commitment_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK_F3E0CCBBA76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `commitment_ibfk_2` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`),
   CONSTRAINT `commitment_ibfk_3` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -47,6 +47,28 @@ LOCK TABLES `commitment` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `dbinfo`
+--
+
+DROP TABLE IF EXISTS `dbinfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dbinfo` (
+  `version` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dbinfo`
+--
+
+LOCK TABLES `dbinfo` WRITE;
+/*!40000 ALTER TABLE `dbinfo` DISABLE KEYS */;
+INSERT INTO `dbinfo` VALUES (2);
+/*!40000 ALTER TABLE `dbinfo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `department`
 --
 
@@ -57,15 +79,15 @@ CREATE TABLE `department` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,
   `requirement` varchar(200) DEFAULT NULL,
-  `chief_user_id` int(11) NOT NULL,
-  `deputy_user_id` int(11) NOT NULL,
-  `event_id` int(11) NOT NULL,
+  `chief_user_id` int(11) DEFAULT NULL,
+  `deputy_user_id` int(11) DEFAULT NULL,
+  `event_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `chief_user_key` (`chief_user_id`),
   KEY `deputy_user_key` (`deputy_user_id`),
   KEY `event_key` (`event_id`),
-  CONSTRAINT `department_ibfk_1` FOREIGN KEY (`chief_user_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `department_ibfk_2` FOREIGN KEY (`deputy_user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK_CD1DE18A173998C2` FOREIGN KEY (`chief_user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK_CD1DE18AE98FD210` FOREIGN KEY (`deputy_user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `department_ibfk_3` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -88,15 +110,15 @@ DROP TABLE IF EXISTS `duty`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `duty` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `shift_id` int(11) NOT NULL,
-  `event_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `shift_id` int(11) DEFAULT NULL,
+  `event_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `shift_key` (`shift_id`),
   KEY `user_key` (`user_id`),
   KEY `event_key` (`event_id`),
+  CONSTRAINT `FK_A5B06099A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `duty_ibfk_1` FOREIGN KEY (`shift_id`) REFERENCES `shift` (`id`),
-  CONSTRAINT `duty_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `duty_ibfk_3` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -148,7 +170,7 @@ CREATE TABLE `shift` (
   `end` datetime DEFAULT NULL,
   `mandatory_size` int(11) NOT NULL,
   `maximum_size` int(11) NOT NULL,
-  `department_id` int(11) NOT NULL,
+  `department_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `department_key` (`department_id`),
   CONSTRAINT `shift_ibfk_1` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`)
@@ -173,22 +195,36 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `forename` varchar(200) DEFAULT NULL,
-  `surname` varchar(200) DEFAULT NULL,
-  `zip` varchar(10) DEFAULT NULL,
-  `city` varchar(200) DEFAULT NULL,
-  `country` varchar(200) DEFAULT NULL,
-  `phone` varchar(50) DEFAULT NULL,
-  `mail` varchar(500) DEFAULT NULL,
-  `occupation` varchar(200) DEFAULT NULL,
-  `password_hash` varchar(500) DEFAULT NULL,
-  `verified` tinyint(1) NOT NULL DEFAULT '0',
-  `is_admin` tinyint(1) NOT NULL DEFAULT '0',
-  `sex` varchar(1) NOT NULL DEFAULT '',
-  `street` varchar(200) DEFAULT NULL,
+  `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `username_canonical` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `email_canonical` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `enabled` tinyint(1) NOT NULL,
+  `salt` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `last_login` datetime DEFAULT NULL,
+  `locked` tinyint(1) NOT NULL,
+  `expired` tinyint(1) NOT NULL,
+  `expires_at` datetime DEFAULT NULL,
+  `confirmation_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `password_requested_at` datetime DEFAULT NULL,
+  `roles` longtext COLLATE utf8_unicode_ci NOT NULL COMMENT '(DC2Type:array)',
+  `credentials_expired` tinyint(1) NOT NULL,
+  `credentials_expire_at` datetime DEFAULT NULL,
+  `forename` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `surname` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `gender` varchar(1) COLLATE utf8_unicode_ci NOT NULL,
   `date_of_birth` date DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+  `street` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `zip` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `city` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `country` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `phone` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `occupation` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UNIQ_8D93D64992FC23A8` (`username_canonical`),
+  UNIQUE KEY `UNIQ_8D93D649A0D96FBF` (`email_canonical`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -197,7 +233,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Christian','Burri','','','','','chriglburri@gmail.com','Code monkey','$2y$13$RCU4Z713WCIws.XTlOouzuOzIvb7CwySZDrVPrKi1BqDJ/Q.b209i',1,1,'',NULL,NULL),(8,'max','muster','1234','mustershausen','CH','','m.m@gmail.com','musterer','$2y$13$vtmwoDXE9TlglMgycvcp2eTWak.JJ87/YwIVXpS2YGYEDBdJfYOtC',0,0,'F','mustergasse','1970-12-31');
+INSERT INTO `user` VALUES (2,'chriglburri','chriglburri','chriglburri@gmail.com','chriglburri@gmail.com',1,'szb7i5rkh340oogcck0ccsswwos84s0','$2y$13$SrVTOBVIOaWyy4owPbHZaObggMPfwksKvHvwMXWJgp//X/WIkIlCK','2016-04-09 15:02:11',0,0,NULL,NULL,NULL,'a:1:{i:0;s:16:\"ROLE_SUPER_ADMIN\";}',0,NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,'speznaz','speznaz','kaelin.severin@gmail.com','kaelin.severin@gmail.com',1,'4q67qx6hvugwkow48w44ss0sk08og8s','$2y$13$DYZRs6acDPm.OqxKj7kbwOUu4qevL5IQSZ0X59JyTA.101Kh5Po1m',NULL,0,0,NULL,NULL,NULL,'a:1:{i:0;s:16:\"ROLE_SUPER_ADMIN\";}',0,NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -210,4 +246,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-04-07 21:28:15
+-- Dump completed on 2016-04-10  0:18:56

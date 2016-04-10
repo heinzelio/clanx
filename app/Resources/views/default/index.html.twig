@@ -23,13 +23,16 @@
                 Du möchtest Hölfer werden? Registriere dich hier.
             </p>
             <p>
-                <a class="btn btn-primary btn-large" href="{{ path('registration_index')}} ">Registrieren</a>
+                <!-- find the route's name in FOSUserBundle/Resources/config/routing/registration.xml-->
+                <a class="btn btn-primary btn-large" href="{{ path('fos_user_registration_register')}} ">Registrieren</a>
             </p>
             <p>
-                Du warst schonmal Hölfer? Melde dich hier an.
+                Du warst schon einmal Hölfer? Melde dich hier an.
             </p>
             <p>
-                <a class="btn btn-primary btn-large" href="{{ path('_login')}} ">Anmelden</a>
+                <!-- find the route's name in FOSUserBundle/Resources/config/routing/security.xml-->
+                <a class="btn btn-primary btn-large" href="{{ path('fos_user_security_login')}} ">Anmelden</a>
+                <a class="btn btn-primary btn-large" href="{{ path('fos_user_security_logout')}} ">Abmelden</a>
             </p>
         </div>
     </div>
