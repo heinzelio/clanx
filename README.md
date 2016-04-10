@@ -9,7 +9,7 @@ Installation
 ============
 
 A) symfony
--------
+----------
 * Install symfony local on your computer according to the online documentation:
 
   [Symfony Book: Installation](https://symfony.com/doc/current/book/installation.html)
@@ -19,10 +19,16 @@ A) symfony
 
 * Create a project
 
-* Get a mysql database started, create the db "clanx" and run the install script:
-
-  ´$ mysql clanx -u username -p < ./sql/000install.sql´
-
-* Create an admin user:
-
-  ´$ php bin/console fos:user:create adminuser --super-admin´
+B) MySql
+--------
+* Get a mysql database started
+* Create the db "clanx" (preferably use phpmyadmin and create a new user account with a database.)
+* Run the install script:
+  ```
+  $ mysql clanx -u username -p < ./sql/000install.sql
+  ```
+C) Create an admin user
+-------------------------
+```
+$ php bin/console fos:user:create adminuser --super-admin
+```
