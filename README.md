@@ -1,5 +1,5 @@
 Clanx Hölfer DB
-===
+===============
 
 (A Symfony project created on March 23, 2016, 7:29 pm.)
 
@@ -21,14 +21,20 @@ A) symfony
 
 B) MySql
 --------
+
 * Get a mysql database started
+
 * Create the db "clanx" (preferably use phpmyadmin and create a new user account with a database.)
+
 * Run the install script:
+
   ```
   $ mysql clanx -u username -p < ./sql/000install.sql
   ```
+
 C) Create an admin user
 -------------------------
+
 ```
 $ php bin/console fos:user:create adminuser --super-admin
 ```
