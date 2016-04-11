@@ -1,0 +1,25 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block fos_user_content %}
+    <div class="container-fluid">
+    	<div class="row">
+    		<div class="col-md-12">
+    			<div class="alert alert-dismissable alert-success">
+
+    				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+    					×
+    				</button>
+    				<h4>
+    					{{ 'registration.confirmed'|trans({'%username%': user.username}) }}
+    				</h4> <strong>Alles klar!</strong>
+                    Du bist jetzt ein registriertes Mitglied auf dieser Webseite.
+                    {% if targetUrl %}
+                        <a href="{{ targetUrl }}">{{ 'registration.back'|trans }}</a>
+                    {% endif %}
+    			</div>
+    		</div>
+    	</div>
+    </div>
+{% endblock fos_user_content %}

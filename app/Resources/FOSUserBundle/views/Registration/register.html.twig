@@ -1,0 +1,15 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% block fos_user_content %}
+
+    <div class="container-fluid">
+    	<div class="row">
+    		<div class="col-md-4">
+
+                {% include "FOSUserBundle:Registration:register_content.html.twig" %}
+
+    		</div>
+    	</div>
+    </div>
+
+{% endblock fos_user_content %}
