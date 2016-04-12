@@ -10,14 +10,14 @@ Installation
 
 A) Git Clone
 ------------
-´´´
+```
 $ git clone https://github.com/chriglburri/clanx.git clanx.git
-´´´
+```
 
 B) Update
-´´´
+```
 $ php composer update
-´´´
+```
 
 (This installs symfony and all the required bundles. You may need to install composer for that. See [Composer Online](https://getcomposer.org/))
 
