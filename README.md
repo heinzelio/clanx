@@ -8,20 +8,20 @@ This is the webpage for clanx festival Hölfer administration.
 Installation
 ============
 
-A) symfony
-----------
-* Install symfony local on your computer according to the online documentation:
+A) Git Clone
+------------
+´´´
+$ git clone https://github.com/chriglburri/clanx.git clanx.git
+´´´
 
-  [Symfony Book: Installation](https://symfony.com/doc/current/book/installation.html)
+B) Update
+´´´
+$ php composer update
+´´´
 
-  Be sure that the FosUserBundle is also installed. (see
-      [online documentation](https://symfony.com/doc/master/bundles/FOSUserBundle/index.html))
+(This installs symfony and all the required bundles. You may need to install composer for that. See [Composer Online](https://getcomposer.org/))
 
-* Create a project
-
-B) MySql
---------
-
+C) SQL Database
 * Get a mysql database started
 
 * Create the db "clanx" (preferably use phpmyadmin and create a new user account with a database.)
@@ -32,7 +32,7 @@ B) MySql
   $ mysql clanx -u username -p < ./sql/000install.sql
   ```
 
-C) Create an admin user
+D) Create an admin user
 -------------------------
 
 ```
