@@ -15,6 +15,7 @@ $ git clone https://github.com/chriglburri/clanx.git clanx.git
 ```
 
 B) Update
+---------
 ```
 $ php composer update
 ```
@@ -22,6 +23,7 @@ $ php composer update
 (This installs symfony and all the required bundles. You may need to install composer for that. See [Composer Online](https://getcomposer.org/))
 
 C) SQL Database
+---------------
 * Get a mysql database started
 
 * Create the db "clanx" (preferably use phpmyadmin and create a new user account with a database.)
