@@ -1,10 +1,7 @@
 {% extends 'base.html.twig' %}
-{% block title %} Benutzerliste {% endblock %}
 
-{% block stylesheets %}
-    <!--
-    <link rel="stylesheet" href="??" integrity="??" crossorigin="??">
-    -->
+{% block title %}
+    Dashboard
 {% endblock %}
 
 {% block body %}
@@ -19,19 +16,17 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="{{ path('dashboard_index') }}">
-              <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-              Dashboard
-          </a>
+          <span class="navbar-brand">Dashboard</span>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <!-- left part -->
           <ul class="nav navbar-nav">
-            <li>
-                <a href="{{ path('user_new') }}">Create a new user</a>
-            </li>
+            {% if is_granted('ROLE_ADMIN') %}
+            <li><a href="{{ path('user_index') }}">Users (Admin only)</a></li>
+            {% endif %}
+            <li><a href="#">Events</a></li>
           </ul>
           <!-- right part -->
           <ul class="nav navbar-nav navbar-right">
@@ -53,40 +48,15 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h1>User list</h1>
-
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Forename</th>
-                        <th>Surname</th>
-                        <th>Mail</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id='userbody'>
-                </tbody>
-            </table>
-
+            <div class="jumbotron">
+                <h2>
+                    Das ist das Dashboard.
+                </h2>
+                <p>
+                    Lorem ipsum.
+                </p>
+            </div>
         </div>
     </div>
 </div>
-
-{% endblock %}
-
-{# JAVASCRIPT FILES ARE IN /web/js #}
-{% block javascripts %}
-<!-- define global var for dirty hacks. (later use FOSJsRoutingBundle)
-     (we can not use "path('route') within a js-File" at the moment)-->
-     <script>
-        var ajaxRoutes = {
-            "user_getVerified": "{{ path('user_getVerified') }}",
-            "user_show": "{{ path('user_show',{'id':'0'}) }}" // the id will be added later. See userIndex.js
-            //,'key2':'value2'
-            };
-    </script>
-
-   <!-- finally your own scripts-->
-   <script src="{{ asset('js/userIndex.js') }}" ></script>
-
 {% endblock %}
