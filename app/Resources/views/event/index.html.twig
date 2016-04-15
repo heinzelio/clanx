@@ -1,0 +1,48 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %}
+    Eventliste
+{% endblock %}
+
+{% block nav_links %}
+    {% if is_granted('ROLE_ADMIN') %}
+        <li><a href="{{ path('event_new') }}">Neuer Event erstellen</a></li>
+    {% endif %}
+{% endblock %}
+
+{% block workspace %}
+
+
+<div class="row">
+    <h1>Event list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for event in events %}
+            <tr>
+                <td><a href="{{ path('event_show', { 'id': event.id }) }}">{{ event.name }}</a></td>
+                <td>{% if event.date %}{{ event.date|date('Y-m-d') }}{% endif %}</td>
+                <td>{{ event.id }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('event_show', { 'id': event.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('event_edit', { 'id': event.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
