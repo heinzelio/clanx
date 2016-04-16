@@ -1,66 +1,83 @@
-{% extends "FOSUserBundle::layout.html.twig" %}
+{% extends "base.html.twig" %}
 
-{% trans_default_domain 'FOSUserBundle' %}
+{% block title %}
+    Passwort zurücksetzen
+{% endblock title %}
 
-{% block fos_user_content %}
-
+{% block body %}
 <div class="container">
-<div class="row">
-<div class="span12">
+	<div class="row">
+		<div class="col-md-4 col-md-offset-4">
 
-{% if error %}
-    <div class="alert alert-danger alert-dismissable">
-        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        {{ error.messageKey|trans(error.messageData, 'security') }}
-    </div>
-{% endif %}
+            {% if error %}
+                <div class="alert alert-danger alert-dismissable">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
 
-<form role="form" action="{{ path("fos_user_security_check") }}" method="post">
-    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
-
-    <fieldset>
-      <div id="legend">
-        <legend class="">Login</legend>
-      </div>
-      <div class="control-group">
-        <!-- Username -->
-        <label class="control-label" for="txtUsername">{{ 'security.login.username'|trans }}</label>
-        <div class="controls">
-            <input type="text" id="username" name="_username"
-                   value="{{ last_username }}" class="input-xlarge" required="required" />
-        </div>
-      </div>
-      <div class="control-group">
-        <!-- Password-->
-        <label class="control-label" for="txtPassword">{{ 'security.login.password'|trans }}</label>
-        <div class="controls">
-          <input type="password" id="password" name="_password" class="input-xlarge" required="required" />
-        </div>
-      </div>
-      <!-- Remember me -->
-      <div class="checkbox">
-          <label>
-              <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
-              {{ 'security.login.remember_me'|trans }}
-          </label>
-      </div>
-
-      <div class="control-group">
-        <!-- Button -->
-        <div class="controls">
-            <button type="submit" class="btn btn-default">
-                {{ 'security.login.submit'|trans }}
-            </button>
-        </div>
-        <div class="controls">
-            <a href="{{ path('fos_user_resetting_request') }}" class="btn btn-info" role="button">
-                Passwort vergessen</a>
-        </div>
-      </div>
-    </fieldset>
-</form>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						Anmelden
+					</h3>
+				</div>
+				<div class="panel-body">
+<!---------- FORM -->
+                    <form action="{{ path("fos_user_security_check") }}" method="post">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+                        <div class = "form-group">
+                            <label class="control-label" for="txtUsername">Benutzername oder EMail</label>
+                            <input
+                                class="form-control"
+                                type="text"
+                                id="username"
+                                name="_username"
+                                value="{{ last_username }}"
+                                required="required"
+                                autofocus />
+                        </div>
+                        <div class = "form-group">
+                            <label class="control-label" for="txtPassword">Passwort</label>
+                            <input
+                                class="form-control"
+                                type="password"
+                                id="password"
+                                name="_password"
+                                required="required" />
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    id="remember_me"
+                                    name="_remember_me"
+                                    value="on" />
+                                    Login speichern
+                            </label>
+                        </div>
+                        <div class = "form-group">
+                            <button type="submit" class="btn btn-default">
+                                Anmelden
+                            </button>
+                        </div>
+                        <div class = "form-group">
+                            <a href="{{ path('fos_user_resetting_request') }}"
+                                class="btn btn-info">
+                                Passwort vergessen</a>
+                        </div>
+                        <div class = "form-group">
+                            <label>Du bist noch kein Benutzer?</label>
+                            <a href="{{ path('fos_user_registration_register') }}"
+                                class="btn btn-default">
+                                Jetzt registrieren!</a>
+                        </div>
+                    </form>
+<!---------- END FORM -->
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-</div>
-</div>
-{% endblock fos_user_content %}
+{% endblock body %}
