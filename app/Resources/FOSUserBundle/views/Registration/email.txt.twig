@@ -1,12 +1,29 @@
 {% trans_default_domain 'FOSUserBundle' %}
+
 {% block subject %}
 {% autoescape false %}
-{{ 'registration.email.subject'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl}) }}
+Willkommen {{user.username}}!
 {% endautoescape %}
 {% endblock %}
+
 {% block body_text %}
 {% autoescape false %}
-{{ 'registration.email.message'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl}) }}
+Hallo {{user.username}}!
+
+Du hast dich auf der Clanx Hölfer DB als Benutzer registriert.
+
+Klicke auf folgenden Link, oder kopiere ihn in die Adresszeile deines Webbrowsers, um deine
+Registrierung abzuschliessen:
+
+{{confirmationUrl}}
+
+Liebe Grüsse: Das Clanx Team!
+
+(Falls du dich nicht registriert hast, hast du dieses Email fälschlicherweise erhalten.
+Ignoriere es einfach.)
+
 {% endautoescape %}
 {% endblock %}
-{% block body_html %}{% endblock %}
+
+{% block body_html %}
+{% endblock %}

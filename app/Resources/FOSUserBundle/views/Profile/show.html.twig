@@ -1,5 +1,15 @@
-{% extends "FOSUserBundle::layout.html.twig" %}
+{% extends 'base_nav.html.twig' %}
 
-{% block fos_user_content %}
+{% block title %}
+Profil anzeigen
+{% endblock title %}
+
+{% block nav_links %}
+    <li><a href="{{ path('fos_user_profile_edit')}}">
+        Profil bearbeiten
+    </a></li>
+{% endblock nav_links %}
+
+{% block workspace %}
 {% include "FOSUserBundle:Profile:show_content.html.twig" %}
-{% endblock fos_user_content %}
+{% endblock workspace %}

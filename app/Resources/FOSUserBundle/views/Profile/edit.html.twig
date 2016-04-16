@@ -1,5 +1,9 @@
-{% extends "FOSUserBundle::layout.html.twig" %}
+{% extends 'base_nav.html.twig' %}
 
-{% block fos_user_content %}
+{% block title %}
+Profil bearbeiten
+{% endblock title %}
+
+{% block workspace %}
 {% include "FOSUserBundle:Profile:edit_content.html.twig" %}
-{% endblock fos_user_content %}
+{% endblock workspace %}

@@ -23,6 +23,17 @@
 
     </head>
     <body>
+        {% if app.request.hasPreviousSession %}
+            {% for type, messages in app.session.flashbag.all() %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ type }} alert-dismissable">
+        			    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        				<strong>{{ type }}!</strong> {{ message }}
+        			</div>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+        
         {% block body %}{% endblock %}
 
         <!-- use jquery on each page -->

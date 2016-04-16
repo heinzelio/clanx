@@ -3,23 +3,31 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
 {% block fos_user_content %}
-    <div class="container-fluid">
-    	<div class="row">
-    		<div class="col-md-12">
-    			<div class="alert alert-dismissable alert-success">
 
-    				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-    					×
-    				</button>
-    				<h4>
-    					{{ 'registration.confirmed'|trans({'%username%': user.username}) }}
-    				</h4> <strong>Alles klar!</strong>
-                    Du bist jetzt ein registriertes Mitglied auf dieser Webseite.
-                    {% if targetUrl %}
-                        <a href="{{ targetUrl }}">{{ 'registration.back'|trans }}</a>
-                    {% endif %}
-    			</div>
-    		</div>
-    	</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jumbotron">
+                <h2> Super! Du bist jetzt ein registrierter Benutzer!
+                </h2>
+                <p> Dein Benutzername ist {{ user.username }}.
+                </p>
+                <p> Deine Emailadresse ist {{ user.email }}.
+                </p>
+                <p> Du kannst beides verwenden um dich nächstes mal anzumelden.
+                </p>
+                <p> Besuche doch als erstes dein Profil, um deine Kontaktdaten wie Adresse und
+                    Telefonnummer zu hinterlegen, damit wir dir deine Einsätze kommunizieren können.
+                </p>
+                <p>
+                    <a class="btn btn-default" href="{{ path('fos_user_profile_edit')}}">
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        Profil
+                    </a>
+                </p>
+            </div>
+        </div>
     </div>
+</div>
+
 {% endblock fos_user_content %}

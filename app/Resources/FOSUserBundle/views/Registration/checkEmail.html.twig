@@ -3,21 +3,25 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
 {% block fos_user_content %}
-    <p></p>
-
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div class="alert alert-dismissable alert-info">
-
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-                        ×
-                    </button>
-                    <h4>
+                <div class="jumbotron">
+                    <h2>
                         Registrierung in Bearbeitung...
-                    </h4>
-                    <strong></strong>
-                    {{ 'registration.check_email'|trans({'%email%': user.email}) }}
+
+                    </h2>
+                    <p>
+                        <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+                        Ein EMail mit dem Aktivierungslink wurde an die Adresse
+                        {{ user.email }} geschickt.
+                    </p>
+                    <p>
+                        Clicke auf den Link im Mail um deine Registrierung abzuschliessen.
+                    </p>
+                    <p>
+                        Du kannst diese Seite jetzt schliessen.
+                    </p>
                 </div>
             </div>
         </div>
