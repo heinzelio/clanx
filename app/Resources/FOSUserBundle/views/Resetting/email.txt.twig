@@ -1,12 +1,26 @@
 {% trans_default_domain 'FOSUserBundle' %}
+
 {% block subject %}
 {% autoescape false %}
-{{ 'resetting.email.subject'|trans({'%username%': user.username}) }}
+Passwort zurücksetzen
 {% endautoescape %}
 {% endblock %}
+
 {% block body_text %}
 {% autoescape false %}
-{{ 'resetting.email.message'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl}) }}
+Hallo {{user.username}}!
+
+Du hast dein Passwort vergessen? Wir wissen es auch nicht (wir speichern nämlich keine Passwörter).
+
+Aber du kannst dir ein neues Passwort setzen. Klicke dazu auf den folgenden Link, oder kopiere ihn und füge ihn in der Adresszeile deines Webbrowsers ein:
+
+{{confirmationUrl}}
+
+Wir hoffen, dass wir dir damit helfen konnten.
+
+Viele Grüsse:
+dein Clanx Team
+
 {% endautoescape %}
 {% endblock %}
 {% block body_html %}{% endblock %}
