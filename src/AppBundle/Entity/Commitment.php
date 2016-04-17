@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="commitment", indexes={@ORM\Index(name="user_key", columns={"user_id"}), @ORM\Index(name="event_key", columns={"event_id"}), @ORM\Index(name="department_key", columns={"department_id"})})
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\CommitmentRepository")
  */
 class Commitment
 {

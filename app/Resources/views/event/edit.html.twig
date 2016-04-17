@@ -1,21 +1,25 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_nav.html.twig' %}
 
-{% block body %}
-    <h1>Event edit</h1>
+{% block title %} Event bearbeiten {% endblock %}
 
-    {{ form_start(edit_form) }}
-        {{ form_widget(edit_form) }}
-        <input type="submit" value="Edit" />
-    {{ form_end(edit_form) }}
+{% block nav_links %}
+    <li class="active">
+        <p class="navbar-text">
+            {{event.name}} bearbeiten
+        </p>
+    </li>
+{% endblock %}
 
-    <ul>
-        <li>
-            <a href="{{ path('event_index') }}">Back to the list</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+{% block workspace %}
+<div class="row">
+    <div class="col-md-4">
+        {{ form_start(edit_form) }}
+            {{form_widget(edit_form) }}
+            <div class="form-group">
+                <input class="btn btn-primary" type="submit" value="Speichern" />
+                <a class="btn btn-default" href="{{ path('event_index') }}">Zurück zur Übersicht</a>
+            </div>
+            {{ form_end(edit_form) }}
+    </div>
+</div>
 {% endblock %}

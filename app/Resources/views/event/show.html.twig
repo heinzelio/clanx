@@ -1,36 +1,52 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_nav.html.twig' %}
 
-{% block body %}
-    <h1>Event</h1>
+{% block title %} {{ event.name }} {% endblock %}
 
-    <table>
-        <tbody>
-            <tr>
-                <th>Name</th>
-                <td>{{ event.name }}</td>
-            </tr>
-            <tr>
-                <th>Date</th>
-                <td>{% if event.date %}{{ event.date|date('Y-m-d') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Id</th>
-                <td>{{ event.id }}</td>
-            </tr>
-        </tbody>
-    </table>
+{% block navlinks %}
+    <li class="active"><p class="navbar-text">{{ event.name }}</p></li>
+{% endblock %}
 
-    <ul>
-        <li>
-            <a href="{{ path('event_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('event_edit', { 'id': event.id }) }}">Edit</a>
-        </li>
-        <li>
+{% block workspace %}
+
+<div class="row">
+<div class="col-md-12">
+
+    <div class="panel panel-primary">
+    <div class="panel-heading">{{event.name}}</div>
+    <div class="panel-body">
+        <ul>
+            <p> Der Event <strong>{{ event.name }}</strong> findet am
+                {% if event.date %}{{ event.date|date('d. M. Y') }}{% endif %}
+                statt.</p>
+            <p>Bis jetzt eingetragene Hölfer: {{ enrolledCount }}</p>
+            {% if isEnrolled %}
+            <p>
+                <button type="button" class="btn btn-success">Du bist als Hölfer eingetragen!</button>
+            </p>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="panel-footer">
+
+        {% if mayEnroll %}
+                <a class="btn btn-primary"
+                href="{{ path ('event_enroll', { 'id': event.id }) }}">Als Hölfer eintragen (TODO)</a>
+        {% endif %}
+
+        <a class="btn btn-default" href="{{ path('event_index') }}">Zurück zur Übersicht</a>
+
+        {% if mayEdit %}
+            <a class="btn btn-default" href="{{ path('event_edit', { 'id': event.id }) }}">Bearbeiten</a>
+        {% endif %}
+
+        {% if mayDelete %}
             {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
+                <input class="btn btn-danger" type="submit" value="Löschen"
+                    onclick="return confirm('{{event.name}} wirklich löschen?')"/>
             {{ form_end(delete_form) }}
-        </li>
-    </ul>
+        {% endif %}
+
+    </div><!-- footer -->
+</div>
+</div>
 {% endblock %}

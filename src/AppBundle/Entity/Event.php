@@ -94,4 +94,31 @@ class Event
     {
         return $this->id;
     }
+
+    /**
+     * Returns true when enrollment on this Event is possible
+     * @return boolean
+     */
+    public function enrollmentPossible()
+    {
+        return $this->date > new \DateTime();
+    }
+
+    /**
+     * Returns true when event may be edited
+     * @return boolean
+     */
+    public function mayEdit()
+    {
+        return $this->date > new \DateTime();
+    }
+
+    /**
+     * Returns true when event may be deleted
+     * @return boolean
+     */
+    public function mayDelete()
+    {
+        return $this->date > new \DateTime();
+    }
 }

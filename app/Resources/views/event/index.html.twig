@@ -5,6 +5,12 @@
 {% endblock %}
 
 {% block nav_links %}
+    <li class="active">
+        <p class="navbar-text">
+            <span class="glyphicon glyphicon-calendar"></span>
+            Events
+        </p>
+    </li>
     {% if is_granted('ROLE_ADMIN') %}
         <li><a href="{{ path('event_new') }}">Neuer Event erstellen</a></li>
     {% endif %}
@@ -14,35 +20,45 @@
 
 
 <div class="row">
-    <h1>Event list</h1>
+    <div class="col-md-6">
+        <div class="panel panel-primary">
+        <div class="panel-heading">Anstehende</div>
+        <div class="panel-body">
+            <ul>
+                {% for event in upcomingEvents %}
+                    <li>
+                        <a href="{{ path('event_show', { 'id': event.id }) }}">{{ event.name }}</a>
+                        ({% if event.date %}{{ event.date|date('d. M. Y') }}{% endif %})
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <a class="btn btn-default" href="{{ path('event_edit', {'id':event.id}) }}">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        </div><!--panel-->
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+        <div class="panel-heading">Vergangene</div>
+        <div class="panel-body">
+            <ul>
+                {% for event in passedEvents %}
+                    <li>
+                        <a href="{{ path('event_show', { 'id': event.id }) }}">{{ event.name }}</a>
+                        ({% if event.date %}{{ event.date|date('d. M. Y') }}{% endif %})
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div> <!--panel-->
+    </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for event in events %}
-            <tr>
-                <td><a href="{{ path('event_show', { 'id': event.id }) }}">{{ event.name }}</a></td>
-                <td>{% if event.date %}{{ event.date|date('Y-m-d') }}{% endif %}</td>
-                <td>{{ event.id }}</td>
-                <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('event_show', { 'id': event.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('event_edit', { 'id': event.id }) }}">edit</a>
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+
+
+
+
 </div>
 {% endblock %}
