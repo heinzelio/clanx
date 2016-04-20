@@ -27,6 +27,12 @@ class Event
     private $date;
 
     /**
+     * @var boolean
+     * @ORM\Column(name="sticky", type="boolean", nullable=false)
+     */
+    private $sticky;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="id", type="integer")
@@ -83,6 +89,26 @@ class Event
     public function getDate()
     {
         return $this->date;
+    }
+    /**
+     * @return boolean
+     */
+    public function getSticky()
+    {
+        return $this->sticky;
+    }
+
+    /**
+     * Set sticky
+     *
+     * @param boolean $sticky
+     *
+     * @return Event
+     */
+    public function setSticky($sticky)
+    {
+        $this->sticky = $sticky;
+        return $this;
     }
 
     /**

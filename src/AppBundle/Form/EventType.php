@@ -5,6 +5,7 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventType extends AbstractType
@@ -18,6 +19,10 @@ class EventType extends AbstractType
         $builder
             ->add('name')
             ->add('date', DateType::class)
+            ->add('sticky', CheckboxType::class, array(
+                    'label'    => 'Klebt der event in der Titelzeile?',
+                    'required' => false,
+));
         ;
     }
 
