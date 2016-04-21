@@ -196,4 +196,13 @@ class Department
     {
         return $this->chiefUser;
     }
+
+    /**
+     * Gets a string representing the department
+     * @return string
+     */
+    public function __toString()
+    {
+        return strval($this->name);
+    }
 }

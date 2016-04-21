@@ -147,4 +147,13 @@ class Event
     {
         return $this->date > new \DateTime();
     }
+
+    /**
+     * Gets a string representing the department
+     * @return string
+     */
+    public function __toString()
+    {
+        return strval($this->name);
+    }
 }

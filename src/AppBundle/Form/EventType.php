@@ -22,7 +22,7 @@ class EventType extends AbstractType
             ->add('sticky', CheckboxType::class, array(
                     'label'    => 'Klebt der event in der Titelzeile?',
                     'required' => false,
-));
+                ));
         ;
     }
 

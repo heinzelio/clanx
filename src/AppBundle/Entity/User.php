@@ -288,4 +288,13 @@ class User extends BaseUser
         return $this->occupation;
     }
 
+    /**
+     * Gets a string representing the department
+     * @return string
+     */
+    public function __toString()
+    {
+        return strval($this->username);
+    }
+
 }
