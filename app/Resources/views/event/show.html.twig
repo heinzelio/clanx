@@ -2,10 +2,6 @@
 
 {% block title %} {{ event.name }} {% endblock %}
 
-{% block navlinks %}
-    <li class="active"><p class="navbar-text">{{ event.name }}</p></li>
-{% endblock %}
-
 {% block workspace %}
 
 <div class="row">
@@ -24,14 +20,27 @@
                 <button type="button" class="btn btn-success">Du bist als Hölfer eingetragen!</button>
             </p>
             {% endif %}
+            {% if isChief %}
+            <p>Du bist Ressortleiter <strong>{{ chiefOfDepartment}}</strong>.
+            {% endif %}
+            {% if isDeputy %}
+            <p>Du bist stellvertretender Ressortleiter <strong>{{ deputyOfDepartment}}</strong>.
+            {% endif %}
+            {% if mayEnroll %}
+            <div class="panel panel-danger">
+            <div class="panel-heading">Jetzt als Hölfer eintragen</div>
+            <div class="panel-body">
+                {# find details of this form in EventController.createEnrollForm() #}
+                {{ form_start(enroll_form) }}
+                    {{form_widget(enroll_form) }}
+                    {#submit button is being generated in the controller.#}
+                {{ form_end(enroll_form) }}
+            </div>
+            </div> <!--panel-->
+            {% endif %}
         </ul>
     </div>
     <div class="panel-footer">
-
-        {% if mayEnroll %}
-                <a class="btn btn-primary"
-                href="{{ path ('event_enroll', { 'id': event.id }) }}">Als Hölfer eintragen (TODO)</a>
-        {% endif %}
 
         <a class="btn btn-default" href="{{ path('event_index') }}">Zurück zur Übersicht</a>
 

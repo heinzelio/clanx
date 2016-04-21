@@ -4,11 +4,15 @@ namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Entity\Event;
+use AppBundle\Entity\Commitment;
 use AppBundle\Form\EventType;
 
 /**
@@ -89,13 +93,47 @@ class EventController extends Controller
      */
     public function showAction(Event $event)
     {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+
+        $depRep = $em->getRepository('AppBundle:Department');
+        $departments = $depRep->findByEvent($event);
+        // find out of which departments i am a chief.
+        $iAmChiefOf = $depRep->findBy(
+            array('chiefUser' => $user, 'event' => $event)
+        );
+        $chiefText = '';
+        $firstLoop = true;
+        foreach ($iAmChiefOf as $dep) {
+            if(!$firstLoop){
+                $chiefText = $chiefText.', ';
+            }
+            $chiefText=$chiefText . $dep->getName();
+            $firstLoop = false;
+        }
+        $iAmAChief = !$firstLoop;
+
+        $iAmDeputyOf = $depRep->findBy(
+            array('deputyUser' => $user, 'event' => $event)
+        );
+        $deputyText = '';
+        $firstLoop = true;
+        foreach ($iAmDeputyOf as $dep) {
+            if(!$firstLoop){
+                $deputyText = $deputyText.', ';
+            }
+            $deputyText=$deputyText.$dep->getName();
+            $firstLoop = false;
+        }
+        $iAmADeputy = !$firstLoop;
+
+        $enrollForm = $this->createEnrollForm($event,$departments);
         $deleteForm = $this->createDeleteForm($event);
 
         // todo: find the values for these:
         // maybe consider the use of "voters"
         // https://symfony.com/doc/current/cookbook/security/voters.html#how-to-use-the-voter-in-a-controller
 
-        $em = $this->getDoctrine()->getManager();
         $commitments = $em->getRepository('AppBundle:Commitment');
 
         $enrolledCount = $commitments->countFor($event);
@@ -104,7 +142,6 @@ class EventController extends Controller
 
         $mayEnroll = !$isEnrolled && $event->enrollmentPossible();
 
-        $user = $this->getUser();
 
         $mayEdit = $this->isGranted('ROLE_ADMIN') && $event->mayEdit();
         $mayDelete = $this->isGranted('ROLE_SUPER_ADMIN') && $event->mayDelete();
@@ -112,11 +149,16 @@ class EventController extends Controller
         return $this->render('event/show.html.twig', array(
             'event' => $event,
             'delete_form' => $deleteForm->createView(),
+            'enroll_form' => $enrollForm->createView(),
             'mayEnroll' => $mayEnroll,
             'enrolledCount' => $enrolledCount,
             'isEnrolled' => $isEnrolled,
             'mayEdit' => $mayEdit,
             'mayDelete' => $mayDelete,
+            'isChief' => $iAmAChief,
+            'isDeputy' => $iAmADeputy,
+            'chiefOfDepartment' => $chiefText,
+            'deputyOfDepartment' => $deputyText
         ));
     }
 
@@ -186,19 +228,70 @@ class EventController extends Controller
     }
 
     /**
+     *
+     */
+    private function createEnrollForm(Event $event, $departments)
+    {
+        $choices = array();
+        foreach ($departments as $dep) {
+            if($dep->getRequirement()){
+                $text = $dep->getName().' ('.$dep->getRequirement().')';
+            }else{
+                $text = $dep->getName();
+            }
+            $choices[$text] = $dep->getID();
+        }
+        return $this->createFormBuilder()
+            ->add('department', ChoiceType::class, array(
+                'label' => "für Ressort (ohne Garantie)",
+                'choices'  => $choices
+            ))
+            ->add('remark', TextareaType::class, array(
+                'label' => "Bemerkung / Wunsch"
+            ))
+            ->add('save', SubmitType::class, array(
+                'label' => 'Eintragen',
+                'attr' => array('class'   => 'btn btn-danger',
+                                'type'    => 'submit',
+                                'onclick' => 'return confirm("Willst du dich wirklich bei '.$event->getName().' eintragen?")'
+                                )
+            ))
+            ->setAction($this->generateUrl('event_enroll', array('id' => $event->getID())))
+            ->setMethod('POST')
+            ->getForm()
+        ;
+    }
+
+    /**
      * Finds and displays a Event entity.
      *
      * @Route("/enroll/{id}", name="event_enroll")
-     * @Method("GET")
+     * @Method("POST")
      * @Security("has_role('ROLE_USER')")
      */
-    public function enrollAction(Event $event)
+    public function enrollAction(Request $request, Event $event)
     {
-        // TODO
-        // show the enroll form
+        $em = $this->getDoctrine()->getManager();
+        $depRep = $em->getRepository('AppBundle:Department');
+        $departments = $depRep->findByEvent($event);
+        $form = $this->createEnrollForm($event,$departments);
+        $form->handleRequest($request);
 
-        // this basically redirects to "commitment_new", with all necessary parameters.
+        if ($form->isSubmitted() && $form->isValid()) {
+            $depId = $form->get('department')->getData();
+            $dep = $depRep->findOneById($depId);
+            $user = $this->getUser();
+            $c = new Commitment();
+            $c->setUser($user);
+            $c->setEvent($event);
+            $c->setDepartment($dep);
+            $c->setRemark($form->get('remark')->getData());
+            $em->persist($c);
+            $em->flush();
+            $session = $request->getSession();
+            $session->getFlashBag()->add('success', 'Erfolgreich eingetragen.');
+        }
 
-        // after enrollment, redirect back to "event_show"
+        return $this->redirectToRoute('event_show', array('id' => $event->getID()));
     }
 }

@@ -53,6 +53,14 @@ class Commitment
     private $user;
 
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="remark", type="string", length=1000, nullable=true)
+     */
+    private $remark;
+
+
 
     /**
      * Get id
@@ -134,5 +142,28 @@ class Commitment
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set remark
+     *
+     * @param string $remark
+     *
+     * @return Commitment
+     */
+    public function setRemark($remark)
+    {
+        $this->remark=$remark;
+        return $this;
+    }
+
+    /**
+     * Get remark
+     *
+     * @return string
+     */
+    public function getRemark()
+    {
+        return $this->remark;
     }
 }
