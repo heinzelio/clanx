@@ -1,0 +1,18 @@
+{# app/Resources/views/emails/CommitmentConfirmation.html.twig #}
+Lieber {{ Forename }}
+
+Du hast dich beim Event {{ Event }} als Hölfer im Ressort {{ Department }} eingetragen.
+
+Dafür schonmal
+VIELEN DANK!
+
+Der Event findet statt am <strong>{{ EventDate|date('d.M.Y') }}</strong>.
+Du wirst zu gegebender Zeit von uns zum Hölferinformationsanlass eingeladen.
+Du hast als gewünschtes Einsatzressort <strong>{{ Department }}</strong> angegeben.
+Bitte beachte, dass wir dir keinen Einsatz in deinem gewünschten Ressort garantieren können.
+
+Du kannst mit folgender URL jederzeit Details zum Event abrufen:
+{{ absolute_url(path('event_show', { 'id': EventID })) }}
+
+Liebe Grüsse:
+das Clanx Team

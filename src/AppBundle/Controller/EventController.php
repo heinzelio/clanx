@@ -286,12 +286,55 @@ class EventController extends Controller
             $c->setEvent($event);
             $c->setDepartment($dep);
             $c->setRemark($form->get('remark')->getData());
-            $em->persist($c);
-            $em->flush();
             $session = $request->getSession();
-            $session->getFlashBag()->add('success', 'Erfolgreich eingetragen.');
+            try{
+                $em->persist($c);
+                $em->flush();
+                $this->sendMail($user, $dep, $event, $c);
+            }catch(Exception $ex){
+                $session->getFlashBag()->add('error', 'Speichern fehlgeschlagen. Du bist NICHT eingetragen. Versuche es später nochmal.');
+            }
         }
 
         return $this->redirectToRoute('event_show', array('id' => $event->getID()));
+    }
+
+    private function sendMail($user,$dep,$event){
+        $message = \Swift_Message::newInstance();
+        $dankeImgLink =  $message->embed(\Swift_Image::fromPath('img/emails/danke.png'));
+        $message->setSubject('Clanx Hölfer Bestätigung')
+            ->setFrom('noreply@clanx.com')
+
+            ->setTo($user->getEmail())
+            ->setBody(
+                $this->renderView(
+                    // app/Resources/views/emails/CommitmentConfirmation.html.twig
+                    'emails/CommitmentConfirmation.html.twig',
+                    array('Forename' => $user->getForename(),
+                        'Event' => $event->getName(),
+                        'EventID' => $event->getId(),
+                        'EventDate' => $event->getDate(),
+                        'Department' => $dep->getName(),
+                        'DankeImgLink' => $dankeImgLink,
+                    )
+                ),
+                'text/html'
+            )
+            ->addPart(
+                $this->renderView(
+                    // app/Resources/views/emails/CommitmentConfirmation.txt.twig
+                    'emails/CommitmentConfirmation.txt.twig',
+                    array('Forename' => $user->getForename(),
+                        'Event' => $event->getName(),
+                        'EventID' => $event->getId(),
+                        'EventDate' => $event->getDate(),
+                        'Department' => $dep->getName(),
+                    )
+                ),
+                'text/plain'
+            )
+
+        ;
+        $this->get('mailer')->send($message);
     }
 }
