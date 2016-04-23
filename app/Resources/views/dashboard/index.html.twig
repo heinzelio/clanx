@@ -21,6 +21,13 @@
                 <p>
                     Lorem ipsum.
                 </p>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <h2>Daten löschen und neue dev Daten generieren</h2>
+                    <p>
+                        <a class="btn btn-danger" href="{{ path('admin_generate_data')}}">JETZT LÖSCHEN & ERSTELLEN</a>
+                    </p>
+                {% endif %}
+
             </div>
         </div>
     </div>
