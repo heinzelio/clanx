@@ -1,0 +1,26 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %}
+    Legacy User File Upload
+{% endblock %}
+
+
+
+{% block workspace %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-primary">
+        <div class="panel-heading">File upload</div>
+        <div class="panel-body">
+            {{ form_start(upload_form) }}
+            {{form_widget(upload_form) }}
+            <div class="form-group">
+                <input class="btn btn-primary" type="submit" value="Upload" />
+                <a class="btn btn-default" href="{{ path('dashboard_index') }}">Cancel</a>
+            </div>
+            {{ form_end(upload_form) }}
+        </div>
+        </div><!--panel-->
+    </div>
+</div>
+{% endblock %}

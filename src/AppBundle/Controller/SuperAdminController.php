@@ -6,10 +6,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Department;
 use AppBundle\Entity\Commitment;
+use AppBundle\Entity\LegacyUser;
 
 /**
  * Dashboard controller.
@@ -172,6 +174,104 @@ class SuperAdminController extends Controller
         if(!$flashbag) return;
         if(!$name) return;
         $flashbag->add('success', 'Gelöscht: '.$counter.' x '.$name);
+    }
+
+    /**
+    * @Route("/data/upload", name="admin_upload_data")
+    * @Method({"GET","POST"})
+    * @Security("has_role('ROLE_SUPER_ADMIN')")
+    */
+    public function uploadAction(Request $request)
+    {
+        $uploadForm = $this->createUploadForm();
+        $uploadForm->handleRequest($request);
+        if ($uploadForm->isSubmitted() && $uploadForm->isValid())
+        {
+            $file = $uploadForm->get('file')->getData();
+            $legacyUsers = $this->parseFile($file);
+
+            $em = $this->getDoctrine()->getManager();
+            foreach($legacyUsers as $lu){
+                $em->persist($lu);
+            }
+            $em->flush();
+            return $this->render('superadmin/showUploaded.html.twig',array(
+                'legacyUsers' => $legacyUsers,
+            ));
+        }
+        return $this->render('superadmin/upload.html.twig',array(
+            'upload_form' => $uploadForm->createView()
+        ));
+    }
+
+    /**
+     * Creates a form to upload a CSV file
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createUploadForm()
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('admin_upload_data'))
+            ->add('file', FileType::class, array('label' => 'Legacy users (CSV only)'))
+            ->setMethod('POST')
+            ->getForm()
+        ;
+    }
+
+    private function parseFile($file)
+    {
+        if(!$file) return null;
+
+        $rowIdx = 0;
+        $legacyUsers = array();
+        if (($fhandle = fopen($file, "r")) !== FALSE)
+        {
+            // parse each line as csv
+            while (($data = fgetcsv($fhandle, 1000, ";")) !== FALSE)
+            {
+                if(!$data[7]) continue; // ignore records without mail. (we need that later)
+                // get each field in a line
+                // Vorname;Nachname;Adresse;Postleitzahl;Ort;Land;
+                // Telefon;E-Mail-Adresse;Geburtsdatum clean;Geschlecht;
+                // Dein Beruf;Ressort 2015
+                $legacyUser = new LegacyUser();
+                $legacyUser->setForename($data[0]);
+                $legacyUser->setSurname($data[1]);
+                $legacyUser->setAddress($data[2]);
+                $legacyUser->setZip($data[3]);
+                $legacyUser->setCity($data[4]);
+                $legacyUser->setCountry($data[5]);
+                $legacyUser->setPhone($data[6]);
+                $legacyUser->setMail($data[7]);
+                if($data[8])
+                {
+                    $date = \DateTime::createFromFormat('d.m.Y', $data[8]);
+                    // from the doc: "Returns a new DateTime instance or FALSE on failure."
+                    // SERIOUSLY, PHP??? ... returns apples or pears or cars or planes, just as he likes... :(
+                    if($date)
+                    {
+                        $legacyUser->setDateOfBirth($date);
+                    }
+                }
+                switch ($data[9]) {
+                    case 'Mann':
+                        $legacyUser->setGender('M');
+                        break;
+                    case 'Frau':
+                        $legacyUser->setGender('F');
+                        break;
+                    default:
+                        break;
+                }
+                $legacyUser->setOccupation($data[10]);
+                $legacyUser->setLastDepartment($data[11]);
+
+                $legacyUsers[$rowIdx] = $legacyUser;
+                $rowIdx++;
+            }
+            fclose($fhandle);
+        }
+        return $legacyUsers;
     }
 }
 

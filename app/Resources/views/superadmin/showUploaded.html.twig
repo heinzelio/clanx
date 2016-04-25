@@ -1,0 +1,24 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %}
+    Imported Users
+{% endblock %}
+
+{% block workspace %}
+<div class="row">
+<div class="col-md-12">
+    <h3>Imported users:</h3>
+    <table class="table table-striped table-bordered">
+        <tbody>
+        {% for user in legacyUsers %}
+            <tr>
+                <td>{{ user.forename }}</td>
+                <td>{{ user.surname }}</td>
+                <td>{{ user.mail }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+{% endblock %}
