@@ -22,6 +22,10 @@
                     Lorem ipsum.
                 </p>
                 {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <h2>Ein Link für Sevi</h2>
+                    <p>
+                        <a class="btn btn-primary" href="{{ path('sevi_index') }}">Hier gehts zur Action...</a>
+                    </p>
                     <h2>Daten löschen und neue dev Daten generieren</h2>
                     <p>
                         <a class="btn btn-danger" href="{{ path('admin_generate_data')}}">JETZT LÖSCHEN & ERSTELLEN</a>
@@ -30,6 +34,7 @@
                     <p>
                         <a class="btn btn-danger" href="{{ path('admin_upload_data') }}">File upload</a>
                     </p>
+
                 {% endif %}
 
             </div>

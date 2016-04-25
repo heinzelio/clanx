@@ -1,0 +1,27 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %}
+    View für Sevi
+{% endblock %}
+
+
+{% block workspace %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jumbotron">
+
+                <h2>
+                    Das ist die View für Sevi.
+                </h2>
+                <p>
+                    Lorem ipsum.
+                </p>
+
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <p> ich bin ein Super Admin {{theSuperDuperVariableName}}</p>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
