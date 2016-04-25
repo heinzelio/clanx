@@ -27,6 +27,7 @@ CREATE TABLE `commitment` (
   `user_id` int(11) DEFAULT NULL,
   `event_id` int(11) DEFAULT NULL,
   `department_id` int(11) DEFAULT NULL,
+  `remark` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_key` (`user_id`),
   KEY `event_key` (`event_id`),
@@ -143,6 +144,7 @@ CREATE TABLE `event` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,
   `date` date NOT NULL,
+  `sticky` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -153,8 +155,42 @@ CREATE TABLE `event` (
 
 LOCK TABLES `event` WRITE;
 /*!40000 ALTER TABLE `event` DISABLE KEYS */;
-INSERT INTO `event` VALUES (1,'Clanx \'16','2016-08-26');
+INSERT INTO `event` VALUES (1,'Clanx \'16','2016-08-26',1);
 /*!40000 ALTER TABLE `event` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `legacy_user`
+--
+
+DROP TABLE IF EXISTS `legacy_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `legacy_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `forename` varchar(200) DEFAULT NULL,
+  `surname` varchar(200) DEFAULT NULL,
+  `address` varchar(200) DEFAULT NULL,
+  `zip` varchar(10) DEFAULT NULL,
+  `city` varchar(200) DEFAULT NULL,
+  `country` varchar(200) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `mail` varchar(200) NOT NULL,
+  `dateOfBirth` date DEFAULT NULL,
+  `gender` varchar(1) DEFAULT NULL,
+  `occupation` varchar(200) DEFAULT NULL,
+  `lastDepartment` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `legacy_user`
+--
+
+LOCK TABLES `legacy_user` WRITE;
+/*!40000 ALTER TABLE `legacy_user` DISABLE KEYS */;
+/*!40000 ALTER TABLE `legacy_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -233,7 +269,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (2,'chriglburri','chriglburri','chriglburri@gmail.com','chriglburri@gmail.com',1,'szb7i5rkh340oogcck0ccsswwos84s0','$2y$13$SrVTOBVIOaWyy4owPbHZaObggMPfwksKvHvwMXWJgp//X/WIkIlCK','2016-04-09 15:02:11',0,0,NULL,NULL,NULL,'a:1:{i:0;s:16:\"ROLE_SUPER_ADMIN\";}',0,NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,'speznaz','speznaz','kaelin.severin@gmail.com','kaelin.severin@gmail.com',1,'4q67qx6hvugwkow48w44ss0sk08og8s','$2y$13$DYZRs6acDPm.OqxKj7kbwOUu4qevL5IQSZ0X59JyTA.101Kh5Po1m',NULL,0,0,NULL,NULL,NULL,'a:1:{i:0;s:16:\"ROLE_SUPER_ADMIN\";}',0,NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `user` VALUES (2,'chriglburri','chriglburri','chriglburri@gmail.com','chriglburri@gmail.com',1,'szb7i5rkh340oogcck0ccsswwos84s0','$2y$13$SrVTOBVIOaWyy4owPbHZaObggMPfwksKvHvwMXWJgp//X/WIkIlCK','2016-04-25 12:08:27',0,0,NULL,NULL,NULL,'a:1:{i:0;s:16:\"ROLE_SUPER_ADMIN\";}',0,NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,'speznaz','speznaz','kaelin.severin@gmail.com','kaelin.severin@gmail.com',1,'4q67qx6hvugwkow48w44ss0sk08og8s','$2y$13$DYZRs6acDPm.OqxKj7kbwOUu4qevL5IQSZ0X59JyTA.101Kh5Po1m',NULL,0,0,NULL,NULL,NULL,'a:1:{i:0;s:16:\"ROLE_SUPER_ADMIN\";}',0,NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -246,4 +282,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-04-10  0:18:56
+-- Dump completed on 2016-04-25 21:51:02
