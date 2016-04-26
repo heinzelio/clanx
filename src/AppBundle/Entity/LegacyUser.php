@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * LegacyUser
  *
  * @ORM\Table(name="legacy_user")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\LegacyUserRepository")
+ * @ORM\Entity
  */
 class LegacyUser
 {
