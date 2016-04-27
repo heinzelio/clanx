@@ -15,12 +15,23 @@
     <div class="row">
         <div class="col-md-12">
             <div class="jumbotron">
-                <h2>
-                    Das ist das Dashboard.
-                </h2>
-                <p>
-                    Lorem ipsum.
+                {% if ShowProfileUpdate %}
+                <h2>Aktualisiere dein Profil!</h2>
+                <p>Unsere Auswertung hat gezeigt, dass Du Dein Profil noch nicht
+                    vollständig ausgefüllt hast. Uns fehlt noch:<br>
+                    <mark>{{ MissingProfilData }}</mark></br>
+                    Klick dich doch schnell rüber und füll das schnell aus. Wir
+                    brauchen diese Daten um Dich über Deine Arbeitseinsätze zu informieren.
+                    (Wir geben Deine Daten niemandem weiter, und wir senden Dir
+                    ausschliesslich Clanxwerbung.)
                 </p>
+                <p><a class="btn btn-primary"
+                    href="{{ path('fos_user_profile_edit') }}">
+                        Zum Profil
+                    </a>
+                </p>
+                {% endif %}
+
                 {% if is_granted('ROLE_SUPER_ADMIN') %}
                     <h2>Ein Link für Sevi</h2>
                     <p>

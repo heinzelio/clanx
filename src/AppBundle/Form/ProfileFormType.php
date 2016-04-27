@@ -86,7 +86,7 @@ class ProfileFormType extends AbstractType
             ->add('street')
             ->add('zip')
             ->add('city')
-            ->add('country')
+            ->add('country',CountryType::class)
             ->add('phone')
             ->add('occupation')
             ->add('username', null, array('label' => 'form.username', 'translation_domain' => 'FOSUserBundle'))
