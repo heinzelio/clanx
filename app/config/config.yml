@@ -86,3 +86,6 @@ fos_user:
     registration:
         confirmation:
             enabled:    true
+    profile:
+      form:
+        type: AppBundle\Form\ProfileFormType

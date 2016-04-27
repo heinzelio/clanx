@@ -9,6 +9,12 @@ services:
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
     user_register_listener:
         class: AppBundle\EventListener\UserRegistrationConrimedListener
-        arguments: ["@doctrine.orm.entity_manager"]
+        arguments: ["%app."]
         tags:
             - { name: kernel.event_subscriber }
+
+    app.form.profile:
+        class: AppBundle\Form\ProfileFormType
+        arguments: ["\\AppBundle\\Entity\\User"]
+        tags:
+            - { name: form.type, alias: app_user_profile }

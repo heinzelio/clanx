@@ -2,6 +2,27 @@
 
 <div class="fos_user_user_show">
 
-    <p>{{ 'profile.show.username'|trans }}: {{ user.username }}</p>
-    <p>{{ 'profile.show.email'|trans }}: {{ user.email }}</p>
+  {% if not user.forename is null and not user.surname is null and not user.city is null%}
+  <p>Du bist <mark>{{ user.forename }} {{user.surname}}</mark>, von <mark>{{user.city}}<mark>.</p>
+  {% else %}
+  <p class="text-danger">Wir wissen so wenig über Dich. Verrate uns doch ein bisschen
+     mehr von Dir, z.B. Deinen Namen, Dein Wohnort und so weiter. Keine Angst, wir
+   schicken dir keine Werbung. (Ausser natürlich einmal pro Jahr das neuste vom Clanx Festival.)</p>
+  {% endif %}
+  {% if not user.dateOfBirth is null %}
+  <p>Dein Geburtstag ist der <mark>{{ user.dateOfBirth|date("d.M.Y") }}</mark>.</p>
+  {% else %}
+  <p class="text-danger">Du hast deinen Geburtstag noch nicht definiert. (Für einige Ressorts am Clanx musst
+  Du mindestens 18 Jahre alt sein. Verrate uns deshalb dein Geburtsdatum. Wir erzählen
+  es niemandem. Versprochen!)</p>
+  {% endif %}
+
+    <p>Dein Benutzername für das Login ist: <mark>{{ user.username }}</mark>.</p>
+    <p>Deine EMailadresse lautet: <mark>{{ user.email }}</mark>.</p>
+<p>
+    <a href="{{ path('fos_user_change_password') }}"
+    class="btn btn-default">Passwort ändern</a>
+    <a href="{{ path('fos_user_profile_edit')}}"
+    class="btn btn-default">Daten anpassen</a>
+    </p>
 </div>
