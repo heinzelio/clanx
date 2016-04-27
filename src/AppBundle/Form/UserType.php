@@ -32,9 +32,7 @@ class UserType extends AbstractType
             ->add('city')
             ->add('country')
             ->add('phone')
-            ->add('mail')
             ->add('occupation')
-            ->add('passwordHash',PasswordType::class)
         ;
 		//Symfony\Component\Debug\Debug::debug($builder->get('verified'));
     }

@@ -111,17 +111,11 @@ class UserController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-
-            $password = $user->getPasswordHash();
-            $encoder = $this->container->get('security.password_encoder');
-            $hash = $encoder->encodePassword($user, $password);
-            $user->setPasswordHash($hash);
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
 
-            return $this->redirectToRoute('user_edit', array('id' => $user->getId()));
+            return $this->redirectToRoute('user_show', array('id' => $user->getId()));
         }
 
         return $this->render('user/edit.html.twig', array(

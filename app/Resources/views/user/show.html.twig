@@ -43,23 +43,11 @@
             </tr>
             <tr>
                 <th>Mail</th>
-                <td>{{ user.mail }}</td>
+                <td>{{ user.email }}</td>
             </tr>
             <tr>
                 <th>Occupation</th>
                 <td>{{ user.occupation }}</td>
-            </tr>
-            <tr>
-                <th>Passwordhash</th>
-                <td>{{ user.passwordHash }}</td>
-            </tr>
-            <tr>
-                <th>Verified</th>
-                <td>{% if user.verified %}Yes{% else %}No{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Isadmin</th>
-                <td>{% if user.isAdmin %}Yes{% else %}No{% endif %}</td>
             </tr>
             <tr>
                 <th>Id</th>
