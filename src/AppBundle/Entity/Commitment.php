@@ -60,6 +60,17 @@ class Commitment
      */
     private $remark;
 
+    /**
+     * @var \DateTime
+    * @ORM\Column(name="possible_start", type="datetime", nullable=true)
+    */
+    private $possibleStart;
+
+    /**
+     * @var string
+    * @ORM\Column(name="shirt_size", type="string", length=10, nullable=true)
+    */
+    private $shirtSize;
 
 
     /**
@@ -165,5 +176,45 @@ class Commitment
     public function getRemark()
     {
         return $this->remark;
+    }
+
+    /**
+    * Set possible start date
+    * @param \DateTime $start
+    * @return Commitment
+    */
+    public function setPossibleStart($start)
+    {
+        $this->possibleStart=$start;
+        return $this;
+    }
+
+    /**
+    * Get possible start date
+    * @return \DateTime
+    */
+    public function getPossibleStart()
+    {
+        return $this->possibleStart;
+    }
+
+    /**
+    * Set shirt size
+    * @param string $shirtSize
+    * @return Commitment
+    */
+    public function setShirtSize($shirtSize)
+    {
+        $this->shirtSize=$shirtSize;
+        return $this;
+    }
+
+    /**
+    * Get shirt size
+    * @return string
+    */
+    public function getShirtSize()
+    {
+        return $this->shirtSize;
     }
 }

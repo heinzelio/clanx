@@ -15,6 +15,7 @@ use FOS\UserBundle\Util\LegacyFormHelper;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
@@ -82,7 +83,7 @@ class ProfileFormType extends AbstractType
             ->add('forename')
             ->add('surname')
             ->add('gender', GenderType::class)
-            ->add('dateOfBirth', DateType::class, array('widget' => 'single_text')) // this makes a html5 date picker. Awesom!
+            ->add('dateOfBirth', BirthdayType::class, array('widget' => 'single_text')) // this makes a html5 date picker. Awesom!
             ->add('street')
             ->add('zip')
             ->add('city')

@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -14,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Commitment;
 use AppBundle\Form\EventType;
+use AppBundle\Form\ShirtSizeType;
 
 /**
  * Event controller.
@@ -243,11 +245,23 @@ class EventController extends Controller
         }
         return $this->createFormBuilder()
             ->add('department', ChoiceType::class, array(
-                'label' => "für Ressort (ohne Garantie)",
+                'label' => 'für Ressort (ohne Garantie)',
                 'choices'  => $choices
             ))
+            ->add('possibleStart', DateTimeType::class,array(
+                'date_widget' => 'single_text',
+                'time_widget' => 'single_text',
+                //'html5' => true,
+                //'input' => 'array',
+                'label' => 'früheste Startzeit',
+                'data' => $event->getDate()
+            ))
+            ->add('shirtSize',ShirtSizeType::class,array(
+                'label' => 'TShirt Grösse',
+            ))
             ->add('remark', TextareaType::class, array(
-                'label' => "Bemerkung / Wunsch"
+                'label' => "Bemerkung / Wunsch",
+                'required' => false
             ))
             ->add('save', SubmitType::class, array(
                 'label' => 'Eintragen',
@@ -279,12 +293,17 @@ class EventController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $depId = $form->get('department')->getData();
+            $startDate = $form->get('possibleStart')->getData();
+            $possStartFormItem = $form->get('possibleStart');
+            $shirtSize = $form->get('shirtSize')->getData();
             $dep = $depRep->findOneById($depId);
             $user = $this->getUser();
             $c = new Commitment();
             $c->setUser($user);
             $c->setEvent($event);
             $c->setDepartment($dep);
+            $c->setPossibleStart($startDate);
+            $c->setShirtSize($shirtSize);
             $c->setRemark($form->get('remark')->getData());
             $session = $request->getSession();
             try{
