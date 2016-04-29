@@ -1,16 +1,26 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_nav.html.twig' %}
 
-{% block body %}
-    <h1>User creation</h1>
+{% block workspace %}
 
+<div class="row">
+<div class="col-md-6 col-md-offset-3">
+<div class="panel panel-default">
+    <div class="panel-heading">Neuer Benutzer anlegen</div>
+
+    <div class="panel-body">
+        <div class="text-danger">
+            Das machen wir nicht! Ein neuer Benutzer muss sich registrieren.
+            Wegen dem Prozess mit EMail validierung und so weiter.
+        </div>
     {{ form_start(form) }}
         {{ form_widget(form) }}
-        <input type="submit" value="Create" />
+        <input class="btn btn-danger" type="submit" value="Create" />
     {{ form_end(form) }}
-
-    <ul>
-        <li>
-            <a href="{{ path('user_index') }}">Back to the list</a>
-        </li>
-    </ul>
+    </div>
+    <div clasS="panel-footer">
+        <a class="btn btn-default" href="{{ path('user_index') }}">Zurück zur Übersicht</a>
+    </div>
+</div>
+</div>
+</div>
 {% endblock %}

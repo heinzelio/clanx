@@ -42,7 +42,7 @@ class User extends BaseUser
      * @var string
      * @ORM\Column(name="gender", type="string", length=1, nullable=false)
      */
-    private $gender='';
+    private $gender='M';
 
     /**
      * @var \DateTime
