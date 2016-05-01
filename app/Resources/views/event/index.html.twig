@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block workspace %}
+{% if is_granted('ROLE_ADMIN') %}
 <div class="row">
 <div class="col-md-12">
     <div><a class="btn btn-default" href="{{ path('event_new') }}">
@@ -13,6 +14,8 @@
     </div>
 </div>
 </div>
+{% endif %}
+
 <div class="row">
     <div class="col-md-6">
         <div class="panel panel-primary">
