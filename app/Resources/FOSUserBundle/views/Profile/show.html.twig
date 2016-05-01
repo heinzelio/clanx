@@ -4,12 +4,6 @@
 Profil anzeigen
 {% endblock title %}
 
-{% block nav_links %}
-    <li><a href="{{ path('fos_user_profile_edit')}}">
-        Profil bearbeiten
-    </a></li>
-{% endblock nav_links %}
-
 {% block workspace %}
 {% include "FOSUserBundle:Profile:show_content.html.twig" %}
 {% endblock workspace %}

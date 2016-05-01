@@ -4,21 +4,15 @@
     Eventliste
 {% endblock %}
 
-{% block nav_links %}
-    <li class="active">
-        <p class="navbar-text">
-            <span class="glyphicon glyphicon-calendar"></span>
-            Events
-        </p>
-    </li>
-    {% if is_granted('ROLE_ADMIN') %}
-        <li><a href="{{ path('event_new') }}">Neuer Event erstellen</a></li>
-    {% endif %}
-{% endblock %}
-
 {% block workspace %}
-
-
+<div class="row">
+<div class="col-md-12">
+    <div><a class="btn btn-default" href="{{ path('event_new') }}">
+        <span class="glyphicon glyphicon-plus"></span>
+        Neuer Event erstellen</a>
+    </div>
+</div>
+</div>
 <div class="row">
     <div class="col-md-6">
         <div class="panel panel-primary">

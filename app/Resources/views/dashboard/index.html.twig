@@ -4,13 +4,6 @@
     Dashboard
 {% endblock %}
 
-{% block nav_links %}
-    {% if is_granted('ROLE_ADMIN') %}
-    <li><a href="{{ path('user_index') }}">Benutzer (Admin only)</a></li>
-    {% endif %}
-    <li><a href="{{ path('event_index') }}">Events</a></li>
-{% endblock %}
-
 {% block workspace %}
     <div class="row">
         <div class="col-md-12">
