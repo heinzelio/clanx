@@ -5,6 +5,7 @@
 {% block workspace %}
 <div class="row">
     <div class="col-md-4">
+        <h3>Event {{ event.name }}</h3>
         {{ form_start(edit_form) }}
             {{form_widget(edit_form) }}
             <div class="form-group">
@@ -12,6 +13,34 @@
                 <a class="btn btn-default" href="{{ path('event_index') }}">Zurück zur Übersicht</a>
             </div>
             {{ form_end(edit_form) }}
+    </div>
+    <div class="col-md-8">
+        <h4>Ressorts für diesen Event:</h4>
+        <table class="table">
+            <tbody>
+            {% for department in departments %}
+                <tr>
+                    <td>
+                        {{ department.name }}
+                        {% if department.requirement %}
+                            <small>({{ department.requirement }})</small>
+                        {% endif %}
+                        {% if department.chiefUser  %}
+                            - {{ department.chiefUser.Forename }} {{ department.chiefUser.Surname }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('department_edit', { 'id': department.id,'event_id':event.id }) }}"
+                            class="btn btn-default">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}

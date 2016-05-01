@@ -1,0 +1,25 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block workspace %}
+<div class="row">
+<div class="col-md-4">
+    <h3>Ressort <em>„{{ department.name }}“</em></h3>
+    <h4>vom Event <em>„{{ event.name }}“</em></h4>
+
+    {{ form_start(edit_form) }}
+        {{ form_widget(edit_form) }}
+            <!--TODO: the identifier "event_mail" may change later.
+            find out how we can get this identifier by code -->
+        <a onclick="department.submit();"
+            class="btn btn-primary">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            Speichern
+        </a>
+    {{ form_end(edit_form) }}
+    <a class="btn btn-default" href="{{ path('event_edit',{'id':event.id}) }}">Zurück zum Event</a>
+    {{ form_start(delete_form) }}
+        <input type="submit" value="Delete">
+    {{ form_end(delete_form) }}
+</div>
+</div>
+{% endblock %}

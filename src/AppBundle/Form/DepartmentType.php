@@ -4,11 +4,9 @@ namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EventType extends AbstractType
+class DepartmentType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -18,13 +16,15 @@ class EventType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('date', DateType::class,array(
-                'widget' => 'single_text',
+            ->add('requirement',null,array(
+                'label' => 'Anforderung (z.B. mind 18j)',
             ))
-            ->add('sticky', CheckboxType::class, array(
-                    'label'    => 'Klebt der Event in der Titelzeile?',
-                    'required' => false,
-                ));
+            ->add('chiefUser',null,array(
+                'label' => 'Ressortleiter'
+            ))
+            ->add('deputyUser',null,array(
+                'label' => 'Stellvertreter'
+            ))
         ;
     }
 
@@ -34,7 +34,7 @@ class EventType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Event'
+            'data_class' => 'AppBundle\Entity\Department'
         ));
     }
 }
