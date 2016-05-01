@@ -21,7 +21,11 @@
             <ul>
                 {% for event in upcomingEvents %}
                     <li>
-                        <a href="{{ path('event_show', { 'id': event.id }) }}">{{ event.name }}</a>
+                        <a href="{{ path('event_show', { 'id': event.id }) }}"
+                            {% if event.sticky %}class="bg-danger"{% endif %}
+                        >
+                            {{ event.name }}
+                        </a>
                         ({% if event.date %}{{ event.date|date('d. M. Y') }}{% endif %})
                         {% if is_granted('ROLE_ADMIN') %}
                         <a class="btn btn-default" href="{{ path('event_edit', {'id':event.id}) }}">
