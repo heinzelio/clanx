@@ -1,16 +1,18 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_nav.html.twig' %}
 
-{% block body %}
-    <h1>Department creation</h1>
+{% block title %} Neues Ressort {% endblock %}
+
+{% block workspace %}
+    <h3>Ressort erstellen für <em>„{{ event.name }}“</em></h3>
 
     {{ form_start(form) }}
         {{ form_widget(form) }}
-        <input type="submit" value="Create" />
+        <a onclick="department.submit();"
+            class="btn btn-primary">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            Speichern
+        </a>
     {{ form_end(form) }}
+    <a class="btn btn-default" href="{{ path('event_edit',{'id':event.id}) }}">Zurück zum Event</a>
 
-    <ul>
-        <li>
-            <a href="{{ path('department_index') }}">Back to the list</a>
-        </li>
-    </ul>
 {% endblock %}

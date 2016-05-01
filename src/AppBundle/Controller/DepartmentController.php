@@ -40,11 +40,12 @@ class DepartmentController extends Controller
     /**
      * Creates a new Department entity.
      *
-     * @Route("/new", name="department_new")
+     * @Route("/new/for/event/{event_id}", name="department_new")
      * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_ADMIN')")
+     * @ParamConverter("event", class="AppBundle:Event", options={"id" = "event_id"})
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, Event $event)
     {
         $department = new Department();
         $form = $this->createForm('AppBundle\Form\DepartmentType', $department);
@@ -52,14 +53,16 @@ class DepartmentController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $department->setEvent($event);
             $em->persist($department);
             $em->flush();
 
-            return $this->redirectToRoute('department_show', array('id' => $department->getId()));
+            return $this->redirectToRoute('event_edit', array('id' => $department->getId()));
         }
 
         return $this->render('department/new.html.twig', array(
             'department' => $department,
+            'event' => $event,
             'form' => $form->createView(),
         ));
     }

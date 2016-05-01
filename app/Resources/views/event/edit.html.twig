@@ -15,7 +15,8 @@
             {{ form_end(edit_form) }}
     </div>
     <div class="col-md-8">
-        <h4>Ressorts für diesen Event:</h4>
+    <div class="panel panel-default">
+        <div class="panel-heading">Ressorts für diesen Event</div>
         <table class="table">
             <tbody>
             {% for department in departments %}
@@ -41,6 +42,14 @@
             {% endfor %}
             </tbody>
         </table>
+
+        <div class="panel-footer">
+            <a class="btn btn-default"
+                href="{{ path('department_new',{'event_id' : event.id}) }}">
+                Neues Ressort anlegen
+            </a>
+        </div>
+    </div><!-- Panel "Departments" -->
     </div>
 </div>
 {% endblock %}
