@@ -1,0 +1,20 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %} Hölfer Mail {% endblock %}
+
+{% block workspace %}
+<div class="row">
+    <div class="col-md-4">
+        {{ form_start(mail_form) }}
+            {{form_widget(mail_form) }}
+            <div class="form-group">
+                <a class="btn btn-primary" onclick="event_mail.submit();">
+                    <span class="glyphicon glyphicon-envelope" ></span>
+                    Email jetzt senden
+                </a>
+                <a class="btn btn-default" href="{{ path('event_index') }}">Abbrechen</a>
+            </div>
+            {{ form_end(mail_form) }}
+    </div>
+</div>
+{% endblock %}

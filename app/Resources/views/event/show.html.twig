@@ -44,8 +44,17 @@
 
         <a class="btn btn-default" href="{{ path('event_index') }}">Zurück zur Übersicht</a>
 
+        {% if mayMail %}
+            <a class="btn btn-default" href="{{ path ('event_mail_enrolled', {'id': event.id})}}">
+                <span class="glyphicon glyphicon-envelope" ></span>
+                Email an alle Hölfer
+            </a>
+        {% endif %}
+
         {% if mayEdit %}
-            <a class="btn btn-default" href="{{ path('event_edit', { 'id': event.id }) }}">Bearbeiten</a>
+            <a class="btn btn-default" href="{{ path('event_edit', { 'id': event.id }) }}">
+                Bearbeiten
+            </a>
         {% endif %}
 
         {% if mayDelete %}

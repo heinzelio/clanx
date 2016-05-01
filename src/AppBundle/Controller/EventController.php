@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -144,6 +145,7 @@ class EventController extends Controller
 
         $mayEnroll = !$isEnrolled && $event->enrollmentPossible();
 
+        $mayMail = $this->isGranted('ROLE_ADMIN');
 
         $mayEdit = $this->isGranted('ROLE_ADMIN') && $event->mayEdit();
         $mayDelete = $this->isGranted('ROLE_SUPER_ADMIN') && $event->mayDelete();
@@ -155,6 +157,7 @@ class EventController extends Controller
             'mayEnroll' => $mayEnroll,
             'enrolledCount' => $enrolledCount,
             'isEnrolled' => $isEnrolled,
+            'mayMail' => $mayMail,
             'mayEdit' => $mayEdit,
             'mayDelete' => $mayDelete,
             'isChief' => $iAmAChief,
@@ -355,5 +358,69 @@ class EventController extends Controller
 
         ;
         $this->get('mailer')->send($message);
+    }
+
+
+
+    /**
+     * Finds and displays a Event entity.
+     *
+     * @Route("/{id}/mail/enrolled", name="event_mail_enrolled")
+     * @Method({"GET","POST"})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function mailEnrolledAction(Request $request, Event $event)
+    {
+        $mailForm = $this->createForm('AppBundle\Form\EventMailType', $event);
+        $mailForm->handleRequest($request);
+
+        if ($mailForm->isSubmitted() && $mailForm->isValid()) {
+
+            $text = $mailForm->get('text')->getData();
+            $subject = $mailForm->get('subject')->getData();
+            $message = \Swift_Message::newInstance();
+            $message->setSubject($subject)
+                ->setFrom('noreply@clanx.com')
+                ->addPart(
+                    $text,
+                    'text/plain'
+                );
+
+            $em = $this->getDoctrine()->getManager();
+            $commitmentsRep = $em->getRepository('AppBundle:Commitment');
+            $commitments=$commitmentsRep->findByEvent($event);
+            $doSend=false;
+            foreach ($commitments as $cmnt) {
+                $doSend=true;
+                $usr=$cmnt->getUser();
+                $message->setBcc($usr->getEmail());
+            }
+
+            if($doSend){
+                $mailer = $this->get('mailer');
+                $numSent = $mailer->send($message);
+                $flashbag = $request->getSession()->getFlashBag();
+                $flashbag->add('success', $numSent.' EMails verschickt.');
+            }else {
+                $flashbag = $request->getSession()->getFlashBag();
+                $flashbag->add('warning', 'Keine Email geschick.');
+            }
+
+
+
+            return $this->redirectToRoute('event_show', array('id' => $event->getId()));
+        }
+
+        // only on unsubmitted forms:
+        $mailForm->get('subject')->setData($event->getName() . " Hölferinfo");
+        $url = $this->generateUrl('event_show',
+                                    array('id' => $event->getId()),
+                                    UrlGeneratorInterface::ABSOLUTE_URL
+                                );
+        $mailForm->get('text')->setData($url);
+        return $this->render('event/mail_enrolled.html.twig', array(
+            'event' => $event,
+            'mail_form' => $mailForm->createView(),
+        ));
     }
 }
