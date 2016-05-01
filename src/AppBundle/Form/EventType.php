@@ -18,7 +18,9 @@ class EventType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('date', DateType::class)
+            ->add('date', DateType::class,array(
+                'widget' => 'single_text',
+            ))
             ->add('sticky', CheckboxType::class, array(
                     'label'    => 'Klebt der event in der Titelzeile?',
                     'required' => false,
