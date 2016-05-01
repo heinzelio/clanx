@@ -15,7 +15,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Commitment;
-use AppBundle\Form\EventType;
+use AppBundle\Entity\Department;
+use AppBundle\Form\EventCreateType;
 use AppBundle\Form\ShirtSizeType;
 
 /**
@@ -69,7 +70,7 @@ class EventController extends Controller
     public function newAction(Request $request)
     {
         $event = new Event();
-        $form = $this->createForm('AppBundle\Form\EventType', $event);
+        $form = $this->createForm('AppBundle\Form\EventCreateType', $event);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -77,7 +78,24 @@ class EventController extends Controller
             $em->persist($event);
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add('success', "'".$event->getName()."' gespeichert");
+            $defaultDpt = new Department();
+            $defaultDpt->setName("Ich helfe wo ich kann");
+            $defaultDpt->setEvent($event);
+            $em->persist($defaultDpt);
+
+            $dptInput = $form->get('departments')->getData();
+            $dptNames = explode("\n", $dptInput);
+
+            foreach ($dptNames as $dptName) {
+                $dpt = new Department();
+                $dpt->setName(trim($dptName));
+                $dpt->setEvent($event);
+                $em->persist($dpt);
+            }
+
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('success', "'".$event->getName()."' gespeichert.");
             return $this->redirectToRoute('event_show', array('id' => $event->getId()));
         }
 
