@@ -138,7 +138,7 @@ class EventController extends Controller
 
         $enrolledCount = $commitments->countFor($event);
 
-        $isEnrolled = $commitments->existsFor( $this->getUser() ,$event);
+        $isEnrolled = $commitments->existsFor( $user ,$event);
 
         $mayEnroll = !$isEnrolled && $event->enrollmentPossible();
 

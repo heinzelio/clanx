@@ -98,7 +98,7 @@ class DepartmentController extends Controller
 
         $user = $this->getUser(); // NOPE!!!
 
-        $mayDelete = $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
+        $mayDelete = $this->isGranted('ROLE_ADMIN');
         $mayDelete = $mayDelete && $countShift == 0;
         $mayDelete = $mayDelete && $countCommitment == 0;
 
