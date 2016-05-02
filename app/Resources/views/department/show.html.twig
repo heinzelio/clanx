@@ -1,9 +1,19 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_nav.html.twig' %}
 
-{% block body %}
-    <h1>Department</h1>
+{% block title %}
+Ressort: {{ department.name }}
+{% endblock %}
 
-    <table>
+{% block workspace %}
+<div class="row">
+<div class="col-md-12">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Ressort: {{ department.name }}
+    </div>
+    <div class="panel-body">
+
+    <table class="table">
         <tbody>
             <tr>
                 <th>Name</th>
@@ -13,24 +23,25 @@
                 <th>Requirement</th>
                 <td>{{ department.requirement }}</td>
             </tr>
+            {% if is_granted('ROLE_SUPER_ADMIN')%}
             <tr>
                 <th>Id</th>
                 <td>{{ department.id }}</td>
             </tr>
+            {% endif %}
         </tbody>
     </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('department_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('department_edit', { 'id': department.id }) }}">Edit</a>
-        </li>
-        <li>
+    <div class="panel-footer">
+        <a class="btn btn-default" type="button"
+            href="{{ path('event_show',{'id':event.id}) }}">Zurück zum Event.</a>
+        {% if is_granted('ROLE_ADMIN') %}
+        <a class="btn btn-default" type="button"
+            href="{{ path('department_edit', { 'id': department.id ,'event_id':event.id}) }}">Bearbeiten</a>
+        {% endif %}
+        {% if mayDelete %}
             {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
+                <input class="btn btn-danger" type="submit" value="Löschen"></input>
             {{ form_end(delete_form) }}
-        </li>
-    </ul>
+        {% endif %}
+    </div>
 {% endblock %}

@@ -57,7 +57,7 @@ class DepartmentController extends Controller
             $em->persist($department);
             $em->flush();
 
-            return $this->redirectToRoute('event_edit', array('id' => $department->getId()));
+            return $this->redirectToRoute('event_edit', array('id' => $event->getId()));
         }
 
         return $this->render('department/new.html.twig', array(
@@ -70,16 +70,42 @@ class DepartmentController extends Controller
     /**
      * Finds and displays a Department entity.
      *
-     * @Route("/{id}", name="department_show")
+     * @Route("/{id}/of/event/{event_id}", name="department_show")
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
+     * @ParamConverter("event", class="AppBundle:Event", options={"id" = "event_id"})
      */
-    public function showAction(Department $department)
+    public function showAction(Department $department,Event $event)
     {
-        $deleteForm = $this->createDeleteForm($department);
+        $deleteForm = $this->createDeleteForm($department,$event);
+        $em = $this->getDoctrine()->getManager();
+        $commRepo = $em->getRepository('AppBundle:Commitment');
+        $shiftRepo = $em->getRepository('AppBundle:Shift');
+
+        $qb = $em->createQueryBuilder();
+        $qb->select('count(shift.id)')
+        ->from('AppBundle:Shift','shift')
+        ->where('shift.department = :dpt')
+        ->setParameter('dpt', $department);
+        $countShift = $qb->getQuery()->getSingleScalarResult();
+
+        $qb = $em->createQueryBuilder();
+        $qb->select('count(cmt.id)')
+        ->from('AppBundle:Commitment','cmt')
+        ->where('cmt.department = :dpt')
+        ->setParameter('dpt', $department);
+        $countCommitment = $qb->getQuery()->getSingleScalarResult();
+
+        $user = $this->getUser(); // NOPE!!!
+
+        $mayDelete = $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
+        $mayDelete = $mayDelete && $countShift == 0;
+        $mayDelete = $mayDelete && $countCommitment == 0;
 
         return $this->render('department/show.html.twig', array(
             'department' => $department,
+            'event' => $event,
+            'mayDelete' => $mayDelete,
             'delete_form' => $deleteForm->createView(),
         ));
     }
@@ -94,7 +120,7 @@ class DepartmentController extends Controller
      */
     public function editAction(Request $request, Department $department, Event $event)
     {
-        $deleteForm = $this->createDeleteForm($department);
+        $deleteForm = $this->createDeleteForm($department,$event);
         $editForm = $this->createForm('AppBundle\Form\DepartmentType', $department);
         $editForm->handleRequest($request);
 
@@ -119,22 +145,24 @@ class DepartmentController extends Controller
     /**
      * Deletes a Department entity.
      *
-     * @Route("/{id}", name="department_delete")
+     * @Route("/{id}/of/event/{event_id}", name="department_delete")
      * @Method("DELETE")
      * @Security("has_role('ROLE_ADMIN')")
+     * @ParamConverter("event", class="AppBundle:Event", options={"id" = "event_id"})
      */
-    public function deleteAction(Request $request, Department $department)
+    public function deleteAction(Request $request, Department $department, Event $event)
     {
-        $form = $this->createDeleteForm($department);
+        $form = $this->createDeleteForm($department,$event);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($department);
             $em->flush();
+            //TODO: Add msg to flashbag.
         }
 
-        return $this->redirectToRoute('department_index');
+        return $this->redirectToRoute('event_edit', array('id'=>$event->getId()));
     }
 
     /**
@@ -144,10 +172,13 @@ class DepartmentController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm(Department $department)
+    private function createDeleteForm(Department $department, Event $event)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('department_delete', array('id' => $department->getId())))
+            ->setAction($this->generateUrl('department_delete', array(
+                'id' => $department->getId(),
+                'event_id'=>$event->getId())
+            ))
             ->setMethod('DELETE')
             ->getForm()
         ;

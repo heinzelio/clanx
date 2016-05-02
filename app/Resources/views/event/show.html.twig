@@ -20,12 +20,35 @@
                 <button type="button" class="btn btn-success">Du bist als Hölfer eingetragen!</button>
             </p>
             {% endif %}
-            {% if isChief %}
-            <p>Du bist Ressortleiter <strong>{{ chiefOfDepartment}}</strong>.
+
+            {% if myDepartmentsAsChief %}
+            <p>Du bist Ressortleiter:
+                <ul>
+                    {% for dpt in myDepartmentsAsChief %}
+                        <li>
+                            <a href="{{ path('department_show',{'id':dpt.Id,'event_id':event.Id}) }}">
+                            {{ dpt.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </p>
             {% endif %}
-            {% if isDeputy %}
-            <p>Du bist stellvertretender Ressortleiter <strong>{{ deputyOfDepartment}}</strong>.
+
+            {% if myDepartmentsAsDeputy %}
+            <p>Du bist stellvertretender Ressortleiter:
+                <ul>
+                    {% for dpt in myDepartmentsAsDeputy %}
+                        <li>
+                            <a href="{{ path('department_show',{'id':dpt.Id,'event_id':event.Id}) }}">
+                            {{ dpt.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </p>
             {% endif %}
+
             {% if mayEnroll %}
             <div class="panel panel-danger">
             <div class="panel-heading">Jetzt als Hölfer eintragen</div>

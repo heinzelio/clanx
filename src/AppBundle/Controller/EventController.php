@@ -120,33 +120,12 @@ class EventController extends Controller
         $depRep = $em->getRepository('AppBundle:Department');
         $departments = $depRep->findByEvent($event);
         // find out of which departments i am a chief.
-        $iAmChiefOf = $depRep->findBy(
+        $myDepartmentsAsChief = $depRep->findBy(
             array('chiefUser' => $user, 'event' => $event)
         );
-        $chiefText = '';
-        $firstLoop = true;
-        foreach ($iAmChiefOf as $dep) {
-            if(!$firstLoop){
-                $chiefText = $chiefText.', ';
-            }
-            $chiefText=$chiefText . $dep->getName();
-            $firstLoop = false;
-        }
-        $iAmAChief = !$firstLoop;
-
-        $iAmDeputyOf = $depRep->findBy(
+        $myDepartmentsAsDeputy = $depRep->findBy(
             array('deputyUser' => $user, 'event' => $event)
         );
-        $deputyText = '';
-        $firstLoop = true;
-        foreach ($iAmDeputyOf as $dep) {
-            if(!$firstLoop){
-                $deputyText = $deputyText.', ';
-            }
-            $deputyText=$deputyText.$dep->getName();
-            $firstLoop = false;
-        }
-        $iAmADeputy = !$firstLoop;
 
         $enrollForm = $this->createEnrollForm($event,$departments);
         $deleteForm = $this->createDeleteForm($event);
@@ -178,10 +157,8 @@ class EventController extends Controller
             'mayMail' => $mayMail,
             'mayEdit' => $mayEdit,
             'mayDelete' => $mayDelete,
-            'isChief' => $iAmAChief,
-            'isDeputy' => $iAmADeputy,
-            'chiefOfDepartment' => $chiefText,
-            'deputyOfDepartment' => $deputyText
+            'myDepartmentsAsChief' => $myDepartmentsAsChief,
+            'myDepartmentsAsDeputy' => $myDepartmentsAsDeputy,
         ));
     }
 
