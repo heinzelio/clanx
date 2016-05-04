@@ -51,7 +51,8 @@ class DashboardController extends Controller
 
         return $this->render('dashboard/index.html.twig', array(
             'ShowProfileUpdate' => $missingProfileData!=null||$missingProfileData!="",
-            'MissingProfilData' => $missingProfileData
+            'MissingProfilData' => $missingProfileData,
+            'username' => $user->getUsername(),
         ));
     }
     private function joinTxt($firstPart, $secondPart, $delimiter=", "){

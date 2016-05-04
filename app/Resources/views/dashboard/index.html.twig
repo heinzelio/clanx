@@ -30,10 +30,16 @@
                     <p>
                         <a class="btn btn-primary" href="{{ path('sevi_index') }}">Hier gehts zur Action...</a>
                     </p>
-                    <h2>Daten löschen und neue dev Daten generieren</h2>
-                    <p>
-                        <a class="btn btn-danger" href="{{ path('admin_generate_data')}}">JETZT LÖSCHEN & ERSTELLEN</a>
-                    </p>
+                    {% if username=='chriglburri' %}
+                      <h2>Cheatsheets</h2>
+                      <p>
+                        <ul><li>
+                          <a class="btn btn-danger" href="http://phpcheatsheets.com/">Php Cheatsheets</a>
+                        </li><li>
+                          <a class="btn btn-danger" href="https://www.cheatography.com/davechild/cheat-sheets/php/">Php Cheatsheets</a>
+                        </li></ul>
+                      </p>
+                    {% endif %}
                     <h2>User file importieren</h2>
                     <p>
                         <a class="btn btn-danger" href="{{ path('admin_upload_data') }}">File upload</a>
