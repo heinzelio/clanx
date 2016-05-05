@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -191,5 +192,88 @@ class DepartmentController extends Controller
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    /**
+     * Send an email to all volunteers of a department.
+     *
+     * @Route("/{id}/mail/volunteers", name="department_mail_volunteers")
+     * @Method({"GET","POST"})
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function mailVolunteersAction(Request $request, Department $department)
+    {
+        $user = $this->getUser();
+        if( !$this->isGranted('ROLE_ADMIN')
+            && $user != $department->getChiefUser()
+            && $user != $department->getDeputyUser())
+        {
+            $this->redirectToRoute('department_show',array(
+                'id'=> $department->getId(),
+                'event_id' => $department->getEvent()->getId()
+            ));
+        }
+
+        $mailForm = $this->createForm('AppBundle\Form\DepartmentMailType', $department);
+        $mailForm->handleRequest($request);
+
+        if ($mailForm->isSubmitted() && $mailForm->isValid())
+        {
+
+            $text = $mailForm->get('text')->getData();
+            $subject = $mailForm->get('subject')->getData();
+            $message = \Swift_Message::newInstance();
+            $message->setSubject($subject)
+                ->setFrom($user->getEmail())
+                ->addPart(
+                    $text,
+                    'text/plain'
+                );
+
+            $em = $this->getDoctrine()->getManager();
+            $commitmentsRep = $em->getRepository('AppBundle:Commitment');
+            $commitments=$commitmentsRep->findByDepartment($department);
+            $doSend=false;
+
+            foreach ($commitments as $cmnt) {
+                $doSend=true;
+                $usr=$cmnt->getUser();
+                //$message->addBcc($usr->getEmail()); for DEBUG only
+                $message->addCc($usr->getEmail());
+            }
+
+            if($doSend){
+                $mailer = $this->get('mailer');
+                $numSent = $mailer->send($message);
+                $flashbag = $request->getSession()->getFlashBag();
+                $flashbag->add('success', $numSent.' EMails verschickt.');
+            }else {
+                $flashbag = $request->getSession()->getFlashBag();
+                $flashbag->add('warning', 'Keine Email geschick.');
+            }
+
+            return $this->redirectToRoute('department_show',array(
+                'id'=> $department->getId(),
+                'event_id' => $department->getEvent()->getId()
+            ));
+        }
+
+        // only on unsubmitted forms:
+        $mailForm->get('subject')->setData(
+                $department->getEvent()->getName()
+                ." - ".$department->getName()
+                . " - Hölferinfo");
+        $url = $this->generateUrl('department_show',
+                                    array('id' => $department->getId(),
+                                    'event_id' => $department->getEvent()->getId()
+                                ),
+                                    UrlGeneratorInterface::ABSOLUTE_URL
+                                );
+        $mailForm->get('text')->setData($url);
+        return $this->render('department\mail_volunteers.html.twig', array(
+            'department' => $department,
+            'event' => $department->getEvent(),
+            'mail_form' => $mailForm->createView(),
+        ));
     }
 }

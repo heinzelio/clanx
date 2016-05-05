@@ -380,7 +380,8 @@ class EventController extends Controller
         $mailForm = $this->createForm('AppBundle\Form\EventMailType', $event);
         $mailForm->handleRequest($request);
 
-        if ($mailForm->isSubmitted() && $mailForm->isValid()) {
+        if ($mailForm->isSubmitted() && $mailForm->isValid())
+        {
 
             $text = $mailForm->get('text')->getData();
             $subject = $mailForm->get('subject')->getData();
@@ -399,7 +400,7 @@ class EventController extends Controller
             foreach ($commitments as $cmnt) {
                 $doSend=true;
                 $usr=$cmnt->getUser();
-                $message->setBcc($usr->getEmail());
+                $message->addBcc($usr->getEmail());
             }
 
             if($doSend){

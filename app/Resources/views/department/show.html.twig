@@ -65,6 +65,12 @@ Ressort: {{ department.name }}
         </table>
     </div><!-- body -->
     <div class="panel-footer">
+        <a class="btn btn-default"
+            href="{{ path('department_mail_volunteers', {
+            'id':department.id
+            }) }}">
+            EMail an alle
+        </a>
     </div><!-- footer -->
 </div><!-- panel -->
 </div><!-- col -->
