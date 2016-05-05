@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Entity\Department;
 use AppBundle\Entity\Event;
+use AppBundle\Entity\User;
 use AppBundle\Form\DepartmentType;
 
 /**
@@ -98,6 +99,13 @@ class DepartmentController extends Controller
 
         $user = $this->getUser(); // NOPE!!!
 
+        $userRepo = $em->getRepository('AppBundle:User');
+        $commitments = $commRepo->findByDepartment($department);
+        $volunteers = array();
+        foreach ($commitments as $cmt) {
+            array_push($volunteers,$cmt->getUser());
+        }
+
         $mayDelete = $this->isGranted('ROLE_ADMIN');
         $mayDelete = $mayDelete && $countShift == 0;
         $mayDelete = $mayDelete && $countCommitment == 0;
@@ -107,6 +115,7 @@ class DepartmentController extends Controller
             'event' => $event,
             'mayDelete' => $mayDelete,
             'delete_form' => $deleteForm->createView(),
+            'volunteers' => $volunteers,
         ));
     }
 

@@ -6,31 +6,31 @@ Ressort: {{ department.name }}
 
 {% block workspace %}
 <div class="row">
-<div class="col-md-12">
+<div class="col-md-6">
 <div class="panel panel-default">
     <div class="panel-heading">
         Ressort: {{ department.name }} ({{ event.name }})
     </div>
     <div class="panel-body">
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Name</th>
-                <td>{{ department.name }}</td>
-            </tr>
-            <tr>
-                <th>Requirement</th>
-                <td>{{ department.requirement }}</td>
-            </tr>
-            {% if is_granted('ROLE_SUPER_ADMIN')%}
-            <tr>
-                <th>Id</th>
-                <td>{{ department.id }}</td>
-            </tr>
-            {% endif %}
-        </tbody>
-    </table>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Name</th>
+                    <td>{{ department.name }}</td>
+                </tr>
+                <tr>
+                    <th>Requirement</th>
+                    <td>{{ department.requirement }}</td>
+                </tr>
+                {% if is_granted('ROLE_SUPER_ADMIN')%}
+                <tr>
+                    <th>Id</th>
+                    <td>{{ department.id }}</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
     <div class="panel-footer">
         <a class="btn btn-default" type="button"
             href="{{ path('event_show',{'id':event.id}) }}">Zurück zum Event.</a>
@@ -43,5 +43,30 @@ Ressort: {{ department.name }}
                 <input class="btn btn-danger" type="submit" value="Löschen"></input>
             {{ form_end(delete_form) }}
         {% endif %}
-    </div>
+    </div><!-- footer -->
+</div><!-- panel -->
+</div><!-- col -->
+<div class="col-md-6">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Hölfer
+    </div><!-- heading -->
+    <div class="panel-body">
+        <table clasS="table">
+        {% for vol in volunteers %}
+            <tbody>
+                <tr>
+                    <td>
+                        {{ vol.username }}
+                    </td>
+                </tr>
+            </tbod>
+        {% endfor %}
+        </table>
+    </div><!-- body -->
+    <div class="panel-footer">
+    </div><!-- footer -->
+</div><!-- panel -->
+</div><!-- col -->
+</div><!-- row -->
 {% endblock %}
