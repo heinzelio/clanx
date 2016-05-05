@@ -88,27 +88,56 @@
     <div class="panel-heading">Du bist als Hölfer eingetragen.</div>
     <div class="panel-body">
         <p> Dein Ressort:
-            <mark>{{commitment.department.name}}</mark>
+            <a class="btn btn-default"
+                href="{{ path('department_show',{
+                'id':commitment.department.id,'event_id':event.id
+                }) }}">
+                {{commitment.department.name}}
+            </a>
+        </p>
             {% if commitment.department.chiefUser %}
-                <a href="{{ path('event_redirect_mail_to',{
+            <p>
+                Ressortleiter:
+                <a class="btn btn-default"
+                    href="{{ path('event_redirect_mail_to',{
                             'id':event.id,
                             'user_id':commitment.department.chiefUser.id})
                         }}">
+                    <span class="glyphicon glyphicon-envelope"></span>
                     {{commitment.department.chiefUser.forename}}
                     {{commitment.department.chiefUser.surname}}
-                    <span class="glyphicon glyphicon-envelope"></span>
+
                 </a>
+            </p>
             {% endif %}
-        </p>
+
+            {% if commitment.department.deputyUser %}
+            <p>
+                Stellvertretender Leiter:
+                <a class="btn btn-default"
+                    href="{{ path('event_redirect_mail_to',{
+                            'id':event.id,
+                            'user_id':commitment.department.deputyUser.id})
+                        }}">
+                    <span class="glyphicon glyphicon-envelope"></span>
+                    {{commitment.department.deputyUser.forename}}
+                    {{commitment.department.deputyUser.surname}}
+
+                </a>
+            </p>
+            {% endif %}
         <p> Deine früheste Startzeit:
             <mark>{{commitment.possibleStart|date('d.m.y h:i')}}</mark>
         </p>
         <p> Deine Tshirt Grösse:
             <mark>{{commitment.shirtSize}}</mark>
         </p>
-        <p> Deine Bemerkung / Wunsch:
-            <mark>{{commitment.remark}}</mark>
-        </p>
+        {% if commitment.remark %}
+            <p> Deine Bemerkung / Wunsch:
+                <mark>{{commitment.remark}}</mark>
+            </p>
+        {% endif %}
+
     </div>
     <div class="panel-footer">
         {% if mayEditCommitment %}
