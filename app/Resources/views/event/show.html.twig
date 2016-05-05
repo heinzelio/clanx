@@ -5,21 +5,15 @@
 {% block workspace %}
 
 <div class="row">
-<div class="col-md-12">
+<div class="col-md-6">
 
     <div class="panel panel-primary">
     <div class="panel-heading">{{event.name}}</div>
     <div class="panel-body">
-        <ul>
             <p> Der Event <strong>{{ event.name }}</strong> findet am
                 {% if event.date %}{{ event.date|date('d. M. Y') }}{% endif %}
                 statt.</p>
             <p>Bis jetzt eingetragene Hölfer: {{ enrolledCount }}</p>
-            {% if isEnrolled %}
-            <p>
-                <button type="button" class="btn btn-success">Du bist als Hölfer eingetragen!</button>
-            </p>
-            {% endif %}
 
             {% if myDepartmentsAsChief %}
             <p>Du bist Ressortleiter:
@@ -48,20 +42,6 @@
                 </ul>
             </p>
             {% endif %}
-
-            {% if mayEnroll %}
-            <div class="panel panel-danger">
-            <div class="panel-heading">Jetzt als Hölfer eintragen</div>
-            <div class="panel-body">
-                {# find details of this form in EventController.createEnrollForm() #}
-                {{ form_start(enroll_form) }}
-                    {{form_widget(enroll_form) }}
-                    {#submit button is being generated in the controller.#}
-                {{ form_end(enroll_form) }}
-            </div>
-            </div> <!--panel-->
-            {% endif %}
-        </ul>
     </div>
     <div class="panel-footer">
 
@@ -88,6 +68,57 @@
         {% endif %}
 
     </div><!-- footer -->
-</div>
-</div>
+    </div> <!-- panel -->
+</div> <!-- col -->
+<div class="col-md-6">
+    {% if mayEnroll %}
+        <div class="panel panel-danger">
+        <div class="panel-heading">Jetzt als Hölfer eintragen</div>
+        <div class="panel-body">
+            {# find details of this form in EventController.createEnrollForm() #}
+            {{ form_start(enroll_form) }}
+                {{form_widget(enroll_form) }}
+                {#submit button is being generated in the controller.#}
+            {{ form_end(enroll_form) }}
+        </div>
+        </div> <!--panel-->
+    {% endif %}
+    {% if commitment %}
+    <div class="panel panel-success">
+    <div class="panel-heading">Du bist als Hölfer eingetragen.</div>
+    <div class="panel-body">
+        <p> Dein Ressort:
+            <mark>{{commitment.department.name}}</mark>
+            {% if commitment.department.chiefUser %}
+                <a href="{{ path('event_redirect_mail_to',{
+                            'id':event.id,
+                            'user_id':commitment.department.chiefUser.id})
+                        }}">
+                    {{commitment.department.chiefUser.forename}}
+                    {{commitment.department.chiefUser.surname}}
+                    <span class="glyphicon glyphicon-envelope"></span>
+                </a>
+            {% endif %}
+        </p>
+        <p> Deine früheste Startzeit:
+            <mark>{{commitment.possibleStart|date('d.m.y h:i')}}</mark>
+        </p>
+        <p> Deine Tshirt Grösse:
+            <mark>{{commitment.shirtSize}}</mark>
+        </p>
+        <p> Deine Bemerkung / Wunsch:
+            <mark>{{commitment.remark}}</mark>
+        </p>
+    </div>
+    <div class="panel-footer">
+        {% if mayEditCommitment %}
+        <a class="btn btn-default" >
+            <span class="glyphicon glyphicon-pencil"></span>
+            Bearbeiten (TODO)</a>
+        {% endif %}
+    </div><!-- footer -->
+    </div> <!--panel-->
+    {% endif %}
+</div> <!-- col -->
+</div> <!-- row -->
 {% endblock %}

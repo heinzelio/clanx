@@ -13,9 +13,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Commitment;
 use AppBundle\Entity\Department;
+use AppBundle\Entity\User;
 use AppBundle\Form\EventCreateType;
 use AppBundle\Form\ShirtSizeType;
 
@@ -112,7 +114,7 @@ class EventController extends Controller
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
-    public function showAction(Event $event)
+    public function showAction(Request $request, Event $event)
     {
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
@@ -138,9 +140,16 @@ class EventController extends Controller
 
         $enrolledCount = $commitments->countFor($event);
 
-        $isEnrolled = $commitments->existsFor( $user ,$event);
+        $commitment = $commitments->findOneBy(array(
+            'user' => $user,
+            'event' => $event,
+        ));
 
-        $mayEnroll = !$isEnrolled && $event->enrollmentPossible();
+        $mayEnroll = !$commitment && $event->enrollmentPossible();
+
+        $interval = new \DateInterval('P2W');
+        // if event is further than 2 weeks from now, a user my change his commitment.
+        $mayEditCommitment = (new \DateTime() < $event->getDate()->add($interval));
 
         $mayMail = $this->isGranted('ROLE_ADMIN');
 
@@ -153,7 +162,8 @@ class EventController extends Controller
             'enroll_form' => $enrollForm->createView(),
             'mayEnroll' => $mayEnroll,
             'enrolledCount' => $enrolledCount,
-            'isEnrolled' => $isEnrolled,
+            'commitment' => $commitment,
+            'mayEditCommitment' => $mayEditCommitment,
             'mayMail' => $mayMail,
             'mayEdit' => $mayEdit,
             'mayDelete' => $mayDelete,
@@ -352,7 +362,6 @@ class EventController extends Controller
                 ),
                 'text/plain'
             )
-
         ;
         $this->get('mailer')->send($message);
     }
@@ -419,5 +428,30 @@ class EventController extends Controller
             'event' => $event,
             'mail_form' => $mailForm->createView(),
         ));
+    }
+
+    /**
+     * Prepares session variables and redirects to the MailToController
+     *
+     * @Route("/{id}/redirect/mail/to/{user_id}", name="event_redirect_mail_to")
+     * @Method("GET")
+     * @ParamConverter("user", class="AppBundle:User", options={"id" = "user_id"})
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function redirectMailToAction(Request $request, Event $event, User $user)
+    {
+        // just in case somone clicks on the "mailTo" button of the
+        // chief-of-department or deputy-of-department:
+        $session = $request->getSession();
+        $session->set('mail_subject', 'Frage betreffend '.$event->getName());
+        $url = $this->generateUrl('event_show',
+                                    array('id' => $event->getId()),
+                                    UrlGeneratorInterface::ABSOLUTE_URL
+                                );
+        $session->set('redirect_url', $url);
+
+        return $this->redirectToRoute('mail_to', array(
+            'id' => $user->getID())
+        );
     }
 }
