@@ -1,0 +1,35 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block workspace %}
+<div class="row">
+<div class="col-md-4">
+<div class="panel panel-default">
+    <div class="panel-heading">
+    Verschiebe <mark>{{ user.forename }} {{ user.surname }}</mark>
+    </div>
+    {{ form_start(move_form) }}
+    <div class="panel-body">
+    Verschiebe den Hölfer aus dem Ressort <mark>{{ department.name }}</mark>
+    in folgendes Ressort:
+
+        {{ form_widget(move_form) }}
+    </div>
+    <div class="panel-footer">
+            <!--TODO: the identifier "form" may change later.
+            find out how we can get this identifier by code -->
+        <a onclick="form.submit();"
+            class="btn btn-primary">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            Speichern
+        </a>
+        <a class="btn btn-default"
+            href="{{ path('department_show',{'id':department.id,'event_id':department.event.id}) }}">
+            <span class="glyphicon glyphicon-remove"></span>
+            Abbrechen
+        </a>
+    </div>
+    {{ form_end(move_form) }}
+</div>
+</div>
+</div>
+{% endblock %}

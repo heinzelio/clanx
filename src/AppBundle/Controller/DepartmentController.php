@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -275,5 +276,92 @@ class DepartmentController extends Controller
             'event' => $department->getEvent(),
             'mail_form' => $mailForm->createView(),
         ));
+    }
+
+
+    /**
+     * Deletes a Department entity.
+     *
+     * @Route("/{id}/move/volunteer/{user_id}", name="department_move_volunteer")
+     * @Method({"GET", "POST"})
+     * @Security("has_role('ROLE_USER')")
+     * @ParamConverter("user", class="AppBundle:User", options={"id" = "user_id"})
+     */
+    public function moveVolunteerAction(Request $request, Department $department, User $user)
+    {
+        if(!$this->isGranted('ROLE_ADMIN'))
+        {
+            $chiefUser= $department->getChiefUser();
+            $thisUser=$this->getUser();
+            if ($thisUser->getId()!=$chiefUser->getId())
+            {
+                $this->get('session')->getFlashBag()
+                    ->add('warning', "Du musst Admin oder Ressortleiter sein, um Hölfer verschieben zu können.");
+                return $this->redirectToRoute('department_show',array(
+                    'id'=>$department->getId(),
+                    'event_id'=>$department->getEvent()->getId()
+                ));
+            }
+        }
+
+        $form = $this->createMoveVolunteerForm($department,$user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $cmtRepo = $em->getRepository('AppBundle:Commitment');
+            $cmt = $cmtRepo->findOneBy(array(
+                'department'=>$department,
+                'user'=>$user
+            ));
+            $targetDptId = $form->get('department')->getData();
+            $targetDpt = $em->getRepository('AppBundle:Department')->findOneById($targetDptId);
+            $cmt->setDepartment($targetDpt);
+            $em->persist($cmt);
+            $em->flush();
+            $this->get('session')->getFlashBag()
+            ->add('success',
+                'Hölfer wurde verschoben nach '
+                .$cmt->getDepartment()->getName());
+
+            return $this->redirectToRoute('department_show',array(
+                'id'=>$department->getId(),
+                'event_id'=>$department->getEvent()->getId()
+            ));
+        }
+
+        return $this->render('department/move_volunteer.html.twig',array(
+            'department'=>$department,
+            'user'=>$user,
+            'move_form' => $form->createView(),
+        ));
+    }
+
+    private function createMoveVolunteerForm(Department $department, User $user)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $allDepartments = $em->getRepository('AppBundle:Department')->findByEvent($department->getEvent());
+
+        $choices = array();
+        foreach ($allDepartments as $dpt)
+        {
+            if($dpt->getId() != $department->getId())
+            {
+                $choices[$dpt->getName()] = $dpt->getID();
+            }
+        }
+
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('department_move_volunteer', array(
+                'id' => $department->getId(),
+                'user_id'=>$user->getId())
+            ))
+            ->add('department', ChoiceType::class, array(
+                'label' => '',
+                'choices'  => $choices
+            ))
+            ->setMethod('POST')
+            ->getForm()
+        ;
     }
 }

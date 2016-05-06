@@ -11,26 +11,24 @@ Ressort: {{ department.name }}
     <div class="panel-heading">
         Ressort: {{ department.name }} ({{ event.name }})
     </div>
-    <div class="panel-body">
-        <table class="table">
-            <tbody>
-                <tr>
-                    <th>Name</th>
-                    <td>{{ department.name }}</td>
-                </tr>
-                <tr>
-                    <th>Requirement</th>
-                    <td>{{ department.requirement }}</td>
-                </tr>
-                {% if is_granted('ROLE_SUPER_ADMIN')%}
-                <tr>
-                    <th>Id</th>
-                    <td>{{ department.id }}</td>
-                </tr>
-                {% endif %}
-            </tbody>
-        </table>
-    </div>
+    <table class="table"><!-- table instead of body -->
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <td>{{ department.name }}</td>
+            </tr>
+            <tr>
+                <th>Requirement</th>
+                <td>{{ department.requirement }}</td>
+            </tr>
+            {% if is_granted('ROLE_SUPER_ADMIN')%}
+            <tr>
+                <th>Id</th>
+                <td>{{ department.id }}</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table><!-- table instead of body -->
     <div class="panel-footer">
         <a class="btn btn-default" type="button"
             href="{{ path('event_show',{'id':event.id}) }}">Zurück zum Event.</a>
@@ -51,19 +49,24 @@ Ressort: {{ department.name }}
     <div class="panel-heading">
         Hölfer
     </div><!-- heading -->
-    <div class="panel-body">
-        <table clasS="table">
-        {% for vol in volunteers %}
-            <tbody>
-                <tr>
-                    <td>
-                        {{ vol.username }}
-                    </td>
-                </tr>
-            </tbod>
-        {% endfor %}
-        </table>
-    </div><!-- body -->
+    <table clasS="table"> <!-- table instead of body -->
+    {% for vol in volunteers %}
+        <tbody>
+            <tr>
+                <td>
+                    {{ vol.username }}
+                </td>
+                <td>
+                    <a class="btn btn-default"
+                        href="{{path('department_move_volunteer',{'id':department.id,'user_id':vol.id})}}">
+                        <span class="glyphicon glyphicon-new-window"></span>
+                        Verschieben
+                    </a>
+                </td>
+            </tr>
+        </tbod>
+    {% endfor %}
+    </table> <!-- table instead of body -->
     <div class="panel-footer">
         <a class="btn btn-default"
             href="{{ path('department_mail_volunteers', {
