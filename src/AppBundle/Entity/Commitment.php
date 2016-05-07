@@ -72,6 +72,12 @@ class Commitment
     */
     private $shirtSize;
 
+    /**
+     * @var boolean
+    * @ORM\Column(name="need_train_ticket", type="boolean", nullable=false)
+    */
+    private $needTrainTicket;
+
 
     /**
      * Get id
@@ -216,5 +222,25 @@ class Commitment
     public function getShirtSize()
     {
         return $this->shirtSize;
+    }
+
+    /**
+    * Set value if the user needs a train ticket
+    * @param boolean $needTrainTicket
+    * @return Commitment
+    */
+    public function setNeedTrainTicket($needTrainTicket)
+    {
+        $this->needTrainTicket=$needTrainTicket;
+        return $this;
+    }
+
+    /**
+    * Get value if the user needs a train ticket
+    * @return boolean
+    */
+    public function getNeedTrainTicket()
+    {
+        return $this->needTrainTicket;
     }
 }

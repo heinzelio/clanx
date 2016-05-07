@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -261,13 +262,17 @@ class EventController extends Controller
             ->add('possibleStart', DateTimeType::class,array(
                 'date_widget' => 'single_text',
                 'time_widget' => 'single_text',
+                'required' => false,
                 //'html5' => true,
                 //'input' => 'array',
                 'label' => 'früheste Startzeit',
-                'data' => $event->getDate()
             ))
             ->add('shirtSize',ShirtSizeType::class,array(
                 'label' => 'TShirt Grösse',
+            ))
+            ->add('needTrainTicket', CheckboxType::class, array(
+                'label' => 'Ich brauche ein Zugbillet',
+                'attr' => array('checked'=>false),
             ))
             ->add('remark', TextareaType::class, array(
                 'label' => "Bemerkung / Wunsch",
@@ -306,6 +311,7 @@ class EventController extends Controller
             $startDate = $form->get('possibleStart')->getData();
             $possStartFormItem = $form->get('possibleStart');
             $shirtSize = $form->get('shirtSize')->getData();
+            $needTrainTicket = $form->get('needTrainTicket')->getData();
             $dep = $depRep->findOneById($depId);
             $user = $this->getUser();
             $c = new Commitment();
@@ -314,6 +320,7 @@ class EventController extends Controller
             $c->setDepartment($dep);
             $c->setPossibleStart($startDate);
             $c->setShirtSize($shirtSize);
+            $c->setNeedTrainTicket($needTrainTicket);
             $c->setRemark($form->get('remark')->getData());
             $session = $request->getSession();
             try{
