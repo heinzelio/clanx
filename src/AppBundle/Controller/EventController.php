@@ -19,6 +19,8 @@ use AppBundle\Entity\Event;
 use AppBundle\Entity\Commitment;
 use AppBundle\Entity\Department;
 use AppBundle\Entity\User;
+use AppBundle\Entity\RedirectInfo;
+use AppBundle\Entity\Mail;
 use AppBundle\Form\EventCreateType;
 use AppBundle\Form\ShirtSizeType;
 
@@ -384,58 +386,36 @@ class EventController extends Controller
      */
     public function mailEnrolledAction(Request $request, Event $event)
     {
-        $mailForm = $this->createForm('AppBundle\Form\EventMailType', $event);
-        $mailForm->handleRequest($request);
+        $session = $request->getSession();
+        $em = $this->getDoctrine()->getManager();
 
-        if ($mailForm->isSubmitted() && $mailForm->isValid())
-        {
+        $mail = new Mail();
+        $eventUrl = $this->generateUrl('event_show',
+                                 array('id' => $event->getId()),
+                                 UrlGeneratorInterface::ABSOLUTE_URL
+                             );
 
-            $text = $mailForm->get('text')->getData();
-            $subject = $mailForm->get('subject')->getData();
-            $message = \Swift_Message::newInstance();
-            $message->setSubject($subject)
-                ->setFrom('noreply@clanx.com')
-                ->addPart(
-                    $text,
-                    'text/plain'
-                );
+        $mail->setSubject($event->getName() . " Hölferinfo")
+             ->setSender($this->getUser()->getEmail())
+             ->setText('Link: '.$eventUrl)
+             ;
 
-            $em = $this->getDoctrine()->getManager();
-            $commitmentsRep = $em->getRepository('AppBundle:Commitment');
-            $commitments=$commitmentsRep->findByEvent($event);
-            $doSend=false;
-            foreach ($commitments as $cmnt) {
-                $doSend=true;
-                $usr=$cmnt->getUser();
-                $message->addBcc($usr->getEmail());
-            }
-
-            if($doSend){
-                $mailer = $this->get('mailer');
-                $numSent = $mailer->send($message);
-                $flashbag = $request->getSession()->getFlashBag();
-                $flashbag->add('success', $numSent.' EMails verschickt.');
-            }else {
-                $flashbag = $request->getSession()->getFlashBag();
-                $flashbag->add('warning', 'Keine Email geschick.');
-            }
-
-
-
-            return $this->redirectToRoute('event_show', array('id' => $event->getId()));
+        $commitmentsRep = $em->getRepository('AppBundle:Commitment');
+        $commitments=$commitmentsRep->findByEvent($event);
+        foreach ($commitments as $cmnt) {
+            $mail->addBcc($cmnt->getUser()->getEmail());
         }
 
-        // only on unsubmitted forms:
-        $mailForm->get('subject')->setData($event->getName() . " Hölferinfo");
-        $url = $this->generateUrl('event_show',
-                                    array('id' => $event->getId()),
-                                    UrlGeneratorInterface::ABSOLUTE_URL
-                                );
-        $mailForm->get('text')->setData($url);
-        return $this->render('event/mail_enrolled.html.twig', array(
-            'event' => $event,
-            'mail_form' => $mailForm->createView(),
-        ));
+        $session->set(Mail::SESSION_KEY, $mail);
+
+        $backLink = new RedirectInfo();
+        $backLink->setRouteName('event_show')
+                 ->setArguments(array('id'=>$event->getId()))
+                 ;
+
+        $session->set(RedirectInfo::SESSION_KEY, $backLink);
+
+        return $this->redirectToRoute('mail_edit');
     }
 
     /**
@@ -443,23 +423,27 @@ class EventController extends Controller
      *
      * @Route("/{id}/redirect/mail/to/{user_id}", name="event_redirect_mail_to")
      * @Method("GET")
-     * @ParamConverter("user", class="AppBundle:User", options={"id" = "user_id"})
+     * @ParamConverter("recipient", class="AppBundle:User", options={"id" = "user_id"})
      * @Security("has_role('ROLE_USER')")
      */
-    public function redirectMailToAction(Request $request, Event $event, User $user)
+    public function redirectMailToAction(Request $request, Event $event, User $recipient)
     {
         // just in case somone clicks on the "mailTo" button of the
         // chief-of-department or deputy-of-department:
         $session = $request->getSession();
-        $session->set('mail_subject', 'Frage betreffend '.$event->getName());
-        $url = $this->generateUrl('event_show',
-                                    array('id' => $event->getId()),
-                                    UrlGeneratorInterface::ABSOLUTE_URL
-                                );
-        $session->set('redirect_url', $url);
 
-        return $this->redirectToRoute('mail_to', array(
-            'id' => $user->getID())
-        );
+        $backLink = new RedirectInfo();
+        $backLink->setRouteName('event_show')
+                 ->setArguments(array('id'=>$event->getId()));
+        $session->set(RedirectInfo::SESSION_KEY,$backLink);
+
+        $mail = new Mail();
+        $mail->setSubject('Frage betreffend '.$event->getName())
+             ->setRecipient($recipient->getEmail())
+             ->setSender($this->getUseR()->getEmail());
+
+        $session->set(Mail::SESSION_KEY, $mail);
+
+        return $this->redirectToRoute('mail_edit');
     }
 }

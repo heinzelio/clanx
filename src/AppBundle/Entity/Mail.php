@@ -7,6 +7,8 @@ namespace AppBundle\Entity;
  */
 class Mail
 {
+    const SESSION_KEY = 'MailData';
+
     private $subject;
     private $text;
     private $sender;

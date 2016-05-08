@@ -10,6 +10,8 @@ namespace AppBundle\Entity;
  */
 class RedirectInfo
 {
+    const SESSION_KEY = 'RedirectInfo';
+
     private $routeName;
     private $arguments;
 
