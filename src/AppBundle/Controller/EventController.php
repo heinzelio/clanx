@@ -439,7 +439,7 @@ class EventController extends Controller
     }
 
     /**
-     * Prepares session variables and redirects to the MailToController
+     * Prepares session variables and redirects to the MailController
      *
      * @Route("/{id}/redirect/mail/to/{user_id}", name="event_redirect_mail_to")
      * @Method("GET")

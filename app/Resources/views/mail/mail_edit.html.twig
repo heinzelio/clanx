@@ -1,0 +1,59 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %} Send Mail
+{% endblock %}
+
+{% block workspace %}
+
+<div class="row">
+<div class="col-md-6">
+    <div class="panel panel-primary">
+        <div class="panel-heading">Mail schreiben
+        </div> <!-- heading -->
+
+        {{ form_start(mail_form, {'action': path('mail_send'), 'method': 'POST'}) }}
+
+        <div class="panel-body">
+            {{form_widget(mail_form) }}
+        </div><!-- body -->
+        <div class="panel-footer">
+            <!--TODO: the identifier "mail2" may change later.
+                    find out how we can get this identifier by code -->
+            <a class="btn btn-primary"
+                onclick="mail2.submit();">
+                <span class="glyphicon glyphicon-envelope"></span>
+                Senden
+            </a>
+            <a class="btn btn-default"
+                href="{{ path('mail_abort') }}">
+                <span class="glyphicon glyphicon-remove"></span>
+                Abbrechen
+            </a>
+        </div> <!-- footer -->
+        {{ form_end(mail_form)}}
+    </div>
+
+</div><!-- col -->
+<div class="col-md-6">
+    <div class="panel panel-primary">
+        <div class="panel-body">
+            <p>Sende an {{mail.recipient}}</p>
+            <p>Als {{mail.sender}}
+            <p>CC:</p>
+            <ul>
+                {% for adr,name in mail.ccs %}
+                <li>{{ name }}&lt; {{adr}} &gt;</li>
+                {% endfor %}
+            </ul>
+            <p>BCC:</p>
+            <ul>
+                {% for adr,name in mail.bccs %}
+                <li>{{ name }}&lt; {{adr}} &gt;</li>
+                {% endfor %}
+            </ul>
+        </div><!-- body -->
+    </div><!-- panel -->
+</div><!-- col -->
+</div><!-- row -->
+
+{% endblock %}
