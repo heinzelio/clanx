@@ -7,7 +7,7 @@ Ressort: {{ department.name }}
 {% block workspace %}
 <div class="row">
 <div class="col-md-6">
-<div class="panel panel-default">
+<div class="panel panel-primary">
     <div class="panel-heading">
         Ressort: {{ department.name }} ({{ event.name }})
     </div>
@@ -30,12 +30,16 @@ Ressort: {{ department.name }}
         </tbody>
     </table><!-- table instead of body -->
     <div class="panel-footer">
-        <a class="btn btn-default" type="button"
-            href="{{ path('event_show',{'id':event.id}) }}">Zurück zum Event.</a>
         {% if is_granted('ROLE_ADMIN') %}
-        <a class="btn btn-default" type="button"
-            href="{{ path('department_edit', { 'id': department.id ,'event_id':event.id}) }}">Bearbeiten</a>
+        <a class="btn btn-primary" type="button"
+            href="{{ path('department_edit', { 'id': department.id ,'event_id':event.id}) }}">
+            <span class="glyphicon glyphicon-pencil"></span>
+            Bearbeiten</a>
         {% endif %}
+        <a class="btn btn-default" type="button"
+            href="{{ path('event_show',{'id':event.id}) }}">
+            <span class="glyphicon glyphicon-remove"></span>
+            Zurück zum Event.</a>
         {% if mayDelete %}
             {{ form_start(delete_form) }}
                 <input class="btn btn-danger" type="submit" value="Löschen"></input>
@@ -72,6 +76,7 @@ Ressort: {{ department.name }}
             href="{{ path('department_mail_volunteers', {
             'id':department.id
             }) }}">
+            <span class="glyphicon glyphicon-envelope"></span>
             EMail an alle
         </a>
     </div><!-- footer -->

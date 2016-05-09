@@ -13,6 +13,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Entity\Department;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Mail;
+use AppBundle\Entity\RedirectInfo;
 use AppBundle\Form\DepartmentType;
 
 /**
@@ -214,6 +216,42 @@ class DepartmentController extends Controller
                 'event_id' => $department->getEvent()->getId()
             ));
         }
+
+        $mailData = new Mail();
+        $mailData->setSender($user->getEmail());
+
+        $em = $this->getDoctrine()->getManager();
+        $commitmentsRep = $em->getRepository('AppBundle:Commitment');
+        $commitments=$commitmentsRep->findByDepartment($department);
+        foreach ($commitments as $cmnt)
+        {
+            $usr=$cmnt->getUser();
+            $mailData->addBcc($usr->getEmail(),$usr->getFullname());
+        }
+        $mailData->setSubject(
+                $department->getEvent()->getName()
+                ." - ".$department->getName()
+                . " - Hölferinfo");
+        $url = $this->generateUrl('department_show',
+                                    array('id' => $department->getId(),
+                                    'event_id' => $department->getEvent()->getId()
+                                ),
+                                    UrlGeneratorInterface::ABSOLUTE_URL
+                                );
+        $mailData->setText('Link: '.$url);
+
+        $redirectInfo = new RedirectInfo();
+        $redirectInfo->setRouteName('department_show');
+        $redirectInfo->setArguments(array(
+            'id' => $department->getId(),
+            'event_id' => $department->getEvent()->getId()
+        ));
+
+        $session = $request->getSession();
+        $session->set(Mail::SESSION_KEY,$mailData);
+        $session->set(RedirectInfo::SESSION_KEY,$redirectInfo);
+
+        return $this->redirectToRoute('mail_edit');
 
         $mailForm = $this->createForm('AppBundle\Form\DepartmentMailType', $department);
         $mailForm->handleRequest($request);

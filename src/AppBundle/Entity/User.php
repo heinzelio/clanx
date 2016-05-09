@@ -129,6 +129,11 @@ class User extends BaseUser
         return $this->surname;
     }
 
+    public function getFullname()
+    {
+        return $this->forename." ".$this->surname;
+    }
+
     /**
      * Set gender
      * @param string $gender
