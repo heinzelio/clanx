@@ -6,7 +6,7 @@
 {% block workspace %}
 
 <div class="row">
-<div class="col-md-6">
+<div class="col-md-7">
     <div class="panel panel-primary">
         <div class="panel-heading">Mail schreiben
         </div> <!-- heading -->
@@ -34,23 +34,37 @@
     </div>
 
 </div><!-- col -->
-<div class="col-md-6">
-    <div class="panel panel-primary">
+<div class="col-md-5">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Metadata
+        </div>
         <div class="panel-body">
-            <p>Sende an {{mail.recipient}}</p>
-            <p>Als {{mail.sender}}
-            <p>CC:</p>
-            <ul>
-                {% for adr,name in mail.ccs %}
-                <li>{{ name }}&lt; {{adr}} &gt;</li>
-                {% endfor %}
-            </ul>
-            <p>BCC:</p>
-            <ul>
-                {% for adr,name in mail.bccs %}
-                <li>{{ name }}&lt; {{adr}} &gt;</li>
-                {% endfor %}
-            </ul>
+            {% if mail.recipient %}
+                <p><strong>Emfänger:</strong> <mark>{{mail.recipient}}</mark></p>
+            {% endif %}
+
+            {% if mail.sender %}
+                <p><strong>Sender:</strong> <mark>{{mail.sender}}</mark>
+            {% endif %}
+            {% if mail.ccs %}
+                <p><strong>CC:</strong></p>
+                <ul>
+                    {% for adr,name in mail.ccs %}
+                    <li>{{ name }} &lt;{{adr}}&gt;</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if mail.bccs %}
+                <p><strong>BCC:</strong></p>
+                <ul>
+                    {% for adr,name in mail.bccs %}
+                    <li>{{ name }} &lt;{{adr}}&gt;</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
         </div><!-- body -->
     </div><!-- panel -->
 </div><!-- col -->

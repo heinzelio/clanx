@@ -389,13 +389,13 @@ class EventController extends Controller
         $session = $request->getSession();
         $em = $this->getDoctrine()->getManager();
 
-        $mail = new Mail();
+        $mailData = new Mail();
         $eventUrl = $this->generateUrl('event_show',
                                  array('id' => $event->getId()),
                                  UrlGeneratorInterface::ABSOLUTE_URL
                              );
 
-        $mail->setSubject($event->getName() . " Hölferinfo")
+        $mailData->setSubject($event->getName() . " Hölferinfo")
              ->setSender($this->getUser()->getEmail())
              ->setText('Link: '.$eventUrl)
              ;
@@ -403,10 +403,13 @@ class EventController extends Controller
         $commitmentsRep = $em->getRepository('AppBundle:Commitment');
         $commitments=$commitmentsRep->findByEvent($event);
         foreach ($commitments as $cmnt) {
-            $mail->addBcc($cmnt->getUser()->getEmail());
+            $usr = $cmnt->getUser();
+            $eml = $usr->getEmail();
+            $nme = $usr->getForename().' '.$usr->getSurname();
+            $mailData->addBcc($eml, $nme);
         }
 
-        $session->set(Mail::SESSION_KEY, $mail);
+        $session->set(Mail::SESSION_KEY, $mailData);
 
         $backLink = new RedirectInfo();
         $backLink->setRouteName('event_show')
@@ -437,12 +440,12 @@ class EventController extends Controller
                  ->setArguments(array('id'=>$event->getId()));
         $session->set(RedirectInfo::SESSION_KEY,$backLink);
 
-        $mail = new Mail();
-        $mail->setSubject('Frage betreffend '.$event->getName())
+        $mailData = new Mail();
+        $mailData->setSubject('Frage betreffend '.$event->getName())
              ->setRecipient($recipient->getEmail())
              ->setSender($this->getUseR()->getEmail());
 
-        $session->set(Mail::SESSION_KEY, $mail);
+        $session->set(Mail::SESSION_KEY, $mailData);
 
         return $this->redirectToRoute('mail_edit');
     }
