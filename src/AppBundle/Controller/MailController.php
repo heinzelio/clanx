@@ -30,22 +30,22 @@ class MailController extends Controller
     public function editAction(Request $request)
     {
         $session = $request->getSession();
-        $mail = $session->get(Mail::SESSION_KEY);
-        if(!$mail)
+        $mailData = $session->get(Mail::SESSION_KEY);
+        if(!$mailData)
         {
-            $mail = new Mail();
-            $mail->setSubject('Betreff')->setText('Text');
+            $mailData = new Mail();
+            $mailData->setSubject('Betreff')->setText('Text');
             $session->set(Mail::SESSION_KEY, $mail);
         }
-        $sender = $mail->getSender();
-        if(!$mail->getSender())
+        $sender = $mailData->getSender();
+        if(!$mailData->getSender())
         {
-            $mail->setSender('noreply@clanx.ch');
+            $mailData->setSender('noreply@clanx.ch');
         }
-        $editForm = $this->createForm('AppBundle\Form\Mail2Type', $mail);
+        $editForm = $this->createForm('AppBundle\Form\Mail2Type', $mailData);
         return $this->render('mail/mail_edit.html.twig',array(
             'mail_form' => $editForm->createView(),
-            'mail' => $mail,
+            'mail' => $mailData,
         ));
     }
 
@@ -59,38 +59,50 @@ class MailController extends Controller
     public function sendAction(Request $request)
     {
         $session = $request->getSession();
-        $mail = $session->remove(Mail::SESSION_KEY);
-        $mailForm = $this->createForm('AppBundle\Form\Mail2Type', $mail);
+        $mailData = $session->remove(Mail::SESSION_KEY);
+        $mailForm = $this->createForm('AppBundle\Form\Mail2Type', $mailData);
         $mailForm->handleRequest($request);
 
         if ($mailForm->isSubmitted() && $mailForm->isValid())
         {
             $message = \Swift_Message::newInstance();
-            $message->setSubject($mail->getSubject())
-                ->setFrom($mail->getSender())
+            $ackMessage = \Swift_Message::newInstance();
+            $message->setSubject($mailData->getSubject())
+                ->setFrom($mailData->getSender())
                 ->addPart(
-                    $mail->getText(),
+                    $mailData->getText(),
                     'text/plain');
 
-            if($mail->getRecipient())
+            if($mailData->getRecipient())
             {
-                $message->setTo($mail->getRecipient());
+                $message->setTo($mailData->getRecipient());
             }
-            if($mail->getCcs())
+            if($mailData->getCcs())
             {
-                foreach ($mail->getCcs() as $adr => $name) {
+                foreach ($mailData->getCcs() as $adr => $name) {
                     $message->addCc($adr);
                 }
             }
-            if($mail->getBccs())
+            if($mailData->getBccs())
             {
-                foreach ($mail->getBccs() as $adr => $name) {
+                foreach ($mailData->getBccs() as $adr => $name) {
                     $message->addBcc($adr);
                 }
             }
 
+            $ackMessage
+                ->setFrom(array('noreply@clanx.ch' => 'Clanx Hölfer DB'))
+                ->setTo($this->getUser()->getEmail())
+                ->setSubject($mailData->getSubject())
+                ->setBody(
+                    $this->renderView('mail/send_mail_ack.html.twig',array(
+                            'Mail' => $mailData,
+                            'Forename' => $this->getUser()->getForename(),
+                    )), 'text/html');
+
             $mailer = $this->get('mailer');
             $numSent = $mailer->send($message);
+            $mailer->send($ackMessage);
 
             if ($numSent)
             {
