@@ -10,15 +10,11 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Id</th>
                     <th>Vorname</th>
                     <th>Nachname</th>
                     <th>Geb.datum</th>
-                    <th>Adresse</th>
-                    <th>PLZ</th>
                     <th>Ort</th>
                     <th>Land</th>
-                    <th>Telefonnummer</th>
                     <th>Beruf / Spezialität</th>
                     <th></th>
                 </tr>
@@ -26,15 +22,11 @@
             <tbody>
             {% for user in users %}
                 <tr>
-                    <td><a href="{{ path('user_show', { 'id': user.id }) }}">{{ user.id }}</a></td>
                     <td>{{ user.forename }}</td>
                     <td>{{ user.surname }}</td>
                     <td>{% if user.dateOfBirth %}{{ user.dateOfBirth|date('d. M. Y') }}{% endif %}</td>
-                    <td>{{ user.street }}</td>
-                    <td>{{ user.zip }}</td>
                     <td>{{ user.city }}</td>
                     <td>{{ user.country }}</td>
-                    <td>{{ user.phone }}</td>
                     <td>{{ user.occupation }}</td>
                     <td>
                         <div>
@@ -49,7 +41,14 @@
             </tbody>
         </table>
         <div class="panel-footer">
-            <a class="btn btn-default" href="{{ path('user_new') }}">Neuer Benutzer anlegen</a>
+            <a class="btn btn-default"
+                href="{{ path('user_new') }}">
+                <span class="glyphicon glyphicon-plus"></span>
+                Neuer Benutzer anlegen</a>
+            <a class="btn btn-default"
+                href="{{ path('user_mail_all') }}">
+                <span class="glyphicon glyphicon-envelope"></span>
+                EMail an alle</a>
         </div>
     </div> <!-- Panel -->
 </div>

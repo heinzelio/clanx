@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Mail;
+use AppBundle\Entity\RedirectInfo;
 use AppBundle\Form\UserType;
 
 /**
@@ -191,5 +193,34 @@ class UserController extends Controller
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    /**
+     * Send a mail to all users.
+     *
+     * @Route("/mail/all", name="user_mail_all")
+     * @Method("GET")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function mailAllAction(Request $request)
+    {
+        $session = $request->getSession();
+        $em = $this->getDoctrine()->getManager();
+        $users = $em->getRepository('AppBundle:User')->findAll();
+
+        $mailData = new Mail();
+        foreach ($users as $u) {
+            $mailData->addBcc(
+                $u->getEmail(),
+                $u->getForename().' '.$u->getSurname()
+            );
+        }
+        $redirectInfo = new redirectInfo();
+        $redirectInfo->setRouteName('user_index');
+        $redirectInfo->setArguments(array());
+        $session->set(Mail::SESSION_KEY, $mailData);
+        $session->set(RedirectInfo::SESSION_KEY, $redirectInfo);
+
+        return $this->redirectToRoute('mail_edit');
     }
 }
