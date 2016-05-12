@@ -1,0 +1,13 @@
+[{
+    "id": 1,
+    "surname": "Meier",
+    "forename": "Hans"
+},{
+    "id": 2,
+    "surname": "Müller",
+    "forename": "Sepp"
+},{
+    "id": 3,
+    "surname":"Keller",
+    "forename": "Toni"
+}]

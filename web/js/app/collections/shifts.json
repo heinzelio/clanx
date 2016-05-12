@@ -1,0 +1,16 @@
+[{
+    "id": 1,
+    "start": "09:000",
+    "end": "14:00",
+    "name": "Frühschicht"
+}, {
+    "id": 2,
+    "start": "14:00",
+    "end": "19:00",
+    "name": "Nachmittag"
+}, {
+    "id": 3,
+    "start": "19:00",
+    "end": "24:00",
+    "name": "Nachtschicht"
+}]
