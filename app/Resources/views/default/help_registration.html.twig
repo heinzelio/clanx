@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Hilfe Registrieren
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+        <div class="panel-body">
+            <h3>
+                Warum muss ich mich registrieren? Ich will doch nur helfen!
+            </h3>
+
+            <p>
+                Wir, die Organisatoren des Clanx Festival verwenden diese Datenbank
+                um den Überblick über die unzählengen Hölfer zu behalten und
+                mit ihnen zu kommunizieren.
+            </p>
+            <h3>
+                Ok. Was muss ich also machen um mich zu registrieren?
+            </h3>
+            <p>
+                <ul>
+                    <li>
+                        Klicke auf den Knopf mit der aufschrift "Registrieren".
+                    </li>
+                    <li>
+                        Gib deine Mailadresse ein.
+                    </li>
+                    <li>
+                        Wähle einen Benutzernamen. Dieser muss eindeutig sein.
+                        Du kannst den Benutzernamen später für das Login verwenden.
+                    </li>
+                    <li>
+                        Wähle ein Passwort. Wähle ein gutes Passwort. *
+                    </li>
+                    <li>
+                        Gib dein Passwort nochmal ein, um sicherzustellen, dass
+                        du dich nicht vertippt hast.
+                    </li>
+                    <li>
+                        Klicke auf "Registrieren". Nun wird dein Profil erstellt, es ist
+                        aber noch nicht aktiv.
+                    </li>
+                    <li>
+                        Du erhälst ein EMail an die Adresse, die du angegeben hast.
+                        In diesem EMail ist ein Link auf den du klicken musst.
+                        Wenn das nicht geht, musst du den Link kopieren und in die
+                        Adresszeile deines Browsers einfügen. **
+                    </li>
+                    <li>
+                        Du bist nun registriert und angemeldet.
+                    </li>
+                </ul>
+            </p>
+
+            <h3>* Was ist ein gutes Passwort?</h3>
+            <p>
+                Um zu sehen wie gut dein Passwort ist, kannst du einen
+                <a href="https://www.passwortcheck.ch/passwortcheck/check.php?lang=de">Passwortchecker</a>
+                benutzen. <stron>Achtung: sende nie ein Passwort das du
+                verwendest oder verwenden möchtest irgendwohin</strong>
+                Verwende beim Passwortcheck nicht dein wirkliches Passwort, sonder
+                eines, dass gleich aufgebaut ist wie dein gewähltes Passwort.
+                Denke immer daran: du weisst nie, wer am anderen Ende der Leitung sitzt.
+            </p>
+
+            <h3>* Ist mein Passwort bei euch denn sicher?</h3>
+            <p>
+                Wir speichern dein Passwort bei uns nicht im Klartext ab.
+                Falls wir gehackt werden, und unsere Datenbank geklaut wird,
+                kann niemand herausfinden, wie dein Passwort lautet. Du solltest
+                aber trotzdem niemals dasselbe Passwort mehrmals verwenden.
+            </p>
+
+            <h3>** Warum muss ich zuerst auf einen Link im Mail klicken bevor ich die Webseite benutzen kann?</h3>
+            <p>
+                Mit dieser Methode versuchen wir Spamer und anderes Ungeziefer von unserer
+                Datenbank fernzuhalten.
+            </p>
+
+            <h3>Was macht ihr dann mit meinen persönlichen Daten?</h3>
+            <p>
+                Deine Daten werden nur im Zusammenhang mit Veranstaltungen verwendet,
+                die vom Verein Burg Clanx Festival organisiert werden.
+                Du wirst keine Werbung von uns erhalten, und wir werden deine
+                Daten nicht an andere Organisationen oder Personen weitergeben.
+                Sollte sich dieser Grundsatz irgendwann ändern, wirst du von uns
+                darüber informiert, und du hast dann das Recht deine Daten zu löschen.
+            </p>
+
+            <h3> Ihr habt mich überzeugt, ich registriere mich. Wo gehts lang?</h3>
+            <p>
+                Hier:
+                <a class="btn btn-primary btn-large"
+                    href="{{ path('fos_user_registration_register')}} ">
+                    Registrieren
+                </a>
+            </p>
+
+        </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}
