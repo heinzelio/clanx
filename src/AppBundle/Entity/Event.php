@@ -33,6 +33,13 @@ class Event
     private $sticky;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string", length=2000, nullable=true)
+     */
+    private $description;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="id", type="integer")
@@ -109,6 +116,31 @@ class Event
     {
         $this->sticky = $sticky;
         return $this;
+    }
+
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return Event
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**

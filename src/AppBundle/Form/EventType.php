@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventType extends AbstractType
@@ -17,8 +18,18 @@ class EventType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
+            ->add('name',null,array(
+                'label'=>'Name',
+            ))
+            ->add('description',TextareaType::class,array(
+                    'label' => 'Beschreibung',
+                    'attr' => array(
+                        'rows' => 5,
+                        'cols' => 80
+                    ),
+            ))
             ->add('date', DateType::class,array(
+                'label'=>'Datum',
                 'widget' => 'single_text',
             ))
             ->add('sticky', CheckboxType::class, array(

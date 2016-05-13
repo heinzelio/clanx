@@ -5,12 +5,20 @@
 {% block workspace %}
 <div class="row">
     <div class="col-md-4">
-        <h3>Event {{ event.name }}</h3>
+        <h3>Event: <mark>{{ event.name }}</mark></h3>
         {{ form_start(edit_form) }}
             {{form_widget(edit_form) }}
             <div class="form-group">
-                <input class="btn btn-primary" type="submit" value="Speichern" />
-                <a class="btn btn-default" href="{{ path('event_index') }}">Zurück zur Übersicht</a>
+                <!-- the form name "event" may change later...-->
+                <a class="btn btn-primary" onclick="event.submit();">
+                    <span class="glyphicon glyphicon-floppy-disk"></span>
+                    Speichern
+                </a>
+                <a class="btn btn-default"
+                    href="{{ path('event_show',{'id':event.id}) }}">
+                    <span class="glyphicon glyphicon-remove"></span>
+                    Abbrechen
+                </a>
             </div>
             {{ form_end(edit_form) }}
     </div>
