@@ -10,25 +10,42 @@ Ressort: {{ department.name }}
 <div class="panel panel-primary">
     <div class="panel-heading">
         Ressort: {{ department.name }} ({{ event.name }})
+        {% if is_granted('ROLE_SUPER_ADMIN')%}
+        ID: {{ department.id }}
+        {% endif %}
     </div>
-    <table class="table"><!-- table instead of body -->
-        <tbody>
-            <tr>
-                <th>Name</th>
-                <td>{{ department.name }}</td>
-            </tr>
-            <tr>
-                <th>Requirement</th>
-                <td>{{ department.requirement }}</td>
-            </tr>
-            {% if is_granted('ROLE_SUPER_ADMIN')%}
-            <tr>
-                <th>Id</th>
-                <td>{{ department.id }}</td>
-            </tr>
-            {% endif %}
-        </tbody>
-    </table><!-- table instead of body -->
+    <div class="panel-body">
+        {% if department.requirement %}
+            <p><strong>Anforderung</strong></p>
+            <p>{{department.requirement}}</p>
+        {% endif %}
+        <p><strong>
+            Eingeschreibene Hölfer im Ressort:
+        </strong></p>
+        {% for vol in volunteers %}
+            <p>
+                {{ vol.Forename }} {{ vol.Surname}}
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a class="btn btn-default"
+                        href="{{ path('department_redirect_mail_to',{
+                                'id':department.id,
+                                'user_id':vol.id})}}">
+                        <span class="glyphicon glyphicon-envelope"></span>
+                        Anschreiben
+                    </a>
+                {% endif %}
+
+                {% if userIsChief or userIsDeputy %}
+                    <a class="btn btn-default"
+                        href="{{path('department_move_volunteer',{'id':department.id,'user_id':vol.id})}}"
+                        data-toggle="tooltip" title="Diesen Hölfer einem anderen Ressort zuweisen.">
+                        <span class="glyphicon glyphicon-new-window"></span>
+                        Verschieben
+                    </a>
+                {% endif %}
+        {% endfor %}
+    </div>
     <div class="panel-footer">
         {% if is_granted('ROLE_ADMIN') %}
         <a class="btn btn-primary" type="button"
@@ -36,10 +53,19 @@ Ressort: {{ department.name }}
             <span class="glyphicon glyphicon-pencil"></span>
             Bearbeiten</a>
         {% endif %}
+        {% if userIsChief or userIsDeputy %}
+            <a class="btn btn-default"
+                href="{{ path('department_mail_volunteers', {
+                'id':department.id
+                }) }}">
+                <span class="glyphicon glyphicon-envelope"></span>
+                EMail an alle
+            </a>
+        {% endif %}
         <a class="btn btn-default" type="button"
             href="{{ path('event_show',{'id':event.id}) }}">
             <span class="glyphicon glyphicon-remove"></span>
-            Zurück zum Event.</a>
+            Zurück zum Event</a>
         {% if mayDelete %}
             {{ form_start(delete_form) }}
                 <input class="btn btn-danger" type="submit" value="Löschen"></input>
@@ -48,39 +74,13 @@ Ressort: {{ department.name }}
     </div><!-- footer -->
 </div><!-- panel -->
 </div><!-- col -->
-<div class="col-md-6">
-<div class="panel panel-default">
-    <div class="panel-heading">
-        Hölfer
-    </div><!-- heading -->
-    <table clasS="table"> <!-- table instead of body -->
-    {% for vol in volunteers %}
-        <tbody>
-            <tr>
-                <td>
-                    {{ vol.username }}
-                </td>
-                <td>
-                    <a class="btn btn-default"
-                        href="{{path('department_move_volunteer',{'id':department.id,'user_id':vol.id})}}">
-                        <span class="glyphicon glyphicon-new-window"></span>
-                        Verschieben
-                    </a>
-                </td>
-            </tr>
-        </tbod>
-    {% endfor %}
-    </table> <!-- table instead of body -->
-    <div class="panel-footer">
-        <a class="btn btn-default"
-            href="{{ path('department_mail_volunteers', {
-            'id':department.id
-            }) }}">
-            <span class="glyphicon glyphicon-envelope"></span>
-            EMail an alle
-        </a>
-    </div><!-- footer -->
-</div><!-- panel -->
-</div><!-- col -->
 </div><!-- row -->
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 {% endblock %}

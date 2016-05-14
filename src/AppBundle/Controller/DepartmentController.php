@@ -101,8 +101,6 @@ class DepartmentController extends Controller
         ->setParameter('dpt', $department);
         $countCommitment = $qb->getQuery()->getSingleScalarResult();
 
-        $user = $this->getUser(); // NOPE!!!
-
         $userRepo = $em->getRepository('AppBundle:User');
         $commitments = $commRepo->findByDepartment($department);
         $volunteers = array();
@@ -114,12 +112,22 @@ class DepartmentController extends Controller
         $mayDelete = $mayDelete && $countShift == 0;
         $mayDelete = $mayDelete && $countCommitment == 0;
 
+        $activeUser = $this->getUser();
+        $chiefUser = $department->getChiefUser();
+        $deputyUser = $department->getDeputyUser();
+        // catch null
+        $userIsChief = $chiefUser && $activeUser->getId()==$chiefUser->getId();
+        $userIsDeputy = $deputyUser && $activeUser->getId()==$deputyUser->getId();
+
+
         return $this->render('department/show.html.twig', array(
             'department' => $department,
             'event' => $event,
             'mayDelete' => $mayDelete,
             'delete_form' => $deleteForm->createView(),
             'volunteers' => $volunteers,
+            'userIsChief' => $userIsChief,
+            'userIsDeputy' => $userIsDeputy,
         ));
     }
 
@@ -401,5 +409,34 @@ class DepartmentController extends Controller
             ->setMethod('POST')
             ->getForm()
         ;
+    }
+
+    /**
+     * Prepares session variables and redirects to the MailController
+     *
+     * @Route("/{id}/redirect/mail/to/{user_id}", name="department_redirect_mail_to")
+     * @Method("GET")
+     * @ParamConverter("recipient", class="AppBundle:User", options={"id" = "user_id"})
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function redirectMailToAction(Request $request, Department $department, User $recipient)
+    {
+        // just in case somone clicks on the "mailTo" button of the
+        // chief-of-department or deputy-of-department:
+        $session = $request->getSession();
+
+        $backLink = new RedirectInfo();
+        $backLink->setRouteName('event_show')
+                 ->setArguments(array('id'=>$department->getId()));
+        $session->set(RedirectInfo::SESSION_KEY,$backLink);
+
+        $mailData = new Mail();
+        $mailData->setSubject('Dein Einsat am '.$event->getName())
+             ->setRecipient($recipient->getEmail())
+             ->setSender($this->getUser()->getEmail());
+
+        $session->set(Mail::SESSION_KEY, $mailData);
+
+        return $this->redirectToRoute('mail_edit');
     }
 }
