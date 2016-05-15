@@ -24,28 +24,6 @@
                     </a>
                 </p>
                 {% endif %}
-
-                {% if is_granted('ROLE_SUPER_ADMIN') %}
-                    <h2>Ein Link für Sevi</h2>
-                    <p>
-                        <a class="btn btn-primary" href="{{ path('sevi_index') }}">Hier gehts zur Action...</a>
-                    </p>
-                    {% if username=='chriglburri' %}
-                      <h2>Cheatsheets</h2>
-                      <p>
-                        <ul><li>
-                          <a class="btn btn-danger" href="http://phpcheatsheets.com/">Php Cheatsheets</a>
-                        </li><li>
-                          <a class="btn btn-danger" href="https://www.cheatography.com/davechild/cheat-sheets/php/">Php Cheatsheets</a>
-                        </li></ul>
-                      </p>
-                    {% endif %}
-                    <h2>User file importieren</h2>
-                    <p>
-                        <a class="btn btn-danger" href="{{ path('admin_upload_data') }}">File upload</a>
-                    </p>
-                {% endif %}
-
             </div>
         </div>
     </div>

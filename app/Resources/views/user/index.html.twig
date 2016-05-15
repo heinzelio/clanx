@@ -49,6 +49,12 @@
                 href="{{ path('user_mail_all') }}">
                 <span class="glyphicon glyphicon-envelope"></span>
                 EMail an alle</a>
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <a class="btn btn-danger"
+                    href="{{ path('admin_upload_data') }}">
+                    <span class="glyphicon glyphicon-upload"></span>
+                    Upload legacy user data</a>
+            {% endif %}
         </div>
     </div> <!-- Panel -->
 </div>
