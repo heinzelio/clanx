@@ -55,6 +55,7 @@ class DashboardController extends Controller
             'username' => $user->getUsername(),
         ));
     }
+    
     private function joinTxt($firstPart, $secondPart, $delimiter=", "){
         if($firstPart){
             return $firstPart.$delimiter.$secondPart;

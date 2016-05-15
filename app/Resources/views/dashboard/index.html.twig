@@ -8,21 +8,39 @@
     <div class="row">
         <div class="col-md-12">
             <div class="jumbotron">
+                <h2>Dashboard</h2>
+                <p>
+                    Benutze die Menuzeile ganz oben um die einzelnen Arbeitsbereiche
+                    aufzurufen. <br/>
+                    Der Link <strong>"Home"</strong> führt dich auf diese Seite. <br/>
+                    Der Link <strong>"Events"</strong> öffnet dir eine Liste aller anstehenden
+                    Events. <br/>
+                    Wenn wir einen Event wichtig finden, fügen wir einen direkten
+                    Link dazu in die Menuzeile ein. Du kannst den Event von dort,
+                    oder über die Liste der anstehenden Events aufrufen.<br/>
+                    Der Link <strong>"Info"</strong> zeigt Daten über die bei der Programmierung
+                    verwendeteten Produkte, Lizenzen und Versionen. <br/>
+                    Der Link mit deinem Benutzernamen ganz rechts aussen öffnet
+                    ein Menu über das du dein Profil bearbeiten und dich Abmelden
+                    kannst. (Melde dich immer ab, wenn du dich von einem öffentlichen
+                    Computer auf dieser Webseite anmeldest.)
+
+                </p>
                 {% if ShowProfileUpdate %}
-                <h2>Aktualisiere dein Profil!</h2>
-                <p>Unsere Auswertung hat gezeigt, dass Du Dein Profil noch nicht
-                    vollständig ausgefüllt hast. Uns fehlt noch:<br>
-                    <mark>{{ MissingProfilData }}</mark></br>
-                    Klick dich doch schnell rüber und füll das schnell aus. Wir
-                    brauchen diese Daten um Dich über Deine Arbeitseinsätze zu informieren.
-                    (Wir geben Deine Daten niemandem weiter, und wir senden Dir
-                    ausschliesslich Clanxwerbung.)
-                </p>
-                <p><a class="btn btn-primary"
-                    href="{{ path('fos_user_profile_edit') }}">
-                        Zum Profil
-                    </a>
-                </p>
+                    <h2>Aktualisiere dein Profil!</h2>
+                    <p>Unsere Auswertung hat gezeigt, dass du dein Profil noch nicht
+                        vollständig ausgefüllt hast. Uns fehlt noch:<br>
+                        <mark>{{ MissingProfilData }}</mark></br>
+                        Klick dich doch schnell rüber und füll das schnell aus. Wir
+                        brauchen diese Daten um dich über deine Arbeitseinsätze zu informieren.
+                        (Wir geben deine Daten niemandem weiter, und wir senden dir
+                        ausschliesslich Clanxwerbung.)
+                    </p>
+                    <p><a class="btn btn-primary"
+                        href="{{ path('fos_user_profile_edit') }}">
+                            Zum Profil
+                        </a>
+                    </p>
                 {% endif %}
             </div>
         </div>
