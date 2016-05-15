@@ -1,0 +1,34 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %}
+    Info
+{% endblock %}
+
+{% block workspace %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+        <div class="panel-heading">Symfony</div>
+        <div class="panel-body">
+            <p>Version: {{ constant('Symfony\\Component\\HttpKernel\\Kernel::VERSION') }}</p>
+            <p>Lizenz: MIT</p>
+            <p>Link: <a href="http://www.symfony.com">Symfony.com</a></p>
+        </div>
+        </div><!--panel-->
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+        <div class="panel-heading">Glyphicons</div>
+        <div class="panel-body">
+            <p>Lizenz: <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></p>
+            <p>Link: <a href="https://www.glyphicons.com/">Glyphicons.com</a></p>
+        </div>
+    </div> <!--panel-->
+    </div>
+
+
+
+
+
+</div>
+{% endblock %}
