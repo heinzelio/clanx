@@ -45,7 +45,7 @@
             </tbody>
         </table>
         <div class="panel-footer">
-            {% if is_granted(ROLE_SUPER_ADMIN) %}
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
                 <a class="btn btn-default"
                     href="{{ path('user_new') }}">
                     <span class="glyphicon glyphicon-plus"></span>
@@ -56,7 +56,7 @@
                 href="{{ path('user_mail_all') }}">
                 <span class="glyphicon glyphicon-envelope"></span>
                 EMail an alle</a>
-                
+
             {% if is_granted('ROLE_SUPER_ADMIN') %}
                 <a class="btn btn-danger"
                     href="{{ path('admin_upload_data') }}">
