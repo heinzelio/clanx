@@ -78,9 +78,6 @@
     <div class="panel-footer">
         <a class="btn btn-default" href="{{ path('user_index') }}">Zurück zur Übersicht</a>
         <a class="btn btn-default" href="{{ path('user_edit', { 'id': user.id }) }}">Benutzer bearbeiten</a>
-        {{ form_start(delete_form) }}
-            <input class="btn btn-danger" type="submit" value="Delete">
-        {{ form_end(delete_form) }}
     </div>
 </div>
 </div>

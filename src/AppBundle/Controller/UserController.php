@@ -73,11 +73,8 @@ class UserController extends Controller
      */
     public function showAction(User $user)
     {
-        $deleteForm = $this->createDeleteForm($user);
-
         return $this->render('user/show.html.twig', array(
             'user' => $user,
-            'delete_form' => $deleteForm->createView(),
         ));
     }
 
@@ -90,7 +87,6 @@ class UserController extends Controller
      */
     public function editAction(Request $request, User $user)
     {
-        $deleteForm = $this->createDeleteForm($user);
         $editForm = $this->createForm('AppBundle\Form\UserType', $user);
         $editForm->handleRequest($request);
 
@@ -99,16 +95,87 @@ class UserController extends Controller
             $em->persist($user);
             $em->flush();
 
-            return $this->redirectToRoute('user_edit', array('id' => $user->getId()));
+            return $this->redirectToRoute('user_show', array('id' => $user->getId()));
         }
+
+        $mayDemote = $this->mayDemote($user);
+        $mayPromoteAdmin = $this->mayPromoteToAdmin($user);
+        $mayPromoteSuperAdmin = $this->mayPromoteToSuperAdmin($user);
 
         return $this->render('user/edit.html.twig', array(
             'user' => $user,
             'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'may_promote_super_admin'=>$mayPromoteSuperAdmin,
+            'may_promote_admin'=>$mayPromoteAdmin,
+            'may_demote'=>$mayDemote,
         ));
     }
 
+    private function mayDemote(User $userToEdit)
+    {
+        if($this->getUser()->getID()==$userToEdit->getID())
+        {
+            // Nobody may demot himself. 'Cause this would lead to extinction.
+            return false;
+        }
+        if($this->isGranted('ROLE_SUPER_ADMIN'))
+        {
+            // a superadmin may demote an admin or another superadmin.
+            if($userToEdit->hasRole('ROLE_SUPER_ADMIN')
+                || $userToEdit->hasRole('ROLE_ADMIN')
+            )
+            {
+                return true;
+            }
+            // there is no need to demote a regular user.
+            return false;
+        }
+        else if($this->isGranted('ROLE_ADMIN'))
+        {
+            // an admin may not demote a superadmin.d
+            if($userToEdit->hasRole('ROLE_SUPER_ADMIN'))
+            {
+                return false;
+            }
+            // but he may demot another admin.
+            else if($userToEdit->hasRole('ROLE_ADMIN'))
+            {
+                return true;
+            }
+            // again, there is no need to demote a regular user.
+            return false;
+        }
+        return false;
+    }
+
+    private function mayPromoteToAdmin(User $userToEdit)
+    {
+        if($this->isGranted('ROLE_SUPER_ADMIN')||$this->isGranted('ROLE_ADMIN'))
+        {
+            // you may only promote user that are not admins yet
+            if($userToEdit->hasRole('ROLE_ADMIN')
+                || $userToEdit->hasRole('ROLE_SUPER_ADMIN'))
+            {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private function mayPromoteToSuperAdmin(User $userToEdit)
+    {
+        // only superadmins may promote other superadmins
+        if($this->isGranted('ROLE_SUPER_ADMIN'))
+        {
+            // there is no need to promote a user that already is superadmin
+            if($userToEdit->hasRole('ROLE_SUPER_ADMIN')){
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Gives a user an admin role.
@@ -156,43 +223,6 @@ class UserController extends Controller
         $em->persist($user);
         $em->flush();
         return $this->redirectToRoute('user_show', array('id' => $user->getId()));
-    }
-
-    /**
-     * Deletes a User entity.
-     *
-     * @Route("/{id}", name="user_delete")
-     * @Method("DELETE")
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
-     */
-    public function deleteAction(Request $request, User $user)
-    {
-        $form = $this->createDeleteForm($user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($user);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('user_index');
-    }
-
-    /**
-     * Creates a form to delete a User entity.
-     *
-     * @param User $user The User entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(User $user)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('user_delete', array('id' => $user->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
     }
 
     /**

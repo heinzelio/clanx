@@ -442,7 +442,7 @@ class EventController extends Controller
         $mailData = new Mail();
         $mailData->setSubject('Frage betreffend '.$event->getName())
              ->setRecipient($recipient->getEmail())
-             ->setSender($this->getUseR()->getEmail());
+             ->setSender($this->getUser()->getEmail());
 
         $session->set(Mail::SESSION_KEY, $mailData);
 

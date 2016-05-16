@@ -11,27 +11,40 @@
     <div class="panel-heading">
         Benutzer bearbeiten
     </div>
-    <div class="panel-body">
+
     {{ form_start(edit_form) }}
+    <div class="panel-body">
         {{ form_widget(edit_form) }}
-        <input class="btn btn-primary" type="submit" value="Speichern" />
-    {{ form_end(edit_form) }}
     </div>
     <div class="panel-footer">
-        {% if is_granted('ROLE_ADMIN') %}
-        <a class="btn btn-default" href="{{ path('user_demote', { 'id': user.id })}}">Adminrechte wegnehmen</a>
+        <a class="btn btn-primary"
+            onclick="user.submit();">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            Speichern</a>
+        {% if may_demote %}
+            <a class="btn btn-default"
+                href="{{ path('user_demote', { 'id': user.id })}}">
+                <span class="glyphicon glyphicon-remove-circle"></span>
+                Adminrechte wegnehmen</a>
         {% endif %}
-        {% if is_granted('ROLE_ADMIN') %}
-        <a class="btn btn-default" href="{{ path('user_promote_admin', { 'id': user.id })}}">Zum Admin machen</a>
+        {% if may_promote_admin %}
+            <a class="btn btn-default"
+                href="{{ path('user_promote_admin', { 'id': user.id })}}">
+                <span class="glyphicon glyphicon-star"></span>
+                Zum Admin machen</a>
         {% endif %}
-        {% if is_granted('ROLE_SUPER_ADMIN') %}
-        <a class="btn btn-default" href="{{ path('user_promote_superadmin', { 'id': user.id })}}">Zum Superadmin machen</a>
+        {% if may_promote_super_admin %}
+            <a class="btn btn-default"
+                href="{{ path('user_promote_superadmin', { 'id': user.id })}}">
+                <span class="glyphicon glyphicon-star-empty"></span>
+                Zum Superadmin machen</a>
         {% endif %}
-        <a class="btn btn-default" href="{{ path('user_index') }}">Zurück zur Übersicht</a>
-        {{ form_start(delete_form) }}
-            <input class="btn btn-danger" type="submit" value="Löschen">
-        {{ form_end(delete_form) }}
+        <a class="btn btn-default"
+            href="{{ path('user_index') }}">
+            <span class="glyphicon glyphicon-remove"></span>
+            Zurück zur Übersicht</a>
     </div>
+    {{ form_end(edit_form) }}
 </div>
 </div>
 </div>
