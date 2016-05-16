@@ -45,14 +45,18 @@
             </tbody>
         </table>
         <div class="panel-footer">
-            <a class="btn btn-default"
-                href="{{ path('user_new') }}">
-                <span class="glyphicon glyphicon-plus"></span>
-                Neuer Benutzer anlegen</a>
+            {% if is_granted(ROLE_SUPER_ADMIN) %}
+                <a class="btn btn-default"
+                    href="{{ path('user_new') }}">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Neuer Benutzer anlegen</a>
+            {% endif %}
+
             <a class="btn btn-default"
                 href="{{ path('user_mail_all') }}">
                 <span class="glyphicon glyphicon-envelope"></span>
                 EMail an alle</a>
+                
             {% if is_granted('ROLE_SUPER_ADMIN') %}
                 <a class="btn btn-danger"
                     href="{{ path('admin_upload_data') }}">
