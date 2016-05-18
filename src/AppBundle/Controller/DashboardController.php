@@ -30,18 +30,19 @@ class DashboardController extends Controller
         if(!$user->getSurname()){
             $missingProfileData = $this->joinTxt($missingProfileData,"Nachname");
         }
-        if(!$user->getStreet()){
-            $missingProfileData = $this->joinTxt($missingProfileData,"Strasse");
-        }
-        if(!$user->getCity()){
-            $missingProfileData = $this->joinTxt($missingProfileData,"Wohnort");
-        }
-        if(!$user->getZip()){
-            $missingProfileData = $this->joinTxt($missingProfileData,"Postleitzahl");
-        }
-        if(!$user->getCountry()){
-            $missingProfileData = $this->joinTxt($missingProfileData,"Land");
-        }
+        // there is no need for this at the moment.
+        // if(!$user->getStreet()){
+        //     $missingProfileData = $this->joinTxt($missingProfileData,"Strasse");
+        // }
+        // if(!$user->getCity()){
+        //     $missingProfileData = $this->joinTxt($missingProfileData,"Wohnort");
+        // }
+        // if(!$user->getZip()){
+        //     $missingProfileData = $this->joinTxt($missingProfileData,"Postleitzahl");
+        // }
+        // if(!$user->getCountry()){
+        //     $missingProfileData = $this->joinTxt($missingProfileData,"Land");
+        // }
         if(!$user->getDateOfBirth()){
             $missingProfileData = $this->joinTxt($missingProfileData,"Geburtsdatum");
         }
@@ -55,7 +56,7 @@ class DashboardController extends Controller
             'username' => $user->getUsername(),
         ));
     }
-    
+
     private function joinTxt($firstPart, $secondPart, $delimiter=", "){
         if($firstPart){
             return $firstPart.$delimiter.$secondPart;

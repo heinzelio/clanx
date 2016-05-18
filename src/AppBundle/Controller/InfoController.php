@@ -24,6 +24,15 @@ class InfoController extends Controller
     {
         return $this->render('info/index.html.twig');
     }
+
+    /**
+    * @Route("/privacypolicy", name="info_privacy_policy")
+    * @Method("GET")
+    */
+    public function privacyPolicyAction()
+    {
+        return $this->render('info/privacy_policy.html.twig');
+    }
 }
 
 ?>
