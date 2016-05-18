@@ -1,29 +1,42 @@
 {% extends "FOSUserBundle::layout.html.twig" %}
 
 {% block fos_user_content %}
+{% trans_default_domain 'FOSUserBundle' %}
 
-    <div class="container-fluid">
-    	<div class="row">
-    		<div class="col-md-4">
-
-                {% trans_default_domain 'FOSUserBundle' %}
-                
-                {{ form_start(form, {
-                        'method': 'post',
-                        'action': path('fos_user_registration_register'),
-                        'attr': {'class': 'fos_user_registration_register form-horizontal'}}) }}
-                    {{ form_widget(form) }}
-
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-default">
-                                {{ 'registration.submit'|trans }}
-                            </button>
-                        </div>
-                    </div>
-                {{ form_end(form) }}
-    		</div>
-    	</div>
+<div class="container">
+<div class="row">
+<div class="col-md-4 col-md-offset-4">
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        Registrieren
     </div>
+
+        {{ form_start(form, {
+                'method': 'post',
+                'action': path('fos_user_registration_register'),
+                'attr': {'class': 'fos_user_registration_register'}}) }}
+
+            <div class="panel-body">
+                {{ form_widget(form) }}
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-floppy-disk"></span>
+                    {{ 'registration.submit'|trans }}
+                </button>
+                <a class="btn btn-default"
+                    href="{{path('info_privacy_policy')}}"
+                    target="_blank"
+                    >
+                    <span class="glyphicon glyphicon-lock"></span>
+                    Datenschutzerklärung
+                </a>
+            </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+</div>
+</div>
 
 {% endblock fos_user_content %}
