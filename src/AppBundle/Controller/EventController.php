@@ -275,6 +275,7 @@ class EventController extends Controller
             ->add('needTrainTicket', CheckboxType::class, array(
                 'label' => 'Ich brauche ein Zugbillet',
                 'attr' => array('checked'=>false),
+                'required' => false,
             ))
             ->add('remark', TextareaType::class, array(
                 'label' => "Bemerkung / Wunsch",
