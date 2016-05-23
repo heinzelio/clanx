@@ -89,8 +89,10 @@ class ProfileFormType extends AbstractType
             ->add('gender', GenderType::class, array(
                 'label' => 'Geschlecht',
             ))
-            ->add('dateOfBirth', BirthdayType::class, array(
+            ->add('dateOfBirth', DateType::class, array(
                 'widget' => 'single_text',
+                'html5' => false,
+                'attr' => array('class'=>'datepicker'),
                 'label' => 'Geburtsdatum',
                 'required' => false,
             ))
