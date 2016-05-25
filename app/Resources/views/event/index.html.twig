@@ -20,9 +20,10 @@
                         </a>
                         ({% if event.date %}{{ event.date|date('d. M. Y') }}{% endif %})
                         {% if is_granted('ROLE_ADMIN') %}
-                        <a class="btn btn-default" href="{{ path('event_edit', {'id':event.id}) }}">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
+                            <a class="btn btn-default" href="{{ path('event_edit', {'id':event.id}) }}">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                Bearbeiten
+                            </a>
                         {% endif %}
                     </li>
                 {% endfor %}
