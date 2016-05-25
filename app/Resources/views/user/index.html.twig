@@ -16,9 +16,8 @@
                 <tr>
                     <th>Vorname</th>
                     <th>Nachname</th>
-                    <th>Geb.datum</th>
+                    <th>EMail</th>
                     <th>Ort</th>
-                    <th>Land</th>
                     <th>Beruf / Spezialität</th>
                     <th></th>
                 </tr>
@@ -28,9 +27,8 @@
                 <tr>
                     <td>{{ user.forename }}</td>
                     <td>{{ user.surname }}</td>
-                    <td>{% if user.dateOfBirth %}{{ user.dateOfBirth|date('d. M. Y') }}{% endif %}</td>
+                    <td>{{ user.email }}</td>
                     <td>{{ user.city }}</td>
-                    <td>{{ user.country }}</td>
                     <td>{{ user.occupation }}</td>
                     <td>
                         <div>
