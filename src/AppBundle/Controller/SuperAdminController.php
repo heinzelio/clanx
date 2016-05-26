@@ -192,6 +192,7 @@ class SuperAdminController extends Controller
 
             $em = $this->getDoctrine()->getManager();
             foreach($legacyUsers as $lu){
+                $lu->setMail(strtolower($lu->getMail()));
                 $em->persist($lu);
             }
             $em->flush();
