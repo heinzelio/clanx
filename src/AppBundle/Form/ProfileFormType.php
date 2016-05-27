@@ -91,6 +91,7 @@ class ProfileFormType extends AbstractType
             ))
             ->add('dateOfBirth', DateType::class, array(
                 'widget' => 'single_text',
+                'format' => 'dd.MM.yyyy', // sync with datepicker.js
                 'html5' => false,
                 'attr' => array('class'=>'datepicker'),
                 'label' => 'Geburtsdatum',

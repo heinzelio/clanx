@@ -23,6 +23,7 @@ class EventCreateType extends EventType
             ))
             ->add('date', DateType::class,array(
                 'widget' => 'single_text',
+                'format' => 'dd.MM.yyyy', // sync with datepicker.js
                 'html5' => false,
                 'attr' => array('class'=>'datepicker'),
                 'label' => 'Startdatum',
