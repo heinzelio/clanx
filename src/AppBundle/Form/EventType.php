@@ -18,19 +18,22 @@ class EventType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name',null,array(
+            ->add('name',null, array(
                 'label'=>'Name',
             ))
-            ->add('description',TextareaType::class,array(
+            ->add('description',TextareaType::class, array(
                     'label' => 'Beschreibung',
                     'attr' => array(
                         'rows' => 5,
                         'cols' => 80
                     ),
             ))
-            ->add('date', DateType::class,array(
-                'label'=>'Datum',
+            ->add('date', DateType::class, array(
                 'widget' => 'single_text',
+                'format' => 'dd.MM.yyyy', // sync with datepicker.js
+                'html5' => false,
+                'attr' => array('class'=>'datepicker'),
+                'label' => 'Startdatum',
             ))
             ->add('sticky', CheckboxType::class, array(
                     'label'    => 'Klebt der Event in der Titelzeile?',
