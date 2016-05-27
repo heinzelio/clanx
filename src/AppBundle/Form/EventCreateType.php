@@ -18,9 +18,14 @@ class EventCreateType extends EventType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
+            ->add('name',null,array(
+                'label' => 'Bezeichnung',
+            ))
             ->add('date', DateType::class,array(
                 'widget' => 'single_text',
+                'html5' => false,
+                'attr' => array('class'=>'datepicker'),
+                'label' => 'Startdatum',
             ))
             ->add('sticky', CheckboxType::class, array(
                     'label'    => 'Klebt der event in der Titelzeile?',
