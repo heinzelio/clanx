@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -256,18 +257,15 @@ class EventController extends Controller
             }
             $choices[$text] = $dep->getID();
         }
+        $emptyData = $event->getDate()->format('d.m.Y')." 08:00";
         return $this->createFormBuilder()
             ->add('department', ChoiceType::class, array(
                 'label' => 'für Ressort (ohne Garantie)',
                 'choices'  => $choices
             ))
-            ->add('possibleStart', DateTimeType::class,array(
-                'date_widget' => 'single_text',
-                'time_widget' => 'single_text',
-                'required' => false,
-                //'html5' => true,
-                //'input' => 'array',
-                'label' => 'früheste Startzeit',
+            ->add('possibleStart', TextType::class, array(
+                'label' => 'frühestes Startdatum & Zeit',
+                'data' => $emptyData,
             ))
             ->add('shirtSize',ShirtSizeType::class,array(
                 'label' => 'TShirt Grösse',

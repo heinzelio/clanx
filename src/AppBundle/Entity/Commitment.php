@@ -61,8 +61,8 @@ class Commitment
     private $remark;
 
     /**
-     * @var \DateTime
-    * @ORM\Column(name="possible_start", type="datetime", nullable=true)
+     * @var string
+    * @ORM\Column(name="possible_start", type="string", length=200, nullable=true)
     */
     private $possibleStart;
 
@@ -186,7 +186,7 @@ class Commitment
 
     /**
     * Set possible start date
-    * @param \DateTime $start
+    * @param string $start
     * @return Commitment
     */
     public function setPossibleStart($start)
@@ -197,7 +197,7 @@ class Commitment
 
     /**
     * Get possible start date
-    * @return \DateTime
+    * @return string
     */
     public function getPossibleStart()
     {

@@ -1,6 +1,12 @@
 {% extends 'base_nav.html.twig' %}
 
-{% block title %} {{ event.name }} {% endblock %}
+{% block title %}
+    {{ event.name }}
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/datepicker.js')}}"></script>
+{% endblock %}
 
 {% block workspace %}
 
@@ -47,7 +53,7 @@
     </div>
     <div class="panel-footer">
 
-        <a class="btn btn-default" 
+        <a class="btn btn-default"
 	    href="{{ path('event_index') }}">
             Zurück zur Übersicht
         </a>
