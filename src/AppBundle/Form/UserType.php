@@ -29,7 +29,7 @@ class UserType extends AbstractType
                 'widget' => 'single_text',
                 'format' => 'dd.MM.yyyy', // sync with datepicker.js
                 'html5' => false,
-                'attr' => array('class'=>'datepicker'),
+                'attr' => array('class'=>'datepicker birthday'),
                 'label' => 'Geburtsdatum',
                 'required' => false,
             ))
