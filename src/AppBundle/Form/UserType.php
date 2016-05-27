@@ -16,19 +16,46 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('forename', null, array('label'=>'Vorname'))
-            ->add('surname', null, array('label'=>'Nachname'))
-            ->add('gender', GenderType::class, array('label'=>'Geschlecht'))
+            ->add('forename', null, array(
+                'label'=>'Vorname'
+            ))
+            ->add('surname', null, array(
+                'label'=>'Nachname'
+            ))
+            ->add('gender', GenderType::class, array(
+                'label'=>'Geschlecht'
+            ))
             ->add('dateOfBirth', BirthdayType::class,array(
                 'widget' => 'single_text',
-                'label' => 'Geburtsdatum'
+                'format' => 'dd.MM.yyyy', // sync with datepicker.js
+                'html5' => false,
+                'attr' => array('class'=>'datepicker'),
+                'label' => 'Geburtsdatum',
+                'required' => false,
             ))
-            ->add('street', null, array('label'=>'Adresse'))
-            ->add('zip', null, array('label'=>'PLZ'))
-            ->add('city', null, array('label'=>'Ort'))
-            ->add('country', CountryType::class, array('label'=>'Land'))
-            ->add('phone', null, array('label'=>'Telefonnummer'))
-            ->add('occupation', null, array('label'=>'Beruf / Spezialität'))
+            ->add('street', null, array(
+                'label'=>'Adresse',
+                'required' => false,
+            ))
+            ->add('zip', null, array(
+                'label'=>'PLZ',
+                'required' => false,
+            ))
+            ->add('city', null, array(
+                'label'=>'Ort',
+                'required' => false,
+            ))
+            ->add('country', CountryType::class, array(
+                'label'=>'Land',
+                'required' => false,
+            ))
+            ->add('phone', null, array(
+                'label'=>'Telefonnummer'
+            ))
+            ->add('occupation', null, array(
+                'label'=>'Beruf / Fachbereich',
+                'required' => false,
+            ))
         ;
     }
 
