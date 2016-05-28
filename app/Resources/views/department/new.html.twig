@@ -5,9 +5,9 @@
 {% block workspace %}
     <h3>Ressort erstellen für <em>„{{ event.name }}“</em></h3>
 
-    {{ form_start(form) }}
+    {{ form_start(form, {'name': 'form_department_new'}) }}
         {{ form_widget(form) }}
-        <a onclick="department.submit();"
+        <a onclick="form_department_new.submit();"
             class="btn btn-primary">
             <span class="glyphicon glyphicon-floppy-disk"></span>
             Speichern

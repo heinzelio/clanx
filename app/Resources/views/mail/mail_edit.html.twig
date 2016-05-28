@@ -11,16 +11,18 @@
         <div class="panel-heading">Mail schreiben
         </div> <!-- heading -->
 
-        {{ form_start(mail_form, {'action': path('mail_send'), 'method': 'POST'}) }}
+        {{ form_start(mail_form, {
+            'action': path('mail_send'),
+            'method': 'POST',
+            'name': 'form_mail_edit'
+        }) }}
 
         <div class="panel-body">
             {{form_widget(mail_form) }}
         </div><!-- body -->
         <div class="panel-footer">
-            <!--TODO: the identifier "mail2" may change later.
-                    find out how we can get this identifier by code -->
             <a class="btn btn-primary"
-                onclick="mail2.submit();">
+                onclick="form_mail_edit.submit();">
                 <span class="glyphicon glyphicon-envelope"></span>
                 Senden
             </a>

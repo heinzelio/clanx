@@ -10,11 +10,9 @@
     <h3>Ressort <em>„{{ department.name }}“</em></h3>
     <h4>vom Event <em>„{{ event.name }}“</em></h4>
 
-    {{ form_start(edit_form) }}
+    {{ form_start(edit_form, {'name': 'form_department_edit'}) }}
         {{ form_widget(edit_form) }}
-            <!--TODO: the identifier "event_mail" may change later.
-            find out how we can get this identifier by code -->
-        <a onclick="department.submit();"
+        <a onclick="form_department_edit.submit();"
             class="btn btn-primary">
             <span class="glyphicon glyphicon-floppy-disk"></span>
             Speichern

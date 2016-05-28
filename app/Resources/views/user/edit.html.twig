@@ -16,13 +16,13 @@
         Benutzer bearbeiten
     </div>
 
-    {{ form_start(edit_form) }}
+    {{ form_start(edit_form, {'name': 'form_user_edit'}) }}
     <div class="panel-body">
         {{ form_widget(edit_form) }}
     </div>
     <div class="panel-footer">
         <a class="btn btn-primary"
-            onclick="user.submit();">
+            onclick="form_user_edit.submit();">
             <span class="glyphicon glyphicon-floppy-disk"></span>
             Speichern</a>
         {% if may_demote %}

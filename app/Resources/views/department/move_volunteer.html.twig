@@ -11,7 +11,7 @@
     <div class="panel-heading">
     Verschiebe <mark>{{ user.forename }} {{ user.surname }}</mark>
     </div>
-    {{ form_start(move_form) }}
+    {{ form_start(move_form, {'name': 'form_volunteer_move'}) }}
     <div class="panel-body">
     Verschiebe den Hölfer aus dem Ressort <mark>{{ department.name }}</mark>
     in folgendes Ressort:
@@ -19,9 +19,7 @@
         {{ form_widget(move_form) }}
     </div>
     <div class="panel-footer">
-            <!--TODO: the identifier "form" may change later.
-            find out how we can get this identifier by code -->
-        <a onclick="form.submit();"
+        <a onclick="form_volunteer_move.submit();"
             class="btn btn-primary">
             <span class="glyphicon glyphicon-floppy-disk"></span>
             Speichern

@@ -5,12 +5,10 @@
 {% block workspace %}
 <div class="row">
     <div class="col-md-4">
-        {{ form_start(mail_form) }}
+        {{ form_start(mail_form, {'name': 'form_department_mail'}) }}
             {{form_widget(mail_form) }}
             <div class="form-group">
-                <!--TODO: the identifier "department_mail" may change later.
-                find out how we can get this identifier by code -->
-                <a class="btn btn-primary" onclick="department_mail.submit();">
+                <a class="btn btn-primary" onclick="form_department_mail.submit();">
                     <span class="glyphicon glyphicon-envelope" ></span>
                     Email jetzt senden
                 </a>
