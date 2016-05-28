@@ -10,11 +10,11 @@
 <div class="row">
     <div class="col-md-4">
         <h3>Event: <mark>{{ event.name }}</mark></h3>
-        {{ form_start(edit_form) }}
+        {{ form_start(edit_form, {'name': 'form_event_edit'}) }}
             {{form_widget(edit_form) }}
             <div class="form-group">
-                <!-- the form name "event" may change later...-->
-                <a class="btn btn-primary" onclick="event.submit();">
+                <a class="btn btn-primary"
+                    onclick="form_event_edit.submit();">
                     <span class="glyphicon glyphicon-floppy-disk"></span>
                     Speichern
                 </a>
