@@ -53,7 +53,8 @@
             <a class="btn btn-default"
                 href="{{ path('user_mail_all') }}">
                 <span class="glyphicon glyphicon-envelope"></span>
-                EMail an alle</a>
+                EMail <span class="small">an alle registrierte Benutzer</span>
+            </a>
 
             {% if is_granted('ROLE_SUPER_ADMIN') %}
                 <a class="btn btn-danger"
