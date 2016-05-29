@@ -157,9 +157,16 @@
     </div>
     <div class="panel-footer">
         {% if mayEditCommitment %}
-        <a class="btn btn-default" >
+        <a class="btn btn-default"
+            href="{{path('commitment_edit',{'id':commitment.id})}}">
             <span class="glyphicon glyphicon-pencil"></span>
-            Bearbeiten (TODO)</a>
+            Bearbeiten
+        </a>
+        {% else %}
+        <a class="btn btn-default" disabled="disabled">
+            <span class="glyphicon glyphicon-lock"></span>
+            Bearbeiten nicht mehr möglich
+        </a>
         {% endif %}
     </div><!-- footer -->
     </div> <!--panel-->
