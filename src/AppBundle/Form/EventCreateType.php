@@ -19,7 +19,14 @@ class EventCreateType extends EventType
     {
         $builder
             ->add('name',null,array(
-                'label' => 'Bezeichnung',
+                'label' => 'Bezeichnung (kurz)',
+            ))
+            ->add('description',TextareaType::class, array(
+                    'label' => 'Beschreibung (Ausführlich)',
+                    'attr' => array(
+                        'rows' => 5,
+                        'cols' => 80
+                    ),
             ))
             ->add('date', DateType::class,array(
                 'widget' => 'single_text',
