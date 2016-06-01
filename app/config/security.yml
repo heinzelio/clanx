@@ -26,6 +26,12 @@ security:
     access_control:
         # we normally do access control with annotations in the controllers.
         #- { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: "%secure_channel%" }
+        - { path: ^/login$, host:clanx\.ch$, requires_channel: https }
+        - { path: ^/register, host:clanx\.ch$, requires_channel: https }
+        - { path: ^/resetting/request, host:clanx\.ch$, requires_channel: https }
+        - { path: ^/profile/change-password, host:clanx\.ch$, requires_channel: https } 
+
+
 
     encoders:
         FOS\UserBundle\Model\UserInterface: bcrypt
