@@ -1,0 +1,4 @@
+RewriteEngine on
+RewriteCond %{REQUEST_URI} ^/$
+RewriteRule (.*) /web/app.php/dashboard [R=302]
+# make that a 301 as soon as you are satisfied
