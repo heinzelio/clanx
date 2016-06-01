@@ -29,9 +29,7 @@ security:
         - { path: ^/login$, host:clanx\.ch$, requires_channel: https }
         - { path: ^/register, host:clanx\.ch$, requires_channel: https }
         - { path: ^/resetting/request, host:clanx\.ch$, requires_channel: https }
-        - { path: ^/profile/change-password, host:clanx\.ch$, requires_channel: https } 
-
-
+        - { path: ^/profile/change-password, roles:ROLE_USER, host:clanx\.ch, requires_channel: https }
 
     encoders:
         FOS\UserBundle\Model\UserInterface: bcrypt
