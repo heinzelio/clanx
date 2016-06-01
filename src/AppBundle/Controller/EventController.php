@@ -91,13 +91,16 @@ class EventController extends Controller
             $em->persist($defaultDpt);
 
             $dptInput = $form->get('departments')->getData();
-            $dptNames = explode("\n", $dptInput);
+            if($dptInput)
+            {
+                $dptNames = explode("\n", $dptInput);
 
-            foreach ($dptNames as $dptName) {
-                $dpt = new Department();
-                $dpt->setName(trim($dptName));
-                $dpt->setEvent($event);
-                $em->persist($dpt);
+                foreach ($dptNames as $dptName) {
+                    $dpt = new Department();
+                    $dpt->setName(trim($dptName));
+                    $dpt->setEvent($event);
+                    $em->persist($dpt);
+                }
             }
 
             $em->flush();
