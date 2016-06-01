@@ -224,6 +224,10 @@ class EventController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $dpts = $em->getRepository('AppBundle:Department')->findByEvent($event);
+            foreach ($dpts as $dpt) {
+                $em->remove($dpt);
+            }
             $em->remove($event);
             $em->flush();
         }
