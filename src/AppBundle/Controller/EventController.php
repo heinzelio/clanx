@@ -87,6 +87,7 @@ class EventController extends Controller
             $defaultDpt = new Department();
             $defaultDpt->setName("Ich helfe wo ich kann");
             $defaultDpt->setEvent($event);
+            $defaultDpt->setChiefUser($this->getUser());
             $em->persist($defaultDpt);
 
             $dptInput = $form->get('departments')->getData();
