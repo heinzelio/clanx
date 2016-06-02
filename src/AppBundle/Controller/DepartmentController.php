@@ -116,8 +116,8 @@ class DepartmentController extends Controller
         $chiefUser = $department->getChiefUser();
         $deputyUser = $department->getDeputyUser();
         // catch null
-        $userIsChief = $chiefUser && $activeUser->getId()==$chiefUser->getId();
-        $userIsDeputy = $deputyUser && $activeUser->getId()==$deputyUser->getId();
+        $userIsChief = $activeUser->isChiefOf($department);
+        $userIsDeputy = $activeUser->isDeputyOf($department);
 
 
         return $this->render('department/show.html.twig', array(
@@ -160,6 +160,44 @@ class DepartmentController extends Controller
             'event' => $event,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+        ));
+    }
+
+    /**
+     * Displays a form to edit only the deputy of an existing Department entity.
+     * Used only by chiev_of_department
+     *
+     * @Route("/{id}/edit/deputy", name="department_edit_deputy")
+     * @Method({"GET", "POST"})
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function editDeputyAction(Request $request, Department $department)
+    {
+        if(! $this->getUser()->isChiefOf($department))
+        {
+            return $this->redirectToRoute('department_show',array('id'=>$department->getId()));
+        }
+
+        $editForm = $this->createForm('AppBundle\Form\DepartmentDeputyType', $department);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($department);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('success', "'".$department->getName()."' gespeichert.");
+
+            return $this->redirectToRoute('department_show',array(
+                'id'=>$department->getId(),
+                'event_id'=>$department->getEvent()->getId()
+            ));
+        }
+
+        return $this->render('department/edit_deputy.html.twig', array(
+            'department' => $department,
+            'event' => $department->getEvent(),
+            'edit_form' => $editForm->createView(),
         ));
     }
 

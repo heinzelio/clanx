@@ -294,12 +294,53 @@ class User extends BaseUser
     }
 
     /**
-     * Gets a string representing the department
+     * Returns true, if the user is chief of the given department.
+     * @return boolean
+     */
+    public function isChiefOf(Department $department)
+    {
+        if(! $department)
+        {
+            return false;
+        }
+        if(! $department->getChiefUser())
+        {
+            return false;
+        }
+        return $this->id==$department->getChiefUser()->getId();
+    }
+
+    /**
+     * Returns true, if the user is deputy of the given department.
+     * @return boolean
+     */
+    public function isDeputyOf(Department $department)
+    {
+        if(! $department)
+        {
+            return false;
+        }
+        if(! $department->getDeputyUser())
+        {
+            return false;
+        }
+        return $this->id==$department->getDeputyUser()->getId();
+    }
+
+    /**
+     * Gets a string representing the user
      * @return string
      */
     public function __toString()
     {
-        return strval($this->username);
+        if($this->forename && $this->surname)
+        {
+            return $this->forename.' '.$this->surname;
+        }
+        if($this->forename){
+            return $this->forename.' ('.$this->username.')';
+        }
+        return $this->username.' ('.$this->email.')';
     }
 
 }

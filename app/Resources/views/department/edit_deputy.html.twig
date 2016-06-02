@@ -1,0 +1,28 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %}
+    Stellvertreter bearbeiten
+{% endblock %}
+
+{% block workspace %}
+<div class="row">
+<div class="col-md-4">
+    <h3>Ressort <em>„{{ department.name }}“</em></h3>
+    <h4>vom Event <em>„{{ event.name }}“</em></h4>
+
+    {{ form_start(edit_form, {'name': 'form_department_edit'}) }}
+        {{ form_widget(edit_form) }}
+        <a onclick="form_department_edit.submit();"
+            class="btn btn-primary">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            Speichern
+        </a>
+        <a class="btn btn-default"
+            href="{{ path('department_show',{'id':department.Id,'event_id':event.Id}) }}">
+            <span class="glyphicon glyphicon-remove"></span>
+            Zurück
+        </a>
+    {{ form_end(edit_form) }}
+</div>
+</div>
+{% endblock %}

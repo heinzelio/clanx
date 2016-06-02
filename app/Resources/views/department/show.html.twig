@@ -53,6 +53,13 @@ Ressort: {{ department.name }}
             <span class="glyphicon glyphicon-pencil"></span>
             Bearbeiten</a>
         {% endif %}
+        {% if userIsChief %}
+            <a class="btn btn-default"
+                href="{{ path('department_edit_deputy',{'id':department.id}) }}">
+                <span class="glyphicon glyphicon-pencil"></span>
+                Stellvertreter bestimmen
+            </a>
+        {% endif %}
         {% if userIsChief or userIsDeputy %}
             <a class="btn btn-default"
                 href="{{ path('department_mail_volunteers', {
