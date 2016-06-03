@@ -80,6 +80,10 @@
 
     </div><!-- footer -->
     </div> <!-- panel -->
+    {{ render(controller(
+        'AppBundle:EventVolunteers:index',
+        { 'id': event.id }
+    )) }}
 </div> <!-- col -->
 <div class="col-md-6">
     {% if mayEnroll %}
