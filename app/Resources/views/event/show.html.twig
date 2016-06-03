@@ -25,29 +25,27 @@
 
             {% if myDepartmentsAsChief %}
             <p>Du bist Ressortleiter:
-                <ul>
-                    {% for dpt in myDepartmentsAsChief %}
-                        <li>
-                            <a href="{{ path('department_show',{'id':dpt.Id,'event_id':event.Id}) }}">
-                            {{ dpt.name }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
+                {% for dpt in myDepartmentsAsChief %}
+                    <br />
+                    <a href="{{ path('department_show',{'id':dpt.Id,'event_id':event.Id}) }}"
+                    class="btn btn-default">
+                    <span class="glyphicon glyphicon-eye-open"></span>
+                    {{ dpt.name }}
+                    </a>
+                {% endfor %}
             </p>
             {% endif %}
 
             {% if myDepartmentsAsDeputy %}
             <p>Du bist stellvertretender Ressortleiter:
-                <ul>
-                    {% for dpt in myDepartmentsAsDeputy %}
-                        <li>
-                            <a href="{{ path('department_show',{'id':dpt.Id,'event_id':event.Id}) }}">
-                            {{ dpt.name }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
+                {% for dpt in myDepartmentsAsDeputy %}
+                    <br />
+                    <a href="{{ path('department_show',{'id':dpt.Id,'event_id':event.Id}) }}"
+                    class="btn btn-default">
+                    <span class="glyphicon glyphicon-eye-open"></span>
+                    {{ dpt.name }}
+                    </a>
+                {% endfor %}
             </p>
             {% endif %}
     </div>
