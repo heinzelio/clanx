@@ -348,7 +348,7 @@ class EventController extends Controller
         $message = \Swift_Message::newInstance();
         $dankeImgLink =  $message->embed(\Swift_Image::fromPath('img/emails/danke.png'));
         $message->setSubject('Clanx Hölfer Bestätigung')
-            ->setFrom(array('noreply@clanx.ch'=>'Clanx Hölfer DB'))
+            ->setFrom(array('no-reply@clanx.ch'=>'Clanx Hölfer DB'))
             ->setTo($user->getEmail())
             ->setBody(
                 $this->renderView(

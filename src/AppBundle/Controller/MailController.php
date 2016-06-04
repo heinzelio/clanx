@@ -40,7 +40,7 @@ class MailController extends Controller
         $sender = $mailData->getSender();
         if(!$mailData->getSender())
         {
-            $mailData->setSender('noreply@clanx.ch');
+            $mailData->setSender('no-reply@clanx.ch');
         }
         $editForm = $this->createForm('AppBundle\Form\Mail2Type', $mailData);
         return $this->render('mail/mail_edit.html.twig',array(
@@ -91,7 +91,7 @@ class MailController extends Controller
             }
 
             $ackMessage
-                ->setFrom(array('noreply@clanx.ch' => 'Clanx Hölfer DB'))
+                ->setFrom(array('no-reply@clanx.ch' => 'Clanx Hölfer DB'))
                 ->setTo($this->getUser()->getEmail())
                 ->setSubject($mailData->getSubject())
                 ->setBody(
