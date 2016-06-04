@@ -464,12 +464,15 @@ class DepartmentController extends Controller
         $session = $request->getSession();
 
         $backLink = new RedirectInfo();
-        $backLink->setRouteName('event_show')
-                 ->setArguments(array('id'=>$department->getId()));
+        $backLink->setRouteName('department_show')
+                 ->setArguments(array(
+                     'id'=>$department->getId(),
+                     'event_id'=>$department->getEvent()->getId(),
+             ));
         $session->set(RedirectInfo::SESSION_KEY,$backLink);
 
         $mailData = new Mail();
-        $mailData->setSubject('Dein Einsat am '.$event->getName())
+        $mailData->setSubject('Dein Einsatz am '.$department->getEvent()->getName())
              ->setRecipient($recipient->getEmail())
              ->setSender($this->getUser()->getEmail());
 
