@@ -3,16 +3,30 @@
 {% block title %} Neues Ressort {% endblock %}
 
 {% block workspace %}
-    <h3>Ressort erstellen für <em>„{{ event.name }}“</em></h3>
+<div class="row">
+<div class="col-md-6">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Ressort erstellen für <mark>„{{ event.name }}“</mark>
+    </div>
 
-    {{ form_start(form, {'name': 'form_department_new'}) }}
-        {{ form_widget(form) }}
+    <div class="panel-body">
+        {{ form_start(form, {'name': 'form_department_new'}) }}
+            {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+    <div class="panel-footer">
         <a onclick="form_department_new.submit();"
             class="btn btn-primary">
             <span class="glyphicon glyphicon-floppy-disk"></span>
             Speichern
         </a>
-    {{ form_end(form) }}
-    <a class="btn btn-default" href="{{ path('event_edit',{'id':event.id}) }}">Zurück zum Event</a>
-
+        <a class="btn btn-default"
+            href="{{ path('event_edit',{'id':event.id}) }}">
+            Zurück zum Event
+        </a>
+    </div>
+</div> <!-- panel -->
+</div> <!-- col -->
+</div> <!-- row -->
 {% endblock %}
