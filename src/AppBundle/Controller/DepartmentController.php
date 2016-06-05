@@ -25,24 +25,6 @@ use AppBundle\Form\DepartmentType;
 class DepartmentController extends Controller
 {
     /**
-     * Lists all Department entities.
-     *
-     * @Route("/", name="department_index")
-     * @Method("GET")
-     * @Security("has_role('ROLE_ADMIN')")
-     */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $departments = $em->getRepository('AppBundle:Department')->findAll();
-
-        return $this->render('department/index.html.twig', array(
-            'departments' => $departments,
-        ));
-    }
-
-    /**
      * Creates a new Department entity.
      *
      * @Route("/new/for/event/{event_id}", name="department_new")
