@@ -199,6 +199,8 @@ class EventController extends Controller
             $em->persist($event);
             $em->flush();
 
+            $this->get('session')->getFlashBag()->add('success', "Änderung gespeichert.");
+
             return $this->redirectToRoute('event_show', array('id' => $event->getId()));
         }
 
