@@ -19,20 +19,37 @@
     </div>
     <div class="panel-footer">
         <a onclick="form_department_edit.submit();"
-            class="btn btn-primary">
+            class="btn btn-primary"
+            data-toggle="tooltip"
+            title="Änderungen übernehmen und in der Datenbank speichern.">
             <span class="glyphicon glyphicon-floppy-disk"></span>
             Speichern
         </a>
         <a class="btn btn-default"
-            href="{{ path('event_edit',{'id':event.id}) }}">
+            href="{{ path('event_edit',{'id':event.id}) }}"
+            data-toggle="tooltip"
+            title="Nicht speichern und zurück zu {{event.name}}">
             <span class="glyphicon glyphicon-remove"></span>
             Abbrechen
         </a>
         {{ form_start(delete_form) }}
-            <input class="btn btn-danger" type="submit" value="Delete">
+            <input class="btn btn-danger"
+                type="submit"
+                value="Delete"
+                data-toggle="tooltip"
+                title="Dieses Ressort aus der Datenbank löschen.
+                (Geht nur, solange keine Hölfer zugewiesen sind.)">
         {{ form_end(delete_form) }}
     </div>
 </div><!--panel-->
 </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 {% endblock %}
