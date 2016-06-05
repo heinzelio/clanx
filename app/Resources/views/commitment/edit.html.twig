@@ -7,38 +7,42 @@
 {% block workspace %}
 <div class="row">
 <div class="col-md-6 col-md-offset-3">
-    <h3>Mein Einsatz: <em>„{{ department.name }}“</em></h3>
-    <h4>am Event <em>„{{ event.name }}“</em></h4>
-
-    {{ form_start(edit_form, {'name': 'form_commitment_edit'}) }}
-        {{ form_widget(edit_form) }}
-    {{ form_end(edit_form) }}
-
-    <a onclick="form_commitment_edit.submit();"
-        class="btn btn-primary">
-        <span class="glyphicon glyphicon-floppy-disk"></span>
-        Speichern
-    </a>
-
-    <a class="btn btn-default"
-        href="{{ path('event_show',{'id':event.id}) }}">
-        <span class="glyphicon glyphicon-remove"></span>
-        Abbrechen
-    </a>
-
-    {% if may_delete %}
-        <a onclick="form_commitment_delete.submit();"
-            class="btn btn-danger">
-            <span class="glyphicon glyphicon-trash"></span>
-            Löschen <span class="small">(Nicht mehr helfen)</span>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Mein Einsatz: <mark>„{{ department.name }}“</mark><br />
+        <small>am Event <mark>„{{ event.name }}“</mark></small>
+    </div>
+    <div class="panel-body">
+        {{ form_start(edit_form, {'name': 'form_commitment_edit'}) }}
+            {{ form_widget(edit_form) }}
+        {{ form_end(edit_form) }}
+    </div>
+    <div class="panel-footer">
+        <a onclick="form_commitment_edit.submit();"
+            class="btn btn-primary">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            Speichern
         </a>
-        {{ form_start(delete_form, {'name': 'form_commitment_delete'}) }}
-        {{ form_end(delete_form) }}
-    {% else %}
-        <a class="btn btn-default" disabled="disabled">
-            Löschen nicht mehr möglich
+        <a class="btn btn-default"
+            href="{{ path('event_show',{'id':event.id}) }}">
+            <span class="glyphicon glyphicon-remove"></span>
+            Abbrechen
         </a>
-    {% endif %}
+        {% if may_delete %}
+            <a onclick="form_commitment_delete.submit();"
+                class="btn btn-danger">
+                <span class="glyphicon glyphicon-trash"></span>
+                Löschen <span class="small">(Nicht mehr helfen)</span>
+            </a>
+            {{ form_start(delete_form, {'name': 'form_commitment_delete'}) }}
+            {{ form_end(delete_form) }}
+        {% else %}
+            <a class="btn btn-default" disabled="disabled">
+                Löschen nicht mehr möglich
+            </a>
+        {% endif %}
+    </div>
+</div> <!--panel-->
 </div>
 </div>
 {% endblock %}
