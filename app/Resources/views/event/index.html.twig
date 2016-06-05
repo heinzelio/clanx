@@ -10,31 +10,40 @@
         <div class="panel panel-primary">
         <div class="panel-heading">Anstehende</div>
         <div class="panel-body">
-            <ul>
-                {% for event in upcomingEvents %}
-                    <li>
-                        <a href="{{ path('event_show', { 'id': event.id }) }}"
-                            {% if event.sticky %}class="bg-danger"{% endif %}
-                        >
-                            {{ event.name }}
-                        </a>
-                        ({% if event.date %}{{ event.date|date('d. M. Y') }}{% endif %})
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <a class="btn btn-default" href="{{ path('event_edit', {'id':event.id}) }}">
-                                <span class="glyphicon glyphicon-pencil"></span>
-                                Bearbeiten
-                            </a>
+            {% for event in upcomingEvents %}
+                <p>
+                    <a
+                        {% if event.sticky %}
+                            class="btn btn-danger"
+                        {% else %}
+                            class="btn btn-default"
                         {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
+                        href="{{ path('event_show', { 'id': event.id }) }}"
+                        data-toggle="tooltip"
+                        title="Details öffnen">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                        {{ event.name }}
+                    </a>
+                    ({% if event.date %}{{ event.date|date('d. M. Y') }}{% endif %})
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a class="btn btn-default"
+                            href="{{ path('event_edit', {'id':event.id}) }}"
+                            data-toggle="tooltip"
+                            title="Details von '{{event.name}}' bearbeiten">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    {% endif %}
+                </p>
+            {% endfor %}
         </div><!--body-->
         <div class="panel-footer">
             {% if is_granted('ROLE_ADMIN') %}
                 <a class="btn btn-default"
-                    href="{{ path('event_new') }}">
+                    href="{{ path('event_new') }}"
+                    data-toggle="tooltip"
+                    title="Neuer Event erstellen">
                     <span class="glyphicon glyphicon-plus"></span>
-                    Neuer Event erstellen
+                    Erstellen
                 </a>
             {% endif %}
         </div><!--footer-->
@@ -55,10 +64,13 @@
         </div>
     </div> <!--panel-->
     </div>
-
-
-
-
-
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 {% endblock %}
