@@ -38,10 +38,14 @@
                     </li>
                     <li>
                         Auf der ganzen Webseite findest du immer wieder
-                        <a class="btn btn-default">
+                        <a class="btn btn-default"
+                            data-toggle="tooltip"
+                            title="Das ist ein Tooltip. Er erklärt was passiert,
+                            wenn du den Button klickst. In diesem Fall: nichts.">
                             <span class="glyphicon glyphicon-eye-open"></span>
                             Buttons
-                        </a>. Einige haben sog. Tooltips. Fahre mit der Maus
+                        </a> welche Funktionen auslösen.
+                        Einige haben sog. Tooltips. Fahre mit der Maus
                         ohne zu klicken über den Button um den Tooltip anzuzeigen.
                         Wenn du diese Seite auf einem Smartphone anschaust, dann
                         lege den Finger ohne ihn zu bewegen länger als 1 Sekunde
@@ -63,7 +67,9 @@
                         <mark>{{ MissingProfilData }}</mark>
                     </p>
                     <p><a class="btn btn-primary"
-                        href="{{ path('fos_user_profile_edit') }}">
+                        href="{{ path('fos_user_profile_edit') }}"
+                        data-toggle="tooltip"
+                        title="Öffne hier dein Profil um es zu bearbeiten.">
                         <span class="glyphicon glyphicon-user"></span>
                         <span class="glyphicon glyphicon-pencil"></span>
                             Profil bearbeiten
@@ -72,7 +78,11 @@
                     <p>
                         <a class="btn btn-default"
                             href="{{path('info_privacy_policy')}}"
-                            target="_blank">
+                            target="_blank"
+                            data-toggle="tooltip"
+                            title="Lies die Datenschutzerklärung. Sie wird in
+                            einem separaten Fenster geöffnet. Diese Seite bleibt
+                            im Hintergrund offen.">
                             <span class="glyphicon glyphicon-lock"></span>
                             Datenschutzerklärung
                         </a>
@@ -81,4 +91,12 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 {% endblock %}
