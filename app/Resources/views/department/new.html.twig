@@ -17,16 +17,34 @@
     </div>
     <div class="panel-footer">
         <a onclick="form_department_new.submit();"
-            class="btn btn-primary">
+            class="btn btn-primary"
+            data-toggle="tooltip"
+            title="Das Ressort in der Datenbank anlegen.">
             <span class="glyphicon glyphicon-floppy-disk"></span>
             Speichern
         </a>
         <a class="btn btn-default"
-            href="{{ path('event_edit',{'id':event.id}) }}">
-            Zurück zum Event
+            href="{{ path('event_edit',{'id':event.id}) }}"
+            data-toggle="tooltip"
+            title="Nicht speichern und zurück zu {{event.name}} gehen.">
+            <span class="glyphicon glyphicon-remove"></span>
+            Abbrechen
         </a>
     </div>
 </div> <!-- panel -->
 </div> <!-- col -->
 </div> <!-- row -->
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    // Template:
+    /*<a href="#"
+    data-toggle="tooltip"
+    title="Bla">
+    </a>*/
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 {% endblock %}
