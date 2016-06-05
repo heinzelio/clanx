@@ -22,12 +22,16 @@
 
     <div class="panel-footer">
         <a onclick="form_department_edit.submit();"
-            class="btn btn-primary">
+            class="btn btn-primary"
+            data-toggle="tooltip"
+            title="Änderungen übernehmen und in der Datenbank speichern.">
             <span class="glyphicon glyphicon-floppy-disk"></span>
             Speichern
         </a>
         <a class="btn btn-default"
-            href="{{ path('department_show',{'id':department.Id,'event_id':event.Id}) }}">
+            href="{{ path('department_show',{'id':department.Id,'event_id':event.Id}) }}"
+            data-toggle="tooltip"
+            title="Nicht speichern und zurück zu {{department.name}}">
             <span class="glyphicon glyphicon-remove"></span>
             Zurück
         </a>
@@ -35,4 +39,12 @@
 </div><!--panel-->
 </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 {% endblock %}
