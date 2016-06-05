@@ -7,11 +7,20 @@
 {% block workspace %}
 <div class="row">
 <div class="col-md-4">
-    <h3>Ressort <em>„{{ department.name }}“</em></h3>
-    <h4>vom Event <em>„{{ event.name }}“</em></h4>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Ressort <mark>„{{ department.name }}“</mark> <br/>
+        <small>vom Event <mark>„{{ event.name }}“</mark></small>
+    </div>
 
-    {{ form_start(edit_form, {'name': 'form_department_edit'}) }}
-        {{ form_widget(edit_form) }}
+    <div class="panel-body">
+        {{ form_start(edit_form, {'name': 'form_department_edit'}) }}
+            {{ form_widget(edit_form) }}
+
+        {{ form_end(edit_form) }}
+    </div>
+
+    <div class="panel-footer">
         <a onclick="form_department_edit.submit();"
             class="btn btn-primary">
             <span class="glyphicon glyphicon-floppy-disk"></span>
@@ -22,7 +31,8 @@
             <span class="glyphicon glyphicon-remove"></span>
             Zurück
         </a>
-    {{ form_end(edit_form) }}
+    </div>
+</div><!--panel-->
 </div>
 </div>
 {% endblock %}
