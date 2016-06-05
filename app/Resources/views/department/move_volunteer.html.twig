@@ -9,14 +9,14 @@
 <div class="col-md-4">
 <div class="panel panel-default">
     <div class="panel-heading">
-    Verschiebe <mark>{{ user.forename }} {{ user.surname }}</mark>
+    Verschiebe <mark>{{ user }}</mark>
     </div>
-    {{ form_start(move_form, {'name': 'form_volunteer_move'}) }}
     <div class="panel-body">
     Verschiebe den Hölfer aus dem Ressort <mark>{{ department.name }}</mark>
     in folgendes Ressort:
-
+        {{ form_start(move_form, {'name': 'form_volunteer_move'}) }}
         {{ form_widget(move_form) }}
+        {{ form_end(move_form) }}
     </div>
     <div class="panel-footer">
         <a onclick="form_volunteer_move.submit();"
@@ -30,7 +30,6 @@
             Abbrechen
         </a>
     </div>
-    {{ form_end(move_form) }}
 </div>
 </div>
 </div>
