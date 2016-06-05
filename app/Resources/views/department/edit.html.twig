@@ -18,7 +18,11 @@
             Speichern
         </a>
     {{ form_end(edit_form) }}
-    <a class="btn btn-default" href="{{ path('event_edit',{'id':event.id}) }}">Zurück zum Event</a>
+    <a class="btn btn-default"
+        href="{{ path('event_edit',{'id':event.id}) }}">
+        <span class="glyphicon glyphicon-remove"></span>
+        Abbrechen
+    </a>
     {{ form_start(delete_form) }}
         <input class="btn btn-danger" type="submit" value="Delete">
     {{ form_end(delete_form) }}
