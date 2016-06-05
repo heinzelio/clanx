@@ -26,7 +26,9 @@
             <p>
                 <!-- find the route's name in FOSUserBundle/Resources/config/routing/registration.xml-->
                 <a class="btn btn-primary btn-large"
-                    href="{{ path('fos_user_registration_register')}} ">
+                    href="{{ path('fos_user_registration_register')}} "
+                    data-toggle="tooltip"
+                    title="Klicke hier um dich auf der Webseite zu registrieren.">
                         <span class="glyphicon glyphicon-pencil"></span>
                     Registrieren.
                 </a>
@@ -41,7 +43,9 @@
             <p>
                 <!-- find the route's name in FOSUserBundle/Resources/config/routing/security.xml-->
                 <a class="btn btn-primary btn-large"
-                    href="{{ path('fos_user_security_login')}} ">
+                    href="{{ path('fos_user_security_login')}} "
+                    data-toggle="tooltip"
+                    title="Klicke hier um dich mit deinem Login anzumelden.">
                     <span class="glyphicon glyphicon-user"></span>
                     Anmelden
                 </a>
@@ -58,5 +62,9 @@
 {% endblock %}
 
 {% block javascripts %}
-<!-- no custom scripts at the moment -->
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 {% endblock %}
