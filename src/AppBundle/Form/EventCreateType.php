@@ -45,7 +45,8 @@ class EventCreateType extends EventType
                 'mapped' => false,
                 'attr' => array(
                     'rows' => 7,
-                    'cols' => 80
+                    'cols' => 80,
+                    'id' => 'event_new_departments'
                 ),
             ));
     }
