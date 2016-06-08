@@ -289,13 +289,6 @@ class EventController extends Controller
                 'label' => "Bemerkung / Wunsch",
                 'required' => false
             ))
-            ->add('save', SubmitType::class, array(
-                'label' => 'Eintragen',
-                'attr' => array('class'   => 'btn btn-danger',
-                                'type'    => 'submit',
-                                'onclick' => 'return confirm("Willst du dich wirklich bei '.$event->getName().' eintragen?")'
-                                )
-            ))
             ->setAction($this->generateUrl('event_enroll', array('id' => $event->getID())))
             ->setMethod('POST')
             ->getForm()

@@ -4,10 +4,6 @@
     {{ event.name }}
 {% endblock %}
 
-{% block javascripts %}
-    <script src="{{ asset('js/datepicker.js')}}"></script>
-{% endblock %}
-
 {% block workspace %}
 
 <div class="row">
@@ -28,9 +24,11 @@
                 {% for dpt in myDepartmentsAsChief %}
                     <br />
                     <a href="{{ path('department_show',{'id':dpt.Id,'event_id':event.Id}) }}"
-                    class="btn btn-default">
-                    <span class="glyphicon glyphicon-eye-open"></span>
-                    {{ dpt.name }}
+                        class="btn btn-default"
+                        data-toggle="tooltip"
+                        title="Zeige Details des Ressorts {{dpt.name}}.">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                        {{ dpt.name }}
                     </a>
                 {% endfor %}
             </p>
@@ -41,9 +39,11 @@
                 {% for dpt in myDepartmentsAsDeputy %}
                     <br />
                     <a href="{{ path('department_show',{'id':dpt.Id,'event_id':event.Id}) }}"
-                    class="btn btn-default">
-                    <span class="glyphicon glyphicon-eye-open"></span>
-                    {{ dpt.name }}
+                        class="btn btn-default"
+                        data-toggle="tooltip"
+                        title="Zeige Details des Ressorts {{dpt.name}}">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                        {{ dpt.name }}
                     </a>
                 {% endfor %}
             </p>
@@ -52,20 +52,28 @@
     <div class="panel-footer">
 
         <a class="btn btn-default"
-	    href="{{ path('event_index') }}">
-            Zurück zur Übersicht
+	       href="{{ path('event_index') }}"
+           data-toggle="tooltip"
+           title="Gehe zurück zur Eventübersicht">
+           <span class="glyphicon glyphicon-remove"></span>
+            Abbrechen
         </a>
 
         {% if mayMail %}
-            <a class="btn btn-default" href="{{ path ('event_mail_enrolled', {'id': event.id})}}">
+            <a class="btn btn-default"
+                href="{{ path ('event_mail_enrolled', {'id': event.id})}}"
+                data-toggle="tooltip"
+                title="Schreibe ein Email an alle Hölfer von diesem Event.">
                 <span class="glyphicon glyphicon-envelope" ></span>
-                EMail <span class="small">an Hölfer von diesem Event</span>
+                Email schreiben
             </a>
         {% endif %}
 
         {% if mayEdit %}
             <a class="btn btn-default"
-                href="{{ path('event_edit', { 'id': event.id }) }}">
+                href="{{ path('event_edit', { 'id': event.id }) }}"
+                data-toggle="tooltip"
+                title="Details von {{event.name}} bearbeiten.">
                 <span class="glyphicon glyphicon-pencil"></span>
                 Bearbeiten
             </a>
@@ -74,7 +82,9 @@
         {% if mayDelete %}
             {{ form_start(delete_form) }}
                 <input class="btn btn-danger" type="submit" value="Löschen"
-                    onclick="return confirm('{{event.name}} wirklich löschen?')"/>
+                    onclick="return confirm('{{event.name}} wirklich löschen?')"
+                    data-toggle="tooltip"
+                    title="Den Event {{event.name}} aus der Datenbank löschen."/>
             {{ form_end(delete_form) }}
         {% endif %}
 
@@ -91,10 +101,17 @@
         <div class="panel-heading">Jetzt als Hölfer eintragen</div>
         <div class="panel-body">
             {# find details of this form in EventController.createEnrollForm() #}
-            {{ form_start(enroll_form) }}
+                {{ form_start(enroll_form, {'name': 'event_enroll_form'}) }}
                 {{form_widget(enroll_form) }}
                 {#submit button is being generated in the controller.#}
             {{ form_end(enroll_form) }}
+            <a class="btn btn-danger"
+                onclick="event_enroll_form.submit();"
+                data-toggle="tooltip"
+                title="Änderungen übernehmen und in der Datenbank speichern.">
+                <span class="glyphicon glyphicon-floppy-disk"></span>
+                Eintragen
+            </a>
         </div>
         </div> <!--panel-->
     {% endif %}
@@ -106,7 +123,10 @@
             <a class="btn btn-default"
                 href="{{ path('department_show',{
                 'id':commitment.department.id,'event_id':event.id
-                }) }}">
+                }) }}"
+                data-toggle="tooltip"
+                title="Zeige Details des Ressorts {{commitment.department.name}}">
+                <span class="glyphicon glyphicon-eye-open"></span>
                 {{commitment.department.name}}
             </a>
         </p>
@@ -117,11 +137,11 @@
                 href="{{ path('event_redirect_mail_to',{
                         'id':event.id,
                         'user_id':commitment.department.chiefUser.id})
-                    }}">
+                    }}"
+                data-toggle="tooltip"
+                title="Schreibe ein Email an {{commitment.department.chiefUser}}.">
                 <span class="glyphicon glyphicon-envelope"></span>
-                {{commitment.department.chiefUser.forename}}
-                {{commitment.department.chiefUser.surname}}
-
+                {{commitment.department.chiefUser}}
             </a>
         </p>
         {% endif %}
@@ -133,10 +153,11 @@
                 href="{{ path('event_redirect_mail_to',{
                         'id':event.id,
                         'user_id':commitment.department.deputyUser.id})
-                    }}">
+                    }}"
+                data-toggle="tooltip"
+                title="Schreibe ein Email an {{commitment.department.deputyUser}}.">
                 <span class="glyphicon glyphicon-envelope"></span>
-                {{commitment.department.deputyUser.forename}}
-                {{commitment.department.deputyUser.surname}}
+                {{commitment.department.deputyUser}}
 
             </a>
         </p>
@@ -160,12 +181,21 @@
     <div class="panel-footer">
         {% if mayEditCommitment %}
         <a class="btn btn-default"
-            href="{{path('commitment_edit',{'id':commitment.id})}}">
+            href="{{path('commitment_edit',{'id':commitment.id})}}"
+            data-toggle="tooltip"
+            title="Ändere oder lösche deine Eintragung als Hölfer.">
             <span class="glyphicon glyphicon-pencil"></span>
             Bearbeiten
         </a>
         {% else %}
-        <a class="btn btn-default" disabled="disabled">
+        <a class="btn btn-default"
+            disabled="disabled">
+        <!-- tooltips gönd nöd uf disabledem Button :(
+            data-toggle="tooltip"
+            title="Ändern oder löschen ist nicht mehr möglich. Deine Teilnahme
+            ist definitiv. (Falls ein Problem besteht, nimm bitte mit deinem
+            Ressortleiter Kontakt auf.)"
+        -->
             <span class="glyphicon glyphicon-lock"></span>
             Bearbeiten nicht mehr möglich
         </a>
@@ -175,4 +205,13 @@
     {% endif %}
 </div> <!-- col -->
 </div> <!-- row -->
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/datepicker.js')}}"></script>
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 {% endblock %}
