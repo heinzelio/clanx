@@ -1,3 +1,5 @@
+<!-- this is a nested template. See "event/show.html.twig" for context -->
+
 <div class="panel panel-primary">
 <div class="panel-heading">Hölfer pro Ressort</div>
 <div class="panel-body">
@@ -9,7 +11,9 @@
                 {% else %}
                     btn-default
                 {% endif %}
-            ">
+            "
+            data-toggle="tooltip"
+            title="Zeige Details des Ressorts {{dept.name}}.">
             <span class="glyphicon glyphicon-eye-open"></span>
             {{ dept.name }}: {{ dept.usercount}} Hölfer
         </a>
