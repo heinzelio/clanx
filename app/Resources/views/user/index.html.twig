@@ -32,10 +32,20 @@
                     <td>{{ user.occupation }}</td>
                     <td>
                         <div>
-                            <a class="btn btn-default btn-xs" href="{{ path('user_show', { 'id': user.id }) }}">Zeigen</a>
+                            <a class="btn btn-default btn-xs"
+                                href="{{ path('user_show', { 'id': user.id }) }}"
+                                data-toggle="tooltip"
+                                title="Details von {{user}} anzeigen.">
+                                Zeigen
+                            </a>
                         </div>
                         <div>
-                            <a class="btn btn-default btn-xs" href="{{ path('user_edit', { 'id': user.id }) }}">Bearbeiten</a>
+                            <a class="btn btn-default btn-xs"
+                                href="{{ path('user_edit', { 'id': user.id }) }}"
+                                data-toggle="tooltip"
+                                title="Daten von {{user}} bearbeiten.">
+                                Bearbeiten
+                            </a>
                         </div>
                     </td>
                 </tr>
@@ -51,14 +61,18 @@
             {% endif %}
 
             <a class="btn btn-default"
-                href="{{ path('user_mail_all') }}">
+                href="{{ path('user_mail_all') }}"
+                data-toggle="tooltip"
+                title="Schreibe ein Email an alle registrierten Benutzer.">
                 <span class="glyphicon glyphicon-envelope"></span>
-                EMail <span class="small">an alle registrierte Benutzer</span>
+                Email
             </a>
 
             {% if is_granted('ROLE_SUPER_ADMIN') %}
                 <a class="btn btn-danger"
-                    href="{{ path('admin_upload_data') }}">
+                    href="{{ path('admin_upload_data') }}"
+                    data-toggle="tooltip"
+                    title="Benutzerdaten vom früheren System hochladen (csv Format erwartet.)">
                     <span class="glyphicon glyphicon-upload"></span>
                     Upload legacy user data</a>
             {% endif %}
@@ -66,4 +80,12 @@
     </div> <!-- Panel -->
 </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 {% endblock %}
