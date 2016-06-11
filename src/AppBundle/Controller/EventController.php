@@ -339,7 +339,7 @@ class EventController extends Controller
         return $this->redirectToRoute('event_show', array('id' => $event->getID()));
     }
 
-    private function sendMail($user,$dep,$event){
+    private function sendMail($user,$dep,$event,$commitment){
         $message = \Swift_Message::newInstance();
         $dankeImgLink =  $message->embed(\Swift_Image::fromPath('img/emails/danke.png'));
         $message->setSubject('Clanx Hölfer Bestätigung')
@@ -374,6 +374,36 @@ class EventController extends Controller
             )
         ;
         $this->get('mailer')->send($message);
+
+        $chiefUser = $dep->getChiefUser();
+        if($chiefUser)
+        {
+            $messageToChief = \Swift_Message::newInstance();
+            $messageToChief->setSubject('Neue Hölferanmeldung im Ressort '.$dep->getName())
+                ->setFrom(array($user->getEmail()=>$user))
+                ->setTo($chiefUser->getEmail())
+                ->setBody(
+                    $this->renderView('emails\commitmentNotificationToChief.html.twig',
+                        array('chief' => $chiefUser,
+                            'user' => $user,
+                            'department' => $dep,
+                            'commitment' => $commitment,
+                        )
+                    ),
+                    'text/html'
+                )
+                ->addPart(
+                    $this->renderView('emails\commitmentNotificationToChief.txt.twig',
+                        array('chief' => $chiefUser,
+                            'user' => $user,
+                            'department' => $dep,
+                            'commitment' => $commitment,
+                        )
+                    ),
+                    'text/plain'
+                );
+                $this->get('mailer')->send($messageToChief);
+        }
     }
 
 

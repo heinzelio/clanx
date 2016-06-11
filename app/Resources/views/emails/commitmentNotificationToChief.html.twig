@@ -1,0 +1,35 @@
+{# app\Resources\views\emails\commitmentNotificationToChief.html.twig #}
+
+<h3>Hallo {{chief}}</h3>
+
+<p>
+    {{user}} hat sich soeben als Hölfer im Ressort {{department.name}} eingetragen.
+</p>
+{% if commitment.remark %}
+    <p>
+        Er hat folgende Bemerkung hinzugefügt:
+    </p>
+    <p>
+        <blockquote>
+            <i>
+                {{commitment.remark|nl2br}}
+            </i>
+        </blockquote>
+    </p>
+{% endif %}
+{% if commitment.possibleStart %}
+<p>
+    Er hat als früheste Startzeit angegeben: <i>{{commitment.possibleStart}}</i>
+</p>
+{% endif %}
+
+<p>
+    Antworte direkt auf dieses Mail um {{user}} ein Mail zu schreiben.
+</p>
+<p>
+    Besuche folgende Seite, um eine Übersicht über dein Ressort zu sehen:
+    {{ absolute_url(path('department_show', { 'id': department.id, 'event_id': department.event.id })) }}
+</p>
+
+<p>Liebe Grüsse: </p>
+<h3>die Clanx Hölfer DB</h3>
