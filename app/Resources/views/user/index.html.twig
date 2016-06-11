@@ -53,13 +53,7 @@
             </tbody>
         </table>
         <div class="panel-footer">
-            {% if is_granted('ROLE_SUPER_ADMIN') %}
-                <a class="btn btn-default"
-                    href="{{ path('user_new') }}">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    Neuer Benutzer anlegen</a>
-            {% endif %}
-
+            
             <a class="btn btn-default"
                 href="{{ path('user_mail_all') }}"
                 data-toggle="tooltip"
