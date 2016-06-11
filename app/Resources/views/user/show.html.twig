@@ -1,14 +1,16 @@
 {% extends 'base_nav.html.twig' %}
 
 {% block title %}
-    {{user.forename}} {{user.surname}}
+    {{user}}
 {% endblock %}
 
 {% block workspace %}
 <div class="row">
 <div class="col-md-6 col-md-offset-3">
 <div class="panel panel-default">
-    <div class="panel-heading">Benutzer {{user.forename}} {{user.surname}}</div>
+    <div class="panel-heading">
+        Benutzer {{user}}
+    </div>
 
     <table class="table">
         <tbody>
@@ -76,10 +78,30 @@
     </table>
 
     <div class="panel-footer">
-        <a class="btn btn-default" href="{{ path('user_index') }}">Zurück zur Übersicht</a>
-        <a class="btn btn-default" href="{{ path('user_edit', { 'id': user.id }) }}">Benutzer bearbeiten</a>
+        <a class="btn btn-default"
+            href="{{ path('user_index') }}"
+            data-toggle="tooltip"
+            title="Kehre zurück zur Übersicht.">
+            <span class="glyphicon glyphicon-remove"></span>
+            Abbrechen
+        </a>
+        <a class="btn btn-default"
+            href="{{ path('user_edit', { 'id': user.id }) }}"
+            data-toggle="tooltip"
+            title="Bearbeite Details des Benutzers.">
+            <span class="glyphicon glyphicon-pencil"></span>
+            Bearbeiten
+        </a>
     </div>
 </div>
 </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 {% endblock %}
