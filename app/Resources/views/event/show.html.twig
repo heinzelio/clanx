@@ -15,7 +15,7 @@
             <p> Der Event <strong>{{ event.name }}</strong> findet am
                 {% if event.date %}{{ event.date|date('d. M. Y') }}{% endif %}
                 statt.</p>
-            <p class="small"> {{ event.description}}
+            <p class="small"> {{ event.description|nl2br}}
             </p>
             <p>Bis jetzt eingetragene Hölfer: {{ enrolledCount }}</p>
 
