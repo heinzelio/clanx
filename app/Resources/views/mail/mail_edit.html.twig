@@ -10,36 +10,38 @@
     <div class="panel panel-primary">
         <div class="panel-heading">Mail schreiben
         </div> <!-- heading -->
-
-        {{ form_start(mail_form, {
-            'action': path('mail_send'),
-            'method': 'POST',
-            'name': 'form_mail_edit'
-        }) }}
-
         <div class="panel-body">
-            {{form_widget(mail_form) }}
+            {{ form_start(mail_form, {
+                'action': path('mail_send'),
+                'method': 'POST',
+                'name': 'form_mail_edit'
+            }) }}
+                {{form_widget(mail_form) }}
+            {{ form_end(mail_form)}}
         </div><!-- body -->
         <div class="panel-footer">
             <a class="btn btn-primary"
-                onclick="form_mail_edit.submit();">
+                onclick="form_mail_edit.submit();"
+                data-toggle="tooltip"
+                title="Sende das Email jetzt an alle Empfänger.">
                 <span class="glyphicon glyphicon-envelope"></span>
                 Senden
             </a>
             <a class="btn btn-default"
-                href="{{ path('mail_abort') }}">
+                href="{{ path('mail_abort') }}"
+                data-toggle="tooltip"
+                title="Verwerfe das Email und kehre zurück zur vorherigen Seite">
                 <span class="glyphicon glyphicon-remove"></span>
                 Abbrechen
             </a>
         </div> <!-- footer -->
-        {{ form_end(mail_form)}}
     </div>
 
 </div><!-- col -->
 <div class="col-md-5">
     <div class="panel panel-default">
         <div class="panel-heading">
-            Metadata
+            Metadaten
         </div>
         <div class="panel-body">
             {% if mail.recipient %}
@@ -72,4 +74,12 @@
 </div><!-- col -->
 </div><!-- row -->
 
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 {% endblock %}
