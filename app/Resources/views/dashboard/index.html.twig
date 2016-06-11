@@ -7,90 +7,25 @@
 {% block workspace %}
     <div class="row">
         <div class="col-md-12">
-            <div class="jumbotron">
                 <h2>Home</h2>
-                <h3>Verwendungshinweise:</h3>
-                <ul>
-                    <li>
-                        Benutze die Menuzeile ganz oben um die einzelnen Arbeitsbereiche
-                        aufzurufen.
-                    </li>
-                    <li>
-                        Der Link <strong>"Home"</strong> führt dich auf diese Seite. <br/>
-                        Der Link <strong>"Events"</strong> öffnet dir eine Liste aller anstehenden
-                        Events.
-                    </li>
-                    <li>
-                        Wenn wir einen Event wichtig finden, setzen wir ihn in die
-                        Menuzeile und <span class="hot">markieren</span> ihn. Du kannst den Event von dort,
-                        oder über die Liste der anstehenden Events aufrufen.
-                    </li>
-                    <li>
-                        Der Link <strong>"Info"</strong> zeigt Daten über die
-                        bei der Programmierung verwendeteten Produkte,
-                        Lizenzen und Versionen.
-                    </li>
-                    <li>
-                        Der Link mit deinem Benutzernamen ganz rechts aussen öffnet
-                        ein Menu über das du dein Profil bearbeiten und dich Abmelden
-                        kannst. (Melde dich immer ab, wenn du dich von einem öffentlichen
-                        Computer auf dieser Webseite anmeldest.)
-                    </li>
-                    <li>
-                        Auf der ganzen Webseite findest du immer wieder
-                        <a class="btn btn-default"
-                            data-toggle="tooltip"
-                            title="Das ist ein Tooltip. Er erklärt was passiert,
-                            wenn du den Button klickst. In diesem Fall: nichts.">
-                            <span class="glyphicon glyphicon-eye-open"></span>
-                            Buttons
-                        </a> welche Funktionen auslösen.
-                        Einige haben sog. Tooltips. Fahre mit der Maus
-                        ohne zu klicken über den Button um den Tooltip anzuzeigen.
-                        Wenn du diese Seite auf einem Smartphone anschaust, dann
-                        lege den Finger ohne ihn zu bewegen länger als 1 Sekunde
-                        auf den Button, um den Tooltip anzuzeigen. (Machmal
-                        erscheint dann auch ein Kontextmenu. Tippe ausserhalb
-                        des Menus um dieses wieder zu schliessen und den Tooltip
-                        zu lesen.)
-                    </li>
-                </ul>
-                {% if ShowProfileUpdate %}
-                    <h2>Aktualisiere dein Profil!</h2>
-                    <p> Wir haben festgestellt, dass du dein Profil noch nicht
-                        vollständig ausgefüllt hast.
-                    </p>
-                    <p> Nimm dir doch einen Moment Zeit und fülle noch diese
-                        Felder aus:
-                    </p>
-                    <p>
-                        <mark>{{ MissingProfilData }}</mark>
-                    </p>
-                    <p><a class="btn btn-primary"
-                        href="{{ path('fos_user_profile_edit') }}"
-                        data-toggle="tooltip"
-                        title="Öffne hier dein Profil um es zu bearbeiten.">
-                        <span class="glyphicon glyphicon-user"></span>
-                        <span class="glyphicon glyphicon-pencil"></span>
-                            Profil bearbeiten
-                        </a>
-                    </p>
-                    <p>
-                        <a class="btn btn-default"
-                            href="{{path('info_privacy_policy')}}"
-                            target="_blank"
-                            data-toggle="tooltip"
-                            title="Lies die Datenschutzerklärung. Sie wird in
-                            einem separaten Fenster geöffnet. Diese Seite bleibt
-                            im Hintergrund offen.">
-                            <span class="glyphicon glyphicon-lock"></span>
-                            Datenschutzerklärung
-                        </a>
-                    </p>
-                {% endif %}
-            </div>
         </div>
-    </div>
+    </div> <!-- row for jumbotron -->
+    <div class="row">
+        <div class="col-md-6">
+            {% include "dashboard/panel_application_note.html.twig" %}
+        </div>
+        {% if ShowProfileUpdate %}
+        <div class="col-md-6">
+            {% include "dashboard/panel_update_profile.html.twig" %}
+        </div>
+        {% endif %}
+        <div class="col-md-6">
+            {% include "dashboard/panel_report_bug.html.twig" %}
+        </div>
+        <div class="col-md-6">
+            {% include "dashboard/panel_help_wanted.html.twig" %}
+        </div>
+    </div><!-- row for panels -->
 {% endblock %}
 
 {% block javascripts %}

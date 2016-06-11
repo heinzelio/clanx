@@ -1,0 +1,26 @@
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <h3>
+            Bäng!<img src="{{ asset('img/thunder.png') }}" alt="thunder" />
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        <p>
+            Du hast einen Fehler gefunden?
+        </p>
+        <p>
+            <a href="{{ path('info_mail_developer')}}"
+                class="btn btn-default"
+                data-toggle="tooltip"
+                title="Email an die Entwickler senden.">
+                <span class="glyphicon glyphicon-envelope"></span>
+                Melde das doch bitte den Entwicklern
+            </a>
+            <br />
+            Beschreibe auf welcher Unterseite du den Fehler entdeckt hast,
+            und wie wir den Fehler bei uns reproduzieren können. <br />
+            Vielen Dank für deine Mithilfe!
+        </p>
+    </div>
+</div>
