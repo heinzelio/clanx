@@ -5,6 +5,7 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Doctrine\ORM\EntityRepository;
 
 class DepartmentType extends AbstractType
 {
@@ -20,10 +21,24 @@ class DepartmentType extends AbstractType
                 'label' => 'Anforderung (z.B. mind 18j)',
             ))
             ->add('chiefUser',null,array(
-                'label' => 'Ressortleiter'
+                'label' => 'Ressortleiter',
+                'query_builder' => function (EntityRepository $repo) {
+                    return $repo->createQueryBuilder('u')
+                        ->orderBy('u.username', 'ASC')
+                        ->orderBy('u.surname', 'ASC')
+                        ->orderBy('u.forename', 'ASC')
+                        ;
+                    }
             ))
             ->add('deputyUser',null,array(
-                'label' => 'Stellvertreter'
+                'label' => 'Stellvertreter',
+                'query_builder' => function (EntityRepository $repo) {
+                    return $repo->createQueryBuilder('u')
+                        ->orderBy('u.username', 'ASC')
+                        ->orderBy('u.surname', 'ASC')
+                        ->orderBy('u.forename', 'ASC')
+                        ;
+                    }
             ))
         ;
     }
