@@ -6,7 +6,12 @@
 
 {% block javascripts %}
     <script src="{{ asset('js/datepicker.js')}}"></script>
-{% endblock %}
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+    {% endblock %}
 
 {% block workspace %}
 <div class="row">
@@ -16,39 +21,49 @@
         Benutzer bearbeiten
     </div>
 
-    {{ form_start(edit_form, {'name': 'form_user_edit'}) }}
     <div class="panel-body">
-        {{ form_widget(edit_form) }}
+        {{ form_start(edit_form, {'name': 'form_user_edit'}) }}
+            {{ form_widget(edit_form) }}
+        {{ form_end(edit_form) }}
     </div>
     <div class="panel-footer">
         <a class="btn btn-primary"
-            onclick="form_user_edit.submit();">
+            onclick="form_user_edit.submit();"
+            data-toggle="tooltip"
+            title="Änderungen übernehmen und in der Datenbank speichern.">
             <span class="glyphicon glyphicon-floppy-disk"></span>
             Speichern</a>
         {% if may_demote %}
             <a class="btn btn-default"
-                href="{{ path('user_demote', { 'id': user.id })}}">
+                href="{{ path('user_demote', { 'id': user.id })}}"
+                data-toggle="tooltip"
+                title="Diesen Benutzer wieder zu einen Benutzer ohne spezielle Rechte machen.">
                 <span class="glyphicon glyphicon-remove-circle"></span>
                 Adminrechte wegnehmen</a>
         {% endif %}
         {% if may_promote_admin %}
             <a class="btn btn-default"
-                href="{{ path('user_promote_admin', { 'id': user.id })}}">
+                href="{{ path('user_promote_admin', { 'id': user.id })}}"
+                data-toggle="tooltip"
+                title="Diesem Benutzer Administrationsrechte erteilen. (Administratoren können Daten manipulieren und löschen.)">
                 <span class="glyphicon glyphicon-star"></span>
                 Zum Admin machen</a>
         {% endif %}
         {% if may_promote_super_admin %}
             <a class="btn btn-default"
-                href="{{ path('user_promote_superadmin', { 'id': user.id })}}">
+                href="{{ path('user_promote_superadmin', { 'id': user.id })}}"
+                data-toggle="tooltip"
+                title="Diesen Benutzer zum SA machen. (Ich hoffe, du weisst was du tust.)">
                 <span class="glyphicon glyphicon-star-empty"></span>
                 Zum Superadmin machen</a>
         {% endif %}
         <a class="btn btn-default"
-            href="{{ path('user_index') }}">
+            href="{{ path('user_index') }}"
+            data-toggle="tooltip"
+            title="Nicht speichern und zurück zur Übersicht gehen.">
             <span class="glyphicon glyphicon-remove"></span>
-            Zurück zur Übersicht</a>
+            Abbrechen</a>
     </div>
-    {{ form_end(edit_form) }}
 </div>
 </div>
 </div>
