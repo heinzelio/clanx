@@ -48,28 +48,6 @@ LOCK TABLES `commitment` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `dbinfo`
---
-
-DROP TABLE IF EXISTS `dbinfo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `dbinfo` (
-  `version` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `dbinfo`
---
-
-LOCK TABLES `dbinfo` WRITE;
-/*!40000 ALTER TABLE `dbinfo` DISABLE KEYS */;
-INSERT INTO `dbinfo` VALUES (2);
-/*!40000 ALTER TABLE `dbinfo` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `department`
 --
 
