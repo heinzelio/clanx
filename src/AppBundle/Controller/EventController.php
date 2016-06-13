@@ -267,15 +267,22 @@ class EventController extends Controller
             }
             $choices[$text] = $dep->getID();
         }
-        $emptyData = $event->getDate()->format('d.m.Y')." 08:00";
+        $threeDays = new \DateInterval('P2D');
+        $emptyData = $event->getDate()->format('D, d.m.Y')
+        ." 08:00 - "
+        .$event->getDate()->add($threeDays)->format('D, d.m.Y')
+        . " 20:00";
         return $this->createFormBuilder()
             ->add('department', ChoiceType::class, array(
                 'label' => 'für Ressort (ohne Garantie)',
                 'choices'  => $choices
             ))
-            ->add('possibleStart', TextType::class, array(
-                'label' => 'frühestes Startdatum & Zeit',
+            ->add('possibleStart', TextareaType::class, array(
+                'label' => 'Ich helfe an folgenden Tagen (bitte auch Zeit angeben)',
                 'data' => $emptyData,
+                'attr' => array(
+                    'rows' => 4
+                )
             ))
             ->add('shirtSize',ShirtSizeType::class,array(
                 'label' => 'TShirt Grösse',
@@ -287,7 +294,10 @@ class EventController extends Controller
             ))
             ->add('remark', TextareaType::class, array(
                 'label' => "Bemerkung / Wunsch",
-                'required' => false
+                'required' => false,
+                'attr' => array(
+                    'rows' => 4
+                )
             ))
             ->setAction($this->generateUrl('event_enroll', array('id' => $event->getID())))
             ->setMethod('POST')
