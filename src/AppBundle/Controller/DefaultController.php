@@ -3,9 +3,9 @@
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response; // see "adminAction"
 
 class DefaultController extends Controller
 {
@@ -15,16 +15,25 @@ class DefaultController extends Controller
     public function indexAction(Request $request)
     {
         // replace this example code with whatever you need
+        if($this->isGranted('ROLE_USER')){
+            return $this->redirectToRoute('dashboard_index');
+        }
+        
         return $this->render('default/index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..'),
         ]);
     }
 
+
     /**
-     * @Route("/admin")
+     * Shows help to the registration process.
+     *
+     * @Route("/help/registration", name="default_help_registration")
+     * @Method("GET")
      */
-	public function adminAction(Request $request)
-	{
-		return new Response('<html><body>Admin page!</body></html>');
-	}
+    public function helpRegistrationAction()
+    {
+        return $this->render('default/help_registration.html.twig');
+    }
+
 }

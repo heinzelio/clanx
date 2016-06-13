@@ -19,6 +19,8 @@ class CommitmentRepository extends EntityRepository
         return  $qb->getQuery()->getSingleScalarResult();
     }
 
+    // not used anymore...
+    // still here for documentation purposes
     public function existsFor($user,$event)
     {
         $em = $this->getEntityManager();

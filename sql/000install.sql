@@ -48,28 +48,6 @@ LOCK TABLES `commitment` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `dbinfo`
---
-
-DROP TABLE IF EXISTS `dbinfo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `dbinfo` (
-  `version` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `dbinfo`
---
-
-LOCK TABLES `dbinfo` WRITE;
-/*!40000 ALTER TABLE `dbinfo` DISABLE KEYS */;
-INSERT INTO `dbinfo` VALUES (2);
-/*!40000 ALTER TABLE `dbinfo` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `department`
 --
 
@@ -269,7 +247,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (2,'chriglburri','chriglburri','chriglburri@gmail.com','chriglburri@gmail.com',1,'szb7i5rkh340oogcck0ccsswwos84s0','$2y$13$SrVTOBVIOaWyy4owPbHZaObggMPfwksKvHvwMXWJgp//X/WIkIlCK','2016-04-25 12:08:27',0,0,NULL,NULL,NULL,'a:1:{i:0;s:16:\"ROLE_SUPER_ADMIN\";}',0,NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,'speznaz','speznaz','kaelin.severin@gmail.com','kaelin.severin@gmail.com',1,'4q67qx6hvugwkow48w44ss0sk08og8s','$2y$13$DYZRs6acDPm.OqxKj7kbwOUu4qevL5IQSZ0X59JyTA.101Kh5Po1m',NULL,0,0,NULL,NULL,NULL,'a:1:{i:0;s:16:\"ROLE_SUPER_ADMIN\";}',0,NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `user` VALUES (1,'chriglburri','chriglburri','chriglburri@gmail.com','chriglburri@gmail.com',1,'szb7i5rkh340oogcck0ccsswwos84s0','$2y$13$SrVTOBVIOaWyy4owPbHZaObggMPfwksKvHvwMXWJgp//X/WIkIlCK','2016-04-25 12:08:27',0,0,NULL,NULL,NULL,'a:1:{i:0;s:16:\"ROLE_SUPER_ADMIN\";}',0,NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

@@ -15,6 +15,7 @@ use FOS\UserBundle\Util\LegacyFormHelper;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
@@ -79,18 +80,55 @@ class ProfileFormType extends AbstractType
     protected function buildUserForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('forename')
-            ->add('surname')
-            ->add('gender', GenderType::class)
-            ->add('dateOfBirth', DateType::class, array('widget' => 'single_text')) // this makes a html5 date picker. Awesom!
-            ->add('street')
-            ->add('zip')
-            ->add('city')
-            ->add('country')
-            ->add('phone')
-            ->add('occupation')
-            ->add('username', null, array('label' => 'form.username', 'translation_domain' => 'FOSUserBundle'))
-            ->add('email', LegacyFormHelper::getType('Symfony\Component\Form\Extension\Core\Type\EmailType'), array('label' => 'form.email', 'translation_domain' => 'FOSUserBundle'))
+            ->add('forename', null, array(
+                'label' => 'Vorname',
+            ))
+            ->add('surname', null, array(
+                'label' => 'Nachname',
+            ))
+            ->add('gender', GenderType::class, array(
+                'label' => 'Geschlecht',
+            ))
+            ->add('dateOfBirth', DateType::class, array(
+                'widget' => 'single_text',
+                'format' => 'dd.MM.yyyy', // sync with datepicker.js
+                'html5' => false,
+                'attr' => array('class'=>'datepicker birthday'),
+                'label' => 'Geburtsdatum',
+                'required' => false,
+            ))
+            ->add('street', null, array(
+                'label' => 'Strasse',
+                'required' => false,
+            ))
+            ->add('zip', null, array(
+                'label' => 'PLZ',
+                'required' => false,
+            ))
+            ->add('city', null, array(
+                'label' => 'Ort',
+                'required' => false,
+            ))
+            ->add('country', CountryType::class, array(
+                'label' => 'Land',
+                'required' => false,
+            ))
+            ->add('phone', null, array(
+                'label' => 'Telefon',
+                'required' => false,
+            ))
+            ->add('occupation', null, array(
+                'label' => 'Beruf / Fachbereich',
+                'required' => false,
+            ))
+            ->add('username', null, array(
+                'label' => 'form.username',
+                'translation_domain' => 'FOSUserBundle',
+            ))
+            ->add('email', LegacyFormHelper::getType('Symfony\Component\Form\Extension\Core\Type\EmailType'), array(
+                'label' => 'form.email',
+                'translation_domain' => 'FOSUserBundle',
+            ))
         ;
     }
 }

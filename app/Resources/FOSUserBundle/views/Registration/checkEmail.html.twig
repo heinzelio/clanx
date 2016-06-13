@@ -9,12 +9,14 @@
                 <div class="jumbotron">
                     <h2>
                         Registrierung in Bearbeitung...
-
+                        <span class="glyphicon glyphicon-envelope"></span>
                     </h2>
                     <p>
-                        <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
                         Ein EMail mit dem Aktivierungslink wurde an die Adresse
-                        {{ user.email }} geschickt.
+                        <br />
+                        <mark>{{ user.email }}</mark>
+                        <br/>
+                        geschickt.
                     </p>
                     <p>
                         Clicke auf den Link im Mail um deine Registrierung abzuschliessen.

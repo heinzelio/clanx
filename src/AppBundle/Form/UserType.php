@@ -3,12 +3,9 @@
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-
-use AppBundle\Form\GenderType;
 
 class UserType extends AbstractType
 {
@@ -18,23 +15,48 @@ class UserType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $ctYear = date("Y");
         $builder
-            ->add('forename')
-            ->add('surname')
-            ->add('gender', GenderType::class)
-            // ->add('dateOfBirth',DateType::class, array(
-            //         'widget' => 'choice',
-            //         'years' => range(1900,$ctYear)))
-            ->add('dateOfBirth',DateType::class,array('widget' => 'single_text')) // this makes a html5 date picker. Awesom!
-            ->add('street')
-            ->add('zip')
-            ->add('city')
-            ->add('country')
-            ->add('phone')
-            ->add('occupation')
+            ->add('forename', null, array(
+                'label'=>'Vorname'
+            ))
+            ->add('surname', null, array(
+                'label'=>'Nachname'
+            ))
+            ->add('gender', GenderType::class, array(
+                'label'=>'Geschlecht'
+            ))
+            ->add('dateOfBirth', BirthdayType::class,array(
+                'widget' => 'single_text',
+                'format' => 'dd.MM.yyyy', // sync with datepicker.js
+                'html5' => false,
+                'attr' => array('class'=>'datepicker birthday'),
+                'label' => 'Geburtsdatum',
+                'required' => false,
+            ))
+            ->add('street', null, array(
+                'label'=>'Adresse',
+                'required' => false,
+            ))
+            ->add('zip', null, array(
+                'label'=>'PLZ',
+                'required' => false,
+            ))
+            ->add('city', null, array(
+                'label'=>'Ort',
+                'required' => false,
+            ))
+            ->add('country', CountryType::class, array(
+                'label'=>'Land',
+                'required' => false,
+            ))
+            ->add('phone', null, array(
+                'label'=>'Telefonnummer'
+            ))
+            ->add('occupation', null, array(
+                'label'=>'Beruf / Fachbereich',
+                'required' => false,
+            ))
         ;
-		//Symfony\Component\Debug\Debug::debug($builder->get('verified'));
     }
 
     /**

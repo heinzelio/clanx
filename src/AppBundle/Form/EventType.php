@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventType extends AbstractType
@@ -17,10 +18,25 @@ class EventType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
-            ->add('date', DateType::class)
+            ->add('name',null, array(
+                'label'=>'Name',
+            ))
+            ->add('description',TextareaType::class, array(
+                    'label' => 'Beschreibung',
+                    'attr' => array(
+                        'rows' => 5,
+                        'cols' => 80
+                    ),
+            ))
+            ->add('date', DateType::class, array(
+                'widget' => 'single_text',
+                'format' => 'dd.MM.yyyy', // sync with datepicker.js
+                'html5' => false,
+                'attr' => array('class'=>'datepicker regular'),
+                'label' => 'Startdatum',
+            ))
             ->add('sticky', CheckboxType::class, array(
-                    'label'    => 'Klebt der event in der Titelzeile?',
+                    'label'    => 'Klebt der Event in der Titelzeile?',
                     'required' => false,
                 ));
         ;

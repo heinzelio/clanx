@@ -1,0 +1,71 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %}
+    Info
+{% endblock %}
+
+{% block workspace %}
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">Version</div>
+            <div class="panel-body">
+                <ul>
+                    <li>1.0</li>
+                    <li>11.06.2016</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Entwickler</div>
+            <div class="panel-body">
+                <ul>
+                    <li>Q3l</li>
+                    <li>speznaz</li>
+                </ul>
+                <p>
+                    <a href="{{ path('info_mail_developer')}}"
+                        class="btn btn-default">
+                        <span class="glyphicon glyphicon-envelope"></span>
+                        Mail an die Entwickler
+                    </a>
+                </p>
+
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Framework, Symbole, Bibliotheken, Substanzen</div>
+            <div class="panel-body">
+                <p><strong>Symfony</strong></p>
+                <p>Version: {{ constant('Symfony\\Component\\HttpKernel\\Kernel::VERSION') }}</p>
+                <p>Lizenz: MIT</p>
+                <p>Link: <a href="http://www.symfony.com">Symfony.com</a></p>
+
+                <p><strong>Glyphicon</strong></p>
+                <p>Lizenz: <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></p>
+                <p>Link: <a href="https://www.glyphicons.com/">Glyphicons.com</a></p>
+
+                <p><strong>Bootstrap</strong></p>
+                <p>Version: 3.3.6</p>
+                <p>Lizenz: <a href="https://github.com/twbs/bootstrap/blob/master/LICENSE">MIT</a></p>
+                <p>Link: <a href="http://getbootstrap.com">Getbootstrap.com</a></p>
+
+                <p><strong>jQuery</strong></p>
+                <p>Version: 2.2.3</p>
+                <p>Lizenz: <a href="https://jquery.org/license/">jQuery Foundation</a></p>
+                <p>Link: <a href="https://jquery.com/">jQuery.com</a></p>
+
+                <p><strong>Shrunk Pidgin Smilies</strong></p>
+                <p>Lizenz: <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPL 2.0</a></p>
+                <p>Quelle: <a href="https://www.iconfinder.com/iconsets/pidginsmilies">Iconfinder</a></p>
+                <p>Von: <a href="http://planetpeanut.uk/">Hylke</a></p>
+
+                <p><strong>Aberlour</strong></p>
+                <p>Age: 10y</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

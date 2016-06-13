@@ -1,15 +1,64 @@
 {% extends "FOSUserBundle::layout.html.twig" %}
 
 {% block fos_user_content %}
+{% trans_default_domain 'FOSUserBundle' %}
 
-    <div class="container-fluid">
-    	<div class="row">
-    		<div class="col-md-4">
-
-                {% include "FOSUserBundle:Registration:register_content.html.twig" %}
-
-    		</div>
-    	</div>
+<div class="container">
+<div class="row">
+<div class="col-md-4 col-md-offset-4">
+    <h2>Clanx Helfer DB</h2>
+</div>
+</div>
+<div class="row">
+<div class="col-md-4 col-md-offset-4">
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        Registrieren
     </div>
+        <div class="panel-body">
+            {{ form_start(form, {
+                    'method': 'post',
+                    'action': path('fos_user_registration_register'),
+                    'attr': {'class': 'fos_user_registration_register'},
+                    'name': 'form_registration',
+                    }) }}
+                    {{ form_widget(form) }}
+            {{ form_end(form) }}
+            <p>
+                <a class="btn btn-primary"
+                    onclick="form_registration.submit();"
+                    data-toggle="tooltip"
+                    title="Änderungen übernehmen und in der Datenbank speichern.">
+                    <span class="glyphicon glyphicon-floppy-disk"></span>
+                    {{ 'registration.submit'|trans }}
+                </a>
+                <a class="btn btn-default pull-right"
+                    href="{{path('info_privacy_policy')}}"
+                    target="_blank">
+                    <span class="glyphicon glyphicon-lock"></span>
+                    Datenschutzerklärung
+                </a>
+            </p>
+            <p>
+                <a class="btn btn-default"
+                    href="{{ path('default_help_registration') }}">
+                    <span class="glyphicon glyphicon-question-sign"></span>
+                    FAQ
+                </a>
+            </p>
+
+            <hr />
+            Du bist schon ein Benutzer?
+            <a class="btn btn-default pull-right"
+                href="{{ path('fos_user_security_login')}} ">
+                <span class="glyphicon glyphicon-user"></span>
+                Anmelden
+            </a>
+        </div>
+
+    </div>
+</div>
+</div>
+</div>
 
 {% endblock fos_user_content %}

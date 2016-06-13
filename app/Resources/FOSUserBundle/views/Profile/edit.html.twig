@@ -4,6 +4,16 @@
 Profil bearbeiten
 {% endblock title %}
 
+{% block javascripts %}
+<script src="{{ asset('js/datepicker.js')}}"></script>
+{% endblock javascripts %}
+
 {% block workspace %}
+
+<div class="row">
+<div class="col-md-6 col-md-offset-3">
 {% include "FOSUserBundle:Profile:edit_content.html.twig" %}
+</div>
+</div>
+
 {% endblock workspace %}

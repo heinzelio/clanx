@@ -1,0 +1,105 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %}
+Ressort: {{ department.name }}
+{% endblock %}
+
+{% block workspace %}
+<div class="row">
+<div class="col-md-6">
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        Ressort: {{ department.name }} ({{ event.name }})
+        {% if is_granted('ROLE_SUPER_ADMIN')%}
+        ID: {{ department.id }}
+        {% endif %}
+    </div>
+    <div class="panel-body">
+        {% if department.requirement %}
+            <p><strong>Anforderung</strong></p>
+            <p>{{department.requirement}}</p>
+        {% endif %}
+        <p><strong>
+            Eingeschreibene Hölfer im Ressort:
+        </strong></p>
+        {% for vol in volunteers %}
+            <p>
+                {{ vol }} {# this calls User.__toString(). Pretty neat. #}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a class="btn btn-default"
+                        href="{{ path('department_redirect_mail_to',{
+                                'id':department.id,
+                                'user_id':vol.id})}}"
+                        data-toggle="tooltip"
+                        title="{{vol}} ein Email schreiben.">
+                        <span class="glyphicon glyphicon-envelope"></span>
+                    </a>
+                {% endif %}
+
+                {% if userIsChief or userIsDeputy %}
+                    <a class="btn btn-default"
+                        href="{{path('department_move_volunteer',{'id':department.id,'user_id':vol.id})}}"
+                        data-toggle="tooltip"
+                        title="Diesen Hölfer einem anderen Ressort zuweisen.">
+                        <span class="glyphicon glyphicon-new-window"></span>
+                        Verschieben
+                    </a>
+                {% endif %}
+        {% endfor %}
+    </div>
+    <div class="panel-footer">
+        {% if is_granted('ROLE_ADMIN') %}
+        <a class="btn btn-primary" type="button"
+            href="{{ path('department_edit', { 'id': department.id ,'event_id':event.id}) }}"
+            data-toggle="tooltip"
+            title="Bearbeite Bezeichnung, Anforderung, Ressortleiter und Stellvertreter.">
+            <span class="glyphicon glyphicon-pencil"></span>
+            Bearbeiten</a>
+        {% endif %}
+        {% if userIsChief %}
+            <a class="btn btn-default"
+                href="{{ path('department_edit_deputy',{'id':department.id}) }}"
+                data-toggle="tooltip"
+                title="Bestimme einen Stellvertreter für dieses Ressort."
+                >
+                <span class="glyphicon glyphicon-pencil"></span>
+                Stellvertreter
+            </a>
+        {% endif %}
+        {% if userIsChief or userIsDeputy %}
+            <a class="btn btn-default"
+                href="{{ path('department_mail_volunteers', {
+                'id':department.id
+                }) }}"
+                data-toggle="tooltip"
+                title="Schreibe ein Email an alle Hölfer aus diesem Ressort."
+                >
+                <span class="glyphicon glyphicon-envelope"></span>
+                Email
+            </a>
+        {% endif %}
+        <a class="btn btn-default" type="button"
+            href="{{ path('event_show',{'id':event.id}) }}"
+            data-toggle="tooltip"
+            title="Schliessen und zurück zum Event gehen."
+            >
+            <span class="glyphicon glyphicon-remove"></span>
+            Zurück</a>
+        {% if mayDelete %}
+            {{ form_start(delete_form) }}
+                <input class="btn btn-danger" type="submit" value="Löschen"></input>
+            {{ form_end(delete_form) }}
+        {% endif %}
+    </div><!-- footer -->
+</div><!-- panel -->
+</div><!-- col -->
+</div><!-- row -->
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+{% endblock %}

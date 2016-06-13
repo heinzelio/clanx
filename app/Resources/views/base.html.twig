@@ -5,23 +5,36 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
 
-      <title>{% block title %}Sönd Willkomm!{% endblock %}</title>
+      <title>{% block title %}Clanx Hölfer DB{% endblock %}</title>
 
       <meta name="description" content="{% block description %}{% endblock %}">
       <meta name="author" content="LayoutIt!">
 
+      <!-- use jquery on each page -->
+      <link href="{{ asset('css/jquery-ui.min.css') }}" rel="stylesheet">
+      <link href="{{ asset('css/jquery-ui.structure.min.css') }}" rel="stylesheet">
+      <link href="{{ asset('css/jquery-ui.theme.min.css') }}" rel="stylesheet">
+
       <!-- use bootstrap on each page -->
       <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+
       <!-- this is our global stylesheet that we use on each page -->
       <link href="{{ asset('css/global.css') }}" rel="stylesheet">
+
       <!-- add custom stylesheets for each page separately: -->
       <link href="{{ asset('css/shiftPlanner.css') }}" rel="stylesheet">
 
       {% block stylesheets %}{% endblock %}
 
-      
-      {% block javascripts %}
-      {% endblock %}
+      <!-- use jquery on each page -->
+      <script src="{{ asset('js/jquery-2.2.3.min.js') }}"></script>
+      <script src="{{ asset('js/jquery-ui.min.js')}}"></script>
+
+      <!-- use bootstrap on each page -->
+      <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+
+      <!-- add custom scripts for each page separately: -->
+      {% block javascripts %}{% endblock %}
 
     </head>
     <body>
@@ -35,10 +48,8 @@
                 {% endfor %}
             {% endfor %}
         {% endif %}
-        
-        {% block body %}{% endblock %}
 
-        <!-- this is our global script that we use on each page -->
+        {% block body %}{% endblock %}
 
     </body>
 </html>

@@ -14,8 +14,7 @@ Installation
 ```
 $ mysql -u clanx -p
 $ Enter password: ********
-mysql> status;
-mysql> exit;
+mysql> SHOW VARIABLES LIKE 'port';
 ```
 
 * Clone the git repository to your development environment:

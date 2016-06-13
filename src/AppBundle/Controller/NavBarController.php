@@ -69,6 +69,12 @@ class NavBarController extends Controller
                     array_push($items,$userItem);
         }
 
+        $infoItem = $this->createItem(
+            'Info',
+            'glyphicon glyphicon glyphicon-info-sign',
+            'info_index');
+        array_push($items,$infoItem);
+
         return $this->render('snippets/navbar.html.twig', array(
             'navbarItems' => $items,
         ));

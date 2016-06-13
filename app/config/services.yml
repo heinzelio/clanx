@@ -9,7 +9,7 @@ services:
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
     user_register_listener:
         class: AppBundle\EventListener\UserRegistrationConrimedListener
-        arguments: ["%app."]
+        arguments: ["@doctrine.orm.entity_manager"]
         tags:
             - { name: kernel.event_subscriber }
 

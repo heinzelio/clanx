@@ -1,0 +1,39 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3>
+            Aktualisiere dein Profil!
+        </h3>
+    </div>
+    <div class="panel-body">
+        <p> Wir haben festgestellt, dass du dein Profil noch nicht
+            vollständig ausgefüllt hast.
+        </p>
+        <p> Nimm dir doch einen Moment Zeit und fülle noch diese
+            Felder aus:
+        </p>
+        <p>
+            <mark>{{ MissingProfilData }}</mark>
+        </p>
+        <p><a class="btn btn-primary"
+            href="{{ path('fos_user_profile_edit') }}"
+            data-toggle="tooltip"
+            title="Öffne hier dein Profil um es zu bearbeiten.">
+            <span class="glyphicon glyphicon-user"></span>
+            <span class="glyphicon glyphicon-pencil"></span>
+                Profil bearbeiten
+            </a>
+        </p>
+        <p>
+            <a class="btn btn-default"
+                href="{{path('info_privacy_policy')}}"
+                target="_blank"
+                data-toggle="tooltip"
+                title="Lies die Datenschutzerklärung. Sie wird in
+                einem separaten Fenster geöffnet. Diese Seite bleibt
+                im Hintergrund offen.">
+                <span class="glyphicon glyphicon-lock"></span>
+                Datenschutzerklärung
+            </a>
+        </p>
+    </div>
+</div>

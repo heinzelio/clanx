@@ -21,8 +21,14 @@
     <p>Deine EMailadresse lautet: <mark>{{ user.email }}</mark>.</p>
 <p>
     <a href="{{ path('fos_user_change_password') }}"
-    class="btn btn-default">Passwort ändern</a>
+        class="btn btn-default">
+        <span class="glyphicon glyphicon-option-horizontal"></span>
+        Passwort ändern
+    </a>
     <a href="{{ path('fos_user_profile_edit')}}"
-    class="btn btn-default">Daten anpassen</a>
+        class="btn btn-default">
+        <span class="glyphicon glyphicon-pencil"></span>
+        Daten anpassen
+    </a>
     </p>
 </div>

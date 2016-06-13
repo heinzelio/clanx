@@ -4,16 +4,26 @@ namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Commitment;
-use AppBundle\Form\EventType;
+use AppBundle\Entity\Department;
+use AppBundle\Entity\User;
+use AppBundle\Entity\RedirectInfo;
+use AppBundle\Entity\Mail;
+use AppBundle\Form\EventCreateType;
+use AppBundle\Form\ShirtSizeType;
 
 /**
  * Event controller.
@@ -66,7 +76,7 @@ class EventController extends Controller
     public function newAction(Request $request)
     {
         $event = new Event();
-        $form = $this->createForm('AppBundle\Form\EventType', $event);
+        $form = $this->createForm('AppBundle\Form\EventCreateType', $event);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -74,7 +84,28 @@ class EventController extends Controller
             $em->persist($event);
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add('success', "'".$event->getName()."' gespeichert");
+            $defaultDpt = new Department();
+            $defaultDpt->setName("Ich helfe wo ich kann");
+            $defaultDpt->setEvent($event);
+            $defaultDpt->setChiefUser($this->getUser());
+            $em->persist($defaultDpt);
+
+            $dptInput = $form->get('departments')->getData();
+            if($dptInput)
+            {
+                $dptNames = explode("\n", $dptInput);
+
+                foreach ($dptNames as $dptName) {
+                    $dpt = new Department();
+                    $dpt->setName(trim($dptName));
+                    $dpt->setEvent($event);
+                    $em->persist($dpt);
+                }
+            }
+
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('success', "'".$event->getName()."' gespeichert.");
             return $this->redirectToRoute('event_show', array('id' => $event->getId()));
         }
 
@@ -91,7 +122,7 @@ class EventController extends Controller
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
-    public function showAction(Event $event)
+    public function showAction(Request $request, Event $event)
     {
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
@@ -99,33 +130,12 @@ class EventController extends Controller
         $depRep = $em->getRepository('AppBundle:Department');
         $departments = $depRep->findByEvent($event);
         // find out of which departments i am a chief.
-        $iAmChiefOf = $depRep->findBy(
+        $myDepartmentsAsChief = $depRep->findBy(
             array('chiefUser' => $user, 'event' => $event)
         );
-        $chiefText = '';
-        $firstLoop = true;
-        foreach ($iAmChiefOf as $dep) {
-            if(!$firstLoop){
-                $chiefText = $chiefText.', ';
-            }
-            $chiefText=$chiefText . $dep->getName();
-            $firstLoop = false;
-        }
-        $iAmAChief = !$firstLoop;
-
-        $iAmDeputyOf = $depRep->findBy(
+        $myDepartmentsAsDeputy = $depRep->findBy(
             array('deputyUser' => $user, 'event' => $event)
         );
-        $deputyText = '';
-        $firstLoop = true;
-        foreach ($iAmDeputyOf as $dep) {
-            if(!$firstLoop){
-                $deputyText = $deputyText.', ';
-            }
-            $deputyText=$deputyText.$dep->getName();
-            $firstLoop = false;
-        }
-        $iAmADeputy = !$firstLoop;
 
         $enrollForm = $this->createEnrollForm($event,$departments);
         $deleteForm = $this->createDeleteForm($event);
@@ -138,10 +148,18 @@ class EventController extends Controller
 
         $enrolledCount = $commitments->countFor($event);
 
-        $isEnrolled = $commitments->existsFor( $this->getUser() ,$event);
+        $commitment = $commitments->findOneBy(array(
+            'user' => $user,
+            'event' => $event,
+        ));
 
-        $mayEnroll = !$isEnrolled && $event->enrollmentPossible();
+        $mayEnroll = !$commitment && $event->enrollmentPossible();
 
+        // if event is further than 2 weeks from now, a user my change his commitment.
+        $twoWeeksFromNow = (new \DateTime())->add(new \DateInterval('P2W'));
+        $mayEditCommitment = ($twoWeeksFromNow < $event->getDate());
+
+        $mayMail = $this->isGranted('ROLE_ADMIN');
 
         $mayEdit = $this->isGranted('ROLE_ADMIN') && $event->mayEdit();
         $mayDelete = $this->isGranted('ROLE_SUPER_ADMIN') && $event->mayDelete();
@@ -152,13 +170,13 @@ class EventController extends Controller
             'enroll_form' => $enrollForm->createView(),
             'mayEnroll' => $mayEnroll,
             'enrolledCount' => $enrolledCount,
-            'isEnrolled' => $isEnrolled,
+            'commitment' => $commitment,
+            'mayEditCommitment' => $mayEditCommitment,
+            'mayMail' => $mayMail,
             'mayEdit' => $mayEdit,
             'mayDelete' => $mayDelete,
-            'isChief' => $iAmAChief,
-            'isDeputy' => $iAmADeputy,
-            'chiefOfDepartment' => $chiefText,
-            'deputyOfDepartment' => $deputyText
+            'myDepartmentsAsChief' => $myDepartmentsAsChief,
+            'myDepartmentsAsDeputy' => $myDepartmentsAsDeputy,
         ));
     }
 
@@ -174,19 +192,23 @@ class EventController extends Controller
         $deleteForm = $this->createDeleteForm($event);
         $editForm = $this->createForm('AppBundle\Form\EventType', $event);
         $editForm->handleRequest($request);
+        $em = $this->getDoctrine()->getManager();
+        $departments = $em->getRepository('AppBundle:Department')->findByEvent($event);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $em->persist($event);
             $em->flush();
 
-            return $this->redirectToRoute('event_edit', array('id' => $event->getId()));
+            $this->get('session')->getFlashBag()->add('success', "Änderung gespeichert.");
+
+            return $this->redirectToRoute('event_show', array('id' => $event->getId()));
         }
 
         return $this->render('event/edit.html.twig', array(
             'event' => $event,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'departments' => $departments
         ));
     }
 
@@ -204,6 +226,10 @@ class EventController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $dpts = $em->getRepository('AppBundle:Department')->findByEvent($event);
+            foreach ($dpts as $dpt) {
+                $em->remove($dpt);
+            }
             $em->remove($event);
             $em->flush();
         }
@@ -241,20 +267,37 @@ class EventController extends Controller
             }
             $choices[$text] = $dep->getID();
         }
+        $threeDays = new \DateInterval('P2D');
+        $emptyData = $event->getDate()->format('D, d.m.Y')
+        ." 08:00 - "
+        .$event->getDate()->add($threeDays)->format('D, d.m.Y')
+        . " 20:00";
         return $this->createFormBuilder()
             ->add('department', ChoiceType::class, array(
-                'label' => "für Ressort (ohne Garantie)",
+                'label' => 'für Ressort (ohne Garantie)',
                 'choices'  => $choices
             ))
-            ->add('remark', TextareaType::class, array(
-                'label' => "Bemerkung / Wunsch"
+            ->add('possibleStart', TextareaType::class, array(
+                'label' => 'Ich helfe an folgenden Tagen (bitte auch Zeit angeben)',
+                'data' => $emptyData,
+                'attr' => array(
+                    'rows' => 4
+                )
             ))
-            ->add('save', SubmitType::class, array(
-                'label' => 'Eintragen',
-                'attr' => array('class'   => 'btn btn-danger',
-                                'type'    => 'submit',
-                                'onclick' => 'return confirm("Willst du dich wirklich bei '.$event->getName().' eintragen?")'
-                                )
+            ->add('shirtSize',ShirtSizeType::class,array(
+                'label' => 'TShirt Grösse',
+            ))
+            ->add('needTrainTicket', CheckboxType::class, array(
+                'label' => 'Ich brauche ein Zugbillet',
+                'attr' => array('checked'=>false),
+                'required' => false,
+            ))
+            ->add('remark', TextareaType::class, array(
+                'label' => "Bemerkung / Wunsch",
+                'required' => false,
+                'attr' => array(
+                    'rows' => 4
+                )
             ))
             ->setAction($this->generateUrl('event_enroll', array('id' => $event->getID())))
             ->setMethod('POST')
@@ -279,12 +322,19 @@ class EventController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $depId = $form->get('department')->getData();
+            $startDate = $form->get('possibleStart')->getData();
+            $possStartFormItem = $form->get('possibleStart');
+            $shirtSize = $form->get('shirtSize')->getData();
+            $needTrainTicket = $form->get('needTrainTicket')->getData();
             $dep = $depRep->findOneById($depId);
             $user = $this->getUser();
             $c = new Commitment();
             $c->setUser($user);
             $c->setEvent($event);
             $c->setDepartment($dep);
+            $c->setPossibleStart($startDate);
+            $c->setShirtSize($shirtSize);
+            $c->setNeedTrainTicket($needTrainTicket);
             $c->setRemark($form->get('remark')->getData());
             $session = $request->getSession();
             try{
@@ -299,12 +349,11 @@ class EventController extends Controller
         return $this->redirectToRoute('event_show', array('id' => $event->getID()));
     }
 
-    private function sendMail($user,$dep,$event){
+    private function sendMail($user,$dep,$event,$commitment){
         $message = \Swift_Message::newInstance();
         $dankeImgLink =  $message->embed(\Swift_Image::fromPath('img/emails/danke.png'));
         $message->setSubject('Clanx Hölfer Bestätigung')
-            ->setFrom('noreply@clanx.com')
-
+            ->setFrom(array('no-reply@clanx.ch'=>'Clanx Hölfer DB'))
             ->setTo($user->getEmail())
             ->setBody(
                 $this->renderView(
@@ -333,8 +382,112 @@ class EventController extends Controller
                 ),
                 'text/plain'
             )
-
         ;
         $this->get('mailer')->send($message);
+
+        $chiefUser = $dep->getChiefUser();
+        if($chiefUser)
+        {
+            $messageToChief = \Swift_Message::newInstance();
+            $messageToChief->setSubject('Neue Hölferanmeldung im Ressort '.$dep->getName())
+                ->setFrom(array($user->getEmail()=>$user))
+                ->setTo($chiefUser->getEmail())
+                ->setBody(
+                    $this->renderView('emails\commitmentNotificationToChief.html.twig',
+                        array('chief' => $chiefUser,
+                            'user' => $user,
+                            'department' => $dep,
+                            'commitment' => $commitment,
+                        )
+                    ),
+                    'text/html'
+                )
+                ->addPart(
+                    $this->renderView('emails\commitmentNotificationToChief.txt.twig',
+                        array('chief' => $chiefUser,
+                            'user' => $user,
+                            'department' => $dep,
+                            'commitment' => $commitment,
+                        )
+                    ),
+                    'text/plain'
+                );
+                $this->get('mailer')->send($messageToChief);
+        }
+    }
+
+
+
+    /**
+     * Finds and displays a Event entity.
+     *
+     * @Route("/{id}/mail/enrolled", name="event_mail_enrolled")
+     * @Method({"GET","POST"})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function mailEnrolledAction(Request $request, Event $event)
+    {
+        $session = $request->getSession();
+        $em = $this->getDoctrine()->getManager();
+
+        $mailData = new Mail();
+        $eventUrl = $this->generateUrl('event_show',
+                                 array('id' => $event->getId()),
+                                 UrlGeneratorInterface::ABSOLUTE_URL
+                             );
+
+        $mailData->setSubject($event->getName() . " Hölferinfo")
+             ->setSender($this->getUser()->getEmail())
+             ->setText('Link: '.$eventUrl)
+             ;
+
+        $commitmentsRep = $em->getRepository('AppBundle:Commitment');
+        $commitments=$commitmentsRep->findByEvent($event);
+        foreach ($commitments as $cmnt) {
+            $usr = $cmnt->getUser();
+            $eml = $usr->getEmail();
+            $nme = $usr->getForename().' '.$usr->getSurname();
+            $mailData->addBcc($eml, $nme);
+        }
+
+        $session->set(Mail::SESSION_KEY, $mailData);
+
+        $backLink = new RedirectInfo();
+        $backLink->setRouteName('event_show')
+                 ->setArguments(array('id'=>$event->getId()))
+                 ;
+
+        $session->set(RedirectInfo::SESSION_KEY, $backLink);
+
+        return $this->redirectToRoute('mail_edit');
+    }
+
+    /**
+     * Prepares session variables and redirects to the MailController
+     *
+     * @Route("/{id}/redirect/mail/to/{user_id}", name="event_redirect_mail_to")
+     * @Method("GET")
+     * @ParamConverter("recipient", class="AppBundle:User", options={"id" = "user_id"})
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function redirectMailToAction(Request $request, Event $event, User $recipient)
+    {
+        // just in case somone clicks on the "mailTo" button of the
+        // chief-of-department or deputy-of-department:
+        $session = $request->getSession();
+
+        $backLink = new RedirectInfo();
+        $backLink->setRouteName('event_show')
+                 ->setArguments(array('id'=>$event->getId()));
+        $session->set(RedirectInfo::SESSION_KEY,$backLink);
+
+        $mailData = new Mail();
+        $mailData->setSubject('Frage betreffend '.$event->getName())
+             ->setRecipient($recipient->getEmail())
+             ->setSender($this->getUser()->getEmail());
+
+        $session->set(Mail::SESSION_KEY, $mailData);
+
+        return $this->redirectToRoute('mail_edit');
     }
 }

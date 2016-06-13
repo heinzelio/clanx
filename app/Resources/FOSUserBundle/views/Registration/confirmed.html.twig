@@ -10,24 +10,34 @@
             <div class="jumbotron">
                 <h2> Super! Du bist jetzt ein registrierter Benutzer!
                 </h2>
-                <p> Dein Benutzername ist {{ user.username }}.
-                </p>
-                <p> Deine Emailadresse ist {{ user.email }}.
-                </p>
-                <p> Du kannst beides verwenden um dich nächstes mal anzumelden.
-                </p>
-                <p> Besuche doch als erstes dein Profil, um deine Kontaktdaten wie Adresse und
-                    Telefonnummer zu hinterlegen, damit wir dir deine Einsätze kommunizieren können.
-                </p>
-                <p> Falls du letztes Jahr schon als Hölfer eingetragen warst, konnten wir
-                    vielleicht noch einige Daten von dir übernehmen. Bitte nicht erschrecken,
-                    wenn schon alles richtig ausgefüllt ist ;)
-                </p>
                 <p>
-                    <a class="btn btn-default" href="{{ path('fos_user_profile_edit')}}">
-                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                        Profil
+                    Dein Benutzername ist <mark>{{ user.username }}</mark> und
+                    deine Emailadresse ist <mark>{{ user.email }}</mark>.
+                </p>
+                <p> (Du kannst beides verwenden um dich nächstes mal anzumelden.)
+                </p>
+                <hr />
+                <p> Besuche als erstes dein
+                    <a class="btn btn-default"
+                        href="{{ path('fos_user_profile_edit')}}">
+                        <span class="glyphicon glyphicon-user"></span>
+                        <span class="glyphicon glyphicon-pencil"></span>
+                            Profil
+                    </a>, um deine Kontaktdaten zu hinterlegen.
+                </p>
+                <p> Vielleicht kennen wir dich vom letzten Clanx, dann wissen wir
+                    dein Daten schon.
+                </p>
+                <hr />
+                <p>
+                    <strong>Du bist jetzt noch kein Hölfer!</strong>
+                    Öffne einen
+                    <a class="btn btn-default"
+                        href="{{path('event_index')}}">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                            Event
                     </a>
+                    , um dich dort als Hölfer einzuschreiben.
                 </p>
             </div>
         </div>

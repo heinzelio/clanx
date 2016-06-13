@@ -1,0 +1,38 @@
+{# app/Resources/views/emails/CommitmentConfirmation.txt.twig #}
+<h3>Hallo {{ Forename }}</h3>
+
+<p> Du hast über die Clanx Hölfer DB ein Email verschickt.</p>
+<p> Du hast als Absender folgende Adresse verwendet: <strong>{{Mail.Sender}}</strong>.</p>
+{% if Mail.Recipient %}
+<p> Du hast als Empfänger folgende Adresse verwendet: <strong>{{Mail.Recipient}}</strong>.</p>
+{% endif %}
+{% if Mail.Ccs %}
+<p> Du hast folgende Empfänger im CC:
+    <ul>
+        {% for adr,name in Mail.Ccs %}
+            <li>{{name}} &lt;{{adr}}&gt;</li>
+        {% endfor %}
+    </ul>
+</p>
+{% endif %}
+{% if Mail.Bccs %}
+<p> Du hast folgende Empfänger im BCC:
+    <ul>
+        {% for adr,name in Mail.Bccs %}
+            <li>{{name}} &lt;{{adr}}&gt;</li>
+        {% endfor %}
+    </ul>
+</p>
+{% endif %}
+
+<p> Der Betreff deiner Mail ist <strong>{{Mail.Subject}}</strong>.
+</p>
+<p>
+    Der <strong>Text</strong> deiner Mail ist:
+</p>
+<p><i>{{Mail.Text}}</i></p>
+
+<p>Liebe Grüsse: </p>
+<h3>deine <strong><i>Clanx Hölfer DB</i></strong></h3>
+
+<p><smaller>PS: lies dieses Mail gedanklich mit einer Roboterstimme...</smaller></p>

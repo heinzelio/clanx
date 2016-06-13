@@ -1,11 +1,16 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-    Passwort zurücksetzen
+    Login
 {% endblock title %}
 
 {% block body %}
 <div class="container">
+    <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+        <h2>Clanx Helfer DB</h2>
+    </div>
+    </div>
 	<div class="row">
 		<div class="col-md-4 col-md-offset-4">
 
@@ -58,20 +63,23 @@
                             </label>
                         </div>
                         <div class = "form-group">
-                            <button type="submit" class="btn btn-default">
+                            <button type="submit" class="btn btn-primary">
+                                <span class="glyphicon glyphicon-user"></span>
                                 Anmelden
                             </button>
-                        </div>
-                        <div class = "form-group">
                             <a href="{{ path('fos_user_resetting_request') }}"
-                                class="btn btn-info">
+                                class="btn btn-danger pull-right">
+                                <span class="glyphicon glyphicon-question-sign"></span>
                                 Passwort vergessen</a>
                         </div>
+                        <hr />
                         <div class = "form-group">
                             <label>Du bist noch kein Benutzer?</label>
                             <a href="{{ path('fos_user_registration_register') }}"
                                 class="btn btn-default">
-                                Jetzt registrieren!</a>
+                                Jetzt registrieren!
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </a>
                         </div>
                     </form>
 <!---------- END FORM -->

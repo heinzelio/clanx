@@ -1,72 +1,107 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_nav.html.twig' %}
 
-{% block body %}
-    <h1>User</h1>
+{% block title %}
+    {{user}}
+{% endblock %}
 
-    <table>
+{% block workspace %}
+<div class="row">
+<div class="col-md-6 col-md-offset-3">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Benutzer {{user}}
+    </div>
+
+    <table class="table">
         <tbody>
-            <tr>
-                <th>Forename</th>
-                <td>{{ user.forename }}</td>
-            </tr>
-            <tr>
-                <th>Surname</th>
-                <td>{{ user.surname }}</td>
-            </tr>
-            <tr>
-                <th>Gender</th>
-                <td>{{ user.gender }}</td>
-            </tr>
-            <tr>
-                <th>Date of birth</th>
-                <td>{{ user.dateOfBirth|date('d. M. Y') }}</td>
-            </tr>
-            <tr>
-                <th>Street</th>
-                <td>{{ user.street }}</td>
-            </tr>
-            <tr>
-                <th>Zip</th>
-                <td>{{ user.zip }}</td>
-            </tr>
-            <tr>
-                <th>City</th>
-                <td>{{ user.city }}</td>
-            </tr>
-            <tr>
-                <th>Country</th>
-                <td>{{ user.country }}</td>
-            </tr>
-            <tr>
-                <th>Phone</th>
-                <td>{{ user.phone }}</td>
-            </tr>
-            <tr>
-                <th>Mail</th>
-                <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <th>Occupation</th>
-                <td>{{ user.occupation }}</td>
-            </tr>
             <tr>
                 <th>Id</th>
                 <td>{{ user.id }}</td>
             </tr>
+            <tr>
+                <th>Vorname</th>
+                <td>{{ user.forename }}</td>
+            </tr>
+            <tr>
+                <th>Nachname</th>
+                <td>{{ user.surname }}</td>
+            </tr>
+            <tr>
+                <th>Geschlecht</th>
+                <td>
+                    {% if user.gender == "M" %}
+                        Mann
+                    {% elseif user.gender == "F" %}
+                        Frau
+                    {% else %}
+                        ???
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Geburtsdatum</th>
+                <td>{% if user.dateOfBirth %}{{ user.dateOfBirth|date('Y-m-d') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Adresse</th>
+                <td>{{ user.street }}</td>
+            </tr>
+            <tr>
+                <th>PLZ</th>
+                <td>{{ user.zip }}</td>
+            </tr>
+            <tr>
+                <th>Ort</th>
+                <td>{{ user.city }}</td>
+            </tr>
+            <tr>
+                <th>Land</th>
+                <td>{{ user.country }}</td>
+            </tr>
+            <tr>
+                <th>Telefonnummer</th>
+                <td>{{ user.phone }}</td>
+            </tr>
+            <tr>
+                <th>Beruf / Spezialität</th>
+                <td>{{ user.occupation }}</td>
+            </tr>
+            <tr>
+                <th>Berechtigung</th>
+                <td>
+                    {% for role in user.roles %}
+                    {{role}},
+                    {% endfor %}
+                </td>
+            </tr>
         </tbody>
     </table>
 
-    <ul>
-        <li>
-            <a href="{{ path('user_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('user_edit', { 'id': user.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+    <div class="panel-footer">
+        <a class="btn btn-default"
+            href="{{ path('user_index') }}"
+            data-toggle="tooltip"
+            title="Kehre zurück zur Übersicht.">
+            <span class="glyphicon glyphicon-remove"></span>
+            Abbrechen
+        </a>
+        <a class="btn btn-default"
+            href="{{ path('user_edit', { 'id': user.id }) }}"
+            data-toggle="tooltip"
+            title="Bearbeite Details des Benutzers.">
+            <span class="glyphicon glyphicon-pencil"></span>
+            Bearbeiten
+        </a>
+    </div>
+</div>
+</div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 {% endblock %}

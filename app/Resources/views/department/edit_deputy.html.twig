@@ -1,0 +1,50 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %}
+    Stellvertreter bearbeiten
+{% endblock %}
+
+{% block workspace %}
+<div class="row">
+<div class="col-md-4">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Ressort <mark>„{{ department.name }}“</mark> <br/>
+        <small>vom Event <mark>„{{ event.name }}“</mark></small>
+    </div>
+
+    <div class="panel-body">
+        {{ form_start(edit_form, {'name': 'form_department_edit'}) }}
+            {{ form_widget(edit_form) }}
+
+        {{ form_end(edit_form) }}
+    </div>
+
+    <div class="panel-footer">
+        <a onclick="form_department_edit.submit();"
+            class="btn btn-primary"
+            data-toggle="tooltip"
+            title="Änderungen übernehmen und in der Datenbank speichern.">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            Speichern
+        </a>
+        <a class="btn btn-default"
+            href="{{ path('department_show',{'id':department.Id,'event_id':event.Id}) }}"
+            data-toggle="tooltip"
+            title="Nicht speichern und zurück zu {{department.name}}">
+            <span class="glyphicon glyphicon-remove"></span>
+            Zurück
+        </a>
+    </div>
+</div><!--panel-->
+</div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+{% endblock %}

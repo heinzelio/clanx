@@ -38,7 +38,7 @@ class UserRegistrationConrimedListener implements EventSubscriberInterface
         $user = $event->getUser();
         $em = $this->entityManager;
         $repository = $em->getRepository('AppBundle:LegacyUser');
-        $legacyUser = $repository->findOneByMail($user->getEmail());
+        $legacyUser = $repository->findOneByMail(strtolower($user->getEmail()));
         if ($legacyUser) {
             $user->setForename($legacyUser->getForename());
             $user->setSurname($legacyUser->getSurname());

@@ -1,43 +1,37 @@
 {% extends 'base_nav.html.twig' %}
 
 {% block title %}
-    Dashboard
-{% endblock %}
-
-{% block nav_links %}
-    {% if is_granted('ROLE_ADMIN') %}
-    <li><a href="{{ path('user_index') }}">Benutzer (Admin only)</a></li>
-    {% endif %}
-    <li><a href="{{ path('event_index') }}">Events</a></li>
+    Home
 {% endblock %}
 
 {% block workspace %}
     <div class="row">
         <div class="col-md-12">
-            <div class="jumbotron">
-                <h2>
-                    Das ist das Dashboard.
-                </h2>
-                <p>
-                    Lorem ipsum.
-                </p>
-                {% if is_granted('ROLE_SUPER_ADMIN') %}
-                    <h2>Ein Link für Sevi</h2>
-                    <p>
-                        <a class="btn btn-primary" href="{{ path('sevi_index') }}">Hier gehts zur Action...</a>
-                    </p>
-                    <h2>Daten löschen und neue dev Daten generieren</h2>
-                    <p>
-                        <a class="btn btn-danger" href="{{ path('admin_generate_data')}}">JETZT LÖSCHEN & ERSTELLEN</a>
-                    </p>
-                    <h2>User file importieren</h2>
-                    <p>
-                        <a class="btn btn-danger" href="{{ path('admin_upload_data') }}">File upload</a>
-                    </p>
-
-                {% endif %}
-
-            </div>
+                <h2>Home</h2>
         </div>
-    </div>
+    </div> <!-- row for jumbotron -->
+    <div class="row">
+        <div class="col-md-6">
+            {% include "dashboard/panel_application_note.html.twig" %}
+        </div>
+        {% if ShowProfileUpdate %}
+        <div class="col-md-6">
+            {% include "dashboard/panel_update_profile.html.twig" %}
+        </div>
+        {% endif %}
+        <div class="col-md-6">
+            {% include "dashboard/panel_report_bug.html.twig" %}
+        </div>
+        <div class="col-md-6">
+            {% include "dashboard/panel_help_wanted.html.twig" %}
+        </div>
+    </div><!-- row for panels -->
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 {% endblock %}

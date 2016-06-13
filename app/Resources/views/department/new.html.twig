@@ -1,0 +1,45 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %} Neues Ressort {% endblock %}
+
+{% block workspace %}
+<div class="row">
+<div class="col-md-6">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Ressort erstellen für <mark>„{{ event.name }}“</mark>
+    </div>
+
+    <div class="panel-body">
+        {{ form_start(form, {'name': 'form_department_new'}) }}
+            {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+    <div class="panel-footer">
+        <a onclick="form_department_new.submit();"
+            class="btn btn-primary"
+            data-toggle="tooltip"
+            title="Das Ressort in der Datenbank anlegen.">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            Speichern
+        </a>
+        <a class="btn btn-default"
+            href="{{ path('event_edit',{'id':event.id}) }}"
+            data-toggle="tooltip"
+            title="Nicht speichern und zurück zu {{event.name}} gehen.">
+            <span class="glyphicon glyphicon-remove"></span>
+            Abbrechen
+        </a>
+    </div>
+</div> <!-- panel -->
+</div> <!-- col -->
+</div> <!-- row -->
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+{% endblock %}

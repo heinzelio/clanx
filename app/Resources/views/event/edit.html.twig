@@ -2,24 +2,87 @@
 
 {% block title %} Event bearbeiten {% endblock %}
 
-{% block nav_links %}
-    <li class="active">
-        <p class="navbar-text">
-            {{event.name}} bearbeiten
-        </p>
-    </li>
+{% block javascripts %}
+    <script src="{{ asset('js/datepicker.js')}}"></script>
+
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 {% endblock %}
 
 {% block workspace %}
 <div class="row">
     <div class="col-md-4">
-        {{ form_start(edit_form) }}
-            {{form_widget(edit_form) }}
-            <div class="form-group">
-                <input class="btn btn-primary" type="submit" value="Speichern" />
-                <a class="btn btn-default" href="{{ path('event_index') }}">Zurück zur Übersicht</a>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Event: <mark>{{ event.name }}</mark>
             </div>
-            {{ form_end(edit_form) }}
+            <div class="panel-body">
+                {{ form_start(edit_form, {'name': 'form_event_edit'}) }}
+                    {{form_widget(edit_form) }}
+                {{ form_end(edit_form) }}
+            </div>
+            <div class="panel-footer">
+                <a class="btn btn-primary"
+                    onclick="form_event_edit.submit();"
+                    data-toggle="tooltip"
+                    title="Änderungen übernehmen und in der Datenbank speichern.">
+                    <span class="glyphicon glyphicon-floppy-disk"></span>
+                    Speichern
+                </a>
+                <a class="btn btn-default"
+                    href="{{ path('event_show',{'id':event.id}) }}"
+                    data-toggle="tooltip"
+                    title="Nicht speichern und zurück zur Detailansicht.">
+                    <span class="glyphicon glyphicon-remove"></span>
+                    Abbrechen
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+    <div class="panel panel-default">
+        <div class="panel-heading">Ressorts für diesen Event</div>
+        <table class="table">
+            <tbody>
+            {% for department in departments %}
+                <tr>
+                    <td>
+                        {{ department.name }}
+                        {% if department.requirement %}
+                            <small>({{ department.requirement }})</small>
+                        {% endif %}
+                        {% if department.chiefUser  %}
+                            - {{ department.chiefUser }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('department_edit', { 'id': department.id,'event_id':event.id }) }}"
+                            class="btn btn-default"
+                            data-toggle="tooltip"
+                            title="Ressortdetails von '{{department.name}}' bearbeiten.">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="panel-footer">
+            <a class="btn btn-default"
+                href="{{ path('department_new',{'event_id' : event.id}) }}"
+                data-toggle="tooltip"
+                title="Der Buttontext sagt schon alles. Da gibt es nichts
+                hinzuzufügen.">
+                Neues Ressort anlegen
+            </a>
+        </div>
+    </div><!-- Panel "Departments" -->
     </div>
 </div>
 {% endblock %}

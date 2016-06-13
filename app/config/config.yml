@@ -81,7 +81,7 @@ fos_user:
 
     from_email:
         # ALL different emails use this adress and name:
-        address:        noreply@incommodities.net
+        address:        no-reply@incommodities.net
         sender_name:    ClanxHölferDB
     registration:
         confirmation:

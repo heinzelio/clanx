@@ -1,61 +1,217 @@
 {% extends 'base_nav.html.twig' %}
 
-{% block title %} {{ event.name }} {% endblock %}
+{% block title %}
+    {{ event.name }}
+{% endblock %}
 
 {% block workspace %}
 
 <div class="row">
-<div class="col-md-12">
+<div class="col-md-6">
 
     <div class="panel panel-primary">
     <div class="panel-heading">{{event.name}}</div>
     <div class="panel-body">
-        <ul>
             <p> Der Event <strong>{{ event.name }}</strong> findet am
                 {% if event.date %}{{ event.date|date('d. M. Y') }}{% endif %}
                 statt.</p>
+            <p class="small"> {{ event.description|nl2br}}
+            </p>
             <p>Bis jetzt eingetragene Hölfer: {{ enrolledCount }}</p>
-            {% if isEnrolled %}
-            <p>
-                <button type="button" class="btn btn-success">Du bist als Hölfer eingetragen!</button>
+
+            {% if myDepartmentsAsChief %}
+            <p>Du bist Ressortleiter:
+                {% for dpt in myDepartmentsAsChief %}
+                    <br />
+                    <a href="{{ path('department_show',{'id':dpt.Id,'event_id':event.Id}) }}"
+                        class="btn btn-default"
+                        data-toggle="tooltip"
+                        title="Zeige Details des Ressorts {{dpt.name}}.">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                        {{ dpt.name }}
+                    </a>
+                {% endfor %}
             </p>
             {% endif %}
-            {% if isChief %}
-            <p>Du bist Ressortleiter <strong>{{ chiefOfDepartment}}</strong>.
+
+            {% if myDepartmentsAsDeputy %}
+            <p>Du bist stellvertretender Ressortleiter:
+                {% for dpt in myDepartmentsAsDeputy %}
+                    <br />
+                    <a href="{{ path('department_show',{'id':dpt.Id,'event_id':event.Id}) }}"
+                        class="btn btn-default"
+                        data-toggle="tooltip"
+                        title="Zeige Details des Ressorts {{dpt.name}}">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                        {{ dpt.name }}
+                    </a>
+                {% endfor %}
+            </p>
             {% endif %}
-            {% if isDeputy %}
-            <p>Du bist stellvertretender Ressortleiter <strong>{{ deputyOfDepartment}}</strong>.
-            {% endif %}
-            {% if mayEnroll %}
-            <div class="panel panel-danger">
-            <div class="panel-heading">Jetzt als Hölfer eintragen</div>
-            <div class="panel-body">
-                {# find details of this form in EventController.createEnrollForm() #}
-                {{ form_start(enroll_form) }}
-                    {{form_widget(enroll_form) }}
-                    {#submit button is being generated in the controller.#}
-                {{ form_end(enroll_form) }}
-            </div>
-            </div> <!--panel-->
-            {% endif %}
-        </ul>
     </div>
     <div class="panel-footer">
 
-        <a class="btn btn-default" href="{{ path('event_index') }}">Zurück zur Übersicht</a>
+        <a class="btn btn-default"
+	       href="{{ path('event_index') }}"
+           data-toggle="tooltip"
+           title="Gehe zurück zur Eventübersicht">
+           <span class="glyphicon glyphicon-remove"></span>
+            Abbrechen
+        </a>
+
+        {% if mayMail %}
+            <a class="btn btn-default"
+                href="{{ path ('event_mail_enrolled', {'id': event.id})}}"
+                data-toggle="tooltip"
+                title="Schreibe ein Email an alle Hölfer von diesem Event.">
+                <span class="glyphicon glyphicon-envelope" ></span>
+                Email schreiben
+            </a>
+        {% endif %}
 
         {% if mayEdit %}
-            <a class="btn btn-default" href="{{ path('event_edit', { 'id': event.id }) }}">Bearbeiten</a>
+            <a class="btn btn-default"
+                href="{{ path('event_edit', { 'id': event.id }) }}"
+                data-toggle="tooltip"
+                title="Details von {{event.name}} bearbeiten.">
+                <span class="glyphicon glyphicon-pencil"></span>
+                Bearbeiten
+            </a>
         {% endif %}
 
         {% if mayDelete %}
             {{ form_start(delete_form) }}
                 <input class="btn btn-danger" type="submit" value="Löschen"
-                    onclick="return confirm('{{event.name}} wirklich löschen?')"/>
+                    onclick="return confirm('{{event.name}} wirklich löschen?')"
+                    data-toggle="tooltip"
+                    title="Den Event {{event.name}} aus der Datenbank löschen."/>
             {{ form_end(delete_form) }}
         {% endif %}
 
     </div><!-- footer -->
-</div>
-</div>
+    </div> <!-- panel -->
+    {{ render(controller(
+        'AppBundle:EventVolunteers:index',
+        { 'id': event.id }
+    )) }}
+</div> <!-- col -->
+<div class="col-md-6">
+    {% if mayEnroll %}
+        <div class="panel panel-danger">
+        <div class="panel-heading">Jetzt als Hölfer eintragen</div>
+        <div class="panel-body">
+            {# find details of this form in EventController.createEnrollForm() #}
+                {{ form_start(enroll_form, {'name': 'event_enroll_form'}) }}
+                {{form_widget(enroll_form) }}
+                {#submit button is being generated in the controller.#}
+            {{ form_end(enroll_form) }}
+            <a class="btn btn-danger"
+                onclick="event_enroll_form.submit();"
+                data-toggle="tooltip"
+                title="Änderungen übernehmen und in der Datenbank speichern.">
+                <span class="glyphicon glyphicon-floppy-disk"></span>
+                Eintragen
+            </a>
+        </div>
+        </div> <!--panel-->
+    {% endif %}
+    {% if commitment %}
+    <div class="panel panel-success">
+    <div class="panel-heading">Du bist als Hölfer eingetragen.</div>
+    <div class="panel-body">
+        <p> Dein Ressort:
+            <a class="btn btn-default"
+                href="{{ path('department_show',{
+                'id':commitment.department.id,'event_id':event.id
+                }) }}"
+                data-toggle="tooltip"
+                title="Zeige Details des Ressorts {{commitment.department.name}}">
+                <span class="glyphicon glyphicon-eye-open"></span>
+                {{commitment.department.name}}
+            </a>
+        </p>
+        {% if commitment.department.chiefUser %}
+        <p>
+            Ressortleiter:
+            <a class="btn btn-default"
+                href="{{ path('event_redirect_mail_to',{
+                        'id':event.id,
+                        'user_id':commitment.department.chiefUser.id})
+                    }}"
+                data-toggle="tooltip"
+                title="Schreibe ein Email an {{commitment.department.chiefUser}}.">
+                <span class="glyphicon glyphicon-envelope"></span>
+                {{commitment.department.chiefUser}}
+            </a>
+        </p>
+        {% endif %}
+
+        {% if commitment.department.deputyUser %}
+        <p>
+            Stellvertretender Leiter:
+            <a class="btn btn-default"
+                href="{{ path('event_redirect_mail_to',{
+                        'id':event.id,
+                        'user_id':commitment.department.deputyUser.id})
+                    }}"
+                data-toggle="tooltip"
+                title="Schreibe ein Email an {{commitment.department.deputyUser}}.">
+                <span class="glyphicon glyphicon-envelope"></span>
+                {{commitment.department.deputyUser}}
+
+            </a>
+        </p>
+        {% endif %}
+
+        {% if commitment.possibleStart %}
+        <p> Deine früheste Startzeit:
+            <mark>{{commitment.possibleStart}}</mark>
+        </p>
+        {% endif %}
+        <p> Deine TShirt Grösse:
+            <mark>{{commitment.shirtSize}}</mark>
+        </p>
+        {% if commitment.remark %}
+            <p> Deine Bemerkung / Wunsch:
+                <mark>{{commitment.remark|nl2br}}</mark>
+            </p>
+        {% endif %}
+
+    </div>
+    <div class="panel-footer">
+        {% if mayEditCommitment %}
+        <a class="btn btn-default"
+            href="{{path('commitment_edit',{'id':commitment.id})}}"
+            data-toggle="tooltip"
+            title="Ändere oder lösche deine Eintragung als Hölfer.">
+            <span class="glyphicon glyphicon-pencil"></span>
+            Bearbeiten
+        </a>
+        {% else %}
+        <a class="btn btn-default"
+            disabled="disabled">
+        <!-- tooltips gönd nöd uf disabledem Button :(
+            data-toggle="tooltip"
+            title="Ändern oder löschen ist nicht mehr möglich. Deine Teilnahme
+            ist definitiv. (Falls ein Problem besteht, nimm bitte mit deinem
+            Ressortleiter Kontakt auf.)"
+        -->
+            <span class="glyphicon glyphicon-lock"></span>
+            Bearbeiten nicht mehr möglich
+        </a>
+        {% endif %}
+    </div><!-- footer -->
+    </div> <!--panel-->
+    {% endif %}
+</div> <!-- col -->
+</div> <!-- row -->
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/datepicker.js')}}"></script>
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 {% endblock %}

@@ -19,30 +19,37 @@
             <h2>
                 Willkommen auf der Clanx Hölfer Datenbank!
             </h2>
-
-             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-             <p>
-                 <a class="btn btn-primary btn-large" href="{{ path('dashboard_index')}} ">Dashboard</a>
-             </p>
-             <p>
-                 <a class="btn btn-primary btn-large" href="{{ path('fos_user_security_logout')}} ">Abmelden</a>
-            </p>
-            {% else %}
+<hr />
             <p>
-                Du möchtest Hölfer werden? Registriere dich hier.
+                Zum ersten mal hier? Registriere dich!
             </p>
             <p>
                 <!-- find the route's name in FOSUserBundle/Resources/config/routing/registration.xml-->
-                <a class="btn btn-primary btn-large" href="{{ path('fos_user_registration_register')}} ">Registrieren</a>
+                <a class="btn btn-primary btn-large"
+                    href="{{ path('fos_user_registration_register')}} "
+                    data-toggle="tooltip"
+                    title="Klicke hier um dich auf der Webseite zu registrieren.">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    Registrieren.
+                </a>
+                <a href="{{ path('default_help_registration') }}">
+                    Wie geht das?
+                </a>
             </p>
+<hr />
             <p>
-                Du warst schon einmal Hölfer? Melde dich hier an.
+                Du bist schon registriert? Melde dich jetzt an.
             </p>
             <p>
                 <!-- find the route's name in FOSUserBundle/Resources/config/routing/security.xml-->
-                <a class="btn btn-primary btn-large" href="{{ path('fos_user_security_login')}} ">Anmelden</a>
+                <a class="btn btn-primary btn-large"
+                    href="{{ path('fos_user_security_login')}} "
+                    data-toggle="tooltip"
+                    title="Klicke hier um dich mit deinem Login anzumelden.">
+                    <span class="glyphicon glyphicon-user"></span>
+                    Anmelden
+                </a>
             </p>
-            {% endif %}
         </div>
     </div>
 </div>
@@ -55,5 +62,9 @@
 {% endblock %}
 
 {% block javascripts %}
-<!-- no custom scripts at the moment -->
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 {% endblock %}

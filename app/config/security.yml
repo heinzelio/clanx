@@ -24,18 +24,12 @@ security:
             anonymous:    true
 
     access_control:
-        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/user, roles: ROLE_USER }
-        # route / and /login is always accessible
-        #- { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        #- { path: ^/registration, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        # require ROLE_ADMIN for /admin*
-        #- { path: ^/admin, roles: ROLE_ADMIN }
-        #- { path: ^/user, roles: ROLE_USER }
+        # we normally do access control with annotations in the controllers.
+        #- { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: "%secure_channel%" }
+        # - { path: ^/login$, host:clanx\.ch$, requires_channel: https }
+        # - { path: ^/register, host:clanx\.ch$, requires_channel: https }
+        # - { path: ^/resetting/request, host:clanx\.ch$, requires_channel: https }
+        # - { path: ^/profile/change-password, roles:ROLE_USER, host:clanx\.ch, requires_channel: https }
 
     encoders:
         FOS\UserBundle\Model\UserInterface: bcrypt
