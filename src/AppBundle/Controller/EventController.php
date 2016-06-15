@@ -357,8 +357,7 @@ class EventController extends Controller
             ->setTo($user->getEmail())
             ->setBody(
                 $this->renderView(
-                    // app/Resources/views/emails/CommitmentConfirmation.html.twig
-                    'emails/CommitmentConfirmation.html.twig',
+                    'emails/commitmentConfirmation.html.twig',
                     array('Forename' => $user->getForename(),
                         'Event' => $event->getName(),
                         'EventID' => $event->getId(),
@@ -371,8 +370,7 @@ class EventController extends Controller
             )
             ->addPart(
                 $this->renderView(
-                    // app/Resources/views/emails/CommitmentConfirmation.txt.twig
-                    'emails/CommitmentConfirmation.txt.twig',
+                    'emails/commitmentConfirmation.txt.twig',
                     array('Forename' => $user->getForename(),
                         'Event' => $event->getName(),
                         'EventID' => $event->getId(),
