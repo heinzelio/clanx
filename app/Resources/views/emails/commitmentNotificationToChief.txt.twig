@@ -10,7 +10,12 @@ Er hat folgende Bemerkung hinzugefügt:
 {% endif %}
 
 {% if commitment.possibleStart %}
-Er hat als früheste Startzeit angegeben: {{commitment.possibleStart}}
+    {% if user.gender == 'M' %}
+        {% set pronoun = 'Er' %}
+    {% else %}
+        {% set pronoun = 'Sie' %}
+    {% endif %}
+    {{ pronoun }} hat als früheste Startzeit angegeben: {{commitment.possibleStart}}
 {% endif %}
 
 Antworte direkt auf dieses Mail um {{user}} ein Mail zu schreiben.

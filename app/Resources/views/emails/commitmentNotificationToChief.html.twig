@@ -19,7 +19,13 @@
 {% endif %}
 {% if commitment.possibleStart %}
 <p>
-    Er hat als früheste Startzeit angegeben: <i>{{commitment.possibleStart}}</i>
+    {% if user.gender == 'M' %}
+        {% set pronoun = 'Er' %}
+    {% else %}
+        {% set pronoun = 'Sie' %}
+    {% endif %}
+    {{ pronoun }} hat als früheste Startzeit angegeben: <i>{{commitment.possibleStart}}</i>
+
 </p>
 {% endif %}
 
