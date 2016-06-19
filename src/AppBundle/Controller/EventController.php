@@ -361,7 +361,9 @@ class EventController extends Controller
                 $this->renderView(
                     // app/Resources/views/emails/CommitmentConfirmation.html.twig
                     'emails/CommitmentConfirmation.html.twig',
-                    array('Forename' => $user->getForename(),
+                    array(
+                        'Forename' => $user->getForename(),
+                        'Gender' => $user->getGender(),
                         'Event' => $event->getName(),
                         'EventID' => $event->getId(),
                         'EventDate' => $event->getDate(),
@@ -376,6 +378,7 @@ class EventController extends Controller
                     // app/Resources/views/emails/CommitmentConfirmation.txt.twig
                     'emails/CommitmentConfirmation.txt.twig',
                     array('Forename' => $user->getForename(),
+                        'Gender' => $user->getGender(),
                         'Event' => $event->getName(),
                         'EventID' => $event->getId(),
                         'EventDate' => $event->getDate(),
