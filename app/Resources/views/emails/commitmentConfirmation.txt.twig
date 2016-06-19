@@ -1,5 +1,8 @@
-{# app/Resources/views/emails/commitmentConfirmation.html.twig #}
-Lieber {{ Forename }}
+{% if Gender == 'M' %}
+    Lieber {{ Forename }}
+{% else %}
+    Liebe {{ Forename }}
+{% endif %}
 
 Du hast dich beim Event {{ Event }} als Hölfer im Ressort {{ Department }} eingetragen.
 

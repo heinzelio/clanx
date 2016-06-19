@@ -5,23 +5,29 @@
     <div class="panel-heading">
         Profil bearbeiten
     </div>
+    <div class="panel-body">
     {{ form_start(form, {
+                        'name': 'profile_edit_form',
                         'action': path('fos_user_profile_edit'),
                         'attr': { 'class': 'fos_user_profile_edit' }
                         }) }}
-    <div class="panel-body">
         {{ form_widget(form) }}
-    </div>
+        {{ form_end(form) }}
 
+    </div>
     <div class="panel-footer">
-        <button class="btn btn-primary"
-            type="submit" >
+        <a class="btn btn-primary"
+            onclick="formSubmit(profile_edit_form,this);"
+            data-toggle="tooltip"
+            title="Änderungen übernehmen und in der Datenbank speichern.">
             <span class="glyphicon glyphicon-floppy-disk"></span>
             Speichern
-        </button>
+        </a>
 
         <a class="btn btn-default"
-            href="{{path('fos_user_profile_show')}}">
+            href="{{path('fos_user_profile_show')}}"
+            data-toggle="tooltip"
+            title="Nicht speichern und zurück zur Profilansicht.">
             <span class="glyphicon glyphicon-remove"></span>
             Abbrechen
         </a>
@@ -29,10 +35,19 @@
         <a class="btn btn-default"
             href="{{path('info_privacy_policy')}}"
             target="_blank"
-            >
+            data-toggle="tooltip"
+            title="Lies die Datenschutzerklärung. Sie wird in
+            einem separaten Fenster geöffnet. Diese Seite bleibt
+            im Hintergrund offen.">
             <span class="glyphicon glyphicon-lock"></span>
             Datenschutzerklärung
         </a>
     </div>
 
-{{ form_end(form) }}
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+{% endblock %}
