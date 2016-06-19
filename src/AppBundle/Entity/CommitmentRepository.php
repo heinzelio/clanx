@@ -9,14 +9,24 @@ class CommitmentRepository extends EntityRepository
 {
     public function countFor($event)
     {
+        // we only count people, not commitments.
+        // When the same person works in 3 departments, he still
+        // counts as 1 volunteer.
         $em = $this->getEntityManager();
-        $qb = $em->createQueryBuilder();
-        $qb->select('count(c.id)');
-        $qb->from('AppBundle:Commitment','c');
-        $qb->where('c.event=:evt');
-        $qb->setParameter('evt',$event);
+        $repo = $em->getRepository('AppBundle:Commitment');
+        $commitments = $repo->findByEvent($event);
+        $userIds = array();
+        $count=0;
+        foreach ($commitments as $c) {
+            $uid = (string)$c->getUser()->getId();
+            if(! isset($userIds[$uid]))
+            {
+                $count++;
+                $userIds[$uid] = 1;
+            }
+        }
 
-        return  $qb->getQuery()->getSingleScalarResult();
+        return $count;
     }
 
     // not used anymore...
