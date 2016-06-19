@@ -268,9 +268,11 @@ class EventController extends Controller
             $choices[$text] = $dep->getID();
         }
         $threeDays = new \DateInterval('P2D');
+        $laterDate = clone $event->getDate();
+        $laterDate->add($threeDays);
         $emptyData = $event->getDate()->format('D, d.m.Y')
         ." 08:00 - "
-        .$event->getDate()->add($threeDays)->format('D, d.m.Y')
+        .$laterDate->format('D, d.m.Y')
         . " 20:00";
         return $this->createFormBuilder()
             ->add('department', ChoiceType::class, array(
