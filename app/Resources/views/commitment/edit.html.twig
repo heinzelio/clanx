@@ -18,8 +18,8 @@
         {{ form_end(edit_form) }}
     </div>
     <div class="panel-footer">
-        <a onclick="form_commitment_edit.submit();"
-            class="btn btn-primary"
+        <a class="btn btn-primary"
+            onclick="formSubmit(form_commitment_edit,this);"
             data-toggle="tooltip"
             title="Änderungen übernehmen und in der Datenbank speichern.">
             <span class="glyphicon glyphicon-floppy-disk"></span>
@@ -33,7 +33,7 @@
             Abbrechen
         </a>
         {% if may_delete %}
-            <a onclick="form_commitment_delete.submit();"
+            <a onclick="formSubmit(form_commitment_delete,this);"
                 class="btn btn-danger"
                 data-toggle="tooltip"
                 title="Lösche den Eintrag. Du bist dann nicht mehr als Hölfer
