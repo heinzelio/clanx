@@ -268,9 +268,11 @@ class EventController extends Controller
             $choices[$text] = $dep->getID();
         }
         $threeDays = new \DateInterval('P2D');
+        $laterDate = clone $event->getDate();
+        $laterDate->add($threeDays);
         $emptyData = $event->getDate()->format('D, d.m.Y')
         ." 08:00 - "
-        .$event->getDate()->add($threeDays)->format('D, d.m.Y')
+        .$laterDate->format('D, d.m.Y')
         . " 20:00";
         return $this->createFormBuilder()
             ->add('department', ChoiceType::class, array(
@@ -357,8 +359,11 @@ class EventController extends Controller
             ->setTo($user->getEmail())
             ->setBody(
                 $this->renderView(
+                    // app/Resources/views/emails/commitmentConfirmation.html.twig
                     'emails/commitmentConfirmation.html.twig',
-                    array('Forename' => $user->getForename(),
+                    array(
+                        'Forename' => $user->getForename(),
+                        'Gender' => $user->getGender(),
                         'Event' => $event->getName(),
                         'EventID' => $event->getId(),
                         'EventDate' => $event->getDate(),
@@ -370,8 +375,10 @@ class EventController extends Controller
             )
             ->addPart(
                 $this->renderView(
+                    // app/Resources/views/emails/commitmentConfirmation.txt.twig
                     'emails/commitmentConfirmation.txt.twig',
                     array('Forename' => $user->getForename(),
+                        'Gender' => $user->getGender(),
                         'Event' => $event->getName(),
                         'EventID' => $event->getId(),
                         'EventDate' => $event->getDate(),

@@ -1,5 +1,9 @@
-{# app/Resources/views/emails/commitmentConfirmation.txt.twig #}
-<h3>Lieber {{ Forename }}</h3>
+{# app/Resources/views/emails/commitmentConfirmation.html.twig #}
+{% if Gender == 'M' %}
+    <h3>Lieber {{ Forename }}</h3>
+{% else %}
+    <h3>Liebe {{ Forename }}</h3>
+{% endif %}
 
 <p> Du hast dich beim Event
     <a href="{{ absolute_url(path('event_show', { 'id': EventID })) }}"><strong>{{ Event }}</strong></a>

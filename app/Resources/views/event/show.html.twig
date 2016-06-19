@@ -105,8 +105,9 @@
                 {{form_widget(enroll_form) }}
                 {#submit button is being generated in the controller.#}
             {{ form_end(enroll_form) }}
+
             <a class="btn btn-danger"
-                onclick="event_enroll_form.submit();"
+                onclick="formSubmit(event_enroll_form,this)"
                 data-toggle="tooltip"
                 title="Änderungen übernehmen und in der Datenbank speichern.">
                 <span class="glyphicon glyphicon-floppy-disk"></span>
