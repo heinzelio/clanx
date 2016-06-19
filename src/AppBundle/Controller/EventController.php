@@ -375,8 +375,7 @@ class EventController extends Controller
             )
             ->addPart(
                 $this->renderView(
-                    // app/Resources/views/emails/CommitmentConfirmation.txt.twig
-                    'emails/CommitmentConfirmation.txt.twig',
+                    'emails/commitmentConfirmation.txt.twig',
                     array('Forename' => $user->getForename(),
                         'Gender' => $user->getGender(),
                         'Event' => $event->getName(),
