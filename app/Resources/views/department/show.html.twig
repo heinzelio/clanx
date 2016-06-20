@@ -20,9 +20,16 @@ Ressort: {{ department.name }}
             <p>{{department.requirement}}</p>
         {% endif %}
         <p><strong>
-            Eingeschreibene Hölfer im Ressort:
+            {{commitments|length}}
+            {% if commitments|length ==1 %}
+                eingeschreibener
+            {% else %}
+                eingeschreibene
+            {% endif %}
+             Hölfer im Ressort:
         </strong></p>
-        {% for vol in volunteers %}
+        {% for cmt in commitments %}
+            {% set vol = cmt.user %}
             <p>
                 {{ vol }} {# this calls User.__toString(). Pretty neat. #}
                 {% if is_granted('ROLE_ADMIN') %}
@@ -36,14 +43,26 @@ Ressort: {{ department.name }}
                     </a>
                 {% endif %}
 
-                {% if userIsChief or userIsDeputy %}
+                {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') %}
                     <a class="btn btn-default"
                         href="{{path('department_move_volunteer',{'id':department.id,'user_id':vol.id})}}"
                         data-toggle="tooltip"
-                        title="Diesen Hölfer einem anderen Ressort zuweisen.">
+                        title="{{vol}} einem anderen Ressort zuweisen.">
                         <span class="glyphicon glyphicon-new-window"></span>
                         Verschieben
                     </a>
+                    <a class="btn btn-default"
+                        data-toggle="tooltip"
+                        title="{{cmt.possibleStart}}">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </a>
+                    {% if cmt.remark %}
+                        <a class="btn btn-default"
+                            data-toggle="tooltip"
+                            title="{{cmt.remark}}">
+                            <span class="glyphicon glyphicon-comment"></span>
+                        </a>
+                    {% endif %}
                 {% endif %}
         {% endfor %}
     </div>

@@ -85,10 +85,6 @@ class DepartmentController extends Controller
 
         $userRepo = $em->getRepository('AppBundle:User');
         $commitments = $commRepo->findByDepartment($department);
-        $volunteers = array();
-        foreach ($commitments as $cmt) {
-            array_push($volunteers,$cmt->getUser());
-        }
 
         $mayDelete = $this->isGranted('ROLE_ADMIN');
         $mayDelete = $mayDelete && $countShift == 0;
@@ -107,7 +103,7 @@ class DepartmentController extends Controller
             'event' => $event,
             'mayDelete' => $mayDelete,
             'delete_form' => $deleteForm->createView(),
-            'volunteers' => $volunteers,
+            'commitments' => $commitments,
             'userIsChief' => $userIsChief,
             'userIsDeputy' => $userIsDeputy,
         ));
