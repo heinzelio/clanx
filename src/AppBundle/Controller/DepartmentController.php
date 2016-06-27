@@ -151,7 +151,10 @@ class DepartmentController extends Controller
      */
     public function editDeputyAction(Request $request, Department $department)
     {
-        if(! $this->getUser()->isChiefOf($department))
+        if(! $this->getUser()->isChiefOf($department)
+            &&
+            ! $this->isGranted('ROLE_ADMIN')
+        )
         {
             return $this->redirectToRoute('department_show',array('id'=>$department->getId()));
         }
@@ -395,5 +398,59 @@ class DepartmentController extends Controller
         $session->set(Mail::SESSION_KEY, $mailData);
 
         return $this->redirectToRoute('mail_edit');
+    }
+
+    /**
+     * Renders a table view that can be printed
+     *
+     * @Route("/{id}/print/all", name="department_print_all")
+     * @Method("GET")
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function printAllAction(Request $request, Department $department)
+    {
+        if(!$this->isGranted('ROLE_ADMIN'))
+        {
+            $chiefUser= $department->getChiefUser();
+            $deputyUser = $department->getDeputyUser();
+            $thisUser=$this->getUser();
+            if ($thisUser->getId() != $chiefUser->getId()
+                &&
+                $thisUser->getId() != $deputyUser->getId()
+            )
+            {
+                $this->get('session')->getFlashBag()
+                    ->add('warning', "Du musst Admin, Ressortleiter oder Stellvertreter sein, um Hölferdate drucken zu können.");
+                return $this->redirectToRoute('department_show',array(
+                    'id'=>$department->getId(),
+                    'event_id'=>$department->getEvent()->getId()
+                ));
+            }
+        }
+
+
+         $columns = array('Hölfer',
+                         'Ich helfe an folgenden Tagen',
+                         'Bemerkung',
+                         'Shirt',
+                         'Zugbillet'
+                    );
+        $commitments = $department->getCommitments();
+        $rows = array();
+        foreach ($commitments as $cmt) {
+            $row = array((string) $cmt->getUser(),
+                        $cmt->getPossibleStart(),
+                        $cmt->getRemark(),
+                        $cmt->getShirtSize(),
+                        $cmt->getNeedTrainTicket(),
+                    );
+            array_push($rows,$row);
+        }
+
+        return $this->render('print_table.html.twig',array(
+            'title'=>$department->getName().' Hölferliste',
+            'columns'=>$columns,
+            'rows'=>$rows,
+        ));
     }
 }

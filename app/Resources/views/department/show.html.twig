@@ -75,7 +75,7 @@ Ressort: {{ department.name }}
             <span class="glyphicon glyphicon-pencil"></span>
             Bearbeiten</a>
         {% endif %}
-        {% if userIsChief %}
+        {% if userIsChief or is_granted('ROLE_ADMIN') %}
             <a class="btn btn-default"
                 href="{{ path('department_edit_deputy',{'id':department.id}) }}"
                 data-toggle="tooltip"
@@ -85,7 +85,7 @@ Ressort: {{ department.name }}
                 Stellvertreter
             </a>
         {% endif %}
-        {% if userIsChief or userIsDeputy %}
+        {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') %}
             <a class="btn btn-default"
                 href="{{ path('department_mail_volunteers', {
                 'id':department.id
@@ -95,6 +95,16 @@ Ressort: {{ department.name }}
                 >
                 <span class="glyphicon glyphicon-envelope"></span>
                 Email
+            </a>
+
+            <a class="btn btn-default"
+                href="{{ path('department_print_all', {'id': department.id}) }}"
+                data-toggle="tooltip"
+                title="Drucke von diesem Ressort alle Hölfer mit allen Daten."
+                target="_blank"
+                >
+                <span class="glyphicon glyphicon-print"></span>
+                Drucken
             </a>
         {% endif %}
         <a class="btn btn-default" type="button"

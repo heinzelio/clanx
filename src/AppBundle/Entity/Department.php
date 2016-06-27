@@ -65,6 +65,11 @@ class Department
      */
     private $chiefUser;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Commitment", mappedBy="department")
+     */
+    private $commitments;
+
 
 
     /**
@@ -195,6 +200,11 @@ class Department
     public function getChiefUser()
     {
         return $this->chiefUser;
+    }
+
+    public function getCommitments()
+    {
+        return $this->commitments;
     }
 
     /**
