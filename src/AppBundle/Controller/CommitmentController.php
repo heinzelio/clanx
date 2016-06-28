@@ -39,12 +39,8 @@ class CommitmentController extends Controller
         //TODO: replacy dummy
         $mayDelete = true;
 
-        $options = array('departmentChoices' => array());
-        $deptRepo = $em->getRepository('AppBundle:Department');
-        foreach ($deptRepo->FindAll() as $dept) {
-            // Fill in the choices
-            $options['departmentChoices'][$dept->getName()] = $dept;
-        }
+        $event=$commitment->getEvent();
+        $options = array('departmentChoices' => $event->getDepartments());
         $editForm = $this->createForm('AppBundle\Form\CommitmentType', $commitment, $options);
         $editForm->handleRequest($request);
 
