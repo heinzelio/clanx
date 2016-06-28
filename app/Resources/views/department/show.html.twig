@@ -20,9 +20,16 @@ Ressort: {{ department.name }}
             <p>{{department.requirement}}</p>
         {% endif %}
         <p><strong>
-            Eingeschreibene Hölfer im Ressort:
+            {{commitments|length}}
+            {% if commitments|length ==1 %}
+                eingeschreibener
+            {% else %}
+                eingeschreibene
+            {% endif %}
+             Hölfer im Ressort:
         </strong></p>
-        {% for vol in volunteers %}
+        {% for cmt in commitments %}
+            {% set vol = cmt.user %}
             <p>
                 {{ vol }} {# this calls User.__toString(). Pretty neat. #}
                 {% if is_granted('ROLE_ADMIN') %}
@@ -36,14 +43,26 @@ Ressort: {{ department.name }}
                     </a>
                 {% endif %}
 
-                {% if userIsChief or userIsDeputy %}
+                {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') %}
                     <a class="btn btn-default"
                         href="{{path('department_move_volunteer',{'id':department.id,'user_id':vol.id})}}"
                         data-toggle="tooltip"
-                        title="Diesen Hölfer einem anderen Ressort zuweisen.">
+                        title="{{vol}} einem anderen Ressort zuweisen.">
                         <span class="glyphicon glyphicon-new-window"></span>
                         Verschieben
                     </a>
+                    <a class="btn btn-default"
+                        data-toggle="tooltip"
+                        title="{{cmt.possibleStart}}">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </a>
+                    {% if cmt.remark %}
+                        <a class="btn btn-default"
+                            data-toggle="tooltip"
+                            title="{{cmt.remark}}">
+                            <span class="glyphicon glyphicon-comment"></span>
+                        </a>
+                    {% endif %}
                 {% endif %}
         {% endfor %}
     </div>
@@ -56,7 +75,7 @@ Ressort: {{ department.name }}
             <span class="glyphicon glyphicon-pencil"></span>
             Bearbeiten</a>
         {% endif %}
-        {% if userIsChief %}
+        {% if userIsChief or is_granted('ROLE_ADMIN') %}
             <a class="btn btn-default"
                 href="{{ path('department_edit_deputy',{'id':department.id}) }}"
                 data-toggle="tooltip"
@@ -66,7 +85,7 @@ Ressort: {{ department.name }}
                 Stellvertreter
             </a>
         {% endif %}
-        {% if userIsChief or userIsDeputy %}
+        {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') %}
             <a class="btn btn-default"
                 href="{{ path('department_mail_volunteers', {
                 'id':department.id
@@ -76,6 +95,16 @@ Ressort: {{ department.name }}
                 >
                 <span class="glyphicon glyphicon-envelope"></span>
                 Email
+            </a>
+
+            <a class="btn btn-default"
+                href="{{ path('department_print_all', {'id': department.id}) }}"
+                data-toggle="tooltip"
+                title="Drucke von diesem Ressort alle Hölfer mit allen Daten."
+                target="_blank"
+                >
+                <span class="glyphicon glyphicon-print"></span>
+                Drucken
             </a>
         {% endif %}
         <a class="btn btn-default" type="button"
