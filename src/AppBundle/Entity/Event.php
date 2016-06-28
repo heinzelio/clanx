@@ -48,6 +48,11 @@ class Event
      */
     private $id;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Department", mappedBy="event")
+     */
+    private $departments;
+
 
 
     /**
@@ -151,6 +156,16 @@ class Event
     public function getId()
     {
         return $this->id;
+    }
+    
+    /**
+     * Get all departments of this event
+     *
+     * @return array
+     */
+    public function getDepartments()
+    {
+        return $this->departments;
     }
 
     /**
