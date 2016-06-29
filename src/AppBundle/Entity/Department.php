@@ -215,4 +215,17 @@ class Department
     {
         return strval($this->name);
     }
+
+    /**
+     * Gets a string representation of the department
+     * including the requirement.
+     * @return string
+     */
+    public function getLongText($value='')
+    {
+        if ($this->requirement)
+            return $this->name . ' (' . $this->requirement . ')';
+        else
+            return $this->name;
+    }
 }

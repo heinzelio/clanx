@@ -40,7 +40,7 @@ class CommitmentController extends Controller
         $mayDelete = true;
 
         $event=$commitment->getEvent();
-        $options = array('departmentChoices' => $event->getDepartments());
+        $options = array('departmentChoices' => $event->getFreeDepartments());
         $editForm = $this->createForm('AppBundle\Form\CommitmentType', $commitment, $options);
         $editForm->handleRequest($request);
 
