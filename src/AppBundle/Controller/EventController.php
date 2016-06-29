@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -128,7 +129,6 @@ class EventController extends Controller
         $user = $this->getUser();
 
         $depRep = $em->getRepository('AppBundle:Department');
-        $departments = $depRep->findByEvent($event);
         // find out of which departments i am a chief.
         $myDepartmentsAsChief = $depRep->findBy(
             array('chiefUser' => $user, 'event' => $event)
@@ -137,7 +137,7 @@ class EventController extends Controller
             array('deputyUser' => $user, 'event' => $event)
         );
 
-        $enrollForm = $this->createEnrollForm($event,$departments);
+        $enrollForm = $this->createEnrollForm($event,$event->getFreeDepartments());
         $deleteForm = $this->createDeleteForm($event);
 
         // todo: find the values for these:
@@ -258,15 +258,6 @@ class EventController extends Controller
      */
     private function createEnrollForm(Event $event, $departments)
     {
-        $choices = array();
-        foreach ($departments as $dep) {
-            if($dep->getRequirement()){
-                $text = $dep->getName().' ('.$dep->getRequirement().')';
-            }else{
-                $text = $dep->getName();
-            }
-            $choices[$text] = $dep->getID();
-        }
         $threeDays = new \DateInterval('P2D');
         $laterDate = clone $event->getDate();
         $laterDate->add($threeDays);
@@ -275,9 +266,13 @@ class EventController extends Controller
         .$laterDate->format('D, d.m.Y')
         . " 20:00";
         return $this->createFormBuilder()
-            ->add('department', ChoiceType::class, array(
-                'label' => 'für Ressort (ohne Garantie)',
-                'choices'  => $choices
+            ->add('department', EntityType::class, array(
+                'class'=>'AppBundle:Department',
+                'label' => 'Für Ressort (ohne Garantie)',
+                'choices' => $departments,
+                'choice_label' => function ($dpt) {
+                                        return $dpt->getLongText();
+                                    }
             ))
             ->add('possibleStart', TextareaType::class, array(
                 'label' => 'Ich helfe an folgenden Tagen (bitte auch Zeit angeben)',
@@ -318,8 +313,7 @@ class EventController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $depRep = $em->getRepository('AppBundle:Department');
-        $departments = $depRep->findByEvent($event);
-        $form = $this->createEnrollForm($event,$departments);
+        $form = $this->createEnrollForm($event,$event->getDepartments());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

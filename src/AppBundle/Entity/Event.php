@@ -157,7 +157,7 @@ class Event
     {
         return $this->id;
     }
-    
+
     /**
      * Get all departments of this event
      *
@@ -165,7 +165,20 @@ class Event
      */
     public function getDepartments()
     {
-        return $this->departments;
+        return $this->departments->toArray();
+    }
+    /**
+     * Gets all departments which are not locked.
+     *
+     * @return array
+     */
+    public function getFreeDepartments()
+    {
+        $arr = $this->departments->toArray();
+        return array_filter($arr, function($dpt){
+                                                            // TODO: use locked==false
+                                                            return true;
+                                                        });
     }
 
     /**

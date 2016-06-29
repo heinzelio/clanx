@@ -25,10 +25,7 @@ class CommitmentType extends AbstractType
             'label' => 'Für Ressort (ohne Garantie)',
             'choices' => $options['departmentChoices'],
             'choice_label' => function ($dpt) {
-                                if ($dpt->getRequirement())
-                                    return $dpt->getName().' ('.$dpt->getRequirement().')';
-                                else
-                                    return $dpt->getName();
+                                    return $dpt->getLongText();
                                 }
         ))
         ->add('possibleStart', TextareaType::class, array(
