@@ -70,6 +70,12 @@ class Department
      */
     private $commitments;
 
+    /**
+     * @var boolean
+    * @ORM\Column(name="locked", type="boolean", nullable=false)
+    */
+    private $locked;
+
 
 
     /**
@@ -205,6 +211,35 @@ class Department
     public function getCommitments()
     {
         return $this->commitments;
+    }
+
+    /**
+     * Get locked flag
+     *
+     * @return boolean
+     */
+    public function getLocked()
+    {
+        return $this->locked;
+    }
+
+    /**
+     * Set locked flag
+     *
+     * @param boolean $l
+     *
+     * @return Department
+     */
+    public function setLocked($l)
+    {
+        if( ! $l)
+        {
+            $this->locked = false;
+        }else{
+            $this->locked = $l;
+        }
+
+        return $this;
     }
 
     /**
