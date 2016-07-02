@@ -155,10 +155,6 @@ class EventController extends Controller
 
         $mayEnroll = !$commitment && $event->enrollmentPossible();
 
-        // if event is further than 2 weeks from now, a user my change his commitment.
-        $twoWeeksFromNow = (new \DateTime())->add(new \DateInterval('P2W'));
-        $mayEditCommitment = ($twoWeeksFromNow < $event->getDate());
-
         $mayMail = $this->isGranted('ROLE_ADMIN');
 
         $mayEdit = $this->isGranted('ROLE_ADMIN') && $event->mayEdit();
@@ -171,7 +167,6 @@ class EventController extends Controller
             'mayEnroll' => $mayEnroll,
             'enrolledCount' => $enrolledCount,
             'commitment' => $commitment,
-            'mayEditCommitment' => $mayEditCommitment,
             'mayMail' => $mayMail,
             'mayEdit' => $mayEdit,
             'mayDelete' => $mayDelete,

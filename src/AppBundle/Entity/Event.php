@@ -53,6 +53,11 @@ class Event
      */
     private $departments;
 
+    /**
+     * @var boolean
+    * @ORM\Column(name="locked", type="boolean", nullable=false)
+    */
+    private $locked;
 
 
     /**
@@ -178,6 +183,36 @@ class Event
         return array_filter($arr, function($dpt){
                                                 return ! $dpt->getLocked();
                                             });
+    }
+
+    /**
+     * Lock the event (volunteers may not change their commitment in
+     * a locked event)
+     *
+     * @param boolean $l
+     *
+     * @return Event
+     */
+    public function setLocked($l)
+    {
+        if( ! $l)
+        {
+            $this->locked = false;
+        }else{
+            $this->locked = $l;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Is the event locked?
+     *
+     * @return boolean
+     */
+    public function getLocked()
+    {
+        return $this->locked;
     }
 
     /**
