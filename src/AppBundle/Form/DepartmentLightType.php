@@ -8,7 +8,11 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
 
-class DepartmentDeputyType extends AbstractType
+// This type must always be a subset of "DepartmentType"!
+// chiefs may edit only some fields, admins may edit
+// the whole entity.
+
+class DepartmentLightType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder

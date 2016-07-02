@@ -9,9 +9,13 @@ Ressort: {{ department.name }}
 <div class="col-md-6">
 <div class="panel panel-primary">
     <div class="panel-heading">
-        Ressort: {{ department.name }} ({{ event.name }})
+        Ressort <strong>{{ department.name }}</strong> vom Event {{ event.name }}
         {% if is_granted('ROLE_SUPER_ADMIN')%}
         ID: {{ department.id }}
+        {% endif %}
+        {% if department.locked %}
+            <br/>Dieses Ressort ist gesperrt. Einschreiben nicht mehr möglich.
+            <span class="glyphicon glyphicon-lock"></span>
         {% endif %}
     </div>
     <div class="panel-body">
@@ -67,24 +71,32 @@ Ressort: {{ department.name }}
         {% endfor %}
     </div>
     <div class="panel-footer">
+
         {% if is_granted('ROLE_ADMIN') %}
-        <a class="btn btn-primary" type="button"
-            href="{{ path('department_edit', { 'id': department.id ,'event_id':event.id}) }}"
-            data-toggle="tooltip"
-            title="Bearbeite Bezeichnung, Anforderung, Ressortleiter und Stellvertreter.">
-            <span class="glyphicon glyphicon-pencil"></span>
-            Bearbeiten</a>
-        {% endif %}
-        {% if userIsChief or is_granted('ROLE_ADMIN') %}
-            <a class="btn btn-default"
-                href="{{ path('department_edit_deputy',{'id':department.id}) }}"
+
+            <a class="btn btn-primary" type="button"
+                href="{{ path('department_edit', { 'id': department.id ,'event_id':event.id}) }}"
                 data-toggle="tooltip"
-                title="Bestimme einen Stellvertreter für dieses Ressort."
-                >
+                title="Bearbeite alle Eigenschaften des Ressorts {{department.name}}.">
                 <span class="glyphicon glyphicon-pencil"></span>
-                Stellvertreter
-            </a>
+                Bearbeiten</a>
+
+        {% else %}
+            {% if userIsChief %}
+
+                <a class="btn btn-default"
+                    href="{{ path('department_edit_light',{'id':department.id}) }}"
+                    data-toggle="tooltip"
+                    title="Bearbeite Anforderung, Stellvertreter des Ressorts
+                        {{department.name}} oder sperre es."
+                    >
+                    <span class="glyphicon glyphicon-pencil"></span>
+                    Bearbeiten
+                </a>
+
+            {% endif %}
         {% endif %}
+
         {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') %}
             <a class="btn btn-default"
                 href="{{ path('department_mail_volunteers', {
@@ -110,7 +122,7 @@ Ressort: {{ department.name }}
         <a class="btn btn-default" type="button"
             href="{{ path('event_show',{'id':event.id}) }}"
             data-toggle="tooltip"
-            title="Schliessen und zurück zum Event gehen."
+            title="Schliessen und zurück zur Ansicht gehen."
             >
             <span class="glyphicon glyphicon-remove"></span>
             Zurück</a>
