@@ -176,9 +176,8 @@ class Event
     {
         $arr = $this->departments->toArray();
         return array_filter($arr, function($dpt){
-                                                            // TODO: use locked==false
-                                                            return true;
-                                                        });
+                                                return ! $dpt->getLocked();
+                                            });
     }
 
     /**

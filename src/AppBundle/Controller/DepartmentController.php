@@ -142,24 +142,27 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Displays a form to edit only the deputy of an existing Department entity.
+     * Displays a form to edit only a few fields of an existing Department entity.
      * Used only by chiev_of_department
      *
-     * @Route("/{id}/edit/deputy", name="department_edit_deputy")
+     * @Route("/{id}/edit/light", name="department_edit_light")
      * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_USER')")
      */
-    public function editDeputyAction(Request $request, Department $department)
+    public function editLightAction(Request $request, Department $department)
     {
         if(! $this->getUser()->isChiefOf($department)
             &&
             ! $this->isGranted('ROLE_ADMIN')
         )
         {
-            return $this->redirectToRoute('department_show',array('id'=>$department->getId()));
+            return $this->redirectToRoute('department_show',array(
+                'id' => $department->getId(),
+                'event_id' => $department->getEvent()->getID(),
+            ));
         }
 
-        $editForm = $this->createForm('AppBundle\Form\DepartmentDeputyType', $department);
+        $editForm = $this->createForm('AppBundle\Form\DepartmentLightType', $department);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -175,7 +178,7 @@ class DepartmentController extends Controller
             ));
         }
 
-        return $this->render('department/edit_deputy.html.twig', array(
+        return $this->render('department/edit_light.html.twig', array(
             'department' => $department,
             'event' => $department->getEvent(),
             'edit_form' => $editForm->createView(),

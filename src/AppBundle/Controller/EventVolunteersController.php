@@ -104,6 +104,7 @@ class EventVolunteersController extends Controller
                 'highlighted' => $this->getUser()->isChiefOf($department),
                 'name' => $department->getName(),
                 'usercount' => count($commitments),
+                'locked' => $department->getLocked(),
                 'users' => $users
             );
             array_push($viewDepartments,$newItem);
