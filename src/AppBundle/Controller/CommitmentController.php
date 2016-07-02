@@ -33,13 +33,19 @@ class CommitmentController extends Controller
      */
     public function editAction(Request $request, Commitment $commitment)
     {
+        $event = $commitment->getEvent();
+
+        if($event->getLocked()){
+            $this->get('session')->getFlashBag()->add('danger', "Event gesperrt. Ändern nicht mehr möglich.");
+            return $this->redirectToRoute('event_show', array('id' => $event->getId()));
+        }
+
         $em = $this->getDoctrine()->getManager();
         $deleteForm = $this->createDeleteForm($commitment);
 
         //TODO: replacy dummy
         $mayDelete = true;
 
-        $event=$commitment->getEvent();
         $options = array('departmentChoices' => $event->getFreeDepartments());
         $editForm = $this->createForm('AppBundle\Form\CommitmentType', $commitment, $options);
         $editForm->handleRequest($request);
@@ -49,13 +55,13 @@ class CommitmentController extends Controller
             $em->flush();
 
             $this->get('session')->getFlashBag()->add('success', "Änderung gespeichert.");
-            return $this->redirectToRoute('event_show', array('id' => $commitment->getEvent()->getId()));
+            return $this->redirectToRoute('event_show', array('id' => $event->getId()));
         }
 
         return $this->render('commitment/edit.html.twig', array(
             'commitment' => $commitment,
             'department' => $commitment->getDepartment(),
-            'event' => $commitment->getEvent(),
+            'event' => $event,
             'may_delete' => $mayDelete,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -77,12 +83,9 @@ class CommitmentController extends Controller
             return $this->redirectToRoute('event_show', array('id' => $commitment->getEvent()->getId()));
         }
 
-        //TODO: replacy dummy
-        $mayDelete=true;
-
-        if(!$mayDelete)
+        if($commitment->getEvent()->getLocked())
         {
-            $this->get('session')->getFlashBag()->add('danger', "Löschen nicht mehr möglich.");
+            $this->get('session')->getFlashBag()->add('danger', "Event gesperrt. Löschen nicht mehr möglich.");
             return $this->redirectToRoute('event_show', array('id' => $commitment->getEvent()->getId()));
         }
 

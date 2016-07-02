@@ -180,26 +180,26 @@
 
     </div>
     <div class="panel-footer">
-        {% if mayEditCommitment %}
-        <a class="btn btn-default"
-            href="{{path('commitment_edit',{'id':commitment.id})}}"
-            data-toggle="tooltip"
-            title="Ändere oder lösche deine Eintragung als Hölfer.">
-            <span class="glyphicon glyphicon-pencil"></span>
-            Bearbeiten
-        </a>
+        {% if event.locked %}
+            <a class="btn btn-default"
+                disabled="disabled">
+            <!-- tooltips gönd nöd uf disabledem Button :(
+                data-toggle="tooltip"
+                title="Ändern oder löschen ist nicht mehr möglich. Deine Teilnahme
+                ist definitiv. (Falls ein Problem besteht, nimm bitte mit deinem
+                Ressortleiter Kontakt auf.)"
+            -->
+                <span class="glyphicon glyphicon-lock"></span>
+                Bearbeiten nicht mehr möglich
+            </a>
         {% else %}
-        <a class="btn btn-default"
-            disabled="disabled">
-        <!-- tooltips gönd nöd uf disabledem Button :(
-            data-toggle="tooltip"
-            title="Ändern oder löschen ist nicht mehr möglich. Deine Teilnahme
-            ist definitiv. (Falls ein Problem besteht, nimm bitte mit deinem
-            Ressortleiter Kontakt auf.)"
-        -->
-            <span class="glyphicon glyphicon-lock"></span>
-            Bearbeiten nicht mehr möglich
-        </a>
+            <a class="btn btn-default"
+                href="{{path('commitment_edit',{'id':commitment.id})}}"
+                data-toggle="tooltip"
+                title="Ändere oder lösche deine Eintragung als Hölfer.">
+                <span class="glyphicon glyphicon-pencil"></span>
+                Bearbeiten
+            </a>
         {% endif %}
     </div><!-- footer -->
     </div> <!--panel-->

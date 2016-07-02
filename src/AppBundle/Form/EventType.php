@@ -38,7 +38,11 @@ class EventType extends AbstractType
             ->add('sticky', CheckboxType::class, array(
                     'label'    => 'Klebt der Event in der Titelzeile?',
                     'required' => false,
-                ));
+            ))
+            ->add('locked', CheckboxType::class, array(
+                    'label' => 'Sperren. Hölfer können ihre Eintragungen nicht mehr ändern oder löschen.',
+                    'required' => false,
+            ));
         ;
     }
 
