@@ -19,6 +19,7 @@
                     <th>EMail</th>
                     <th>Ort</th>
                     <th>Beruf / Spezialität</th>
+                    <th>Role</th>
                     <th></th>
                 </tr>
             </thead>
@@ -30,6 +31,7 @@
                     <td>{{ user.email }}</td>
                     <td>{{ user.city }}</td>
                     <td>{{ user.occupation }}</td>
+                    <td>{{ attribute(roles,user.id) }}</td>
                     <td>
                         <div>
                             <a class="btn btn-default btn-xs"
@@ -53,7 +55,7 @@
             </tbody>
         </table>
         <div class="panel-footer">
-            
+
             <a class="btn btn-default"
                 href="{{ path('user_mail_all') }}"
                 data-toggle="tooltip"

@@ -31,9 +31,20 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $users = $em->getRepository('AppBundle:User')->findAll();
+        $roles = array();
+        foreach ($users as $u) {
+            $ctRoles = $u->getRoles();
+            $roleStr = '';
+            if(in_array('ROLE_ADMIN',$ctRoles)){$roleStr = $roleStr."Adm, ";}
+            if(in_array('ROLE_SUPER_ADMIN',$ctRoles)){$roleStr = $roleStr."SA, ";}
+            if(in_array('ROLE_OK',$ctRoles)){$roleStr = $roleStr."OK, ";}
+
+            $roles[$u->getId()] = substr($roleStr, 0, -2);;
+        }
 
         return $this->render('user/index.html.twig', array(
             'users' => $users,
+            'roles' => $roles,
         ));
     }
 
