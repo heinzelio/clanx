@@ -1,5 +1,5 @@
 -- execute this if version is <6 !
-ALTER TABLE department ADD COLUMN locked tinyint(1) NOT NULL DEFAULT 0
+ALTER TABLE department ADD COLUMN locked tinyint(1) NOT NULL DEFAULT 0;
 
 UPDATE info set version = 6;
 
