@@ -55,6 +55,8 @@ Ressort: {{ department.name }}
                         <span class="glyphicon glyphicon-new-window"></span>
                         Verschieben
                     </a>
+                {% endif %}
+                {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') or is_granted('ROLE_OK') %}
                     <a class="btn btn-default"
                         data-toggle="tooltip"
                         title="{{cmt.possibleStart}}">
