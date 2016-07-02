@@ -33,8 +33,10 @@ class EventVolunteersController extends Controller
         if($this->isGranted('ROLE_ADMIN')){
             return $this->renderAdminView($event);
         }
-        if($this->isChiefOfAnyDepartment($event))
-        {
+        if($this->isGranted('ROLE_OK')){
+            return $this->renderCommitteeView($event);
+        }
+        if($this->isChiefOfAnyDepartment($event)){
             return $this->renderChiefView($event);
         }
         $deputiesDepartments = $this->getDeputiesDepartments($event);
@@ -84,6 +86,12 @@ class EventVolunteersController extends Controller
     private function renderAdminView(Event $event)
     {
         // nothing special so far.
+        return $this->renderChiefView($event);
+    }
+
+    private function renderCommitteeView(Event $event)
+    {
+        // chiefs and committee members view the same.
         return $this->renderChiefView($event);
     }
 

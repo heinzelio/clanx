@@ -57,6 +57,24 @@
                 <span class="glyphicon glyphicon-star-empty"></span>
                 Zum Superadmin machen</a>
         {% endif %}
+        {% if may_promote_committee %}
+            <a class="btn btn-default"
+                href="{{ path('user_promote_committee', { 'id': user.id })}}"
+                data-toggle="tooltip"
+                title="Diesen Benutzer zum OK-Mitglied machen.">
+                <span class="glyphicon glyphicon-ok-circle"></span>
+                Zum OK Mitglied machen
+            </a>
+        {% endif %}
+        {% if may_demote_committee %}
+            <a class="btn btn-default"
+                href="{{ path('user_demote_committee', { 'id': user.id })}}"
+                data-toggle="tooltip"
+                title="Diesen Benutzer aus dem OK entfernen.">
+                <span class="glyphicon glyphicon-remove-circle"></span>
+                Aus OK entfernen
+            </a>
+        {% endif %}
         <a class="btn btn-default"
             href="{{ path('user_index') }}"
             data-toggle="tooltip"
