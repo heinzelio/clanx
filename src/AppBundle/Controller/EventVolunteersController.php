@@ -33,10 +33,8 @@ class EventVolunteersController extends Controller
         if($this->isGranted('ROLE_ADMIN')){
             return $this->renderAdminView($event);
         }
-        if($this->isGranted('ROLE_OK')){
-            return $this->renderCommitteeView($event);
-        }
-        if($this->isChiefOfAnyDepartment($event)){
+        if($this->isChiefOfAnyDepartment($event))
+        {
             return $this->renderChiefView($event);
         }
         $deputiesDepartments = $this->getDeputiesDepartments($event);
@@ -89,12 +87,6 @@ class EventVolunteersController extends Controller
         return $this->renderChiefView($event);
     }
 
-    private function renderCommitteeView(Event $event)
-    {
-        // chiefs and committee members view the same.
-        return $this->renderChiefView($event);
-    }
-
     private function renderChiefView(Event $event)
     {
         $em = $this->getDoctrine()->getManager();
@@ -112,7 +104,6 @@ class EventVolunteersController extends Controller
                 'highlighted' => $this->getUser()->isChiefOf($department),
                 'name' => $department->getName(),
                 'usercount' => count($commitments),
-                'locked' => $department->getLocked(),
                 'users' => $users
             );
             array_push($viewDepartments,$newItem);

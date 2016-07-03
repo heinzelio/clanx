@@ -48,16 +48,6 @@ class Event
      */
     private $id;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Department", mappedBy="event")
-     */
-    private $departments;
-
-    /**
-     * @var boolean
-    * @ORM\Column(name="locked", type="boolean", nullable=false)
-    */
-    private $locked;
 
 
     /**
@@ -161,58 +151,6 @@ class Event
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Get all departments of this event
-     *
-     * @return array
-     */
-    public function getDepartments()
-    {
-        return $this->departments->toArray();
-    }
-    /**
-     * Gets all departments which are not locked.
-     *
-     * @return array
-     */
-    public function getFreeDepartments()
-    {
-        $arr = $this->departments->toArray();
-        return array_filter($arr, function($dpt){
-                                                return ! $dpt->getLocked();
-                                            });
-    }
-
-    /**
-     * Lock the event (volunteers may not change their commitment in
-     * a locked event)
-     *
-     * @param boolean $l
-     *
-     * @return Event
-     */
-    public function setLocked($l)
-    {
-        if( ! $l)
-        {
-            $this->locked = false;
-        }else{
-            $this->locked = $l;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Is the event locked?
-     *
-     * @return boolean
-     */
-    public function getLocked()
-    {
-        return $this->locked;
     }
 
     /**
