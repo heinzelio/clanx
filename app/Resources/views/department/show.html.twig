@@ -1,5 +1,8 @@
 {% extends 'base_nav.html.twig' %}
 
+{% set chief = department.chiefUser %}
+{% set deputy = department.deputyUser %}
+
 {% block title %}
 Ressort: {{ department.name }}
 {% endblock %}
@@ -23,6 +26,12 @@ Ressort: {{ department.name }}
             <p><strong>Anforderung</strong></p>
             <p>{{department.requirement}}</p>
         {% endif %}
+        {% if chief %}
+            <p><strong>Ressortleiter:</strong> {{ chief}}</p>
+        {% endif %}
+        {% if deputy %}
+            <p><strong>Stellvertreter:</strong> {{ deputy}}</p>
+        {% endif %}
         <p><strong>
             {{commitments|length}}
             {% if commitments|length ==1 %}
@@ -32,45 +41,58 @@ Ressort: {{ department.name }}
             {% endif %}
              Hölfer im Ressort:
         </strong></p>
-        {% for cmt in commitments %}
-            {% set vol = cmt.user %}
-            <p>
-                {{ vol }} {# this calls User.__toString(). Pretty neat. #}
-                {% if is_granted('ROLE_ADMIN') %}
-                    <a class="btn btn-default"
-                        href="{{ path('department_redirect_mail_to',{
-                                'id':department.id,
-                                'user_id':vol.id})}}"
-                        data-toggle="tooltip"
-                        title="{{vol}} ein Email schreiben.">
-                        <span class="glyphicon glyphicon-envelope"></span>
-                    </a>
-                {% endif %}
-
-                {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') %}
-                    <a class="btn btn-default"
-                        href="{{path('department_move_volunteer',{'id':department.id,'user_id':vol.id})}}"
-                        data-toggle="tooltip"
-                        title="{{vol}} einem anderen Ressort zuweisen.">
-                        <span class="glyphicon glyphicon-new-window"></span>
-                        Verschieben
-                    </a>
-                {% endif %}
-                {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') or is_granted('ROLE_OK') %}
-                    <a class="btn btn-default"
-                        data-toggle="tooltip"
-                        title="{{cmt.possibleStart}}">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </a>
-                    {% if cmt.remark %}
+        <table class="table">
+        <tbody>
+            {% for cmt in commitments %}
+            <tr>
+                {% set vol = cmt.user %}
+                <td>
+                    {% if vol.id == chief.id or vol.id == deputy.id %}
+                        <strong>{{ vol }}</strong>{# this calls User.__toString(). Pretty neat. #}
+                    {% else %}
+                        {{ vol }} {# this calls User.__toString(). Pretty neat. #}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if is_granted('ROLE_ADMIN') %}
                         <a class="btn btn-default"
+                            href="{{ path('department_redirect_mail_to',{
+                                    'id':department.id,
+                                    'user_id':vol.id})}}"
                             data-toggle="tooltip"
-                            title="{{cmt.remark}}">
-                            <span class="glyphicon glyphicon-comment"></span>
+                            title="{{vol}} ein Email schreiben.">
+                            <span class="glyphicon glyphicon-envelope"></span>
                         </a>
                     {% endif %}
-                {% endif %}
-        {% endfor %}
+
+                    {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') %}
+                        <a class="btn btn-default"
+                            href="{{path('department_move_volunteer',{'id':department.id,'user_id':vol.id})}}"
+                            data-toggle="tooltip"
+                            title="{{vol}} einem anderen Ressort zuweisen.">
+                            <span class="glyphicon glyphicon-new-window"></span>
+                            Verschieben
+                        </a>
+                    {% endif %}
+                    {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') or is_granted('ROLE_OK') %}
+                        <a class="btn btn-default"
+                            data-toggle="tooltip"
+                            title="{{cmt.possibleStart}}">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </a>
+                        {% if cmt.remark %}
+                            <a class="btn btn-default"
+                                data-toggle="tooltip"
+                                title="{{cmt.remark}}">
+                                <span class="glyphicon glyphicon-comment"></span>
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
     </div>
     <div class="panel-footer">
 
