@@ -7,6 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,9 +20,13 @@ class CommitmentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add('department', ChoiceType::class, array(
+        ->add('department', EntityType::class, array(
+            'class'=>'AppBundle:Department',
             'label' => 'Für Ressort (ohne Garantie)',
             'choices' => $options['departmentChoices'],
+            'choice_label' => function ($dpt) {
+                                    return $dpt->getLongText();
+                                }
         ))
         ->add('possibleStart', TextareaType::class, array(
             'label' => 'Ich helfe an folgenden Tagen (bitte auch Zeit angeben)',

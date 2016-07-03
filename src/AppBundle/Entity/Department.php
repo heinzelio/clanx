@@ -65,6 +65,17 @@ class Department
      */
     private $chiefUser;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Commitment", mappedBy="department")
+     */
+    private $commitments;
+
+    /**
+     * @var boolean
+    * @ORM\Column(name="locked", type="boolean", nullable=false)
+    */
+    private $locked;
+
 
 
     /**
@@ -197,6 +208,40 @@ class Department
         return $this->chiefUser;
     }
 
+    public function getCommitments()
+    {
+        return $this->commitments;
+    }
+
+    /**
+     * Get locked flag
+     *
+     * @return boolean
+     */
+    public function getLocked()
+    {
+        return $this->locked;
+    }
+
+    /**
+     * Set locked flag
+     *
+     * @param boolean $l
+     *
+     * @return Department
+     */
+    public function setLocked($l)
+    {
+        if( ! $l)
+        {
+            $this->locked = false;
+        }else{
+            $this->locked = $l;
+        }
+
+        return $this;
+    }
+
     /**
      * Gets a string representing the department
      * @return string
@@ -204,5 +249,18 @@ class Department
     public function __toString()
     {
         return strval($this->name);
+    }
+
+    /**
+     * Gets a string representation of the department
+     * including the requirement.
+     * @return string
+     */
+    public function getLongText($value='')
+    {
+        if ($this->requirement)
+            return $this->name . ' (' . $this->requirement . ')';
+        else
+            return $this->name;
     }
 }
