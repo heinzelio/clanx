@@ -31,20 +31,9 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $users = $em->getRepository('AppBundle:User')->findAll();
-        $roles = array();
-        foreach ($users as $u) {
-            $ctRoles = $u->getRoles();
-            $roleStr = '';
-            if(in_array('ROLE_ADMIN',$ctRoles)){$roleStr = $roleStr."Adm, ";}
-            if(in_array('ROLE_SUPER_ADMIN',$ctRoles)){$roleStr = $roleStr."SA, ";}
-            if(in_array('ROLE_OK',$ctRoles)){$roleStr = $roleStr."OK, ";}
-
-            $roles[$u->getId()] = substr($roleStr, 0, -2);;
-        }
 
         return $this->render('user/index.html.twig', array(
             'users' => $users,
-            'roles' => $roles,
         ));
     }
 
@@ -82,21 +71,16 @@ class UserController extends Controller
             return $this->redirectToRoute('user_show', array('id' => $user->getId()));
         }
 
-
         $mayDemote = $this->mayDemote($user);
         $mayPromoteAdmin = $this->mayPromoteToAdmin($user);
         $mayPromoteSuperAdmin = $this->mayPromoteToSuperAdmin($user);
-        $mayPromoteCommittee = $this->mayPromoteCommittee($user);
-        $mayDemoteCommittee = $this->mayDemoteCommittee($user);
 
         return $this->render('user/edit.html.twig', array(
             'user' => $user,
             'edit_form' => $editForm->createView(),
-            'may_promote_super_admin' => $mayPromoteSuperAdmin,
-            'may_promote_admin' => $mayPromoteAdmin,
-            'may_demote' => $mayDemote,
-            'may_promote_committee' => $mayPromoteCommittee,
-            'may_demote_committee' => $mayDemoteCommittee,
+            'may_promote_super_admin'=>$mayPromoteSuperAdmin,
+            'may_promote_admin'=>$mayPromoteAdmin,
+            'may_demote'=>$mayDemote,
         ));
     }
 
@@ -121,7 +105,7 @@ class UserController extends Controller
         }
         else if($this->isGranted('ROLE_ADMIN'))
         {
-            // an admin may not demote a superadmin.
+            // an admin may not demote a superadmin.d
             if($userToEdit->hasRole('ROLE_SUPER_ADMIN'))
             {
                 return false;
@@ -166,30 +150,6 @@ class UserController extends Controller
         return false;
     }
 
-    private function mayPromoteCommittee($userToEdit)
-    {
-        if($this->isGranted('ROLE_ADMIN'))
-        {
-            if($userToEdit->hasRole('ROLE_OK')){
-                return false;
-            }
-            return true;
-        }
-        return false;
-    }
-
-    private function mayDemoteCommittee($userToEdit)
-    {
-        if($this->isGranted('ROLE_ADMIN'))
-        {
-            if($userToEdit->hasRole('ROLE_OK')){
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
-
     /**
      * Gives a user an admin role.
      *
@@ -200,7 +160,7 @@ class UserController extends Controller
     public function promoteAdminAction(Request $request, User $user)
     {
         $em = $this->getDoctrine()->getManager();
-        $user->addRole("ROLE_ADMIN");
+        $user->setRoles(array("ROLE_ADMIN")    );
         $em->persist($user);
         $em->flush();
         return $this->redirectToRoute('user_show', array('id' => $user->getId()));
@@ -216,8 +176,7 @@ class UserController extends Controller
     public function demoteAdminAction(Request $request, User $user)
     {
         $em = $this->getDoctrine()->getManager();
-        $user->removeRole("ROLE_ADMIN");
-        $user->removeRole("ROLE_SUPER_ADMIN");
+        $user->setRoles(array());
         $em->persist($user);
         $em->flush();
         return $this->redirectToRoute('user_show', array('id' => $user->getId()));
@@ -234,39 +193,6 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $user->setRoles(array("ROLE_SUPER_ADMIN")    );
-        $em->persist($user);
-        $em->flush();
-        return $this->redirectToRoute('user_show', array('id' => $user->getId()));
-    }
-
-
-    /**
-     * Adds a user to the organization committee.
-     *
-     * @Route("/{id}/promote/committee", name="user_promote_committee")
-     * @Method({"GET", "POST"})
-     * @Security("has_role('ROLE_ADMIN')")
-     */
-    public function promoteCommitteeAction(Request $request, User $user)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $user->addRole("ROLE_OK");
-        $em->persist($user);
-        $em->flush();
-        return $this->redirectToRoute('user_show', array('id' => $user->getId()));
-    }
-
-    /**
-     * Removes a user from the organization committee.
-     *
-     * @Route("/{id}/demote/committee", name="user_demote_committee")
-     * @Method({"GET", "POST"})
-     * @Security("has_role('ROLE_ADMIN')")
-     */
-    public function demoteCommitteeAction(Request $request, User $user)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $user->removeRole("ROLE_OK");
         $em->persist($user);
         $em->flush();
         return $this->redirectToRoute('user_show', array('id' => $user->getId()));

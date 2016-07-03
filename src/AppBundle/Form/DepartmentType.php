@@ -4,7 +4,6 @@ namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
 
@@ -40,10 +39,6 @@ class DepartmentType extends AbstractType
                         ->orderBy('u.forename', 'ASC')
                         ;
                     }
-            ))
-            ->add('locked', CheckboxType::class, array(
-                'label' => 'Einschreiben gesperrt?',
-                'required' => false,
             ))
         ;
     }
