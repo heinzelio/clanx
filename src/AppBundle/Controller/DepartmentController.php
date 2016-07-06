@@ -65,28 +65,17 @@ class DepartmentController extends Controller
     public function showAction(Department $department,Event $event)
     {
         $deleteForm = $this->createDeleteForm($department,$event);
-        $em = $this->getDoctrine()->getManager();
-        $commRepo = $em->getRepository('AppBundle:Commitment');
-        $shiftRepo = $em->getRepository('AppBundle:Shift');
 
-        $qb = $em->createQueryBuilder();
-        $qb->select('count(shift.id)')
-        ->from('AppBundle:Shift','shift')
-        ->where('shift.department = :dpt')
-        ->setParameter('dpt', $department);
-        $countShift = $qb->getQuery()->getSingleScalarResult();
-
+        $shifts = $department->getShifts();
         $commitments = $department->getCommitments();
         $companions = $department->getCompanions();
 
         $mayDelete = $this->isGranted('ROLE_ADMIN');
-        $mayDelete = $mayDelete && $countShift == 0;
+        $mayDelete = $mayDelete && count($shifts) == 0;
         $mayDelete = $mayDelete && count($commitments) == 0;
         $mayDelete = $mayDelete && count($companions) == 0;
 
         $activeUser = $this->getUser();
-        $chiefUser = $department->getChiefUser();
-        $deputyUser = $department->getDeputyUser();
         // catch null
         $userIsChief = $activeUser->isChiefOf($department);
         $userIsDeputy = $activeUser->isDeputyOf($department);

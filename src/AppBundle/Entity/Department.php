@@ -76,6 +76,11 @@ class Department
     private $companions;
 
     /**
+     * @ORM\OneToMany(targetEntity="Shift", mappedBy="department")
+     */
+    private $shifts;
+
+    /**
      * @var boolean
     * @ORM\Column(name="locked", type="boolean", nullable=false)
     */
@@ -221,6 +226,11 @@ class Department
     public function getCompanions()
     {
         return $this->companions;
+    }
+
+    public function getShifts()
+    {
+        return $this->shifts;
     }
 
     /**
