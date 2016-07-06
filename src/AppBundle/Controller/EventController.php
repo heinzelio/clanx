@@ -145,8 +145,9 @@ class EventController extends Controller
         // https://symfony.com/doc/current/cookbook/security/voters.html#how-to-use-the-voter-in-a-controller
 
         $commitments = $em->getRepository('AppBundle:Commitment');
+        $companions = $em->getRepository('AppBundle:Companion');
 
-        $enrolledCount = $commitments->countFor($event);
+        $enrolledCount = $commitments->countFor($event)+$companions->countFor($event);
 
         $commitment = $commitments->findOneBy(array(
             'user' => $user,
