@@ -91,41 +91,57 @@ Ressort: {{ department.name }}
                 </td>
             </tr>
             {% endfor %}
-            {% for companion in companions %}
-                <tr>
-                    <td>
-                        * {{companion.name}}
-                    </td>
-                    <td>
-                        <!-- TODO: We can not send mails to companions... yet!-->
-                        <!--
-                            <a class="btn btn-default"
-                                href="{{ path('department_redirect_mail_to',{
-                                        'id':department.id,
-                                        'user_id':companion.id})}}"
-                                data-toggle="tooltip"
-                                title="{{companion}} ein Email schreiben.">
-                                <span class="glyphicon glyphicon-envelope"></span>
-                            </a>
-                        -->
-                        {% if companion.email %}
-                            <a class="btn btn-default"
-                                data-toggle="tooltip"
-                                title="{{companion.email}}">
-                                <span class="glyphicon glyphicon-envelope"></span>
-                            </a>
-                        {% endif %}
-                        {% if companion.phone %}
-                            <a class="btn btn-default"
-                                data-toggle="tooltip"
-                                title="{{companion.phone}}">
-                                <span class="glyphicon glyphicon-phone"></span>
-                            </a>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
         </tbody>
+        </table>
+
+        <p><strong>
+            {{companions|length}}
+            nicht
+            {% if companions|length ==1 %}
+                registrierter
+            {% else %}
+                registrierte
+            {% endif %}
+             Hölfer im Ressort:
+        </strong></p>
+
+        <table class="table">
+            <tbody>
+                {% for companion in companions %}
+                    <tr>
+                        <td>
+                            {{companion.name}}
+                        </td>
+                        <td>
+                            <!-- TODO: We can not send mails to companions... yet!-->
+                            <!--
+                                <a class="btn btn-default"
+                                    href="{{ path('department_redirect_mail_to',{
+                                            'id':department.id,
+                                            'user_id':companion.id})}}"
+                                    data-toggle="tooltip"
+                                    title="{{companion}} ein Email schreiben.">
+                                    <span class="glyphicon glyphicon-envelope"></span>
+                                </a>
+                            -->
+                            {% if companion.email %}
+                                <a class="btn btn-default"
+                                    data-toggle="tooltip"
+                                    title="{{companion.email}}">
+                                    <span class="glyphicon glyphicon-envelope"></span>
+                                </a>
+                            {% endif %}
+                            {% if companion.phone %}
+                                <a class="btn btn-default"
+                                    data-toggle="tooltip"
+                                    title="{{companion.phone}}">
+                                    <span class="glyphicon glyphicon-phone"></span>
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
     <div class="panel-footer">
