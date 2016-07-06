@@ -191,4 +191,13 @@ class Companion
     {
         return $this->department;
     }
+
+    /**
+     * Gets a string representing the companion
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
+    }
 }

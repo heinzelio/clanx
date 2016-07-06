@@ -76,19 +76,13 @@ class DepartmentController extends Controller
         ->setParameter('dpt', $department);
         $countShift = $qb->getQuery()->getSingleScalarResult();
 
-        $qb = $em->createQueryBuilder();
-        $qb->select('count(cmt.id)')
-        ->from('AppBundle:Commitment','cmt')
-        ->where('cmt.department = :dpt')
-        ->setParameter('dpt', $department);
-        $countCommitment = $qb->getQuery()->getSingleScalarResult();
-
-        $userRepo = $em->getRepository('AppBundle:User');
-        $commitments = $commRepo->findByDepartment($department);
+        $commitments = $department->getCommitments();
+        $companions = $department->getCompanions();
 
         $mayDelete = $this->isGranted('ROLE_ADMIN');
         $mayDelete = $mayDelete && $countShift == 0;
-        $mayDelete = $mayDelete && $countCommitment == 0;
+        $mayDelete = $mayDelete && count($commitments) == 0;
+        $mayDelete = $mayDelete && count($companions) == 0;
 
         $activeUser = $this->getUser();
         $chiefUser = $department->getChiefUser();
@@ -104,6 +98,7 @@ class DepartmentController extends Controller
             'mayDelete' => $mayDelete,
             'delete_form' => $deleteForm->createView(),
             'commitments' => $commitments,
+            'companions' => $companions,
             'userIsChief' => $userIsChief,
             'userIsDeputy' => $userIsDeputy,
         ));
