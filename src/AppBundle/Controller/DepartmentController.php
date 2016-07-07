@@ -416,14 +416,14 @@ class DepartmentController extends Controller
         }
 
 
-         $columns = array('Hölfer',
+         $columns1 = array('Hölfer',
                          'Ich helfe an folgenden Tagen',
                          'Bemerkung',
                          'Shirt',
                          'Zugbillet'
                     );
         $commitments = $department->getCommitments();
-        $rows = array();
+        $rows1 = array();
         foreach ($commitments as $cmt) {
             $row = array((string) $cmt->getUser(),
                         $cmt->getPossibleStart(),
@@ -431,13 +431,41 @@ class DepartmentController extends Controller
                         $cmt->getShirtSize(),
                         $cmt->getNeedTrainTicket(),
                     );
-            array_push($rows,$row);
+            array_push($rows1,$row);
         }
 
-        return $this->render('print_table.html.twig',array(
-            'title'=>$department->getName().' Hölferliste',
-            'columns'=>$columns,
-            'rows'=>$rows,
-        ));
+         $columns2 = array('Hölfer',
+                         'Email',
+                         'Telefon',
+                         'Stammhölfer'
+                    );
+        $companions = $department->getCompanions();
+        $rows2 = array();
+        foreach ($companions as $companion) {
+            $row = array((string) $companion,
+                        $companion->getEmail(),
+                        $companion->getPhone(),
+                        $companion->getIsRegular(),
+                    );
+            array_push($rows2,$row);
+        }
+        if($companions && count($companions))
+        {
+            return $this->render('print_2_tables.html.twig',array(
+                'title'=>$department->getName().' Hölferliste',
+                'heading_1' => 'Eingeschriebene Hölfer',
+                'columns_1'=>$columns1,
+                'rows_1'=>$rows1,
+                'heading_2' => 'Nicht registrierte Hölfer',
+                'columns_2'=>$columns2,
+                'rows_2'=>$rows2,
+            ));
+        }else {
+            return $this->render('print_table.html.twig',array(
+                'title'=>$department->getName().' Hölferliste',
+                'columns'=>$columns1,
+                'rows'=>$rows1,
+            ));
+        }
     }
 }
