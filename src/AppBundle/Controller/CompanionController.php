@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -27,12 +28,24 @@ class CompanionController extends Controller
      */
     public function newAction(Request $request, Department $department)
     {
-        $this->denyAccessUnlessGranted(new Expression(
-            '"ROLE_ADMIN" in roles or (
-                user and (
-                    user.isChiefOf(object) or user.isDeputyOf(object)
-            ))'
-        ));
+        if(!$this->isGranted('ROLE_ADMIN'))
+        {
+            $user = $this->getUser();
+            if(!($user && ($user->isChiefOf($department) ||
+                $user->isDeputyOf($department))))
+                {
+                    // it is a sub-view. do return a void response when not authorized.
+                    return new Response('');
+                }
+        }
+
+// that would be nice. But unfortunately it throws an authorization exception...
+//        $this->denyAccessUnlessGranted(new Expression(
+//            '"ROLE_ADMIN" in roles or (
+//                user and (
+//                    user.isChiefOf(object) or user.isDeputyOf(object)
+//            ))'
+//        ), $department);
 
         $companion = new Companion();
         $form = $this->createForm('AppBundle\Form\CompanionType', $companion);
