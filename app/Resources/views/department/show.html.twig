@@ -46,8 +46,10 @@ Ressort: {{ department.name }}
             {% for cmt in commitments %}
             <tr>
                 {% set vol = cmt.user %}
+                {% set ctVolIsChief = chief and vol.id == chief.id %}
+                {% set ctVolIsDeputy = deputy and vol.id == deputy.id %}
                 <td>
-                    {% if vol.id == chief.id or vol.id == deputy.id %}
+                    {% if ctVolIsChief or ctVolIsDeputy %}
                         <strong>{{ vol }}</strong>{# this calls User.__toString(). Pretty neat. #}
                     {% else %}
                         {{ vol }} {# this calls User.__toString(). Pretty neat. #}
