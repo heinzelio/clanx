@@ -46,8 +46,10 @@ Ressort: {{ department.name }}
             {% for cmt in commitments %}
             <tr>
                 {% set vol = cmt.user %}
+                {% set ctVolIsChief = chief and vol.id == chief.id %}
+                {% set ctVolIsDeputy = deputy and vol.id == deputy.id %}
                 <td>
-                    {% if vol.id == chief.id or vol.id == deputy.id %}
+                    {% if ctVolIsChief or ctVolIsDeputy %}
                         <strong>{{ vol }}</strong>{# this calls User.__toString(). Pretty neat. #}
                     {% else %}
                         {{ vol }} {# this calls User.__toString(). Pretty neat. #}
@@ -93,6 +95,78 @@ Ressort: {{ department.name }}
             {% endfor %}
         </tbody>
         </table>
+        {% if companions|length >0 %}
+            <p><strong>
+                {{companions|length}}
+                nicht
+                {% if companions|length ==1 %}
+                    registrierter
+                {% else %}
+                    registrierte
+                {% endif %}
+                 Hölfer im Ressort:
+            </strong></p>
+            <table class="table">
+                <tbody>
+                    {% for companion in companions %}
+                        <tr>
+                            <td>
+                                {{companion.name}}
+                            </td>
+                            {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') or is_granted('ROLE_OK') %}
+
+                                <td>
+                                    <!-- TODO: We can not send mails to companions... yet!-->
+                                    <!--
+                                        <a class="btn btn-default"
+                                            href="{{ path('department_redirect_mail_to',{
+                                                    'id':department.id,
+                                                    'user_id':companion.id})}}"
+                                            data-toggle="tooltip"
+                                            title="{{companion}} ein Email schreiben.">
+                                            <span class="glyphicon glyphicon-envelope"></span>
+                                        </a>
+                                    -->
+                                    {% if companion.email %}
+                                        <a class="btn btn-default"
+                                            data-toggle="tooltip"
+                                            title="{{companion.email}}">
+                                            <span class="glyphicon glyphicon-envelope"></span>
+                                        </a>
+                                    {% endif %}
+                                    {% if companion.phone %}
+                                        <a class="btn btn-default"
+                                            data-toggle="tooltip"
+                                            title="{{companion.phone}}">
+                                            <span class="glyphicon glyphicon-phone"></span>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                                <td>
+
+                                    {% set formName = "form_comp_del_" ~ companion.id %}
+                                    <form class=""
+                                    action="{{path('companion_delete',{'id':companion.id})}}"
+                                    name="{{formName}}"
+                                    method="post">
+                                        <input type="hidden" name="_method" value="DELETE" />
+                                        <a onclick="formSubmit({{formName}},this);"
+                                            class="btn btn-default"
+                                            data-toggle="tooltip"
+                                            title="Lösche den Hölfer {{companion.name}}.">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </a>
+                                    </form>
+                                </td>
+
+                            {% endif %}
+                            <!-- admin of chief or deputy -->
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
     </div>
     <div class="panel-footer">
 
@@ -157,6 +231,15 @@ Ressort: {{ department.name }}
         {% endif %}
     </div><!-- footer -->
 </div><!-- panel -->
+
+
+
+</div><!-- col -->
+<div class="col-md-6">
+    {{ render(controller(
+        'AppBundle:Companion:new',
+        { 'id': department.id }
+    )) }}
 </div><!-- col -->
 </div><!-- row -->
 {% endblock %}
