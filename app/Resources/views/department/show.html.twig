@@ -113,33 +113,54 @@ Ressort: {{ department.name }}
                             <td>
                                 {{companion.name}}
                             </td>
-                            <td>
-                                <!-- TODO: We can not send mails to companions... yet!-->
-                                <!--
-                                    <a class="btn btn-default"
-                                        href="{{ path('department_redirect_mail_to',{
-                                                'id':department.id,
-                                                'user_id':companion.id})}}"
-                                        data-toggle="tooltip"
-                                        title="{{companion}} ein Email schreiben.">
-                                        <span class="glyphicon glyphicon-envelope"></span>
-                                    </a>
-                                -->
-                                {% if companion.email %}
-                                    <a class="btn btn-default"
-                                        data-toggle="tooltip"
-                                        title="{{companion.email}}">
-                                        <span class="glyphicon glyphicon-envelope"></span>
-                                    </a>
-                                {% endif %}
-                                {% if companion.phone %}
-                                    <a class="btn btn-default"
-                                        data-toggle="tooltip"
-                                        title="{{companion.phone}}">
-                                        <span class="glyphicon glyphicon-phone"></span>
-                                    </a>
-                                {% endif %}
-                            </td>
+                            {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') or is_granted('ROLE_OK') %}
+
+                                <td>
+                                    <!-- TODO: We can not send mails to companions... yet!-->
+                                    <!--
+                                        <a class="btn btn-default"
+                                            href="{{ path('department_redirect_mail_to',{
+                                                    'id':department.id,
+                                                    'user_id':companion.id})}}"
+                                            data-toggle="tooltip"
+                                            title="{{companion}} ein Email schreiben.">
+                                            <span class="glyphicon glyphicon-envelope"></span>
+                                        </a>
+                                    -->
+                                    {% if companion.email %}
+                                        <a class="btn btn-default"
+                                            data-toggle="tooltip"
+                                            title="{{companion.email}}">
+                                            <span class="glyphicon glyphicon-envelope"></span>
+                                        </a>
+                                    {% endif %}
+                                    {% if companion.phone %}
+                                        <a class="btn btn-default"
+                                            data-toggle="tooltip"
+                                            title="{{companion.phone}}">
+                                            <span class="glyphicon glyphicon-phone"></span>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                                <td>
+
+                                    {% set formName = "form_comp_del_" ~ companion.id %}
+                                    <form class=""
+                                    action="{{path('companion_delete',{'id':companion.id})}}"
+                                    name="{{formName}}"
+                                    method="post">
+                                        <input type="hidden" name="_method" value="DELETE" />
+                                        <a onclick="formSubmit({{formName}},this);"
+                                            class="btn btn-default"
+                                            data-toggle="tooltip"
+                                            title="Lösche den Hölfer {{companion.name}}.">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </a>
+                                    </form>
+                                </td>
+
+                            {% endif %}
+                            <!-- admin of chief or deputy -->
                         </tr>
                     {% endfor %}
                 </tbody>

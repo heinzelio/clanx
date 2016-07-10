@@ -25,6 +25,7 @@ class CompanionController extends Controller
      *
      * @Route("/new/for/department/{id}", name="companion_new")
      * @Method({"GET", "POST"})
+     * @Security("has_role('ROLE_USER')")
      */
     public function newAction(Request $request, Department $department)
     {
@@ -38,14 +39,6 @@ class CompanionController extends Controller
                     return new Response('');
                 }
         }
-
-// that would be nice. But unfortunately it throws an authorization exception...
-//        $this->denyAccessUnlessGranted(new Expression(
-//            '"ROLE_ADMIN" in roles or (
-//                user and (
-//                    user.isChiefOf(object) or user.isDeputyOf(object)
-//            ))'
-//        ), $department);
 
         $companion = new Companion();
         $form = $this->createForm('AppBundle\Form\CompanionType', $companion);
@@ -68,6 +61,40 @@ class CompanionController extends Controller
         return $this->render('department/new_companion.html.twig', array(
             'form' => $form->createView(),
             'department' => $department,
+        ));
+    }
+
+    /**
+     * Deletes a companion.
+     *
+     * @Route("/{id}", name="companion_delete")
+     * @Method("DELETE")
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function deleteAction(Request $request, Companion $companion)
+    {
+        $user = $this->getUser();
+        $department = $companion->getDepartment();
+
+        if (! $user->isChiefOf($department)
+            && ! $user->isDeputyOf($department)
+            && ! $this->isGranted('ROLE_ADMIN'))
+        {
+            $this->get('session')
+                ->getFlashBag()
+                ->add('warning', "Du bist dafür nicht authorisiert.");
+        }else{
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($companion);
+            $em->flush();
+            $this->get('session')
+                ->getFlashBag()
+                ->add('success', "Hölfer ".$companion->getName()." gelöscht.");
+        }
+
+        return $this->redirectToRoute('department_show',array(
+            'id' => $department->getId(),
+            'event_id' => $department->getEvent()->getId(),
         ));
     }
 }
