@@ -17,8 +17,9 @@ Ressort: {{ department.name }}
         ID: {{ department.id }}
         {% endif %}
         {% if department.locked %}
-            <br/>Dieses Ressort ist gesperrt. Einschreiben nicht mehr möglich.
-            <span class="glyphicon glyphicon-lock"></span>
+            <br/>
+            <span class="fa fa-lock"></span>
+            Dieses Ressort ist gesperrt. Einschreiben nicht mehr möglich.
         {% endif %}
     </div>
     <div class="panel-body">
@@ -63,7 +64,7 @@ Ressort: {{ department.name }}
                                     'user_id':vol.id})}}"
                             data-toggle="tooltip"
                             title="{{vol}} ein Email schreiben.">
-                            <span class="glyphicon glyphicon-envelope"></span>
+                            <span class="fa fa-envelope-o"></span>
                         </a>
                     {% endif %}
 
@@ -72,7 +73,7 @@ Ressort: {{ department.name }}
                             href="{{path('department_move_volunteer',{'id':department.id,'user_id':vol.id})}}"
                             data-toggle="tooltip"
                             title="{{vol}} einem anderen Ressort zuweisen.">
-                            <span class="glyphicon glyphicon-new-window"></span>
+                            <span class="fa fa-external-link"></span>
                             Verschieben
                         </a>
                     {% endif %}
@@ -80,13 +81,13 @@ Ressort: {{ department.name }}
                         <a class="btn btn-default"
                             data-toggle="tooltip"
                             title="{{cmt.possibleStart}}">
-                            <span class="glyphicon glyphicon-calendar"></span>
+                            <span class="fa fa-calendar"></span>
                         </a>
                         {% if cmt.remark %}
                             <a class="btn btn-default"
                                 data-toggle="tooltip"
                                 title="{{cmt.remark}}">
-                                <span class="glyphicon glyphicon-comment"></span>
+                                <span class="fa fa-commenting-o fa-lg"></span>
                             </a>
                         {% endif %}
                     {% endif %}
@@ -124,21 +125,21 @@ Ressort: {{ department.name }}
                                                     'user_id':companion.id})}}"
                                             data-toggle="tooltip"
                                             title="{{companion}} ein Email schreiben.">
-                                            <span class="glyphicon glyphicon-envelope"></span>
+                                            <span class="fa fa-envelope-o"></span>
                                         </a>
                                     -->
                                     {% if companion.email %}
                                         <a class="btn btn-default"
                                             data-toggle="tooltip"
                                             title="{{companion.email}}">
-                                            <span class="glyphicon glyphicon-envelope"></span>
+                                            <span class="fa fa-envelope-o"></span>
                                         </a>
                                     {% endif %}
                                     {% if companion.phone %}
                                         <a class="btn btn-default"
                                             data-toggle="tooltip"
                                             title="{{companion.phone}}">
-                                            <span class="glyphicon glyphicon-phone"></span>
+                                            <span class="fa fa-phone-square"></span>
                                         </a>
                                     {% endif %}
                                 </td>
@@ -154,7 +155,7 @@ Ressort: {{ department.name }}
                                             class="btn btn-default"
                                             data-toggle="tooltip"
                                             title="Lösche den Hölfer {{companion.name}}.">
-                                            <span class="glyphicon glyphicon-trash"></span>
+                                            <span class="fa fa-trash-o"></span>
                                         </a>
                                     </form>
                                 </td>
@@ -176,7 +177,7 @@ Ressort: {{ department.name }}
                 href="{{ path('department_edit', { 'id': department.id ,'event_id':event.id}) }}"
                 data-toggle="tooltip"
                 title="Bearbeite alle Eigenschaften des Ressorts {{department.name}}.">
-                <span class="glyphicon glyphicon-pencil"></span>
+                <span class="fa fa-pencil"></span>
                 Bearbeiten</a>
 
         {% else %}
@@ -188,7 +189,7 @@ Ressort: {{ department.name }}
                     title="Bearbeite Anforderung, Stellvertreter des Ressorts
                         {{department.name}} oder sperre es."
                     >
-                    <span class="glyphicon glyphicon-pencil"></span>
+                    <span class="fa fa-pencil"></span>
                     Bearbeiten
                 </a>
 
@@ -203,7 +204,8 @@ Ressort: {{ department.name }}
                 data-toggle="tooltip"
                 title="Schreibe ein Email an alle Hölfer aus diesem Ressort."
                 >
-                <span class="glyphicon glyphicon-envelope"></span>
+                <span class="fa fa-envelope-o"></span>
+                <span class="fa fa-users"></span>
                 Email
             </a>
 
@@ -213,16 +215,16 @@ Ressort: {{ department.name }}
                 title="Drucke von diesem Ressort alle Hölfer mit allen Daten."
                 target="_blank"
                 >
-                <span class="glyphicon glyphicon-print"></span>
+                <span class="fa fa-print"></span>
                 Drucken
             </a>
         {% endif %}
         <a class="btn btn-default" type="button"
             href="{{ path('event_show',{'id':event.id}) }}"
             data-toggle="tooltip"
-            title="Schliessen und zurück zur Ansicht gehen."
+            title="Zurück zum Event {{event.name}} gehen."
             >
-            <span class="glyphicon glyphicon-remove"></span>
+            <span class="fa fa-times"></span>
             Zurück</a>
         {% if mayDelete %}
             {{ form_start(delete_form) }}
