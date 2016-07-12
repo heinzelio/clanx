@@ -343,7 +343,6 @@ class EventController extends Controller
 
     private function sendMail($user,$dep,$event,$commitment){
         $message = \Swift_Message::newInstance();
-        $dankeImgLink =  $message->embed(\Swift_Image::fromPath('img/emails/danke.png'));
         $message->setSubject('Clanx Hölfer Bestätigung')
             ->setFrom(array('no-reply@clanx.ch'=>'Clanx Hölfer DB'))
             ->setTo($user->getEmail())
@@ -358,7 +357,6 @@ class EventController extends Controller
                         'EventID' => $event->getId(),
                         'EventDate' => $event->getDate(),
                         'Department' => $dep->getName(),
-                        'DankeImgLink' => $dankeImgLink,
                     )
                 ),
                 'text/html'
