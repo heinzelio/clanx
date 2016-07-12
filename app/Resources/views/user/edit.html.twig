@@ -38,7 +38,8 @@
                 href="{{ path('user_demote', { 'id': user.id })}}"
                 data-toggle="tooltip"
                 title="Diesen Benutzer wieder zu einen Benutzer ohne spezielle Rechte machen.">
-                <span class="glyphicon glyphicon-remove-circle"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-times"></span>
                 Adminrechte wegnehmen</a>
         {% endif %}
         {% if may_promote_admin %}
@@ -46,7 +47,7 @@
                 href="{{ path('user_promote_admin', { 'id': user.id })}}"
                 data-toggle="tooltip"
                 title="Diesem Benutzer Administrationsrechte erteilen. (Administratoren können Daten manipulieren und löschen.)">
-                <span class="glyphicon glyphicon-star"></span>
+                <span class="fa fa-star"></span>
                 Zum Admin machen</a>
         {% endif %}
         {% if may_promote_super_admin %}
@@ -54,7 +55,7 @@
                 href="{{ path('user_promote_superadmin', { 'id': user.id })}}"
                 data-toggle="tooltip"
                 title="Diesen Benutzer zum SA machen. (Ich hoffe, du weisst was du tust.)">
-                <span class="glyphicon glyphicon-star-empty"></span>
+                <span class="fa fa-star-o"></span>
                 Zum Superadmin machen</a>
         {% endif %}
         {% if may_promote_committee %}
@@ -62,7 +63,7 @@
                 href="{{ path('user_promote_committee', { 'id': user.id })}}"
                 data-toggle="tooltip"
                 title="Diesen Benutzer zum OK-Mitglied machen.">
-                <span class="glyphicon glyphicon-ok-circle"></span>
+                <span class="fa fa-plus-square-o"></span>
                 Zum OK Mitglied machen
             </a>
         {% endif %}
@@ -71,7 +72,7 @@
                 href="{{ path('user_demote_committee', { 'id': user.id })}}"
                 data-toggle="tooltip"
                 title="Diesen Benutzer aus dem OK entfernen.">
-                <span class="glyphicon glyphicon-remove-circle"></span>
+                <span class="fa fa-minus-square-o"></span>
                 Aus OK entfernen
             </a>
         {% endif %}
@@ -79,7 +80,7 @@
             href="{{ path('user_index') }}"
             data-toggle="tooltip"
             title="Nicht speichern und zurück zur Übersicht gehen.">
-            <span class="glyphicon glyphicon-remove"></span>
+            <span class="fa fa-times"></span>
             Abbrechen</a>
     </div>
 </div>

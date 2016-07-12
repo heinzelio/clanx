@@ -71,7 +71,7 @@ class NavBarController extends Controller
 
         $infoItem = $this->createItem(
             'Info',
-            'glyphicon glyphicon glyphicon-info-sign',
+            'fa fa-info',
             'info_index');
         array_push($items,$infoItem);
 
