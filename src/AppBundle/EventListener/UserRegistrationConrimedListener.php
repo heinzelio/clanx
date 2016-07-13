@@ -50,6 +50,7 @@ class UserRegistrationConrimedListener implements EventSubscriberInterface
             $user->setDateOfBirth($legacyUser->getDateOfBirth());
             $user->setPhone($legacyUser->getPhone());
             $user->setOccupation($legacyUser->getOccupation());
+            $user->setIsRegular(true);
             $em->persist($user);
             $em->flush();
         }

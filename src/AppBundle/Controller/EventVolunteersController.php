@@ -104,10 +104,20 @@ class EventVolunteersController extends Controller
             $companions = $department->getCompanions();
             $users = array();
             foreach ($commitments as $cmt) {
-                array_push($users,(string)$cmt->getUser());
+                $u = (string)$cmt->getUser();
+                if($cmt->getUser()->getIsRegular())
+                {
+                    $u = $u . ' *';
+                }
+                array_push($users,$u);
             }
             foreach ($companions as $companion) {
-                array_push($users,(string)$companion->getName());
+                $u = (string)$companion->getName();
+                if($companion->getIsRegular())
+                {
+                    $u = $u . ' *';
+                }
+                array_push($users,$u);
             }
 
             $newItem = array(
