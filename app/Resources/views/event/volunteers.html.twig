@@ -22,7 +22,15 @@
         </a>
         <ul>
             {% for user in dept.users %}
-                <li>{{ user }}</li>
+                <li>
+                    {# user may be entity "user" or entity "companion"! #}
+                    {{ user }}
+                    {% if user.isRegular %}
+                        <span class="fa fa-repeat"
+                            data-toggle="tooltip"
+                            title="{{user}} ist Stammhölfer"></span>
+                    {% endif %}
+                </li>
             {% endfor %}
         </ul>
     {% endfor %}
