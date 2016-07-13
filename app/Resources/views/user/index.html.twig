@@ -20,7 +20,10 @@
                     <th>Ort</th>
                     <th>Beruf / Spezialität</th>
                     <th>Role</th>
-                    <th>Stamm</th>
+                    <th><span class="fa fa-repeat"
+                        data-toggle="tooltip"
+                        title="Ist Stammhölfer."
+                        ></span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -34,7 +37,7 @@
                     <td>{{ user.occupation }}</td>
                     <td>{{ attribute(roles,user.id) }}</td>
                     <td>
-                        {% if user.isRegular %}X{% endif %}
+                        {% if user.isRegular %}<span class="fa fa-repeat"></span>{% endif %}
                     </td>
                     <td>
                         <div>

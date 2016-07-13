@@ -55,7 +55,12 @@ Ressort: {{ department.name }}
                     {% else %}
                         {{ vol }} {# this calls User.__toString(). Pretty neat. #}
                     {% endif %}
-                    {% if vol.isRegular %} *{% endif %}
+                    {% if vol.isRegular %}
+                    <span class="fa fa-repeat"
+                        data-toggle="tooltip"
+                        title="{{vol}} ist Stammhölfer"
+                        ></span>
+                    {% endif %}
                 </td>
                 <td>
                     {% if is_granted('ROLE_ADMIN') %}
@@ -114,7 +119,12 @@ Ressort: {{ department.name }}
                         <tr>
                             <td>
                                 {{companion.name}}
-                                {% if companion.isRegular %} *{% endif %}
+                                {% if companion.isRegular %}
+                                <span class="fa fa-repeat"
+                                    data-toggle="tooltip"
+                                    title="{{companion}} ist Stammhölfer"
+                                    ></span>
+                                {% endif %}
                             </td>
                             {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') or is_granted('ROLE_OK') %}
 
