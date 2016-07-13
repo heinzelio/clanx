@@ -54,6 +54,7 @@ Ressort: {{ department.name }}
                     {% else %}
                         {{ vol }} {# this calls User.__toString(). Pretty neat. #}
                     {% endif %}
+                    {% if vol.isRegular %} *{% endif %}
                 </td>
                 <td>
                     {% if is_granted('ROLE_ADMIN') %}
@@ -112,6 +113,7 @@ Ressort: {{ department.name }}
                         <tr>
                             <td>
                                 {{companion.name}}
+                                {% if companion.isRegular %} *{% endif %}
                             </td>
                             {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') or is_granted('ROLE_OK') %}
 
