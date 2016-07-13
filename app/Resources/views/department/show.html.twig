@@ -84,17 +84,15 @@ Ressort: {{ department.name }}
                         </a>
                     {% endif %}
                     {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') or is_granted('ROLE_OK') %}
-                        <a class="btn btn-default"
+                        <span class="fa fa-calendar"
                             data-toggle="tooltip"
                             title="{{cmt.possibleStart}}">
-                            <span class="fa fa-calendar"></span>
-                        </a>
+                        </span>
                         {% if cmt.remark %}
-                            <a class="btn btn-default"
+                            <span class="fa fa-commenting-o fa-lg"
                                 data-toggle="tooltip"
                                 title="{{cmt.remark}}">
-                                <span class="fa fa-commenting-o fa-lg"></span>
-                            </a>
+                            </span>
                         {% endif %}
                     {% endif %}
                 </td>
@@ -141,18 +139,14 @@ Ressort: {{ department.name }}
                                         </a>
                                     -->
                                     {% if companion.email %}
-                                        <a class="btn btn-default"
+                                        <span class="fa fa-envelope-o"
                                             data-toggle="tooltip"
-                                            title="{{companion.email}}">
-                                            <span class="fa fa-envelope-o"></span>
-                                        </a>
+                                            title="{{companion.email}}"></span>
                                     {% endif %}
                                     {% if companion.phone %}
-                                        <a class="btn btn-default"
+                                        <span class="fa fa-phone-square"
                                             data-toggle="tooltip"
-                                            title="{{companion.phone}}">
-                                            <span class="fa fa-phone-square"></span>
-                                        </a>
+                                            title="{{companion.phone}}"></span>
                                     {% endif %}
                                 </td>
                                 <td>
