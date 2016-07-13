@@ -417,6 +417,7 @@ class DepartmentController extends Controller
 
 
          $columns1 = array('Hölfer',
+                        'Stammhölfer',
                          'Ich helfe an folgenden Tagen',
                          'Bemerkung',
                          'Shirt',
@@ -425,7 +426,9 @@ class DepartmentController extends Controller
         $commitments = $department->getCommitments();
         $rows1 = array();
         foreach ($commitments as $cmt) {
+            $regStr = $cmt->getUser()->getIsRegular() ? 'Ja' : 'Nein';
             $row = array((string) $cmt->getUser(),
+                        $regStr,
                         $cmt->getPossibleStart(),
                         $cmt->getRemark(),
                         $cmt->getShirtSize(),
@@ -435,6 +438,7 @@ class DepartmentController extends Controller
         }
 
          $columns2 = array('Hölfer',
+                        'Stammhölfer',
                          'Email',
                          'Telefon',
                          'Stammhölfer'
@@ -442,7 +446,9 @@ class DepartmentController extends Controller
         $companions = $department->getCompanions();
         $rows2 = array();
         foreach ($companions as $companion) {
+            $regStr = $cmt->getUser()->getIsRegular() ? 'Ja' : 'Nein';
             $row = array((string) $companion,
+                        $regStr,
                         $companion->getEmail(),
                         $companion->getPhone(),
                         $companion->getIsRegular(),
