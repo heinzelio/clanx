@@ -5,7 +5,7 @@ UPDATE user
 SET is_regular=1
 WHERE LOWER(email) IN (
     SELECT LOWER(mail) COLLATE utf8_unicode_ci FROM legacy_user
-)
+);
 
 UPDATE info set version = 9;
 
