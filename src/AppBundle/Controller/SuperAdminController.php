@@ -206,6 +206,64 @@ class SuperAdminController extends Controller
     }
 
     /**
+    * @Route("/make/test/data", name="admin_make_test_data")
+    * @Method({"GET"})
+    * @Security("has_role('ROLE_SUPER_ADMIN')")
+    */
+    public function makeTestDataAction(Request $request)
+    {
+        $roadNames = array('Bahnhof','Post','Lang','Schmid','Metzger'
+            ,'Bank','Schiller','Markt', 'Edison','Tannen','Schönholz'
+            ,'Zürcher','Schweizer',);
+        $roadSuffixes = array('strasse','gasse','weg','platz'
+            ,'gässlein','treppe','graben');
+        $cityNames = array('Oberschön','Unterschön','Vorderholz'
+            ,'Hinterholz','Flach','Berg','Neuberg','Bach','Altbach');
+        $citySuffixes = array('wil','hof','kon','ikon','au','berg'
+            ,'enen','ingen','eschwil');
+        $em = $this->getDoctrine()->getManager();
+        $userRepo = $em->getRepository('AppBundle:User');
+        $legacyRepo = $em->getRepository('AppBundle:LegacyUser');
+
+        foreach ($userRepo->findAll() as $u) {
+            // Canonical mail adress is automatically updated
+            // before persisting data. (fosUserBundle cares about it.)
+            // Password will also be encoded.
+            if($this->getUser()->getId()==$u->getId()){
+                continue; // do not change the current user.
+            }
+            $newUserName = 'clanxer'.$u->getId();
+            $newMail = $newUserName.'@mailinator.com';
+            $newPhone = '0'.rand(76,79).' '.rand(100,999).' '
+                        .rand(10,99).' '.rand(10,99);
+            $newZip = rand(1000,9999);
+            $newStreet = $roadNames[array_rand($roadNames)].$roadSuffixes[array_rand($roadSuffixes)].' '.rand(1,99);
+            $newCity = $cityNames[array_rand($cityNames)].$citySuffixes[array_rand($citySuffixes)];
+
+            $mail = $u->getEmail();
+            $legacyUser = $legacyRepo->findOneByMail($mail);
+            if($legacyUser)
+            {
+                $legacyUser->setMail($newMail);
+            }
+            $u->setEmail($newMail);
+            $u->setUserName($newUserName);
+            $u->setPhone($newPhone);
+            $u->setStreet($newStreet);
+            $u->setZip($newZip);
+            $u->setCity($newCity);
+            $u->setPlainPassword('1234');
+            if($legacyUser)
+            {
+                $em->persist($legacyUser);
+            }
+            $em->persist($u);
+        }
+        $em->flush();
+        return $this->redirectToRoute('user_index');
+    }
+
+    /**
      * Creates a form to upload a CSV file
      * @return \Symfony\Component\Form\Form The form
      */

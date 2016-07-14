@@ -76,8 +76,15 @@
                     href="{{ path('admin_upload_data') }}"
                     data-toggle="tooltip"
                     title="Benutzerdaten vom früheren System hochladen (csv Format erwartet.)">
-                    <span class="fa fa-upload"></span>
+                    <span class="fa fa-upload fa-2x"></span>
                     Upload legacy user data</a>
+                <a class="btn btn-danger"
+                    href="{{ path('admin_make_test_data') }}"
+                    data-toggle="tooltip"
+                    title="Ersetze persönliche Daten durch Pseudodaten für Testzwecke (nicht umkehrbar!)">
+                    <span class="fa fa-bomb fa-2x"></span>
+                    <span class="fa fa-user-secret fa-2x"></span>
+                    Randomize data for tests</a>
             {% endif %}
         </div>
     </div> <!-- Panel -->
