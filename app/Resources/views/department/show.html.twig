@@ -225,6 +225,19 @@ Ressort: {{ department.name }}
                 Drucken
             </a>
         {% endif %}
+
+        {% if is_granted('ROLE_OK') or is_granted('ROLE_ADMIN') %}
+            <a
+                class="btn btn-default"
+                href="{{path('shift_index_of_department',{'department_id':department.id})}}"
+                data-toggle="tooltip"
+                title="Zeige Liste aller Schichten vom Ressort {{department.name}}"
+            >
+                    <span class="fa fa-clock-o"></span>
+                    Schichten
+            </a>
+        {% endif %}
+
         <a class="btn btn-default" type="button"
             href="{{ path('event_show',{'id':event.id}) }}"
             data-toggle="tooltip"

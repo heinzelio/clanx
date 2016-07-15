@@ -1,0 +1,58 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %}
+    Schichten
+{% endblock %}
+
+{% block workspace %}
+<div class="row">
+<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>
+                Schicht <mark>{{shift}}</mark> im Ressort <mark>{{department.name}}</mark></div>
+            </h3>
+        <div class="panel-body">
+
+            {{ form_start(edit_form, {'name': 'form_shift_edit'}) }}
+                {{ form_widget(edit_form) }}
+            {{ form_end(edit_form) }}
+            {{ form_start(delete_form, {'name': 'form_shift_delete'}) }}
+            {{ form_end(delete_form) }}
+        </div>
+        <div class="panel-footer">
+            <a onclick="formSubmit(form_shift_edit,this);"
+                class="btn btn-primary"
+                data-toggle="tooltip"
+                title="Änderungen übernehmen und in der Datenbank speichern.">
+                <span class="fa fa-floppy-o"></span>
+                Speichern
+            </a>
+            <a class="btn btn-default"
+                href="{{ path('shift_index_of_department',{'department_id':department.id}) }}"
+                data-toggle="tooltip"
+                title="Nicht speichern und zurück zur Übersicht">
+                <span class="fa fa-times"></span>
+                Abbrechen
+            </a>
+            <a onclick="formSubmit(form_shift_delete,this);"
+                class="btn btn-danger"
+                data-toggle="tooltip"
+                title="Diese Schicht aus der Datenbank löschen.">
+                <span class="fa fa-trash-o"></span>
+                Löschen
+            </a>
+        </div>
+    </div> <!-- panel -->
+</div> <!-- col -->
+</div> <!-- row -->
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$(document).ready(function(){
+$('[data-toggle="tooltip"]').tooltip();
+});
+</script>
+{% endblock %}
