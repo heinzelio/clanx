@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -60,6 +62,27 @@ class Shift
     private $department;
 
 
+    /**
+     * For validation
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context)
+    {
+        if($this->getEnd())
+        {
+            if ($this->getStart()->getTimestamp() >= $this->getEnd()->getTimestamp()) {
+                $context->buildViolation('Das Ende muss nach dem Start sein')
+                        ->atPath('end')
+                        ->addViolation();
+            }
+        }
+        if($this->getMandatorySize() > $this->getMaximumSize())
+        {
+            $context->buildViolation('Die maximale Grösse kann nicht kleiner als die erforderliche Grösse sein.')
+                    ->atPath('maximumSize')
+                    ->addViolation();
+        }
+    }
 
     /**
      * Set start
@@ -189,5 +212,26 @@ class Shift
     public function getDepartment()
     {
         return $this->department;
+    }
+
+    public function __toString()
+    {
+        if($this->getStart())
+        {
+            $day = $this->getStart()->format('l');
+            $hour = $this->getStart()->format('H');
+            return $day.' '.$hour;
+        }
+        return '-';
+    }
+
+    public function getTimeDiff()
+    {
+        if($this->getStart() && $this->getEnd())
+        {
+            $interval = $this->getStart()->diff($this->getEnd());
+            return $interval->format('%h:%I');
+        }
+        return '';
     }
 }
