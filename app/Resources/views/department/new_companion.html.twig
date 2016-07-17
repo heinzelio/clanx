@@ -1,0 +1,31 @@
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Nicht registrierte Hölfer hinzufügen.
+    </div><!--heading-->
+
+    <div class="panel-body">
+        <p>
+            Es gibt Hölfer, die sich nicht registrieren können oder möchten.
+            Diese können mit diesem Formular eingegeben werden.
+            Nur Ressortleiter und Administratoren sehen dieses Formular.
+        </p>
+        {{ form_start(form, {'name': 'form_companion_new',
+                            'action': path('companion_new',{'id':department.Id}),
+                            'method': 'POST',
+                            }) }}
+            {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div><!--body-->
+
+    <div class="panel-footer">
+        <a onclick="formSubmit(form_companion_new,this);"
+            class="btn btn-primary"
+            data-toggle="tooltip"
+            title="Diesen Hölfer dem Ressort {{department.name}} hinzufügen.">
+            <span class="fa fa-floppy-o"></span>
+            Speichern
+        </a>
+    </div><!--footer-->
+
+</div> <!--panel-->

@@ -21,7 +21,7 @@
                         href="{{ path('event_show', { 'id': event.id }) }}"
                         data-toggle="tooltip"
                         title="Details öffnen">
-                        <span class="glyphicon glyphicon-eye-open"></span>
+                        <span class="fa fa-eye"></span>
                         {{ event.name }}
                     </a>
                     ({% if event.date %}{{ event.date|date('d. M. Y') }}{% endif %})
@@ -30,7 +30,7 @@
                             href="{{ path('event_edit', {'id':event.id}) }}"
                             data-toggle="tooltip"
                             title="Details von '{{event.name}}' bearbeiten">
-                            <span class="glyphicon glyphicon-pencil"></span>
+                            <span class="fa fa-pencil"></span>
                         </a>
                     {% endif %}
                 </p>
@@ -42,7 +42,7 @@
                     href="{{ path('event_new') }}"
                     data-toggle="tooltip"
                     title="Neuer Event erstellen">
-                    <span class="glyphicon glyphicon-plus"></span>
+                    <span class="fa fa-plus"></span>
                     Erstellen
                 </a>
             {% endif %}

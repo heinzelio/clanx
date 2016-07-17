@@ -145,8 +145,9 @@ class EventController extends Controller
         // https://symfony.com/doc/current/cookbook/security/voters.html#how-to-use-the-voter-in-a-controller
 
         $commitments = $em->getRepository('AppBundle:Commitment');
+        $companions = $em->getRepository('AppBundle:Companion');
 
-        $enrolledCount = $commitments->countFor($event);
+        $enrolledCount = $commitments->countFor($event)+$companions->countFor($event);
 
         $commitment = $commitments->findOneBy(array(
             'user' => $user,
@@ -342,7 +343,6 @@ class EventController extends Controller
 
     private function sendMail($user,$dep,$event,$commitment){
         $message = \Swift_Message::newInstance();
-        $dankeImgLink =  $message->embed(\Swift_Image::fromPath('img/emails/danke.png'));
         $message->setSubject('Clanx Hölfer Bestätigung')
             ->setFrom(array('no-reply@clanx.ch'=>'Clanx Hölfer DB'))
             ->setTo($user->getEmail())
@@ -357,7 +357,6 @@ class EventController extends Controller
                         'EventID' => $event->getId(),
                         'EventDate' => $event->getDate(),
                         'Department' => $dep->getName(),
-                        'DankeImgLink' => $dankeImgLink,
                     )
                 ),
                 'text/html'

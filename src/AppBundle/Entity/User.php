@@ -86,6 +86,13 @@ class User extends BaseUser
      */
     private $occupation;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_regular", type="boolean", nullable=false)
+     */
+    private $isRegular;
+
 
     /**
      * Set forename
@@ -291,6 +298,30 @@ class User extends BaseUser
     public function getOccupation()
     {
         return $this->occupation;
+    }
+
+    /**
+     * Set isRegular
+     *
+     * @param boolean $isRegular
+     *
+     * @return Companion
+     */
+    public function setIsRegular($isRegular)
+    {
+        $this->isRegular = $isRegular;
+
+        return $this;
+    }
+
+    /**
+     * Get isRegular
+     *
+     * @return boolean
+     */
+    public function getIsRegular()
+    {
+        return $this->isRegular;
     }
 
     /**

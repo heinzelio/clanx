@@ -17,8 +17,9 @@ Ressort: {{ department.name }}
         ID: {{ department.id }}
         {% endif %}
         {% if department.locked %}
-            <br/>Dieses Ressort ist gesperrt. Einschreiben nicht mehr möglich.
-            <span class="glyphicon glyphicon-lock"></span>
+            <br/>
+            <span class="fa fa-lock"></span>
+            Dieses Ressort ist gesperrt. Einschreiben nicht mehr möglich.
         {% endif %}
     </div>
     <div class="panel-body">
@@ -46,11 +47,19 @@ Ressort: {{ department.name }}
             {% for cmt in commitments %}
             <tr>
                 {% set vol = cmt.user %}
+                {% set ctVolIsChief = chief and vol.id == chief.id %}
+                {% set ctVolIsDeputy = deputy and vol.id == deputy.id %}
                 <td>
-                    {% if vol.id == chief.id or vol.id == deputy.id %}
+                    {% if ctVolIsChief or ctVolIsDeputy %}
                         <strong>{{ vol }}</strong>{# this calls User.__toString(). Pretty neat. #}
                     {% else %}
                         {{ vol }} {# this calls User.__toString(). Pretty neat. #}
+                    {% endif %}
+                    {% if vol.isRegular %}
+                    <span class="fa fa-repeat"
+                        data-toggle="tooltip"
+                        title="{{vol}} ist Stammhölfer"
+                        ></span>
                     {% endif %}
                 </td>
                 <td>
@@ -61,7 +70,7 @@ Ressort: {{ department.name }}
                                     'user_id':vol.id})}}"
                             data-toggle="tooltip"
                             title="{{vol}} ein Email schreiben.">
-                            <span class="glyphicon glyphicon-envelope"></span>
+                            <span class="fa fa-envelope-o"></span>
                         </a>
                     {% endif %}
 
@@ -70,22 +79,20 @@ Ressort: {{ department.name }}
                             href="{{path('department_move_volunteer',{'id':department.id,'user_id':vol.id})}}"
                             data-toggle="tooltip"
                             title="{{vol}} einem anderen Ressort zuweisen.">
-                            <span class="glyphicon glyphicon-new-window"></span>
+                            <span class="fa fa-external-link"></span>
                             Verschieben
                         </a>
                     {% endif %}
                     {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') or is_granted('ROLE_OK') %}
-                        <a class="btn btn-default"
+                        <span class="fa fa-calendar"
                             data-toggle="tooltip"
                             title="{{cmt.possibleStart}}">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </a>
+                        </span>
                         {% if cmt.remark %}
-                            <a class="btn btn-default"
+                            <span class="fa fa-commenting-o fa-lg"
                                 data-toggle="tooltip"
                                 title="{{cmt.remark}}">
-                                <span class="glyphicon glyphicon-comment"></span>
-                            </a>
+                            </span>
                         {% endif %}
                     {% endif %}
                 </td>
@@ -93,6 +100,80 @@ Ressort: {{ department.name }}
             {% endfor %}
         </tbody>
         </table>
+        {% if companions|length >0 %}
+            <p><strong>
+                {{companions|length}}
+                nicht
+                {% if companions|length ==1 %}
+                    registrierter
+                {% else %}
+                    registrierte
+                {% endif %}
+                 Hölfer im Ressort:
+            </strong></p>
+            <table class="table">
+                <tbody>
+                    {% for companion in companions %}
+                        <tr>
+                            <td>
+                                {{companion.name}}
+                                {% if companion.isRegular %}
+                                <span class="fa fa-repeat"
+                                    data-toggle="tooltip"
+                                    title="{{companion}} ist Stammhölfer"
+                                    ></span>
+                                {% endif %}
+                            </td>
+                            {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') or is_granted('ROLE_OK') %}
+
+                                <td>
+                                    <!-- TODO: We can not send mails to companions... yet!-->
+                                    <!--
+                                        <a class="btn btn-default"
+                                            href="{{ path('department_redirect_mail_to',{
+                                                    'id':department.id,
+                                                    'user_id':companion.id})}}"
+                                            data-toggle="tooltip"
+                                            title="{{companion}} ein Email schreiben.">
+                                            <span class="fa fa-envelope-o"></span>
+                                        </a>
+                                    -->
+                                    {% if companion.email %}
+                                        <span class="fa fa-envelope-o"
+                                            data-toggle="tooltip"
+                                            title="{{companion.email}}"></span>
+                                    {% endif %}
+                                    {% if companion.phone %}
+                                        <span class="fa fa-phone-square"
+                                            data-toggle="tooltip"
+                                            title="{{companion.phone}}"></span>
+                                    {% endif %}
+                                </td>
+                                <td>
+
+                                    {% set formName = "form_comp_del_" ~ companion.id %}
+                                    <form class=""
+                                    action="{{path('companion_delete',{'id':companion.id})}}"
+                                    name="{{formName}}"
+                                    method="post">
+                                        <input type="hidden" name="_method" value="DELETE" />
+                                        <a onclick="formSubmit({{formName}},this);"
+                                            class="btn btn-default"
+                                            data-toggle="tooltip"
+                                            title="Lösche den Hölfer {{companion.name}}.">
+                                            <span class="fa fa-trash-o"></span>
+                                        </a>
+                                    </form>
+                                </td>
+
+                            {% endif %}
+                            <!-- admin of chief or deputy -->
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
     </div>
     <div class="panel-footer">
 
@@ -102,7 +183,7 @@ Ressort: {{ department.name }}
                 href="{{ path('department_edit', { 'id': department.id ,'event_id':event.id}) }}"
                 data-toggle="tooltip"
                 title="Bearbeite alle Eigenschaften des Ressorts {{department.name}}.">
-                <span class="glyphicon glyphicon-pencil"></span>
+                <span class="fa fa-pencil"></span>
                 Bearbeiten</a>
 
         {% else %}
@@ -114,7 +195,7 @@ Ressort: {{ department.name }}
                     title="Bearbeite Anforderung, Stellvertreter des Ressorts
                         {{department.name}} oder sperre es."
                     >
-                    <span class="glyphicon glyphicon-pencil"></span>
+                    <span class="fa fa-pencil"></span>
                     Bearbeiten
                 </a>
 
@@ -129,7 +210,8 @@ Ressort: {{ department.name }}
                 data-toggle="tooltip"
                 title="Schreibe ein Email an alle Hölfer aus diesem Ressort."
                 >
-                <span class="glyphicon glyphicon-envelope"></span>
+                <span class="fa fa-envelope-o"></span>
+                <span class="fa fa-users"></span>
                 Email
             </a>
 
@@ -139,16 +221,29 @@ Ressort: {{ department.name }}
                 title="Drucke von diesem Ressort alle Hölfer mit allen Daten."
                 target="_blank"
                 >
-                <span class="glyphicon glyphicon-print"></span>
+                <span class="fa fa-print"></span>
                 Drucken
             </a>
         {% endif %}
+
+        {% if is_granted('ROLE_OK') or is_granted('ROLE_ADMIN') %}
+            <a
+                class="btn btn-default"
+                href="{{path('shift_index_of_department',{'department_id':department.id})}}"
+                data-toggle="tooltip"
+                title="Zeige Liste aller Schichten vom Ressort {{department.name}}"
+            >
+                    <span class="fa fa-clock-o"></span>
+                    Schichten
+            </a>
+        {% endif %}
+
         <a class="btn btn-default" type="button"
             href="{{ path('event_show',{'id':event.id}) }}"
             data-toggle="tooltip"
-            title="Schliessen und zurück zur Ansicht gehen."
+            title="Zurück zum Event {{event.name}} gehen."
             >
-            <span class="glyphicon glyphicon-remove"></span>
+            <span class="fa fa-times"></span>
             Zurück</a>
         {% if mayDelete %}
             {{ form_start(delete_form) }}
@@ -157,6 +252,15 @@ Ressort: {{ department.name }}
         {% endif %}
     </div><!-- footer -->
 </div><!-- panel -->
+
+
+
+</div><!-- col -->
+<div class="col-md-6">
+    {{ render(controller(
+        'AppBundle:Companion:new',
+        { 'id': department.id }
+    )) }}
 </div><!-- col -->
 </div><!-- row -->
 {% endblock %}

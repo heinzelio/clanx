@@ -98,20 +98,23 @@ class EventVolunteersController extends Controller
     private function renderChiefView(Event $event)
     {
         $em = $this->getDoctrine()->getManager();
-        $deptartmentRepo = $em->getRepository('AppBundle:Department');
-        $commitmentRepo = $em->getRepository('AppBundle:Commitment');
         $viewDepartments = array();
-        foreach ($deptartmentRepo->findByEvent($event) as $department) {
-            $commitments = $commitmentRepo->findByDepartment($department);
+        foreach ($event->getDepartments() as $department) {
+            $commitments = $department->getCommitments();
+            $companions = $department->getCompanions();
             $users = array();
             foreach ($commitments as $cmt) {
-                array_push($users,(string)$cmt->getUser());
+                array_push($users,$cmt->getUser());
             }
+            foreach ($companions as $companion) {
+                array_push($users,$companion);
+            }
+
             $newItem = array(
                 'id' => $department->getId(),
                 'highlighted' => $this->getUser()->isChiefOf($department),
                 'name' => $department->getName(),
-                'usercount' => count($commitments),
+                'usercount' => count($commitments)+count($companions),
                 'locked' => $department->getLocked(),
                 'users' => $users
             );
@@ -127,19 +130,24 @@ class EventVolunteersController extends Controller
     private function renderDeputyView(Event $event, array $departments)
     {
         $em = $this->getDoctrine()->getManager();
-        $commitmentRepo = $em->getRepository('AppBundle:Commitment');
         $viewDepartments = array();
         foreach ($departments as $department) {
-            $commitments = $commitmentRepo->findByDepartment($department);
+            $commitments = $department->getCommitments();
+            $companions = $department->getCompanions();
             $users = array();
             foreach ($commitments as $cmt) {
-                array_push($users,(string)$cmt->getUser());
+                array_push($users,$cmt->getUser());
             }
+            foreach ($companions as $companion) {
+                array_push($users,$companion);
+            }
+
             $newItem = array(
                 'id' => $department->getId(),
                 'highlighted' => false,
                 'name' => $department->getName(),
-                'usercount' => count($commitments),
+                'usercount' => count($commitments)+count($companions),
+                'locked' => $department->getLocked(),
                 'users' => $users
             );
             array_push($viewDepartments,$newItem);
