@@ -238,7 +238,7 @@ Ressort: {{ department.name }}
             </a>
             <a
                 class="btn btn-default"
-                href="{{path('shift_index_of_department',{'department_id':department.id})}}"
+                href="{{path('shift_planner',{'id':department.id})}}"
                 data-toggle="tooltip"
                 title="Öffne den Schichtplaner {{department.name}}"
             >

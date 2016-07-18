@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -127,7 +128,7 @@ class DepartmentController extends Controller
 
     /**
      * Displays a form to edit only a few fields of an existing Department entity.
-     * Used only by chiev_of_department
+     * Used only by chief_of_department
      *
      * @Route("/{id}/edit/light", name="department_edit_light")
      * @Method({"GET", "POST"})
@@ -474,4 +475,47 @@ class DepartmentController extends Controller
             ));
         }
     }
+
+    /**
+     * Renders the shiftplanner
+     *
+     * @Route("/{id}/shiftplanner", name="shift_planner")
+     * @Method("GET")
+     * @Security("has_role('ROLE_OK') or has_role('ROLE_ADMIN')")
+     */
+     public function shiftPlannerAction(Department $department)
+     {
+
+         return $this->render('sevi/seviView.html.twig',array(
+             'department'=>$department,
+         ));
+     }
+
+     /**
+      * Renders the shiftplanner
+      *
+      * @Route("/{id}/volunteers", name="shift_planner_volunteers")
+      * @Method("GET")
+      * @Security("has_role('ROLE_OK') or has_role('ROLE_ADMIN')")
+      */
+      public function getVolunteersAction(Department $department)
+      {
+          $commitments = $department->getCommitments();
+          $companions = $department->getCompanions();
+
+          $data = array();
+          foreach ($commitments as $commitment) {
+              $user = array(
+                  'id' => $commitment->getUser()->getId(),
+                  'surname' => $commitment->getUser()->getSurname(),
+                  'forename'=> $commitment->getUser()->getForename(),
+              );
+              array_push($data,$user);
+          }
+
+          $response = new JsonResponse();
+
+          $response->setData($data);
+          return $response;
+      }
 }

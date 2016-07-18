@@ -6,7 +6,8 @@ define([
     ], function($, Handlebars, Backbone, UserModel ) {
 
     var UsersCollection = Backbone.Collection.extend({
-        url:'./../../js/app/collections/users.json'
+        //TODO Somehow bring the dpt id into this path...
+        url:'./../../department/8/volunteers'
     });
 
     return UsersCollection;
