@@ -61,6 +61,10 @@ class ShiftController extends Controller
         }else{
             $shift->setStart($department->getEvent()->getDate());
         }
+        if($recentShift){
+            $shift->setMaximumSize($recentShift->getMaximumSize());
+            $shift->setMandatorySize($recentShift->getMandatorySize());
+        }
         $shift->setEnd($shift->getStart());
         $form = $this->createForm('AppBundle\Form\ShiftType', $shift);
         $form->handleRequest($request);
