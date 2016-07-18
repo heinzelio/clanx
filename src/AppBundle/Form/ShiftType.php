@@ -4,10 +4,10 @@ namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Doctrine\ORM\EntityRepository;
 
-class DepartmentDeputyType extends AbstractType
+class ShiftType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -16,15 +16,17 @@ class DepartmentDeputyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('deputyUser',null,array(
-                'label' => 'Stellvertreter',
-                'query_builder' => function (EntityRepository $repo) {
-                    return $repo->createQueryBuilder('u')
-                        ->orderBy('u.username', 'ASC')
-                        ->orderBy('u.surname', 'ASC')
-                        ->orderBy('u.forename', 'ASC')
-                        ;
-            }
+            ->add('start', DateTimeType::class, array(
+                'label' => 'Start',
+            ))
+            ->add('end', DateTimeType::class, array(
+                'label' => 'Ende',
+            ))
+            ->add('mandatorySize', null, array(
+                'label' => 'Mindestgrösse',
+            ))
+            ->add('maximumSize', null, array(
+                'label' => 'Maximalgrösse',
             ))
         ;
     }
@@ -35,7 +37,7 @@ class DepartmentDeputyType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Department'
+            'data_class' => 'AppBundle\Entity\Shift'
         ));
     }
 }

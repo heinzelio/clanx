@@ -5,34 +5,49 @@
     <div class="panel-heading">
         Profil bearbeiten
     </div>
+    <div class="panel-body">
     {{ form_start(form, {
+                        'name': 'profile_edit_form',
                         'action': path('fos_user_profile_edit'),
                         'attr': { 'class': 'fos_user_profile_edit' }
                         }) }}
-    <div class="panel-body">
         {{ form_widget(form) }}
-    </div>
+        {{ form_end(form) }}
 
+    </div>
     <div class="panel-footer">
-        <button class="btn btn-primary"
-            type="submit" >
-            <span class="glyphicon glyphicon-floppy-disk"></span>
+        <a class="btn btn-primary"
+            onclick="formSubmit(profile_edit_form,this);"
+            data-toggle="tooltip"
+            title="Änderungen übernehmen und in der Datenbank speichern.">
+            <span class="fa fa-floppy-o"></span>
             Speichern
-        </button>
+        </a>
 
         <a class="btn btn-default"
-            href="{{path('fos_user_profile_show')}}">
-            <span class="glyphicon glyphicon-remove"></span>
+            href="{{path('fos_user_profile_show')}}"
+            data-toggle="tooltip"
+            title="Nicht speichern und zurück zur Profilansicht.">
+            <span class="fa fa-times"></span>
             Abbrechen
         </a>
 
         <a class="btn btn-default"
             href="{{path('info_privacy_policy')}}"
             target="_blank"
-            >
-            <span class="glyphicon glyphicon-lock"></span>
+            data-toggle="tooltip"
+            title="Lies die Datenschutzerklärung. Sie wird in
+            einem separaten Fenster geöffnet. Diese Seite bleibt
+            im Hintergrund offen.">
+            <span class="fa fa-user-secret fa-lg"></span>
             Datenschutzerklärung
         </a>
     </div>
 
-{{ form_end(form) }}
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+{% endblock %}

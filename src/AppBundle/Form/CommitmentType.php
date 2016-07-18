@@ -7,6 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -18,24 +19,20 @@ class CommitmentType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
-        /*
-        id                | int(11)       | NO   | PRI | NULL    | auto_increment |
-       | user_id           | int(11)       | YES  | MUL | NULL    |                |
-       | event_id          | int(11)       | YES  | MUL | NULL    |                |
-       | department_id     | int(11)       | YES  | MUL | NULL    |                |
-       | remark            | varchar(1000) | YES  |     | NULL    |                |
-       | possible_start    | varchar(200)  | YES  |     | NULL    |                |
-       | shirt_size        | varchar(10)   | YES  |     | NULL    |                |
-       | need_train_ticket
-        */
         $builder
-        ->add('department', ChoiceType::class, array(
+        ->add('department', EntityType::class, array(
+            'class'=>'AppBundle:Department',
             'label' => 'Für Ressort (ohne Garantie)',
             'choices' => $options['departmentChoices'],
+            'choice_label' => function ($dpt) {
+                                    return $dpt->getLongText();
+                                }
         ))
-        ->add('possibleStart', TextType::class, array(
-            'label' => 'Frühestes Startdatum & Zeit',
+        ->add('possibleStart', TextareaType::class, array(
+            'label' => 'Ich helfe an folgenden Tagen (bitte auch Zeit angeben)',
+            'attr' => array(
+                'rows' => 4
+            )
         ))
         ->add('shirtSize', ShirtSizeType::class, array(
             'label' => 'TShirt Grösse',

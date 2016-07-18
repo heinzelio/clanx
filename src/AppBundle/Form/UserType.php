@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -56,6 +57,10 @@ class UserType extends AbstractType
                 'label'=>'Beruf / Fachbereich',
                 'required' => false,
             ))
+            ->add('isRegular', CheckboxType::class, array(
+                    'label'    => 'Ist Stammhölfer?',
+                    'required' => false,
+                ))
         ;
     }
 

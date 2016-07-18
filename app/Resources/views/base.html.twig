@@ -19,6 +19,9 @@
 
       <!-- use bootstrap on each page -->
       <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+      
+      <!-- use fa on each page -->
+      <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
 
       <!-- this is our global stylesheet that we use on each page -->
       <link href="{{ asset('css/global.css') }}" rel="stylesheet">
@@ -34,6 +37,9 @@
 
       <!-- use bootstrap on each page -->
       <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+
+      <!-- user our custom form submit handler on each page -->
+      <script src="{{ asset('js/form-submit-handling.js')}}"></script>
 
       <!-- add custom scripts for each page separately: -->
       {% block javascripts %}{% endblock %}

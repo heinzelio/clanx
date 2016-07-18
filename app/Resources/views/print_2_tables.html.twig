@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block body %}
+<h3>{{heading_1}}</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            {% for col in columns_1 %}
+                <th>
+                    {{col}}
+                </th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in rows_1 %}
+            <tr>
+                {% for cell in row %}
+                    <td>
+                        {{cell}}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h3>{{heading_2}}</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            {% for col in columns_2 %}
+                <th>
+                    {{col}}
+                </th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in rows_2 %}
+            <tr>
+                {% for cell in row %}
+                    <td>
+                        {{cell}}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

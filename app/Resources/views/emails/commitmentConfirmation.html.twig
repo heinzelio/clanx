@@ -1,12 +1,15 @@
-{# app/Resources/views/emails/CommitmentConfirmation.txt.twig #}
-<h3>Lieber {{ Forename }}</h3>
+{# app/Resources/views/emails/commitmentConfirmation.html.twig #}
+{% if Gender == 'M' %}
+    <h3>Lieber {{ Forename }}</h3>
+{% else %}
+    <h3>Liebe {{ Forename }}</h3>
+{% endif %}
 
 <p> Du hast dich beim Event
     <a href="{{ absolute_url(path('event_show', { 'id': EventID })) }}"><strong>{{ Event }}</strong></a>
     als Hölfer eingetragen.</p>
 
-<p> Dafür schonmal </p>
-<img src="{{ DankeImgLink }}" alt="DANKE!" />
+<p> Dafür schonmal <span style="font-size: 150%">DANKE!</span></p>
 
 <p> Der Event findet statt am <strong>{{ EventDate|date('d.M.Y') }}</strong>.</p>
 <p> Du wirst zu gegebender Zeit von uns zum Hölferinformationsanlass eingeladen.</p>

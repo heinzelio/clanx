@@ -27,7 +27,7 @@
                         class="btn btn-default"
                         data-toggle="tooltip"
                         title="Zeige Details des Ressorts {{dpt.name}}.">
-                        <span class="glyphicon glyphicon-eye-open"></span>
+                        <span class="fa fa-eye"></span>
                         {{ dpt.name }}
                     </a>
                 {% endfor %}
@@ -42,7 +42,7 @@
                         class="btn btn-default"
                         data-toggle="tooltip"
                         title="Zeige Details des Ressorts {{dpt.name}}">
-                        <span class="glyphicon glyphicon-eye-open"></span>
+                        <span class="fa fa-eye"></span>
                         {{ dpt.name }}
                     </a>
                 {% endfor %}
@@ -55,7 +55,7 @@
 	       href="{{ path('event_index') }}"
            data-toggle="tooltip"
            title="Gehe zurück zur Eventübersicht">
-           <span class="glyphicon glyphicon-remove"></span>
+           <span class="fa fa-times"></span>
             Abbrechen
         </a>
 
@@ -64,7 +64,7 @@
                 href="{{ path ('event_mail_enrolled', {'id': event.id})}}"
                 data-toggle="tooltip"
                 title="Schreibe ein Email an alle Hölfer von diesem Event.">
-                <span class="glyphicon glyphicon-envelope" ></span>
+                <span class="fa fa-envelope-o" ></span>
                 Email schreiben
             </a>
         {% endif %}
@@ -74,7 +74,7 @@
                 href="{{ path('event_edit', { 'id': event.id }) }}"
                 data-toggle="tooltip"
                 title="Details von {{event.name}} bearbeiten.">
-                <span class="glyphicon glyphicon-pencil"></span>
+                <span class="fa fa-pencil"></span>
                 Bearbeiten
             </a>
         {% endif %}
@@ -105,11 +105,12 @@
                 {{form_widget(enroll_form) }}
                 {#submit button is being generated in the controller.#}
             {{ form_end(enroll_form) }}
+
             <a class="btn btn-danger"
-                onclick="event_enroll_form.submit();"
+                onclick="formSubmit(event_enroll_form,this)"
                 data-toggle="tooltip"
                 title="Änderungen übernehmen und in der Datenbank speichern.">
-                <span class="glyphicon glyphicon-floppy-disk"></span>
+                <span class="fa fa-floppy-o"></span>
                 Eintragen
             </a>
         </div>
@@ -126,7 +127,7 @@
                 }) }}"
                 data-toggle="tooltip"
                 title="Zeige Details des Ressorts {{commitment.department.name}}">
-                <span class="glyphicon glyphicon-eye-open"></span>
+                <span class="fa fa-eye"></span>
                 {{commitment.department.name}}
             </a>
         </p>
@@ -140,7 +141,7 @@
                     }}"
                 data-toggle="tooltip"
                 title="Schreibe ein Email an {{commitment.department.chiefUser}}.">
-                <span class="glyphicon glyphicon-envelope"></span>
+                <span class="fa fa-envelope-o"></span>
                 {{commitment.department.chiefUser}}
             </a>
         </p>
@@ -156,7 +157,7 @@
                     }}"
                 data-toggle="tooltip"
                 title="Schreibe ein Email an {{commitment.department.deputyUser}}.">
-                <span class="glyphicon glyphicon-envelope"></span>
+                <span class="fa fa-envelope-o"></span>
                 {{commitment.department.deputyUser}}
 
             </a>
@@ -164,41 +165,41 @@
         {% endif %}
 
         {% if commitment.possibleStart %}
-        <p> Deine früheste Startzeit:
+        <p> Ich helfe an folgenden Tagen:<br />
             <mark>{{commitment.possibleStart}}</mark>
         </p>
         {% endif %}
-        <p> Deine TShirt Grösse:
+        <p> Deine TShirt Grösse:<br />
             <mark>{{commitment.shirtSize}}</mark>
         </p>
         {% if commitment.remark %}
-            <p> Deine Bemerkung / Wunsch:
+            <p> Deine Bemerkung / Wunsch:<br/>
                 <mark>{{commitment.remark|nl2br}}</mark>
             </p>
         {% endif %}
 
     </div>
     <div class="panel-footer">
-        {% if mayEditCommitment %}
-        <a class="btn btn-default"
-            href="{{path('commitment_edit',{'id':commitment.id})}}"
-            data-toggle="tooltip"
-            title="Ändere oder lösche deine Eintragung als Hölfer.">
-            <span class="glyphicon glyphicon-pencil"></span>
-            Bearbeiten
-        </a>
+        {% if event.locked %}
+            <a class="btn btn-default"
+                disabled="disabled">
+            <!-- tooltips gönd nöd uf disabledem Button :(
+                data-toggle="tooltip"
+                title="Ändern oder löschen ist nicht mehr möglich. Deine Teilnahme
+                ist definitiv. (Falls ein Problem besteht, nimm bitte mit deinem
+                Ressortleiter Kontakt auf.)"
+            -->
+                <span class="fa fa-lock"></span>
+                Bearbeiten nicht mehr möglich
+            </a>
         {% else %}
-        <a class="btn btn-default"
-            disabled="disabled">
-        <!-- tooltips gönd nöd uf disabledem Button :(
-            data-toggle="tooltip"
-            title="Ändern oder löschen ist nicht mehr möglich. Deine Teilnahme
-            ist definitiv. (Falls ein Problem besteht, nimm bitte mit deinem
-            Ressortleiter Kontakt auf.)"
-        -->
-            <span class="glyphicon glyphicon-lock"></span>
-            Bearbeiten nicht mehr möglich
-        </a>
+            <a class="btn btn-default"
+                href="{{path('commitment_edit',{'id':commitment.id})}}"
+                data-toggle="tooltip"
+                title="Ändere oder lösche deine Eintragung als Hölfer.">
+                <span class="fa fa-pencil"></span>
+                Bearbeiten
+            </a>
         {% endif %}
     </div><!-- footer -->
     </div> <!--panel-->

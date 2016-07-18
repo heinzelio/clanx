@@ -26,23 +26,29 @@
             {{ form_end(form) }}
             <p>
                 <a class="btn btn-primary"
-                    onclick="form_registration.submit();"
+                    onclick="formSubmit(form_registration,this);"
                     data-toggle="tooltip"
                     title="Änderungen übernehmen und in der Datenbank speichern.">
-                    <span class="glyphicon glyphicon-floppy-disk"></span>
+                    <span class="fa fa-floppy-o"></span>
                     {{ 'registration.submit'|trans }}
                 </a>
                 <a class="btn btn-default pull-right"
                     href="{{path('info_privacy_policy')}}"
-                    target="_blank">
-                    <span class="glyphicon glyphicon-lock"></span>
+                    target="_blank"
+                    data-toggle="tooltip"
+                    title="Lies die Datenschutzerklärung. Sie wird in
+                    einem separaten Fenster geöffnet. Diese Seite bleibt
+                    im Hintergrund offen.">
+                    <span class="fa fa-user-secret fa-2x"></span>
                     Datenschutzerklärung
                 </a>
             </p>
             <p>
                 <a class="btn btn-default"
-                    href="{{ path('default_help_registration') }}">
-                    <span class="glyphicon glyphicon-question-sign"></span>
+                    href="{{ path('default_help_registration') }}"
+                    data-toggle="tooltip"
+                    title="Frequently Asked Questions (Häufig gestellte Fragen)" >
+                    <span class="fa fa-question-circle-o "></span>
                     FAQ
                 </a>
             </p>
@@ -51,7 +57,7 @@
             Du bist schon ein Benutzer?
             <a class="btn btn-default pull-right"
                 href="{{ path('fos_user_security_login')}} ">
-                <span class="glyphicon glyphicon-user"></span>
+                <span class="fa fa-user"></span>
                 Anmelden
             </a>
         </div>

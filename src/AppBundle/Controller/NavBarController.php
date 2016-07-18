@@ -40,7 +40,7 @@ class NavBarController extends Controller
 
         $homeItem = $this->createItem(
             'Home',
-            'glyphicon glyphicon-home',
+            'fa fa-home',
             'dashboard_index');
 
         $items = array($homeItem);
@@ -57,21 +57,21 @@ class NavBarController extends Controller
 
         $eventItem = $this->createItem(
             'Events',
-            'glyphicon glyphicon-calendar',
+            'fa fa-calendar',
             'event_index');
         array_push($items,$eventItem);
 
         if($this->isGranted('ROLE_ADMIN')){
                     $userItem = $this->createItem(
                         'Users',
-                        'glyphicon glyphicon-user',
+                        'fa fa-users',
                         'user_index');
                     array_push($items,$userItem);
         }
 
         $infoItem = $this->createItem(
             'Info',
-            'glyphicon glyphicon glyphicon-info-sign',
+            'fa fa-info',
             'info_index');
         array_push($items,$infoItem);
 
