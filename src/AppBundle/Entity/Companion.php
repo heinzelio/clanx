@@ -39,7 +39,7 @@ class Companion
      *
      * @ORM\Column(name="is_regular", type="boolean", nullable=false)
      */
-    private $isRegular;
+    private $isRegular = false;
 
     /**
      * @var integer

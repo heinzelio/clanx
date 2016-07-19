@@ -57,7 +57,7 @@ class Event
      * @var boolean
     * @ORM\Column(name="locked", type="boolean", nullable=false)
     */
-    private $locked;
+    private $locked = false;
 
 
     /**

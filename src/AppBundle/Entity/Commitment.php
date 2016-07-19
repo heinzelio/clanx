@@ -76,7 +76,7 @@ class Commitment
      * @var boolean
     * @ORM\Column(name="need_train_ticket", type="boolean", nullable=false)
     */
-    private $needTrainTicket;
+    private $needTrainTicket = false;
 
 
     /**

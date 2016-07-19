@@ -91,7 +91,7 @@ class User extends BaseUser
      *
      * @ORM\Column(name="is_regular", type="boolean", nullable=false)
      */
-    private $isRegular;
+    private $isRegular = false;
 
 
     /**
