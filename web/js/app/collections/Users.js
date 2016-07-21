@@ -7,7 +7,9 @@ define([
 
     var UsersCollection = Backbone.Collection.extend({
         //TODO Somehow bring the dpt id into this path...
-        url:'./../../api/departments/2/volunteers'
+        url: function() {
+          return $("[name=volunteersUrl]").val();
+        }
     });
 
     return UsersCollection;

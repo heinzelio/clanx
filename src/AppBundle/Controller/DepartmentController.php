@@ -485,37 +485,20 @@ class DepartmentController extends Controller
      */
      public function shiftPlannerAction(Department $department)
      {
+         $volunteersUrl = $this->generateUrl(
+            'api_volunteers_of_department',
+            array('id' => $department->getId())
+            );
+         $shiftsUrl = $this->generateUrl(
+            'api_shifts_of_department',
+            array('id' => $department->getId())
+            );
 
          return $this->render('sevi/seviView.html.twig',array(
              'department'=>$department,
+             'volunteersUrl'=>$volunteersUrl,
+             'shiftsUrl'=>$shiftsUrl,
          ));
      }
 
-     /**
-      * Renders the shiftplanner
-      *
-      * @Route("/{id}/volunteers", name="shift_planner_volunteers")
-      * @Method("GET")
-      * @Security("has_role('ROLE_OK') or has_role('ROLE_ADMIN')")
-      */
-      public function getVolunteersAction(Department $department)
-      {
-          $commitments = $department->getCommitments();
-          $companions = $department->getCompanions();
-
-          $data = array();
-          foreach ($commitments as $commitment) {
-              $user = array(
-                  'id' => $commitment->getUser()->getId(),
-                  'surname' => $commitment->getUser()->getSurname(),
-                  'forename'=> $commitment->getUser()->getForename(),
-              );
-              array_push($data,$user);
-          }
-
-          $response = new JsonResponse();
-
-          $response->setData($data);
-          return $response;
-      }
 }

@@ -7,15 +7,15 @@ View für Sevi
 
 {% block workspace %}
 
-<input type="hidden" name="context_department" value="{{department.id}}">
+<input type="hidden" name="volunteersUrl" value="{{volunteersUrl}}">
+<input type="hidden" name="shiftsUrl" value="{{shiftsUrl}}">
 
 <div class="row">
     <div class="col-md-12">
         <h3>
-            Schichtenplaner
+            Schichtenplaner <mark>{{department.name}}</mark>
         </h3>
         <div class="content">
-            <!-- {#department.id#} -->
         </div>
     </div>
 </div>

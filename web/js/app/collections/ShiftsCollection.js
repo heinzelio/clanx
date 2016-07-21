@@ -12,8 +12,10 @@ define([
             initialize: function() {
                 console.log('New collection initialized...');
 
-                this.fetch({ 
-                    url: "/web/js/collections/shifts.json", 
+                this.fetch({
+                    url: function() {
+                      return $("[name=shiftsUrl]").val();
+                    },
                     success: function() {
                         console.log("JSON file load was successful");
                     },

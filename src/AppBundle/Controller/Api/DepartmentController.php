@@ -24,13 +24,13 @@ class DepartmentController extends Controller
     /**
       * returns the volunteers
       *
-      * @Route("/{id}/volunteers")
+      * @Route("/{id}/volunteers", name="api_volunteers_of_department")
       * @Method("GET")
-      * @Security("has_role('ROLE_USER')")
       */
     public function users(Request $request,Department $department)
     {
         // $authentication=...?
+        // It's all done!!! (How cool is that?)
 
         if(!$this->isGranted('ROLE_USER'))
         {
@@ -39,19 +39,12 @@ class DepartmentController extends Controller
                 Response::HTTP_FORBIDDEN,
                 array('content-type' => 'text/plain')
             );
-        }
-
-        if($department==null)
-        {
-            $response = new Response(
-                'The ressource has not been found',
-                Response::HTTP_NOT_FOUND,
-                array('content-type' => 'text/plain')
-            );
+            return $response;
         }
 
         $commitments = $department->getCommitments();
         $companions = $department->getCompanions();
+        //TODO Also the companions!
 
         $data = array();
         foreach ($commitments as $commitment) {
@@ -61,6 +54,44 @@ class DepartmentController extends Controller
                 'forename'=> $commitment->getUser()->getForename(),
             );
             array_push($data,$user);
+        }
+
+        $response = new JsonResponse();
+
+        $response->setData($data);
+        $response->setStatusCode(Response::HTTP_OK);
+        return $response;
+    }
+
+    /**
+      * returns the shifts
+      *
+      * @Route("/{id}/shifts", name="api_shifts_of_department")
+      * @Method("GET")
+      */
+    public function shifts(Request $request,Department $department)
+    {
+        if(!$this->isGranted('ROLE_USER'))
+        {
+            $response = new Response(
+                'You may not request this ressource',
+                Response::HTTP_FORBIDDEN,
+                array('content-type' => 'text/plain')
+            );
+            return $response;
+        }
+
+        $shifts = $department->getShifts();
+
+        $data = array();
+        foreach ($shifts as $shift) {
+            $s = array(
+                'id' => $shift->getId(),
+                'start' => $shift->getStart(),
+                'end'=> $shift->getEnd(),
+                'name'=> (string)$shift,
+            );
+            array_push($data,$s);
         }
 
         $response = new JsonResponse();
