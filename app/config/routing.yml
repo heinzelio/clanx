@@ -1,5 +1,9 @@
-app:
+app_web:
     resource: "@AppBundle/Controller/"
+    type:     annotation
+
+api_api:
+    resource: "@AppBundle/Controller/Api"
     type:     annotation
 
 fos_user:
