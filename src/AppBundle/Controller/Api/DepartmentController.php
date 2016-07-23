@@ -87,8 +87,8 @@ class DepartmentController extends Controller
         foreach ($shifts as $shift) {
             $s = array(
                 'id' => $shift->getId(),
-                'start' => $shift->getStart(),
-                'end'=> $shift->getEnd(),
+                'start' => $shift->getStart()->format('H:i'),
+                'end'=> $shift->getEnd()->format('H:i'),
                 'name'=> (string)$shift,
             );
             array_push($data,$s);

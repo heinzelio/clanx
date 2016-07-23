@@ -3,12 +3,13 @@ define([
     'handlebars',
     'backbone',
     '../models/User'
-    ], function($, Handlebars, Backbone, UserModel ) {
+], function($, Handlebars, Backbone, UserModel) {
 
     var UsersCollection = Backbone.Collection.extend({
-        //TODO Somehow bring the dpt id into this path...
         url: function() {
-          return $("[name=volunteersUrl]").val();
+            var url = $("[name=volunteersUrl]").val();
+            console.info("debug collection:Shifts:url - " + url);
+            return url;
         }
     });
 

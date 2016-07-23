@@ -1,16 +1,15 @@
- <div class="row">
-   {{#each []}}
-   <div class="col-md-12 clanx-shift-item" data-shift-id="{{id}}">
-       <div class="panel panel-default">
-           <div class="panel-heading">{{name}} {{start}} - {{end}}</div>
-           <div class="panel-body">
-               <ul class="list-group target connected" data-id="{{id}}">
-                   {{#each users}}
-                   <li class="list-group-item">{{user}}</li>
-                   {{/each}}
-               </ul>
-           </div>
-       </div>
-   </div>
-   {{/each}}
+{{#each shifts}}
+<div class="clx-shift-item" data-shift-id="{{id}}">
+    <div class="panel panel-default">
+        <div class="panel-heading">{{name}}</div>
+        <div class="panel-body">
+            <ul class="list-group target connected" data-id="{{id}}">
+                <li class="placeholder">Hölfer hier hin ziehen...</li>
+                {{#each users}}
+                <li class="list-group-item">{{user}}</li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
 </div>
+{{/each}}

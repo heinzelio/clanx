@@ -1,38 +1,45 @@
 define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'handlebars',
-    'custom-jquery-ui',
-    '../collections/ShiftsCollection',
-    'text!./../templates/ShiftPlanner.handlebars',
-    './AvailableUsers'
+        'jquery',
+        'underscore',
+        'backbone',
+        'handlebars',
+        'custom-jquery-ui',
+        'text!./../templates/ShiftPlanner.handlebars',
+        './AvailableUsers',
+        './Shifts'
     ],
-    function($, _, Backbone, Handlebars, CustomJQueryUi, ShiftsCollection, ShiftPlannerTpl, AvailableUsersView) {
+    function($, _, Backbone, Handlebars, CustomJQueryUi,
+        ShiftPlannerTpl, UsersView, ShiftsView
+    ) {
         'use strict';
 
         $(document).ready(function() {
 
             var view = Backbone.View.extend({
                 el: $('.content').get(0),
-                initialize:function(){
+                initialize: function() {
                     this.render();
                     this.afterrender();
                 },
-                render: function () {
+                render: function() {
+                    console.info("debug view:Planner:render");
                     var template = Handlebars.compile(ShiftPlannerTpl);
-                    //var html = template(ShiftsCollection.toJSON());
                     var html = template();
                     this.$el.html(html);
-
                 },
-                afterrender:function(){
-                    this.availableUsersView = new AvailableUsersView({'el':$('.content .clx-available-users').get(0)});
-                    this.availableUsersView.on('ready', $.proxy(this.initDragNDrop, this));
-                },
-                initDragNDrop: function () {
+                afterrender: function() {
+                    console.info("debug view:Planner:afterRender");
+                    this.usersView = new UsersView({
+                        'el': $('.content .clx-available-users').get(0)
+                    });
+                    this.usersView.on('ready', $.proxy(this.initDragNDrop, this));
 
-                    console.info('init drag and drop');
+                    this.shiftsView = new ShiftsView({
+                        'el': $('.clx-shift-list').get(0)
+                    });
+                },
+                initDragNDrop: function() {
+                    console.info("debug view:Planner:initDnD");
 
                     $(".source li").draggable({
                         addClasses: false,
@@ -48,29 +55,29 @@ define([
                             $(this).find(".placeholder").remove();
                             var link = $("<a href='#' class='dismiss'>x</a>");
                             var list = $("<li></li>").text(ui.draggable.text());
-                        $(list).append(link);
-                        $(list).appendTo(this);
+                            $(list).append(link);
+                            $(list).appendTo(this);
+                            // updateValues();
+                        }
+                    }).sortable({
+                        items: "li:not(.placeholder)",
+                        sort: function() {
+                            $(this).removeClass("listActive");
+                        },
+                        update: function() {
+                            // updateValues();
+                        }
+                    }).on("click", ".dismiss", function(event) {
+                        event.preventDefault();
+                        $(this).parent().remove();
                         // updateValues();
-                    }
-                }).sortable({
-                  items: "li:not(.placeholder)",
-                  sort: function() {
-                    $(this).removeClass("listActive");
-                },
-                update: function() {
-                    // updateValues();
+                    });
+
                 }
-            }).on("click", ".dismiss", function(event) {
-              event.preventDefault();
-              $(this).parent().remove();
-              // updateValues();
-          });
 
-        }
-
-    });
+            });
 
             return new view();
         });
     }
-    );
+);
