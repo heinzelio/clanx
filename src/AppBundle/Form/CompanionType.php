@@ -5,6 +5,7 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CompanionType extends AbstractType
@@ -28,6 +29,10 @@ class CompanionType extends AbstractType
             ->add('isRegular', CheckboxType::class, array(
                 'label' => 'Ist Stammhölfer?',
                 'required' => false,
+            ))
+            ->add('remark', TextareaType::class, array(
+                'label' => "Bemerkung",
+                'required' => false
             ))
         ;
     }

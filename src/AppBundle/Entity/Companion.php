@@ -42,6 +42,13 @@ class Companion
     private $isRegular = false;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="remark", type="string", length=1000, nullable=true)
+     */
+    private $remark;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="id", type="integer")
@@ -156,6 +163,29 @@ class Companion
     public function getIsRegular()
     {
         return $this->isRegular;
+    }
+
+    /**
+     * Set Remark
+     *
+     * @param string $remark
+     *
+     * @return Companion
+     */
+    public function setRemark($remark)
+    {
+        $this->remark=$remark;
+        return $this;
+    }
+
+    /**
+     * Get Remark
+     *
+     * @return string
+     */
+    public function getRemark()
+    {
+        return $this->remark;
     }
 
     /**

@@ -139,14 +139,19 @@ Ressort: {{ department.name }}
                                         </a>
                                     -->
                                     {% if companion.email %}
-                                        <span class="fa fa-envelope-o"
+                                        <span class="fa fa-envelope-o fa-lg"
                                             data-toggle="tooltip"
                                             title="{{companion.email}}"></span>
                                     {% endif %}
                                     {% if companion.phone %}
-                                        <span class="fa fa-phone-square"
+                                        <span class="fa fa-phone-square fa-lg"
                                             data-toggle="tooltip"
                                             title="{{companion.phone}}"></span>
+                                    {% endif %}
+                                    {% if companion.remark %}
+                                        <span class="fa fa-commenting-o fa-lg"
+                                            data-toggle="tooltip"
+                                            title="{{companion.remark}}"></span>
                                     {% endif %}
                                 </td>
                                 <td>
