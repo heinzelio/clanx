@@ -421,7 +421,7 @@ class DepartmentController extends Controller
                          'Ich helfe an folgenden Tagen',
                          'Bemerkung',
                          'Shirt',
-                         'Zugbillet'
+                         'Zugbillet',
                     );
         $commitments = $department->getCommitments();
         $rows1 = array();
@@ -442,21 +442,19 @@ class DepartmentController extends Controller
             array_push($rows1,$row);
         }
 
-         $columns2 = array('Hölfer',
+         $columns2 = array("Hölfer\nEmail\nTelefon",
                         'Stammhölfer',
-                         'Email',
-                         'Telefon',
-                         'Stammhölfer'
+                         'Stammhölfer',
+                         'Bemerkung',
                     );
         $companions = $department->getCompanions();
         $rows2 = array();
         foreach ($companions as $companion) {
             $regStr = $cmt->getUser()->getIsRegular() ? 'Ja' : 'Nein';
-            $row = array((string) $companion,
+            $row = array((string) $companion."\n".$companion->getEmail()."\n".$companion->getPhone(),
                         $regStr,
-                        $companion->getEmail(),
-                        $companion->getPhone(),
                         $companion->getIsRegular(),
+                        $companion->getRemark(),
                     );
             array_push($rows2,$row);
         }
