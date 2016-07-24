@@ -263,6 +263,21 @@ class Department
     }
 
     /**
+     * Returns true if the user is already a volunteer in the same department.
+     * @return boolean
+     */
+    public function commitmentExists($commitment)
+    {
+        foreach ($this->getCommitments() as $c) {
+            if($c->getUser()->getId()==$commitment->getUser()->getId())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Gets a string representing the department
      * @return string
      */

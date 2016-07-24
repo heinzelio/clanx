@@ -299,7 +299,7 @@ class EventController extends Controller
     }
 
     /**
-     * Finds and displays a Event entity.
+     * Enrolls user as volunteer.
      *
      * @Route("/enroll/{id}", name="event_enroll")
      * @Method("POST")
@@ -318,6 +318,7 @@ class EventController extends Controller
             $possStartFormItem = $form->get('possibleStart');
             $shirtSize = $form->get('shirtSize')->getData();
             $needTrainTicket = $form->get('needTrainTicket')->getData();
+            $remark = $form->get('remark')->getData();
             $dep = $depRep->findOneById($depId);
             $user = $this->getUser();
             $c = new Commitment();
@@ -327,14 +328,21 @@ class EventController extends Controller
             $c->setPossibleStart($startDate);
             $c->setShirtSize($shirtSize);
             $c->setNeedTrainTicket($needTrainTicket);
-            $c->setRemark($form->get('remark')->getData());
+            $c->setRemark($remark);
             $session = $request->getSession();
-            try{
-                $em->persist($c);
-                $em->flush();
-                $this->sendMail($user, $dep, $event, $c);
-            }catch(Exception $ex){
-                $session->getFlashBag()->add('error', 'Speichern fehlgeschlagen. Du bist NICHT eingetragen. Versuche es später nochmal.');
+            if($dep->commitmentExists($c))
+            {
+                $session->getFlashBag()->add('warning', 'Du bist bereits in diesem Ressort als Hölfer eingetragen.');
+            }
+            else {
+                try{
+                    $em->persist($c);
+                    $em->flush();
+                    $this->sendMail($user, $dep, $event, $c);
+                    $session->getFlashBag()->add('success', 'Du bist als Hölfer eingetragen. Checke deine Emails für mehr Infos (Wenn du kein Email findest, schau bitte auch im Spamordner nach).');
+                }catch(Exception $ex){
+                    $session->getFlashBag()->add('error', 'Speichern fehlgeschlagen. Du bist NICHT eingetragen. Versuche es später nochmal.');
+                }
             }
         }
 
