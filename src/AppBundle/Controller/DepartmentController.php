@@ -186,10 +186,11 @@ class DepartmentController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->remove($department);
             $em->flush();
-            //TODO: Add msg to flashbag.
+
+            $this->get('session')->getFlashBag()->add('success', "Ressort ".(string)$department." erfolgreich gelöscht.");
         }
 
-        return $this->redirectToRoute('event_edit', array('id'=>$event->getId()));
+        return $this->redirectToRoute('event_show', array('id'=>$event->getId()));
     }
 
     /**
