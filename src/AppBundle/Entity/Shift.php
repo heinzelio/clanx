@@ -218,8 +218,10 @@ class Shift
     {
         if($this->getStart())
         {
+            // setlocale (LC_TIME, "German_Swiss"); does not work.
+            // Anyway, find a better solution for this.
             $day = $this->getStart()->format('l');
-            $hour = $this->getStart()->format('H');
+            $hour = $this->getStart()->format('H:i');
             return $day.' '.$hour;
         }
         return '-';
