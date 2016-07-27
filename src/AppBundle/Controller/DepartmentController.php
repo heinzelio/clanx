@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -278,24 +279,25 @@ class DepartmentController extends Controller
      * @Security("has_role('ROLE_USER')")
      * @ParamConverter("user", class="AppBundle:User", options={"id" = "user_id"})
      */
-    public function moveVolunteerAction(Request $request, Department $department, User $user)
+    public function moveVolunteerAction(Request $request, Department $department, User $volunteer)
     {
+        $event = $department->getEvent();
         if(!$this->isGranted('ROLE_ADMIN'))
         {
             $chiefUser= $department->getChiefUser();
-            $thisUser=$this->getUser();
-            if ($thisUser->getId()!=$chiefUser->getId())
+            $operator=$this->getUser();
+            if ($operator->getId()!=$chiefUser->getId())
             {
                 $this->get('session')->getFlashBag()
                     ->add('warning', "Du musst Admin oder Ressortleiter sein, um Hölfer verschieben zu können.");
                 return $this->redirectToRoute('department_show',array(
                     'id'=>$department->getId(),
-                    'event_id'=>$department->getEvent()->getId()
+                    'event_id'=>$event->getId()
                 ));
             }
         }
 
-        $form = $this->createMoveVolunteerForm($department,$user);
+        $form = $this->createMoveVolunteerForm($department,$volunteer);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -303,27 +305,32 @@ class DepartmentController extends Controller
             $cmtRepo = $em->getRepository('AppBundle:Commitment');
             $cmt = $cmtRepo->findOneBy(array(
                 'department'=>$department,
-                'user'=>$user
+                'user'=>$volunteer
             ));
             $targetDptId = $form->get('department')->getData();
             $targetDpt = $em->getRepository('AppBundle:Department')->findOneById($targetDptId);
             $cmt->setDepartment($targetDpt);
             $em->persist($cmt);
             $em->flush();
+
+            $text = $form->get('message')->getData();
+            $this->sendMail($text,$targetDpt,$operator,$volunteer);
+
             $this->get('session')->getFlashBag()
             ->add('success',
                 'Hölfer wurde verschoben nach '
-                .$cmt->getDepartment()->getName());
+                .$cmt->getDepartment()->getName()
+                .' - Nachricht gesendet.');
 
             return $this->redirectToRoute('department_show',array(
                 'id'=>$department->getId(),
-                'event_id'=>$department->getEvent()->getId()
+                'event_id'=>$event->getId()
             ));
         }
 
         return $this->render('department/move_volunteer.html.twig',array(
             'department'=>$department,
-            'user'=>$user,
+            'user'=>$volunteer,
             'move_form' => $form->createView(),
         ));
     }
@@ -351,9 +358,52 @@ class DepartmentController extends Controller
                 'label' => '',
                 'choices'  => $choices
             ))
+            ->add('message', TextareaType::class, array(
+                'label' => 'Nachricht an den Hölfer',
+            ))
             ->setMethod('POST')
             ->getForm()
         ;
+    }
+
+    private function sendMail($text, $newDepartment, $operator, $volunteer)
+    {
+        $message = \Swift_Message::newInstance();
+        $message->setSubject('Dein Einsatz am '.(string)$event.' - Ressortänderung!')
+            ->setFrom($sender->getEmail())
+            ->setTo($volunteer->getEmail())
+            ->setBody(
+                $this->renderView(
+                    // app/Resources/views/emails/commitmentConfirmation.html.twig
+                    'emails/department_changed.html.twig',
+                    array(
+                        'text' => $text,
+                        'department' => $newDepartment,
+                        'event' => $newDepartment->getEvent(),
+                        'operator' => $operator,
+                        'volunteer' => $volunteer,
+                        'link' => hier noch ein Pfad berechnen
+                    )
+                ),
+                'text/html'
+            )
+            ->addPart(
+                $this->renderView(
+                    // app/Resources/views/emails/commitmentConfirmation.txt.twig
+                    'emails/department_changed.txt.twig',
+                    array('Forename' => $user->getForename(),
+                        'Gender' => $user->getGender(),
+                        'Event' => $event->getName(),
+                        'EventID' => $event->getId(),
+                        'EventDate' => $event->getDate(),
+                        'Department' => $dep->getName(),
+                    )
+                ),
+                'text/plain'
+            )
+        ;
+        $this->get('mailer')->send($message);
+
     }
 
     /**
@@ -401,10 +451,10 @@ class DepartmentController extends Controller
         {
             $chiefUser= $department->getChiefUser();
             $deputyUser = $department->getDeputyUser();
-            $thisUser=$this->getUser();
-            if ($thisUser->getId() != $chiefUser->getId()
+            $operator=$this->getUser();
+            if ($operator->getId() != $chiefUser->getId()
                 &&
-                $thisUser->getId() != $deputyUser->getId()
+                $operator->getId() != $deputyUser->getId()
             )
             {
                 $this->get('session')->getFlashBag()
