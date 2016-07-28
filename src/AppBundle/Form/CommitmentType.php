@@ -19,6 +19,7 @@ class CommitmentType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
         ->add('department', EntityType::class, array(
             'class'=>'AppBundle:Department',
@@ -45,6 +46,12 @@ class CommitmentType extends AbstractType
             'label' => "Bemerkung / Wunsch",
             'required' => false
         ))
+        ->add('message', TextareaType::class, array(
+                    'label' => "Diese Nachricht an den Hölfer senden:",
+                    'required' => false,
+                    'mapped' => false,
+                    'attr' => array('class'=>'clx-commitment-message'),
+                ))
         ;
     }
 

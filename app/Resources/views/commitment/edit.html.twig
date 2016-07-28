@@ -9,8 +9,8 @@
 <div class="col-md-6 col-md-offset-3">
 <div class="panel panel-default">
     <div class="panel-heading">
-        Mein Einsatz: <mark>„{{ department.name }}“</mark><br />
-        <small>am Event <mark>„{{ event.name }}“</mark></small>
+        Einsatz von {{volunteer}}: <mark>„{{ department }}“</mark><br />
+        <small>am Event <mark>„{{ event }}“</mark></small>
     </div>
     <div class="panel-body">
         {{ form_start(edit_form, {'name': 'form_commitment_edit'}) }}
@@ -21,37 +21,26 @@
         <a class="btn btn-primary"
             onclick="formSubmit(form_commitment_edit,this);"
             data-toggle="tooltip"
-            title="Änderungen übernehmen und in der Datenbank speichern.">
+            title="Änderungen übernehmen und in der Datenbank speichern. Der Hölfer wird benachrichtigt.">
             <span class="fa fa-floppy-o"></span>
             Speichern
         </a>
         <a class="btn btn-default"
-            href="{{ path('event_show',{'id':event.id}) }}"
+            href="{{ path('department_show',{'id':department.id,'event_id':event.id}) }}"
             data-toggle="tooltip"
-            title="Nicht speichern und zurück zu {{event.name}}">
+            title="Nicht speichern und zurück zu {{department}}">
             <span class="fa fa-times"></span>
             Abbrechen
         </a>
-        {% if may_delete %}
-            <a onclick="formSubmit(form_commitment_delete,this);"
-                class="btn btn-danger"
-                data-toggle="tooltip"
-                title="Lösche den Eintrag. Du bist dann nicht mehr als Hölfer
-                eingetragen.">
-                <span class="fa fa-trash"></span>
-                Löschen
-            </a>
-            {{ form_start(delete_form, {'name': 'form_commitment_delete'}) }}
-            {{ form_end(delete_form) }}
-        {% else %}
-            <a class="btn btn-default"
-                disabled="disabled"
-                data-toggle="tooltip"
-                title="Löschen ist nicht mehr möglich. Wenn du nicht mehr Hölfer
-                sein kannst, nimm Kontakt mit deinem Ressortleiter auf.">
-                Löschen
-            </a>
-        {% endif %}
+        <a onclick="formSubmit(form_commitment_delete,this);"
+            class="btn btn-danger"
+            data-toggle="tooltip"
+            title="Lösche den Eintrag. Der Hölfer wird benachrichtigt.">
+            <span class="fa fa-trash"></span>
+            Löschen
+        </a>
+        {{ form_start(delete_form, {'name': 'form_commitment_delete'}) }}
+        {{ form_end(delete_form) }}
     </div>
 </div> <!--panel-->
 </div>
@@ -62,6 +51,10 @@
 <script>
     $(document).ready(function(){
         $('[data-toggle="tooltip"]').tooltip();
+
+        $(".clx-commitment-message").on('keyup',function() {
+            $('.clx-commitment-delete-message').val($(this).val());
+        });
     });
 </script>
 {% endblock %}

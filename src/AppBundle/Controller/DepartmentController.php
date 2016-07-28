@@ -317,7 +317,7 @@ class DepartmentController extends Controller
             $text = $form->get('message')->getData();
             $numSent = $this->sendMail($text,$newDepartment,$oldDepartment,$operator,$volunteer);
 
-            $flashMsg = 'Hölfer wurde verschoben nach "'.$cmt->getDepartment()->getName().'" - ';
+            $flashMsg = $volunteer.' wurde verschoben nach "'.$cmt->getDepartment()->getName().'" - ';
             if($numSent>0){
               $flashMsg=$flashMsg.'Nachricht gesendet';
             }else{

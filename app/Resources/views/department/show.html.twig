@@ -82,6 +82,12 @@ Ressort: {{ department.name }}
                             <span class="fa fa-external-link"></span>
                             Verschieben
                         </a>
+                        <a class="btn btn-default"
+                            href="{{path('commitment_edit',{'id':cmt.id})}}"
+                            data-toggle="tooltip"
+                            title="Ändere oder lösche den Eintragung von {{vol}}.">
+                            <span class="fa fa-pencil"></span>
+                        </a>
                     {% endif %}
                     {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') or is_granted('ROLE_OK') %}
                         <span class="fa fa-calendar"

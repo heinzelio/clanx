@@ -1,0 +1,21 @@
+{# app/Resources/views/emails/commitment_changed.txt.twig #}
+Hallo {{volunteer}}!
+
+
+Dein Einsatz am Event {{event}}.
+=====================
+
+Deine Einsatzdaten wurden von <strong>{{operator}}</strong> angepasst oder gelöscht.
+
+Besuche die Seite
+{{ absolute_url(path('event_show', { 'id': event.id })) }}
+um dich über deine neuen Einsatzdaten zu informieren.
+{% if text %}
+{{operator}} hat folgende Nachricht an dich gesendet:
+
+-------------------------------
+"{{text}}"
+-------------------------------
+{% endif %}
+
+Das ist ein automatisch generiertes Mail von der Clanx HölferDB.

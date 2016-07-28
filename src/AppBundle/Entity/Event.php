@@ -216,6 +216,16 @@ class Event
     }
 
     /**
+     * Is the event in the future?
+     *
+     * @return boolean
+     */
+    public function isFuture()
+    {
+        return new \DateTime() < $this->getDate();
+    }
+
+    /**
      * Returns true when enrollment on this Event is possible
      * @return boolean
      */

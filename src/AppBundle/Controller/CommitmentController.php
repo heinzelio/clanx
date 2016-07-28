@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -33,39 +34,97 @@ class CommitmentController extends Controller
      */
     public function editAction(Request $request, Commitment $commitment)
     {
+        $operator = $this->getUser();
+        $department = $commitment->getDepartment();
         $event = $commitment->getEvent();
-
-        if($event->getLocked()){
-            $this->get('session')->getFlashBag()->add('danger', "Event gesperrt. Ändern nicht mehr möglich.");
-            return $this->redirectToRoute('event_show', array('id' => $event->getId()));
+        if (!$this->mayEditOrDelete($commitment))
+        {
+            $this->get('session')->getFlashBag()->add('warning', "Eintrag kann nicht geändert oder gelöscht werden.");
+            return $this->redirectToRoute('department_show', array('id' => $department->getId(),'event_id'=>$event->getId()));
         }
 
-        $em = $this->getDoctrine()->getManager();
         $deleteForm = $this->createDeleteForm($commitment);
 
-        //TODO: replacy dummy
-        $mayDelete = true;
-
-        $options = array('departmentChoices' => $event->getFreeDepartments());
+        $options = array(
+            'departmentChoices' => $event->getDepartments()
+        );
         $editForm = $this->createForm('AppBundle\Form\CommitmentType', $commitment, $options);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $message = $editForm->get('message')->getData();
+
+            $this->sendMail($message,$commitment,$operator);
+
+            $em = $this->getDoctrine()->getManager();
             $em->persist($commitment);
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add('success', "Änderung gespeichert.");
-            return $this->redirectToRoute('event_show', array('id' => $event->getId()));
+            $this->get('session')->getFlashBag()->add('success', "Änderung gespeichert, ".$commitment->getUser()." wurde benachrichtigt.");
+            return $this->redirectToRoute('department_show', array('id' => $department->getId(),'event_id'=>$event->getId()));
         }
 
         return $this->render('commitment/edit.html.twig', array(
             'commitment' => $commitment,
             'department' => $commitment->getDepartment(),
+            'volunteer' => $commitment->getUser(),
             'event' => $event,
-            'may_delete' => $mayDelete,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
+    }
+
+    private function mayEditOrDelete($commitment)
+    {
+        $operator = $this->getUser();
+        $department = $commitment->getDepartment();
+        $event = $commitment->getEvent();
+
+        return (
+                     $operator->isChiefOf($department)
+                    ||  $operator->isDeputyOf($department)
+                    ||  $this->isGranted('ROLE_ADMIN')
+                )
+                && !$event->getLocked()
+                && $event->isFuture();
+    }
+
+    private function sendMail($text,$commitment,$operator)
+    {
+        $event = $commitment->getDepartment()->getEvent();
+        $volunteer = $commitment->getUser();
+        $message = \Swift_Message::newInstance();
+        $message->setSubject('Dein Einsatz am '.(string)$event.' - Einsatzänderung!')
+            ->setFrom($operator->getEmail())
+            ->setTo($volunteer->getEmail())
+            ->setBody(
+                $this->renderView(
+                    // app/Resources/views/emails/commitmentConfirmation.html.twig
+                    'emails/commitment_changed.html.twig',
+                    array(
+                        'text' => $text,
+                        'event' => $commitment->getDepartment()->getEvent(),
+                        'operator' => $operator,
+                        'volunteer' => $volunteer,
+                    )
+                ),
+                'text/html'
+            )
+            ->addPart(
+                $this->renderView(
+                    // app/Resources/views/emails/commitmentConfirmation.txt.twig
+                    'emails/commitment_changed.txt.twig',
+                    array(
+                        'text' => $text,
+                        'event' => $commitment->getDepartment()->getEvent(),
+                        'operator' => $operator,
+                        'volunteer' => $volunteer,
+                    )
+                ),
+                'text/plain'
+            )
+        ;
+        return $this->get('mailer')->send($message);
     }
 
     /**
@@ -77,29 +136,29 @@ class CommitmentController extends Controller
      */
     public function deleteAction(Request $request, Commitment $commitment)
     {
-        $accessViolation = $this->getUser()->getID() != $commitment->getUser()->getId();
-        if($accessViolation){
-            $this->get('session')->getFlashBag()->add('danger', "Du darfst diesen Datensatz nicht löschen.");
-            return $this->redirectToRoute('event_show', array('id' => $commitment->getEvent()->getId()));
-        }
-
-        if($commitment->getEvent()->getLocked())
+        $department = $commitment->getDepartment();
+        $event = $department->getEvent();
+        if (!$this->mayEditOrDelete($commitment))
         {
-            $this->get('session')->getFlashBag()->add('danger', "Event gesperrt. Löschen nicht mehr möglich.");
-            return $this->redirectToRoute('event_show', array('id' => $commitment->getEvent()->getId()));
+            $this->get('session')->getFlashBag()->add('warning', "Eintrag kann nicht geändert oder gelöscht werden.");
+            return $this->redirectToRoute('department_show', array('id' => $department->getId(),'event_id'=>$event->getId()));
         }
 
         $form = $this->createDeleteForm($commitment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $message = $form->get('message')->getData();
+            $this->sendMail($message,$commitment,$this->getUser());
+            $volunteer = $commitment->getUser();
             $em = $this->getDoctrine()->getManager();
             $em->remove($commitment);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('success', "Datensatz wurde gelöscht.");
+            $this->get('session')->getFlashBag()->add('success', "Dieser Einsatz wurde gelöscht. ".$volunteer." wurde benachrichtigt.");
         }
 
-        return $this->redirectToRoute('event_show', array('id'=>$commitment->getEvent()->getId()));
+        return $this->redirectToRoute('department_show', array('id' => $department->getId(),'event_id'=>$event->getId()));
     }
 
     /**
@@ -112,6 +171,8 @@ class CommitmentController extends Controller
     private function createDeleteForm(Commitment $commitment)
     {
         return $this->createFormBuilder()
+            ->add('message', HiddenType::class, array(
+                'attr' => array('class'=>'clx-commitment-delete-message'), )) // on btn click, data will be copied from the commitment form
             ->setAction($this->generateUrl('commitment_delete', array(
                 'id' => $commitment->getId())
             ))

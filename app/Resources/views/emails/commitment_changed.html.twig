@@ -1,0 +1,29 @@
+{# app/Resources/views/emails/commitment_changed.html.twig #}
+<p>
+    Hallo {{volunteer}}!
+</p>
+
+<h3>Dein Einsatz am Event <strong>{{event}}</strong></h3>
+
+<p>
+    Deine Einsatzdaten wurden von <strong>{{operator}}</strong> angepasst oder gelöscht.
+</p>
+
+<p>
+    Besuche die Seite
+    <a href="{{ absolute_url(path('event_show', { 'id': event.id })) }}">{{ event }}</a>
+    um dich über deine neuen Einsatzdaten zu informieren.
+</p>
+{% if text %}
+    <p>
+        {{operator}} hat folgende Nachricht an dich gesendet:
+    </p>
+    <p>
+        <blockquote>
+        {{text|nl2br}}
+        </blockquote>
+    </p>
+{% endif %}
+<p>
+  <i>Das ist ein automatisch generiertes Mail von der Clanx HölferDB.</i>
+</p>
