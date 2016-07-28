@@ -362,7 +362,7 @@ class DepartmentController extends Controller
                 'choices'  => $choices
             ))
             ->add('message', TextareaType::class, array(
-                'label' => 'Nachricht an den Hölfer',
+                'label' => 'Diese Nachricht an den Hölfer senden:',
             ))
             ->setMethod('POST')
             ->getForm()
