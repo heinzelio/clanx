@@ -1,20 +1,25 @@
 {# app/Resources/views/emails/department_changed.html.twig #}
-<h3>Du wurdest in ein anderes Ressort verschoben!</h3>
+<h3>Dein Einsatz am Event <strong>{{event}}</strong></h3>
 
 <p>
-    Im Event {{event}}.
+    Du wurdest einem neuen Ressort zugeteilt.
 </p>
 <p>
-    {{operator}} hat dich verschoben nach {{department}}.
+    {{operator}} hat dich verschoben von <i>{{oldDepartment}}</i> nach <i>newDepartment</i>.
 </p>
 <p>
-    besuche {{link}} um dich über dein neues Ressort zu informieren.
+    Besuche die Seite
+    <a href="{{ absolute_url(path('event_show', { 'id': event.id })) }}">{{ event }}</a>
+    um dich über dein neues Ressort zu informieren.
 </p>
 <p>
     {{operator}} hat folgende Nachricht an dich gesendet:
 </p>
 <p>
     <blockquote>
-    {{text}}    
+    {{text}}
     </blockquote>
+</p>
+<p>
+  <i>Das ist ein automatisch generiertes Mail von der Clanx HölferDB.</i>
 </p>

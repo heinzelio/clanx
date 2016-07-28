@@ -1,2 +1,17 @@
 {# app/Resources/views/emails/department_changed.text.twig #}
-Du wurdest in ein anderes Ressort verschoben!
+Dein Einsatz am Event {{event}}.
+=====================
+Du wurdest einem neuen Ressort zugeteilt.
+{{operator}} hat dich verschoben von <i>{{oldDepartment}}</i> nach <i>newDepartment</i>.
+
+Besuche die Seite
+absolute_url(path('event_show', { 'id': event.id }))
+um dich über dein neues Ressort zu informieren.
+
+{{operator}} hat folgende Nachricht an dich gesendet:
+
+-------------------------------
+{{text}}
+-------------------------------
+
+Das ist ein automatisch generiertes Mail von der Clanx HölferDB.

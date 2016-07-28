@@ -277,15 +277,15 @@ class DepartmentController extends Controller
      * @Route("/{id}/move/volunteer/{user_id}", name="department_move_volunteer")
      * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_USER')")
-     * @ParamConverter("user", class="AppBundle:User", options={"id" = "user_id"})
+     * @ParamConverter("volunteer", class="AppBundle:User", options={"id" = "user_id"})
      */
     public function moveVolunteerAction(Request $request, Department $department, User $volunteer)
     {
         $event = $department->getEvent();
+        $operator=$this->getUser();
         if(!$this->isGranted('ROLE_ADMIN'))
         {
             $chiefUser= $department->getChiefUser();
-            $operator=$this->getUser();
             if ($operator->getId()!=$chiefUser->getId())
             {
                 $this->get('session')->getFlashBag()
@@ -307,20 +307,23 @@ class DepartmentController extends Controller
                 'department'=>$department,
                 'user'=>$volunteer
             ));
-            $targetDptId = $form->get('department')->getData();
-            $targetDpt = $em->getRepository('AppBundle:Department')->findOneById($targetDptId);
-            $cmt->setDepartment($targetDpt);
+            $oldDepartment = $cmt->getDepartment();
+            $newDepartmentId = $form->get('department')->getData();
+            $newDepartment = $em->getRepository('AppBundle:Department')->findOneById($newDepartmentId);
+            $cmt->setDepartment($newDepartment);
             $em->persist($cmt);
             $em->flush();
 
             $text = $form->get('message')->getData();
-            $this->sendMail($text,$targetDpt,$operator,$volunteer);
+            $numSent = $this->sendMail($text,$newDepartment,$oldDepartment,$operator,$volunteer);
 
-            $this->get('session')->getFlashBag()
-            ->add('success',
-                'Hölfer wurde verschoben nach '
-                .$cmt->getDepartment()->getName()
-                .' - Nachricht gesendet.');
+            $flashMsg = 'Hölfer wurde verschoben nach "'.$cmt->getDepartment()->getName().'" - ';
+            if($numSent>0){
+              $flashMsg=$flashMsg.'Nachricht gesendet';
+            }else{
+              $flashMsg=$flashMsg.'Nachricht nicht gesendet.';
+            }
+            $this->get('session')->getFlashBag()->add('success',$flashMsg);
 
             return $this->redirectToRoute('department_show',array(
                 'id'=>$department->getId(),
@@ -366,11 +369,12 @@ class DepartmentController extends Controller
         ;
     }
 
-    private function sendMail($text, $newDepartment, $operator, $volunteer)
+    private function sendMail($text, $newDepartment, $oldDepartment, $operator, $volunteer)
     {
+        $event = $newDepartment->getEvent();
         $message = \Swift_Message::newInstance();
         $message->setSubject('Dein Einsatz am '.(string)$event.' - Ressortänderung!')
-            ->setFrom($sender->getEmail())
+            ->setFrom($operator->getEmail())
             ->setTo($volunteer->getEmail())
             ->setBody(
                 $this->renderView(
@@ -378,11 +382,11 @@ class DepartmentController extends Controller
                     'emails/department_changed.html.twig',
                     array(
                         'text' => $text,
-                        'department' => $newDepartment,
+                        'newDepartment' => $newDepartment,
+                        'oldDepartment' => $oldDepartment,
                         'event' => $newDepartment->getEvent(),
                         'operator' => $operator,
                         'volunteer' => $volunteer,
-                        'link' => hier noch ein Pfad berechnen
                     )
                 ),
                 'text/html'
@@ -391,18 +395,19 @@ class DepartmentController extends Controller
                 $this->renderView(
                     // app/Resources/views/emails/commitmentConfirmation.txt.twig
                     'emails/department_changed.txt.twig',
-                    array('Forename' => $user->getForename(),
-                        'Gender' => $user->getGender(),
-                        'Event' => $event->getName(),
-                        'EventID' => $event->getId(),
-                        'EventDate' => $event->getDate(),
-                        'Department' => $dep->getName(),
+                    array(
+                        'text' => $text,
+                        'newDepartment' => $newDepartment,
+                        'oldDepartment' => $oldDepartment,
+                        'event' => $newDepartment->getEvent(),
+                        'operator' => $operator,
+                        'volunteer' => $volunteer,
                     )
                 ),
                 'text/plain'
             )
         ;
-        $this->get('mailer')->send($message);
+        return $this->get('mailer')->send($message);
 
     }
 
