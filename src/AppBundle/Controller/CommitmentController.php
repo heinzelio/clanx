@@ -39,7 +39,7 @@ class CommitmentController extends Controller
         $event = $commitment->getEvent();
         if (!$this->mayEditOrDelete($commitment))
         {
-            $this->get('session')->getFlashBag()->add('warning', "Eintrag kann nicht geändert oder gelöscht werden.");
+            $this->get('session')->getFlashBag()->add('warning', "Eintrag kann nicht geändert werden.");
             return $this->redirectToRoute('department_show', array('id' => $department->getId(),'event_id'=>$event->getId()));
         }
 
@@ -91,6 +91,18 @@ class CommitmentController extends Controller
 
     private function sendMail($text,$commitment,$operator)
     {
+        // This is for debugging in an EATON facility, where smtp does not work.
+        // $volunteer = $commitment->getUser();
+        // $this->get('session')->getFlashBag()
+        // ->add('info', "Mail Dummy. To "
+        //       .$volunteer->getEmail()
+        //       ." From "
+        //       .$operator->getEmail()
+        //       ." Text: "
+        //       .$text
+        //       ." in template emails/commitment_changed.html.twig");
+        // return;
+
         $event = $commitment->getDepartment()->getEvent();
         $volunteer = $commitment->getUser();
         $message = \Swift_Message::newInstance();
@@ -140,7 +152,7 @@ class CommitmentController extends Controller
         $event = $department->getEvent();
         if (!$this->mayEditOrDelete($commitment))
         {
-            $this->get('session')->getFlashBag()->add('warning', "Eintrag kann nicht geändert oder gelöscht werden.");
+            $this->get('session')->getFlashBag()->add('warning', "Eintrag kann nicht gelöscht werden.");
             return $this->redirectToRoute('department_show', array('id' => $department->getId(),'event_id'=>$event->getId()));
         }
 
