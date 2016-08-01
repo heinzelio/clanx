@@ -56,14 +56,14 @@ Ressort: {{ department.name }}
                         {{ vol }} {# this calls User.__toString(). Pretty neat. #}
                     {% endif %}
                     {% if vol.isRegular %}
-                    <span class="fa fa-repeat"
-                        data-toggle="tooltip"
-                        title="{{vol}} ist Stammhölfer"
-                        ></span>
+                        <span class="fa fa-repeat"
+                            data-toggle="tooltip"
+                            title="{{vol}} ist Stammhölfer"
+                            ></span>
                     {% endif %}
                 </td>
                 <td>
-                    {% if is_granted('ROLE_ADMIN') %}
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_OK')%}
                         <a class="btn btn-default"
                             href="{{ path('department_redirect_mail_to',{
                                     'id':department.id,
@@ -72,6 +72,15 @@ Ressort: {{ department.name }}
                             title="{{vol}} ein Email schreiben.">
                             <span class="fa fa-envelope-o"></span>
                         </a>
+                        {% if vol.phone %}
+                            <a class="btn btn-default"
+                                href="tel:{{vol.phone}}"
+                                data-toggle="tooltip"
+                                title="{{vol.phone}} (Auf dem Mobiltelefon hier klicken um anzurufen.)"
+                                >
+                                <span class="fa fa-phone-square fa-lg"></span>
+                            </a>
+                        {% endif %}
                     {% endif %}
 
                     {% if userIsChief or userIsDeputy or is_granted('ROLE_ADMIN') %}
@@ -144,15 +153,20 @@ Ressort: {{ department.name }}
                                             <span class="fa fa-envelope-o"></span>
                                         </a>
                                     -->
+
                                     {% if companion.email %}
                                         <span class="fa fa-envelope-o fa-lg"
                                             data-toggle="tooltip"
                                             title="{{companion.email}}"></span>
                                     {% endif %}
                                     {% if companion.phone %}
-                                        <span class="fa fa-phone-square fa-lg"
+                                        <a class="btn btn-default"
+                                            href="tel:{{companion.phone}}"
                                             data-toggle="tooltip"
-                                            title="{{companion.phone}}"></span>
+                                            title="{{companion.phone}} (Auf dem Mobiltelefon hier klicken um anzurufen.)"
+                                            >
+                                            <span class="fa fa-phone-square fa-lg"></span>
+                                        </a>
                                     {% endif %}
                                     {% if companion.remark %}
                                         <span class="fa fa-commenting-o fa-lg"
@@ -238,15 +252,18 @@ Ressort: {{ department.name }}
         {% endif %}
 
         {% if is_granted('ROLE_OK') or is_granted('ROLE_ADMIN') %}
-            <a
-                class="btn btn-default"
-                href="{{path('shift_index_of_department',{'department_id':department.id})}}"
-                data-toggle="tooltip"
-                title="Zeige Liste aller Schichten vom Ressort {{department.name}}"
-            >
-                    <span class="fa fa-clock-o"></span>
-                    Schichten
-            </a>
+            <!-- Feature not ready yet -->
+            {% if 1==0 %}
+                <a
+                    class="btn btn-default"
+                    href="{{path('shift_index_of_department',{'department_id':department.id})}}"
+                    data-toggle="tooltip"
+                    title="Zeige Liste aller Schichten vom Ressort {{department.name}}"
+                >
+                        <span class="fa fa-clock-o"></span>
+                        Schichten
+                </a>
+            {% endif %}
         {% endif %}
 
         <a class="btn btn-default" type="button"
