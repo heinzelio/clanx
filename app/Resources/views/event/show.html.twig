@@ -80,6 +80,10 @@
             </div>
             <!-- panel -->
             {{
+                render(controller('AppBundle:EventStatistics:index',
+                    { 'id': event.id }))
+            }}
+            {{
                 render(controller('AppBundle:EventVolunteers:index',
                     { 'id': event.id }))
             }}

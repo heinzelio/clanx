@@ -1,0 +1,40 @@
+<!-- this is a nested template. See "event/show.html.twig" for context -->
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+            <a role="button"
+                data-toggle="collapse"
+                data-parent="#accordion"
+                href="#collapseOne"
+                aria-expanded="true"
+                aria-controls="collapseOne">
+          Statistik
+        </a>
+    </div>
+    <div id="collapseOne"
+        class="panel-collapse collapse"
+        role="tabpanel"
+        aria-labelledby="headingOne">
+        <div class="panel-body">
+            <p>
+                Benötigte Zugbillete: <b>{{tickets}}</b>
+            </p>
+            <p>
+                Benötigte Herrenshirts:<br />
+                {% for shirtCategory,count in maleShirtSizes %}
+                    {{shirtCategory}}: <b>{{count}}</b> <br />
+                {% endfor %}
+            </p>
+            <p>
+                Benötigte Damenshirts:<br />
+                {% for shirtCategory,count in femaleShirtSizes %}
+                    {{shirtCategory}}: <b>{{count}}</b> <br />
+                {% endfor %}
+            </p>
+            <p>
+                Für die korrekte Anzahl TShirts beachte zusätzlich die Sonderwünsche in
+                den Kommentaren. Zähle ausserdem noch die OK Mitglieder dazu.
+            </p>
+        </div>
+    </div>
+</div> <!--panel-->

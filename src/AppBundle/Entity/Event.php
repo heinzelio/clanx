@@ -186,6 +186,22 @@ class Event
     }
 
     /**
+     * Gets all commitments of this event.
+     *
+     * @return array
+     */
+    public function getCommitments()
+    {
+        $arr = array();
+        foreach ($this->getDepartments() as $department) {
+            foreach ($department->getCommitments() as $commitment) {
+                array_push($arr,$commitment);
+            }
+        }
+        return  $arr;
+    }
+
+    /**
      * Lock the event (volunteers may not change their commitment in
      * a locked event)
      *
