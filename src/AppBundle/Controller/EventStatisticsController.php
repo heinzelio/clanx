@@ -43,7 +43,7 @@ class EventStatisticsController extends Controller
     private function renderAdminView(Event $event)
     {
         // nothing special so far. Show the same as for committee members
-        return $this->renderChiefView($event);
+        return $this->renderCommitteeView($event);
     }
 
     private function renderCommitteeView(Event $event)
