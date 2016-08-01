@@ -30,5 +30,6 @@ monolog:
         #    type:   chromephp
         #    level:  info
 
-#swiftmailer:
-#    delivery_address: me@example.com
+swiftmailer:
+    # while testing send all mails to this address.
+    delivery_address: clanx@mailinator.com
