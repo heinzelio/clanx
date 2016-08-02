@@ -64,7 +64,7 @@ class DepartmentController extends Controller
      */
     public function showAction(Department $department)
     {
-        $deleteForm = $this->createDeleteForm($department,$department->getEvent());
+        $deleteForm = $this->createDeleteForm($department);
 
         $shifts = $department->getShifts();
         $commitments = $department->getCommitments();
@@ -169,14 +169,13 @@ class DepartmentController extends Controller
     /**
      * Deletes a Department entity.
      *
-     * @Route("/{id}/of/event/{event_id}", name="department_delete")
+     * @Route("/{id}", name="department_delete")
      * @Method("DELETE")
      * @Security("has_role('ROLE_ADMIN')")
-     * @ParamConverter("event", class="AppBundle:Event", options={"id" = "event_id"})
      */
-    public function deleteAction(Request $request, Department $department, Event $event)
+    public function deleteAction(Request $request, Department $department)
     {
-        $form = $this->createDeleteForm($department,$event);
+        $form = $this->createDeleteForm($department);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -187,7 +186,9 @@ class DepartmentController extends Controller
             $this->get('session')->getFlashBag()->add('success', "Ressort ".(string)$department." erfolgreich gelöscht.");
         }
 
-        return $this->redirectToRoute('event_show', array('id'=>$event->getId()));
+        return $this->redirectToRoute('event_show', array(
+            'id'=>$department->getEvent()->getId()
+        ));
     }
 
     /**
@@ -197,13 +198,12 @@ class DepartmentController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm(Department $department, Event $event)
+    private function createDeleteForm(Department $department)
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('department_delete', array(
-                'id' => $department->getId(),
-                'event_id'=>$event->getId())
-            ))
+                'id' => $department->getId()
+                )))
             ->setMethod('DELETE')
             ->getForm()
         ;
