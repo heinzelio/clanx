@@ -28,7 +28,10 @@
                         <p>Du bist Ressortleiter:
                             {% for dpt in myDepartmentsAsChief %}
                                 <br/>
-                                <a href="{{ path('department_show',{'id':dpt.Id,'event_id':event.Id}) }}" class="btn btn-default" data-toggle="tooltip" title="Zeige Details des Ressorts {{dpt.name}}.">
+                                <a href="{{ path('department_show',{'id':dpt.Id}) }}"
+                                    class="btn btn-default"
+                                    data-toggle="tooltip"
+                                    title="Zeige Details des Ressorts {{dpt.name}}.">
                                     <span class="fa fa-eye"></span>
                                     {{ dpt.name }}
                                 </a>
@@ -40,7 +43,10 @@
                         <p>Du bist stellvertretender Ressortleiter:
                             {% for dpt in myDepartmentsAsDeputy %}
                                 <br/>
-                                <a href="{{ path('department_show',{'id':dpt.Id,'event_id':event.Id}) }}" class="btn btn-default" data-toggle="tooltip" title="Zeige Details des Ressorts {{dpt.name}}">
+                                <a href="{{ path('department_show',{'id':dpt.Id}) }}"
+                                    class="btn btn-default"
+                                    data-toggle="tooltip"
+                                    title="Zeige Details des Ressorts {{dpt.name}}">
                                     <span class="fa fa-eye"></span>
                                     {{ dpt.name }}
                                 </a>
@@ -114,7 +120,10 @@
                     <div class="panel-body">
                         <p>
                             Dein Ressort:
-                            <a class="btn btn-default" href="{{ path('department_show',{'id':commitment.department.id,'event_id':event.id}) }}" data-toggle="tooltip" title="Zeige Details des Ressorts {{commitment.department.name}}">
+                            <a class="btn btn-default"
+                                href="{{ path('department_show',{'id':commitment.department.id}) }}" 
+                                data-toggle="tooltip"
+                                title="Zeige Details des Ressorts {{commitment.department.name}}">
                                 <span class="fa fa-eye"></span>
                                 {{commitment.department.name}}
                             </a>

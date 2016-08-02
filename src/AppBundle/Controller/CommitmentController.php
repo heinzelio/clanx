@@ -40,7 +40,9 @@ class CommitmentController extends Controller
         if (!$this->mayEditOrDelete($commitment))
         {
             $this->get('session')->getFlashBag()->add('warning', "Eintrag kann nicht geändert werden.");
-            return $this->redirectToRoute('department_show', array('id' => $department->getId(),'event_id'=>$event->getId()));
+            return $this->redirectToRoute('department_show', array(
+                'id' => $department->getId(),
+            ));
         }
 
         $deleteForm = $this->createDeleteForm($commitment);
@@ -61,7 +63,9 @@ class CommitmentController extends Controller
             $em->flush();
 
             $this->get('session')->getFlashBag()->add('success', "Änderung gespeichert, ".$commitment->getUser()." wurde benachrichtigt.");
-            return $this->redirectToRoute('department_show', array('id' => $department->getId(),'event_id'=>$event->getId()));
+            return $this->redirectToRoute('department_show', array(
+                'id' => $department->getId(),
+            ));
         }
 
         return $this->render('commitment/edit.html.twig', array(
@@ -153,7 +157,9 @@ class CommitmentController extends Controller
         if (!$this->mayEditOrDelete($commitment))
         {
             $this->get('session')->getFlashBag()->add('warning', "Eintrag kann nicht gelöscht werden.");
-            return $this->redirectToRoute('department_show', array('id' => $department->getId(),'event_id'=>$event->getId()));
+            return $this->redirectToRoute('department_show', array(
+                'id' => $department->getId(),
+            ));
         }
 
         $form = $this->createDeleteForm($commitment);
@@ -170,7 +176,9 @@ class CommitmentController extends Controller
             $this->get('session')->getFlashBag()->add('success', "Dieser Einsatz wurde gelöscht. ".$volunteer." wurde benachrichtigt.");
         }
 
-        return $this->redirectToRoute('department_show', array('id' => $department->getId(),'event_id'=>$event->getId()));
+        return $this->redirectToRoute('department_show', array(
+            'id' => $department->getId(),
+        ));
     }
 
     /**

@@ -58,14 +58,13 @@ class DepartmentController extends Controller
     /**
      * Finds and displays a Department entity.
      *
-     * @Route("/{id}/of/event/{event_id}", name="department_show")
+     * @Route("/{id}", name="department_show")
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
-     * @ParamConverter("event", class="AppBundle:Event", options={"id" = "event_id"})
      */
-    public function showAction(Department $department,Event $event)
+    public function showAction(Department $department)
     {
-        $deleteForm = $this->createDeleteForm($department,$event);
+        $deleteForm = $this->createDeleteForm($department,$department->getEvent());
 
         $shifts = $department->getShifts();
         $commitments = $department->getCommitments();
@@ -84,7 +83,7 @@ class DepartmentController extends Controller
 
         return $this->render('department/show.html.twig', array(
             'department' => $department,
-            'event' => $event,
+            'event' => $department->getEvent(),
             'mayDelete' => $mayDelete,
             'delete_form' => $deleteForm->createView(),
             'commitments' => $commitments,
@@ -97,14 +96,13 @@ class DepartmentController extends Controller
     /**
      * Displays a form to edit an existing Department entity.
      *
-     * @Route("/{id}/of/event/{event_id}/edit", name="department_edit")
+     * @Route("/{id}/edit", name="department_edit")
      * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_ADMIN')")
-     * @ParamConverter("event", class="AppBundle:Event", options={"id" = "event_id"})
      */
-    public function editAction(Request $request, Department $department, Event $event)
+    public function editAction(Request $request, Department $department)
     {
-        $deleteForm = $this->createDeleteForm($department,$event);
+        $deleteForm = $this->createDeleteForm($department, $department->getEvent());
         $editForm = $this->createForm('AppBundle\Form\DepartmentType', $department);
         $editForm->handleRequest($request);
 
@@ -120,7 +118,7 @@ class DepartmentController extends Controller
 
         return $this->render('department/edit.html.twig', array(
             'department' => $department,
-            'event' => $event,
+            'event' => $department->getEvent(),
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
@@ -143,7 +141,6 @@ class DepartmentController extends Controller
         {
             return $this->redirectToRoute('department_show',array(
                 'id' => $department->getId(),
-                'event_id' => $department->getEvent()->getID(),
             ));
         }
 
@@ -159,7 +156,6 @@ class DepartmentController extends Controller
 
             return $this->redirectToRoute('department_show',array(
                 'id'=>$department->getId(),
-                'event_id'=>$department->getEvent()->getId()
             ));
         }
 
@@ -229,7 +225,6 @@ class DepartmentController extends Controller
         {
             $this->redirectToRoute('department_show',array(
                 'id'=> $department->getId(),
-                'event_id' => $department->getEvent()->getId()
             ));
         }
 
@@ -250,7 +245,6 @@ class DepartmentController extends Controller
                 . " - Hölferinfo");
         $url = $this->generateUrl('department_show',
                                     array('id' => $department->getId(),
-                                    'event_id' => $department->getEvent()->getId()
                                 ),
                                     UrlGeneratorInterface::ABSOLUTE_URL
                                 );
@@ -260,7 +254,6 @@ class DepartmentController extends Controller
         $redirectInfo->setRouteName('department_show');
         $redirectInfo->setArguments(array(
             'id' => $department->getId(),
-            'event_id' => $department->getEvent()->getId()
         ));
 
         $session = $request->getSession();
@@ -292,7 +285,6 @@ class DepartmentController extends Controller
                     ->add('warning', "Du musst Admin oder Ressortleiter sein, um Hölfer verschieben zu können.");
                 return $this->redirectToRoute('department_show',array(
                     'id'=>$department->getId(),
-                    'event_id'=>$event->getId()
                 ));
             }
         }
@@ -327,7 +319,6 @@ class DepartmentController extends Controller
 
             return $this->redirectToRoute('department_show',array(
                 'id'=>$department->getId(),
-                'event_id'=>$event->getId()
             ));
         }
 
@@ -429,7 +420,6 @@ class DepartmentController extends Controller
         $backLink->setRouteName('department_show')
                  ->setArguments(array(
                      'id'=>$department->getId(),
-                     'event_id'=>$department->getEvent()->getId(),
              ));
         $session->set(RedirectInfo::SESSION_KEY,$backLink);
 
@@ -466,7 +456,6 @@ class DepartmentController extends Controller
                     ->add('warning', "Du musst Admin, Ressortleiter oder Stellvertreter sein, um Hölferdate drucken zu können.");
                 return $this->redirectToRoute('department_show',array(
                     'id'=>$department->getId(),
-                    'event_id'=>$department->getEvent()->getId()
                 ));
             }
         }

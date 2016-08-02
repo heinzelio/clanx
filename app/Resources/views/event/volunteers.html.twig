@@ -4,7 +4,7 @@
 <div class="panel-heading">Hölfer pro Ressort</div>
 <div class="panel-body">
     {% for dept in departments %}
-        <a href="{{ path('department_show',{'id':dept.id,'event_id':event.id}) }}"
+        <a href="{{ path('department_show',{'id':dept.id}) }}"
             class="btn
                 {% if dept.highlighted %}
                     btn-primary

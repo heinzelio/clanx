@@ -205,7 +205,7 @@ Ressort: {{ department.name }}
         {% if is_granted('ROLE_ADMIN') %}
 
             <a class="btn btn-primary" type="button"
-                href="{{ path('department_edit', { 'id': department.id ,'event_id':event.id}) }}"
+                href="{{ path('department_edit', { 'id': department.id }) }}"
                 data-toggle="tooltip"
                 title="Bearbeite alle Eigenschaften des Ressorts {{department.name}}.">
                 <span class="fa fa-pencil"></span>

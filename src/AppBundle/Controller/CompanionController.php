@@ -54,7 +54,6 @@ class CompanionController extends Controller
 
             return $this->redirectToRoute('department_show', array(
                 'id' => $department->getId(),
-                'event_id' => $department->getEvent()->getId(),
             ));
         }
 
@@ -94,7 +93,6 @@ class CompanionController extends Controller
 
         return $this->redirectToRoute('department_show',array(
             'id' => $department->getId(),
-            'event_id' => $department->getEvent()->getId(),
         ));
     }
 }

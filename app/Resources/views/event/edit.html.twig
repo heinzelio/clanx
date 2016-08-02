@@ -60,7 +60,7 @@
                     </td>
                     <td>
                         {% if is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('department_edit', { 'id': department.id,'event_id':event.id }) }}"
+                        <a href="{{ path('department_edit', { 'id': department.id }) }}"
                             class="btn btn-default"
                             data-toggle="tooltip"
                             title="Ressortdetails von '{{department.name}}' bearbeiten.">
