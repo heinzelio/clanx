@@ -489,16 +489,14 @@ class DepartmentController extends Controller
 
          $columns2 = array("Hölfer\nEmail\nTelefon",
                         'Stammhölfer',
-                         'Stammhölfer',
                          'Bemerkung',
                     );
         $companions = $department->getCompanions();
         $rows2 = array();
         foreach ($companions as $companion) {
-            $regStr = $cmt->getUser()->getIsRegular() ? 'Ja' : 'Nein';
+            $regStr = $companion->getIsRegular() ? 'Ja' : 'Nein';
             $row = array((string) $companion."\n".$companion->getEmail()."\n".$companion->getPhone(),
                         $regStr,
-                        $companion->getIsRegular(),
                         $companion->getRemark(),
                     );
             array_push($rows2,$row);
