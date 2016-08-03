@@ -106,11 +106,11 @@ class MailController extends Controller
 
             if ($numSent)
             {
-                $session->getFlashBag()->add('success', $numSent.' EMails verschickt.');
+                $session->getFlashBag()->add('success', 'EMail gesendet.');
             }
             else
             {
-                $session->getFlashBag()->add('warning','Keine Email verschickt.');
+                $session->getFlashBag()->add('warning','Keine Email gesendet.');
             }
 
             $redirectInfo = $session->remove(RedirectInfo::SESSION_KEY);

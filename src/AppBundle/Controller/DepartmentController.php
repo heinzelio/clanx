@@ -231,13 +231,19 @@ class DepartmentController extends Controller
         $mailData = new Mail();
         $mailData->setSender($user->getEmail());
 
-        $em = $this->getDoctrine()->getManager();
-        $commitmentsRep = $em->getRepository('AppBundle:Commitment');
-        $commitments=$commitmentsRep->findByDepartment($department);
+        $commitments = $department->getCommitments();
         foreach ($commitments as $cmnt)
         {
             $usr=$cmnt->getUser();
             $mailData->addBcc($usr->getEmail(),$usr->getFullname());
+        }
+        $companions = $department->getCompanions();
+        foreach ($companions as $companion ) {
+            $mail = $companion->getEmail();
+            if($mail)
+            {
+                $mailData->addBcc($companion->getEmail());
+            }
         }
         $mailData->setSubject(
                 $department->getEvent()->getName()

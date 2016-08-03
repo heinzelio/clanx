@@ -202,6 +202,22 @@ class Event
     }
 
     /**
+     * Gets all compnaions of this event.
+     *
+     * @return array
+     */
+    public function getCompanions()
+    {
+        $arr = array();
+        foreach ($this->getDepartments() as $department) {
+            foreach ($department->getCompanions() as $companion) {
+                array_push($arr,$companion);
+            }
+        }
+        return  $arr;
+    }
+
+    /**
      * Lock the event (volunteers may not change their commitment in
      * a locked event)
      *

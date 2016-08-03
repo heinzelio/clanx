@@ -429,7 +429,6 @@ class EventController extends Controller
     public function mailEnrolledAction(Request $request, Event $event)
     {
         $session = $request->getSession();
-        $em = $this->getDoctrine()->getManager();
 
         $mailData = new Mail();
         $eventUrl = $this->generateUrl('event_show',
@@ -442,13 +441,18 @@ class EventController extends Controller
              ->setText('Link: '.$eventUrl)
              ;
 
-        $commitmentsRep = $em->getRepository('AppBundle:Commitment');
-        $commitments=$commitmentsRep->findByEvent($event);
-        foreach ($commitments as $cmnt) {
+        foreach ($event->getCommitments() as $cmnt) {
             $usr = $cmnt->getUser();
-            $eml = $usr->getEmail();
-            $nme = $usr->getForename().' '.$usr->getSurname();
-            $mailData->addBcc($eml, $nme);
+            $mail = $usr->getEmail();
+            $name = $usr->getForename().' '.$usr->getSurname();
+            $mailData->addBcc($mail, $name);
+        }
+        foreach ($event->getCompanions() as $companion ) {
+            $mail = $companion->getEmail();
+            if($mail)
+            {
+                $mailData->addBcc($mail);
+            }
         }
 
         $session->set(Mail::SESSION_KEY, $mailData);
