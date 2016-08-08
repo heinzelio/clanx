@@ -528,4 +528,121 @@ class DepartmentController extends Controller
             ));
         }
     }
+
+    /**
+     * Renders a table view that can be printed
+     *
+     * @Route("/{id}/export", name="department_export")
+     * @Method("GET")
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function exportAction(Request $request, Department $department)
+    {
+        if(!$this->isGranted('ROLE_ADMIN'))
+        {
+            $chiefUser= $department->getChiefUser();
+            $deputyUser = $department->getDeputyUser();
+            $operator=$this->getUser();
+            if ($operator->getId() != $chiefUser->getId()
+                &&
+                $operator->getId() != $deputyUser->getId()
+            )
+            {
+                $this->get('session')->getFlashBag()
+                    ->add('warning', "Du musst Admin, Ressortleiter oder Stellvertreter sein, um Hölferdate drucken zu können.");
+                return $this->redirectToRoute('department_show',array(
+                    'id'=>$department->getId(),
+                ));
+            }
+        }
+
+        $head = $this->array2csv(array(
+            'Vorname',
+            'Nachname',
+            'Geschlecht',
+            'Geb.Datum',
+            'Strasse',
+            'PLZ',
+            'Ort',
+            'Email',
+            'Telefon',
+            'Beruf',
+            'Stammhölfer',
+            'T-Shirt',
+            'Zugbillet',
+            'Mögliche Arbeitstage',
+            'Bemerkung',
+        ));
+
+
+
+        $rows = array();
+        foreach ($department->getCommitments() as $commitment) {
+            $user=$commitment->getUser();
+            $row = $this->array2csv(array(
+                $user->getForename() ,
+                $user->getSurname() ,
+                $user->getGender() ,
+                $user->getDateOfBirth()->format('d.m.Y') ,
+                $user->getStreet() ,
+                $user->getZip() ,
+                $user->getCity() ,
+                $user->getEmail() ,
+                $user->getPhone() ,
+                $user->getOccupation() ,
+                $user->getIsRegular()==1?"Ja":"Nein" ,
+                $commitment->getShirtSize() ,
+                $commitment->getNeedTrainTicket()==1?"Ja":"Nein" ,
+                $commitment->getPossibleStart() ,
+                $commitment->getRemark() ,
+            ));
+            array_push($rows,$row);
+        }
+        foreach ($department->getCompanions() as $companion) {
+            $row = $this->array2csv(array(
+                $companion->getName() ,
+                '' ,
+                '' ,
+                '' ,
+                '' ,
+                '' ,
+                '' ,
+                $user->getEmail() ,
+                $user->getPhone() ,
+                '' ,
+                $user->getIsRegular()==1?"Ja":"Nein" ,
+                '' ,
+                '' ,
+                '' ,
+                $commitment->getRemark() ,
+            ));
+            array_push($rows,$row);
+        }
+
+        $response = $this->render('export.csv.twig',array(
+            'head' => $head,
+            'rows' => $rows
+        ));
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="export.csv"');
+        return $response;
+
+    }
+
+    private function array2csv($arrayRow)
+    {
+        // https://stackoverflow.com/questions/4249432/export-to-csv-via-php
+        //$delimiter = chr(9); // tab (for excel)
+        $delimiter = ';';
+        $enclosure = '"';
+        $escape = '\\';
+
+        ob_start();
+        $df = fopen("php://output", 'w');
+        //add BOM to fix UTF-8 in Excel
+        fputs($df, $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) ));
+        fputcsv($df, $arrayRow, $delimiter,$enclosure);
+        fclose($df);
+        return ob_get_clean();
+    }
 }
