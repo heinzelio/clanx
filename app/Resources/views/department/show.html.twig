@@ -250,7 +250,7 @@ Ressort: {{ department.name }}
                 Drucken
             </a>
             <a class="btn btn-default"
-                href="{{ path('department_export', {'id': department.id}) }}"
+                href="{{ path('department_download', {'id': department.id}) }}"
                 data-toggle="tooltip"
                 title="Download Liste aller Hölfer in diesem Ressort."
                 >

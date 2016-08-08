@@ -530,13 +530,13 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Renders a table view that can be printed
+     * Provides a list of all volunteers in csv format.
      *
-     * @Route("/{id}/export", name="department_export")
+     * @Route("/{id}/download", name="department_download")
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
-    public function exportAction(Request $request, Department $department)
+    public function downloadAction(Request $request, Department $department)
     {
         if(!$this->isGranted('ROLE_ADMIN'))
         {
