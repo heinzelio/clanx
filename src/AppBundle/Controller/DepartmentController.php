@@ -468,7 +468,7 @@ class DepartmentController extends Controller
 
 
          $columns1 = array("Hölfer\nEmail\nTelefon",
-                         "Stammhölfer\nBeruf",
+                         "Stammhölfer\nBeruf\nGeb.Datum",
                          'Ich helfe an folgenden Tagen',
                          'Bemerkung',
                          'Shirt',
@@ -477,14 +477,16 @@ class DepartmentController extends Controller
         $commitments = $department->getCommitments();
         $rows1 = array();
         foreach ($commitments as $cmt) {
-            $regStr = $cmt->getUser()->getIsRegular() ? 'Ja' : 'Nein';
-            $usrTxt = (string) $cmt->getUser()
-                        ."\n".$cmt->getUser()->getEmail();
-            if($cmt->getUser()->getPhone()){
-                $usrTxt = $usrTxt."\n".$cmt->getUser()->getPhone();
+            $user = $cmt->getUser();
+            $regStr = $user->getIsRegular() ? 'Ja' : 'Nein';
+            $usrTxt = (string) $user
+                        ."\n".$user->getEmail();
+            if($user->getPhone()){
+                $usrTxt = $usrTxt."\n".$user->getPhone();
             }
+            $usrText2 = $regStr."\n".$user->getOccupation()."\n".$user->getDateOfBirth()->format('d.m.Y');
             $row = array($usrTxt,
-                        $regStr."\n".$cmt->getUser()->getOccupation(),
+                        $usrText2,
                         $cmt->getPossibleStart(),
                         $cmt->getRemark(),
                         $cmt->getShirtSize(),
