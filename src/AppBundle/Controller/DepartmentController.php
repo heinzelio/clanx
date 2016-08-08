@@ -484,7 +484,12 @@ class DepartmentController extends Controller
             if($user->getPhone()){
                 $usrTxt = $usrTxt."\n".$user->getPhone();
             }
-            $usrText2 = $regStr."\n".$user->getOccupation()."\n".$user->getDateOfBirth()->format('d.m.Y');
+
+            $dob = $user->getDateOfBirth()?$user->getDateOfBirth()->format('d.m.Y'):"";
+
+            $usrText2 = $regStr.
+                "\n".$user->getOccupation().
+                "\n".$dob;
             $row = array($usrTxt,
                         $usrText2,
                         $cmt->getPossibleStart(),
