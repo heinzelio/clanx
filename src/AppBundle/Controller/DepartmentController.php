@@ -113,7 +113,7 @@ class DepartmentController extends Controller
 
             $this->get('session')->getFlashBag()->add('success', "'".$department->getName()."' gespeichert.");
 
-            return $this->redirectToRoute('event_edit', array('id' => $event->getId()));
+            return $this->redirectToRoute('event_edit', array('id' => $department->getEvent()->getId()));
         }
 
         return $this->render('department/edit.html.twig', array(

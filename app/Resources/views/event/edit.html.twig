@@ -50,6 +50,9 @@
             {% for department in departments %}
                 <tr>
                     <td>
+                        {% if department.locked %}
+                            <span class="fa fa-lock"></span>
+                        {% endif %}
                         {{ department.name }}
                         {% if department.requirement %}
                             <small>({{ department.requirement }})</small>
