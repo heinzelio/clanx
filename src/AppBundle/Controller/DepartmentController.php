@@ -583,7 +583,7 @@ class DepartmentController extends Controller
                 $user->getForename() ,
                 $user->getSurname() ,
                 $user->getGender() ,
-                $user->getDateOfBirth()->format('d.m.Y') ,
+                $user->getDateOfBirth()?$user->getDateOfBirth()->format('d.m.Y'):"" ,
                 $user->getStreet() ,
                 $user->getZip() ,
                 $user->getCity() ,

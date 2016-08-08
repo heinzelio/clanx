@@ -160,6 +160,7 @@ class EventController extends Controller
 
         $mayEdit = $this->isGranted('ROLE_ADMIN') && $event->mayEdit();
         $mayDelete = $this->isGranted('ROLE_SUPER_ADMIN') && $event->mayDelete();
+        $mayDownload = $this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_OK');
 
         return $this->render('event/show.html.twig', array(
             'event' => $event,
@@ -171,6 +172,7 @@ class EventController extends Controller
             'mayMail' => $mayMail,
             'mayEdit' => $mayEdit,
             'mayDelete' => $mayDelete,
+            'mayDownload' => $mayDownload,
             'myDepartmentsAsChief' => $myDepartmentsAsChief,
             'myDepartmentsAsDeputy' => $myDepartmentsAsDeputy,
         ));
@@ -495,4 +497,118 @@ class EventController extends Controller
 
         return $this->redirectToRoute('mail_edit');
     }
+
+    /**
+     * Download all volunteers and companions as csv.
+     *
+     * @Route("/{id}/download", name="event_download")
+     * @Method({"GET","POST"})
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function downloadActiom(Request $request, Event $event)
+    {
+        if(! $this->isGranted('ROLE_ADMIN') && !$this->isGranted('ROLE_OK'))
+        {
+            $this->get('session')->getFlashBag()
+                ->add('warning', "Du musst Admin oder OK Mitglied sein, um Hölferdaten herunterladen zu können.");
+            return $this->redirectToRoute('event_show',array(
+                'id'=>$event->getId(),
+            ));
+        }
+
+        $head = $this->array2csv(array(
+            'Ressort',
+            'Vorname',
+            'Nachname',
+            'Geschlecht',
+            'Geb.Datum',
+            'Strasse',
+            'PLZ',
+            'Ort',
+            'Email',
+            'Telefon',
+            'Beruf',
+            'Stammhölfer',
+            'T-Shirt',
+            'Zugbillet',
+            'Mögliche Arbeitstage',
+            'Bemerkung',
+        ));
+        $rows = array();
+
+        foreach ($event->getDepartments() as $department ) {
+
+            foreach ($department->getCommitments() as $commitment) {
+                $user=$commitment->getUser();
+                $row = $this->array2csv(array(
+                    (string)$department,
+                    $user->getForename() ,
+                    $user->getSurname() ,
+                    $user->getGender() ,
+                    $user->getDateOfBirth()?$user->getDateOfBirth()->format('d.m.Y'):"" ,
+                    $user->getStreet() ,
+                    $user->getZip() ,
+                    $user->getCity() ,
+                    $user->getEmail() ,
+                    $user->getPhone() ,
+                    $user->getOccupation() ,
+                    $user->getIsRegular()==1?"Ja":"Nein" ,
+                    $commitment->getShirtSize() ,
+                    $commitment->getNeedTrainTicket()==1?"Ja":"Nein" ,
+                    $commitment->getPossibleStart() ,
+                    $commitment->getRemark() ,
+                ));
+                array_push($rows,$row);
+            }
+            foreach ($department->getCompanions() as $companion) {
+                $row = $this->array2csv(array(
+                    (string)$department,
+                    $companion->getName() ,
+                    '' ,
+                    '' ,
+                    '' ,
+                    '' ,
+                    '' ,
+                    '' ,
+                    $user->getEmail() ,
+                    $user->getPhone() ,
+                    '' ,
+                    $user->getIsRegular()==1?"Ja":"Nein" ,
+                    '' ,
+                    '' ,
+                    '' ,
+                    $commitment->getRemark() ,
+                ));
+                array_push($rows,$row);
+            }
+        }
+
+        $response = $this->render('export.csv.twig',array(
+            'head' => $head,
+            'rows' => $rows
+        ));
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="export.csv"');
+        return $response;
+
+    }
+
+    private function array2csv($arrayRow)
+    {
+        // https://stackoverflow.com/questions/4249432/export-to-csv-via-php
+        //$delimiter = chr(9); // tab (for excel)
+        $delimiter = ';';
+        $enclosure = '"';
+        $escape = '\\';
+
+        ob_start();
+        $df = fopen("php://output", 'w');
+        //add BOM to fix UTF-8 in Excel
+        fputs($df, $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) ));
+        fputcsv($df, $arrayRow, $delimiter,$enclosure);
+        fclose($df);
+        return ob_get_clean();
+    }
+
+
 }
