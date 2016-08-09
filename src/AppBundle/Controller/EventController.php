@@ -25,6 +25,7 @@ use AppBundle\Entity\RedirectInfo;
 use AppBundle\Entity\Mail;
 use AppBundle\Form\EventCreateType;
 use AppBundle\Form\ShirtSizeType;
+use AppBundle\Service\Authorization;
 
 /**
  * Event controller.
@@ -159,6 +160,10 @@ class EventController extends Controller
         $mayMail = $this->isGranted('ROLE_ADMIN');
 
         $mayEdit = $this->isGranted('ROLE_ADMIN') && $event->mayEdit();
+
+        $auth = $this->get('app.auth');
+        $deleteAuth = $auth->mayDelete($event);
+        
         $mayDelete = $this->isGranted('ROLE_SUPER_ADMIN') && $event->mayDelete();
         $mayDownload = $this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_OK');
 
@@ -171,7 +176,8 @@ class EventController extends Controller
             'commitment' => $commitment,
             'mayMail' => $mayMail,
             'mayEdit' => $mayEdit,
-            'mayDelete' => $mayDelete,
+            'mayDelete' => $deleteAuth[Authorization::VALUE],
+            'mayDeleteMessage' => $deleteAuth[Authorization::MESSAGE],
             'mayDownload' => $mayDownload,
             'myDepartmentsAsChief' => $myDepartmentsAsChief,
             'myDepartmentsAsDeputy' => $myDepartmentsAsDeputy,

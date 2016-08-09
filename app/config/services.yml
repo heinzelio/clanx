@@ -18,3 +18,7 @@ services:
         arguments: ["\\AppBundle\\Entity\\User"]
         tags:
             - { name: form.type, alias: app_user_profile }
+
+    app.auth:
+        class: AppBundle\Service\Authorization
+        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@security.authorization_checker"]
