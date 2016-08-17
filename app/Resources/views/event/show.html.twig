@@ -80,6 +80,7 @@
                         <input class="btn btn-danger" type="submit" value="Löschen" onclick="return confirm('{{event.name}} wirklich löschen?')" data-toggle="tooltip" title="Den Event {{event.name}} aus der Datenbank löschen."/>
                         {{ form_end(delete_form) }}
                     {% endif %}
+                    <!-- {{mayDeleteMessage}} -->
 
                     {% if mayDownload %}
                         <a class="btn btn-default"
