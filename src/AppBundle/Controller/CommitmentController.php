@@ -54,15 +54,19 @@ class CommitmentController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $message = $editForm->get('message')->getData();
-
-            $this->sendMail($message,$commitment,$operator);
-
+            $noMessage = $editForm->get('noMessage')->getData();
+            $mailFlashMsg = $commitment->getUser()." wurde NICHT benachrichtigt.";
+            if(!$noMessage)
+            {
+                $message = $editForm->get('message')->getData();
+                $this->sendMail($message,$commitment,$operator);
+                $mailFlashMsg = $commitment->getUser()." wurde benachrichtigt.";
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($commitment);
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add('success', "Änderung gespeichert, ".$commitment->getUser()." wurde benachrichtigt.");
+            $this->get('session')->getFlashBag()->add('success', "Änderung gespeichert, ".$mailFlashMsg);
             return $this->redirectToRoute('department_show', array(
                 'id' => $department->getId(),
             ));
@@ -89,8 +93,7 @@ class CommitmentController extends Controller
                     ||  $operator->isDeputyOf($department)
                     ||  $this->isGranted('ROLE_ADMIN')
                 )
-                && !$event->getLocked()
-                && $event->isFuture();
+                && !$event->getLocked();
     }
 
     private function sendMail($text,$commitment,$operator)

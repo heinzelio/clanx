@@ -51,7 +51,12 @@ class CommitmentType extends AbstractType
                     'required' => false,
                     'mapped' => false,
                     'attr' => array('class'=>'clx-commitment-message'),
-                ))
+        ))
+        ->add('noMessage', CheckboxType::class, array(
+            'label' => "Keine Nachricht an den Hölfer senden.",
+            'required' => false,
+            'mapped' => false,
+        ))
         ;
     }
 
