@@ -155,15 +155,15 @@ class EventController extends Controller
             'event' => $event,
         ));
 
-        $mayEnroll = !$commitment && $event->enrollmentPossible();
+        $mayEnroll = (!$commitment) && (!$event->getLocked());
 
         $mayMail = $this->isGranted('ROLE_ADMIN');
 
-        $mayEdit = $this->isGranted('ROLE_ADMIN') && $event->mayEdit();
+        $mayEdit = $this->isGranted('ROLE_ADMIN');
 
         $auth = $this->get('app.auth');
         $deleteAuth = $auth->mayDelete($event);
-        
+
         $mayDelete = $this->isGranted('ROLE_SUPER_ADMIN') && $event->mayDelete();
         $mayDownload = $this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_OK');
 
