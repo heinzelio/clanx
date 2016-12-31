@@ -59,6 +59,11 @@ class Event
     */
     private $locked = false;
 
+    /**
+     * @var boolean
+    * @ORM\Column(name="is_for_association_members", type="boolean", nullable=false)
+    */
+    private $isForAssociationMembers = false;
 
     /**
      * Set name
@@ -246,6 +251,27 @@ class Event
     {
         return $this->locked;
     }
+
+    /**
+     * define if the event is for assoc member only
+     * @param boolean $isForMembers
+     * @return Event
+     */
+    public function setIsForAssociationMembers($isForMembers)
+    {
+        if(!$isForMembers){
+            $this->isForAssociationMembers = false;
+        }else{
+            $this->isForAssociationMembers = $isForMembers;
+        }
+        return $this;
+    }
+
+    /**
+     * Is the event for association members only?
+     * @return boolean
+     */
+    public function getIsForAssociationMembers(){return $this->isForAssociationMembers;}
 
     /**
      * Is the event in the future?

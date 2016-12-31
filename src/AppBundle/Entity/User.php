@@ -93,6 +93,11 @@ class User extends BaseUser
      */
     private $isRegular = false;
 
+    /**
+     * @var boolean
+     * @ORM\Column(name="is_association_member", type="boolean", nullable=false)
+     */
+    private $isAssociationMember = false;
 
     /**
      * Set forename
@@ -323,6 +328,28 @@ class User extends BaseUser
     {
         return $this->isRegular;
     }
+
+    /**
+     * define if the user is member of the association
+     * @param boolean $isForMembers
+     * @return Event
+     */
+    public function setIsAssociationMember($isMember)
+    {
+        if(!$isMember){
+            $this->isAssociationMember = false;
+        }else{
+            $this->isAssociationMember = $isMember;
+        }
+        return $this;
+    }
+
+    /**
+     * Is the user member of the association?
+     * @return boolean
+     */
+    public function getIsAssociationMember(){return $this->isAssociationMember;}
+
 
     /**
      * Returns true, if the user is chief of the given department.
