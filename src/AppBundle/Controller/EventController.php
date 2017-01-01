@@ -26,6 +26,7 @@ use AppBundle\Entity\Mail;
 use AppBundle\Form\EventCreateType;
 use AppBundle\Form\ShirtSizeType;
 use AppBundle\Service\Authorization;
+use AppBundle\Service\EventService;
 
 /**
  * Event controller.
@@ -43,24 +44,14 @@ class EventController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
+        //AppBundle\Service\EventService
+        $eventSvc = $this->get('app.event');
 
-        $repository = $em->getRepository('AppBundle:Event');
+        // should be arrays of Event objects,
+        // ordered by date
+        $upcoming = $eventSvc->getUpcoming();
+        $passed = $eventSvc->getPassed();
 
-        $queryUpcoming = $repository->createQueryBuilder('e')
-            ->where('e.date >= :today')
-            ->setParameter('today', new \DateTime("now"))
-            ->orderBy('e.date', 'ASC')
-            ->getQuery();
-
-        $queryPassed = $repository->createQueryBuilder('e')
-            ->where('e.date < :today')
-            ->setParameter('today', new \DateTime("now"))
-            ->orderBy('e.date', 'DESC')
-            ->getQuery();
-
-        $upcoming = $queryUpcoming->getResult();
-        $passed = $queryPassed->getResult();
 
         return $this->render('event/index.html.twig', array(
             'upcomingEvents' => $upcoming,

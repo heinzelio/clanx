@@ -55,14 +55,14 @@ class Event
 
     /**
      * @var boolean
-    * @ORM\Column(name="locked", type="boolean", nullable=false)
-    */
+     * @ORM\Column(name="locked", type="boolean", nullable=false)
+     */
     private $locked = false;
 
     /**
      * @var boolean
-    * @ORM\Column(name="is_for_association_members", type="boolean", nullable=false)
-    */
+     * @ORM\Column(name="is_for_association_members", type="boolean", nullable=false)
+     */
     private $isForAssociationMembers = false;
 
     /**

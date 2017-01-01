@@ -5,15 +5,24 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use AppBundle\Entity\Event;
+use AppBundle\Entity\User;
 
 class Authorization
 {
     const VALUE = 'Value';
     const MESSAGE = 'Message';
 
+    /**
+     * @var Doctrine\ORM\EntityManager
+     */
     protected $entityManager;
     protected $tokenStorage;
     protected $authorizationChecker;
+
+    /**
+     * @var AppBundle\Entity\User
+     */
+    protected $user;
 
     public function __construct(
         EntityManager $em,
@@ -24,6 +33,7 @@ class Authorization
         $this->entityManager = $em;
         $this->securityContext = $ts;
         $this->authorizationChecker = $autch;
+        $this->user = $ts->getToken()->getUser();
     }
     private function isGranted($role)
     {
@@ -60,6 +70,15 @@ class Authorization
         $returnValue[Authorization::VALUE] = true;
         $returnValue[Authorization::MESSAGE] = 'OK';
         return $returnValue;
+    }
+
+    /**
+     * Tells if current logged in user is member of the association.
+     * @return boolean true, if the user is member of the association.
+     */
+    public function isAssociationMember()
+    {
+        return $this->user->getIsAssociationMember();
     }
 }
 
