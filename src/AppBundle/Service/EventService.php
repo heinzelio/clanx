@@ -20,15 +20,27 @@ class EventService
      * @var \Doctrine\ORM\EntityRepository
      */
     protected $repo;
+    /**
+     * @var AppBundle\Service\DepartmentService
+     */
+    protected $departmentService;
+    /**
+     * @var AppBundle\Service\CommitmentService
+     */
+    protected $commitmentService;
 
     public function __construct(
         Authorization $auth,
-        EntityManager $em
+        EntityManager $em,
+        DepartmentService $deptService,
+        CommitmentService $cmmtService
     )
     {
         $this->authorization = $auth;
         $this->entityManager = $em;
         $this->repo = $em->getRepository('AppBundle:Event');
+        $this->departmentService = $deptService;
+        $this->commitmentService = $cmmtService;
     }
 
     /**
@@ -73,6 +85,80 @@ class EventService
             ->orderBy('e.date', 'DESC')
             ->getQuery();
         return $query->getResult();
+    }
+
+    /**
+     * Collects all necessary data to fill in the "show" view of the Event page
+     * @param  Event  $event [description]
+     * @return [type]        [description]
+     */
+    public function getDetailViewModel(Event $event)
+    {
+        $myDepartmentsAsChief = $this->departmentService->getMyDepartmentsAsChief($event);
+        $myDepartmentsAsDeputy = $this->departmentService->getMyDepartmentsAsDeputy($event);
+
+        $enrolledCount = $this->CountVolunteersFor($event);
+
+        $commitment = null;
+        $myCommitments = $this->commitmentService->getCurrentUsersCommitmentsFor($event);
+        if(count($myCommitments)>0)
+        {
+            $commitment = $myCommitments[0];
+        }
+
+        $mayEnroll = (!$commitment) && (!$event->getLocked());
+
+        $mayMail = $this->authorization->maySendEventMassMail();
+        $mayEdit = $this->authorization->mayEditEvent();
+        $deleteAuth = $this->authorization->mayDelete($event);
+
+        $mayDownload = $this->authorization->mayDownloadFromEvent();
+
+        return array(
+            'event' => $event,
+            'mayEnroll' => $mayEnroll,
+            'enrolledCount' => $enrolledCount,
+            'commitment' => $commitment,
+            'mayMail' => $mayMail,
+            'mayEdit' => $mayEdit,
+            'mayDelete' => $deleteAuth[Authorization::VALUE],
+            'mayDeleteMessage' => $deleteAuth[Authorization::MESSAGE],
+            'mayDownload' => $mayDownload,
+            'myDepartmentsAsChief' => $myDepartmentsAsChief,
+            'myDepartmentsAsDeputy' => $myDepartmentsAsDeputy,
+        );
+    }
+
+    /**
+     * Gets the number of people working for the given event.
+     * We only count people, not commitments.
+     * When the same person works in 3 departments, he still
+     * counts as 1 volunteer.
+     * @param  Event  $event The Eventg
+     * @return integer Returns the number of commitments.
+     */
+    public function CountVolunteersFor(Event $event)
+    {
+
+        $cmmtRepo = $this->entityManager->getRepository('AppBundle:Commitment');
+        $commitments = $cmmtRepo->findByEvent($event);
+
+        $userIds = array();
+        $count=0;
+        foreach ($commitments as $c) {
+            $uid = (string)$c->getUser()->getId();
+            if(! isset($userIds[$uid]))
+            {
+                $count++;
+                $userIds[$uid] = 1;
+            }
+        }
+
+        $departments = $event->getDepartments();
+        foreach ($departments as $dpmt) {
+            $count += count($dpmt->getCompanions());
+        }
+        return $count;
     }
 }
 

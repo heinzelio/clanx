@@ -60,6 +60,35 @@ class EventController extends Controller
     }
 
     /**
+     * Finds and displays a Event entity.
+     *
+     * @Route("/{id}", name="event_show")
+     * @Method("GET")
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function showAction(Request $request, Event $event)
+    {
+        //AppBundle\Service\EventService
+        $eventSvc = $this->get('app.event');
+        $auth = $this->get('app.auth');
+
+        $authResult = $auth->mayShowEventDetail($event);
+        if(!$authResult[Authorization::VALUE]){
+            $this->get('session')->getFlashBag()->add('danger', $authResult[Authorization::MESSAGE]);
+            return $this->redirectToRoute('event_index');
+        }
+
+        $detailViewModel = $eventSvc->getDetailViewModel($event);
+
+        $detailViewModel['delete_form'] = $this->createDeleteForm($event)
+                                                ->createView();
+        $detailViewModel['enroll_form'] = $this->createEnrollForm($event,$event->getFreeDepartments())
+                                                ->createView();
+
+        return $this->render('event/show.html.twig', $detailViewModel);
+    }
+
+    /**
      * Creates a new Event entity.
      *
      * @Route("/new", name="event_new")
@@ -105,73 +134,6 @@ class EventController extends Controller
         return $this->render('event/new.html.twig', array(
             'event' => $event,
             'form' => $form->createView(),
-        ));
-    }
-
-    /**
-     * Finds and displays a Event entity.
-     *
-     * @Route("/{id}", name="event_show")
-     * @Method("GET")
-     * @Security("has_role('ROLE_USER')")
-     */
-    public function showAction(Request $request, Event $event)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->getUser();
-
-        $depRep = $em->getRepository('AppBundle:Department');
-        // find out of which departments i am a chief.
-        $myDepartmentsAsChief = $depRep->findBy(
-            array('chiefUser' => $user, 'event' => $event)
-        );
-        $myDepartmentsAsDeputy = $depRep->findBy(
-            array('deputyUser' => $user, 'event' => $event)
-        );
-
-        $enrollForm = $this->createEnrollForm($event,$event->getFreeDepartments());
-        $deleteForm = $this->createDeleteForm($event);
-
-        // todo: find the values for these:
-        // maybe consider the use of "voters"
-        // https://symfony.com/doc/current/cookbook/security/voters.html#how-to-use-the-voter-in-a-controller
-
-        $commitments = $em->getRepository('AppBundle:Commitment');
-        $companions = $em->getRepository('AppBundle:Companion');
-
-        $enrolledCount = $commitments->countFor($event)+$companions->countFor($event);
-
-        $commitment = $commitments->findOneBy(array(
-            'user' => $user,
-            'event' => $event,
-        ));
-
-        $mayEnroll = (!$commitment) && (!$event->getLocked());
-
-        $mayMail = $this->isGranted('ROLE_ADMIN');
-
-        $mayEdit = $this->isGranted('ROLE_ADMIN');
-
-        $auth = $this->get('app.auth');
-        $deleteAuth = $auth->mayDelete($event);
-
-        $mayDelete = $this->isGranted('ROLE_SUPER_ADMIN') && $event->mayDelete();
-        $mayDownload = $this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_OK');
-
-        return $this->render('event/show.html.twig', array(
-            'event' => $event,
-            'delete_form' => $deleteForm->createView(),
-            'enroll_form' => $enrollForm->createView(),
-            'mayEnroll' => $mayEnroll,
-            'enrolledCount' => $enrolledCount,
-            'commitment' => $commitment,
-            'mayMail' => $mayMail,
-            'mayEdit' => $mayEdit,
-            'mayDelete' => $deleteAuth[Authorization::VALUE],
-            'mayDeleteMessage' => $deleteAuth[Authorization::MESSAGE],
-            'mayDownload' => $mayDownload,
-            'myDepartmentsAsChief' => $myDepartmentsAsChief,
-            'myDepartmentsAsDeputy' => $myDepartmentsAsDeputy,
         ));
     }
 

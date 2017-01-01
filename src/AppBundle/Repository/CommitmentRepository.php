@@ -1,15 +1,17 @@
 <?php
 
-// src/AppBundle/Entity/CommitmentRepository.php
-namespace AppBundle\Entity;
+// src/AppBundle/Repository/CommitmentRepository.php
+namespace AppBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
 class CommitmentRepository extends EntityRepository
 {
+    // not used anymore...
+    // still here for documentation purposes
     public function countFor($event)
     {
-        // we only count people, not commitments.
+        // We only count people, not commitments.
         // When the same person works in 3 departments, he still
         // counts as 1 volunteer.
         $em = $this->getEntityManager();

@@ -46,6 +46,12 @@ class Department
     private $event;
 
     /**
+     * The name of the mapped member $event.
+     * @var string
+     */
+    const EVENT = 'event';
+
+    /**
      * @var \AppBundle\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
@@ -56,6 +62,12 @@ class Department
     private $deputyUser;
 
     /**
+     * The name of the mapped member $deputyUser.
+     * @var string
+     */
+    const DEPUTY_USER = 'deputyUser';
+
+    /**
      * @var \AppBundle\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
@@ -64,6 +76,12 @@ class Department
      * })
      */
     private $chiefUser;
+
+    /**
+     * The name of the mapped member $chiefUser.
+     * @var string
+     */
+    const CHIEF_USER = 'chiefUser';
 
     /**
      * @ORM\OneToMany(targetEntity="Commitment", mappedBy="department")

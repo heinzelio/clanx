@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="commitment", indexes={@ORM\Index(name="user_key", columns={"user_id"}), @ORM\Index(name="event_key", columns={"event_id"}), @ORM\Index(name="department_key", columns={"department_id"})})
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="AppBundle\Entity\CommitmentRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CommitmentRepository")
  */
 class Commitment
 {
@@ -43,6 +43,12 @@ class Commitment
     private $event;
 
     /**
+     * name of the mapped member $event
+     * @var string
+     */
+    const EVENT = 'event';    
+
+    /**
      * @var \AppBundle\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
@@ -52,6 +58,11 @@ class Commitment
      */
     private $user;
 
+    /**
+     * name of the mapped member $user
+     * @var string
+     */
+    const USER = 'user';
 
     /**
      * @var string
