@@ -168,6 +168,11 @@ class Authorization
     {
         return $this->user->getIsAssociationMember();
     }
+
+    public function maySeeUserPage()
+    {
+        return $this->isGranted('ROLE_ADMIN');
+    }
 }
 
 ?>

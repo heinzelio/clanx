@@ -34,3 +34,7 @@ services:
     app.commitment:
         class: AppBundle\Service\CommitmentService
         arguments: ["@app.auth", "@doctrine.orm.entity_manager"]
+
+    app.menu:
+        class: AppBundle\Service\MenuService
+        arguments: ["@app.auth"]

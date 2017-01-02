@@ -22,7 +22,7 @@
         <!-- left part -->
       <ul class="nav navbar-nav">
           {# for structure see NavBarController #}
-          {% for item in navbarItems %}
+          {% for item in navbarItems if item %} {# ignore nulls #}
               {% if item.hot %}
                 <li class="hot">
               {% else %}

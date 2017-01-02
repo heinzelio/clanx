@@ -160,6 +160,28 @@ class EventService
         }
         return $count;
     }
+
+    /**
+     * get all sticky events that are in the
+     * future or the very near past (1 week or so)
+     * @return Event[] Returns an array of event entities.
+     */
+    public function getEventsForMenu()
+    {
+        $oneWeekInterval = new \DateInterval('P7D');
+        $oneWeekInterval->invert=1; // negative interval. one week back.
+        $aWeekAgo = new \DateTime();
+        $aWeekAgo->add($oneWeekInterval);
+        $query = $this->repo->createQueryBuilder('e')
+            ->where('e.sticky = 1 AND e.date > :aWeekAgo AND e.isForAssociationMembers <= :userIsMember')
+            ->setParameters(array(
+                'aWeekAgo' => $aWeekAgo,
+                'userIsMember' => $this->authorization->isAssociationMember()
+            ))
+            ->getQuery();
+
+        return $query->getResult();
+    }
 }
 
 ?>

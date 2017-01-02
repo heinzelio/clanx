@@ -24,79 +24,20 @@ class NavBarController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('AppBundle:Event');
-        // get all sticky events that are in the future or the very near past (1 week or so)
-        $oneWeekInterval = new \DateInterval('P7D');
-        $oneWeekInterval->invert=1; // negative interval. one week back.
-        $aWeekAgo = new \DateTime();
-        $aWeekAgo->add($oneWeekInterval);
-        $query = $repository->createQueryBuilder('e')
-            ->where('e.sticky = 1 AND e.date > :aWeekAgo')
-            ->setParameter('aWeekAgo', $aWeekAgo)
-            ->getQuery();
+        $eventService = $this->get('app.event');
+        $menuService = $this->get('app.menu');
 
-        $stickyEvents = $query->getResult();
-
-        $homeItem = $this->createItem(
-            'Home',
-            'fa fa-home',
-            'dashboard_index');
-
-        $items = array($homeItem);
-        foreach ($stickyEvents as $event) {
-            $stickyItem = $this->createItem(
-                $event->getName(),
-                null,
-                'event_show',
-                'id',
-                $event->getId(),
-                true); // "hot" items are visually emphasized
-            array_push($items,$stickyItem);
+        $items[] = $menuService->getHomeMenu();
+        foreach ($eventService->getEventsForMenu() as $event) {
+            $items[] = $menuService->getEventMenu($event);
         }
-
-        $eventItem = $this->createItem(
-            'Events',
-            'fa fa-calendar',
-            'event_index');
-        array_push($items,$eventItem);
-
-        if($this->isGranted('ROLE_ADMIN')){
-                    $userItem = $this->createItem(
-                        'Users',
-                        'fa fa-users',
-                        'user_index');
-                    array_push($items,$userItem);
-        }
-
-        $infoItem = $this->createItem(
-            'Info',
-            'fa fa-info',
-            'info_index');
-        array_push($items,$infoItem);
+        $items[] = $menuService->getEventIndexMenu();
+        $items[] = $menuService->getUserIndexMenu();
+        $items[] = $menuService->getInfoMenu();
 
         return $this->render('snippets/navbar.html.twig', array(
             'navbarItems' => $items,
         ));
-    }
-
-    private function createItem(
-        $name,
-        $icon,
-        $routename,
-        $argumentName=null,
-        $argumentValue=null,
-        $hot=false)
-    {
-        return array(
-            'text' => $name,
-            'icon' => $icon,
-            'routename' => $routename,
-            'hasArguments' => $argumentName!=null,
-            // later this may be a collection!
-            'arguments' => array($argumentName => $argumentValue ),
-            'hot' => $hot,
-        );
     }
 }
 
