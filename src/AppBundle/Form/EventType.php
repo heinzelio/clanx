@@ -22,7 +22,7 @@ class EventType extends AbstractType
                 'label'=>'Name',
             ))
             ->add('isForAssociationMembers',CheckboxType::class, array(
-                    'label' => 'Für Vereinsmitglieder. Nur Benutzer die Mitglied des Vereins sind können diesen Event sehen.',
+                    'label' => 'Für Vereinsmitglieder. Nur Vereinsmitglieder können diesen Event sehen.',
                     'required' => false,
             ))
             ->add('description',TextareaType::class, array(

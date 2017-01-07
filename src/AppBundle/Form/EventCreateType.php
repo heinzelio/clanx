@@ -20,6 +20,11 @@ class EventCreateType extends EventType
         $builder
             ->add('name',null,array(
                 'label' => 'Name (kurz)',
+                'required' => true,
+            ))
+            ->add('isForAssociationMembers',CheckboxType::class, array(
+                    'label' => 'Für Vereinsmitglieder. Nur Vereinsmitglieder können diesen Event sehen.',
+                    'required' => false,
             ))
             ->add('description',TextareaType::class, array(
                     'label' => 'Beschreibung (Ausführlich)',
@@ -34,6 +39,7 @@ class EventCreateType extends EventType
                 'html5' => false,
                 'attr' => array('class'=>'datepicker regular'),
                 'label' => 'Startdatum',
+                'required' => true,
             ))
             ->add('sticky', CheckboxType::class, array(
                     'label'    => 'Klebt der event in der Titelzeile?',

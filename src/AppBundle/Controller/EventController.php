@@ -60,35 +60,6 @@ class EventController extends Controller
     }
 
     /**
-     * Finds and displays a Event entity.
-     *
-     * @Route("/{id}", name="event_show")
-     * @Method("GET")
-     * @Security("has_role('ROLE_USER')")
-     */
-    public function showAction(Request $request, Event $event)
-    {
-        //AppBundle\Service\EventService
-        $eventSvc = $this->get('app.event');
-        $auth = $this->get('app.auth');
-
-        $authResult = $auth->mayShowEventDetail($event);
-        if(!$authResult[Authorization::VALUE]){
-            $this->get('session')->getFlashBag()->add('danger', $authResult[Authorization::MESSAGE]);
-            return $this->redirectToRoute('event_index');
-        }
-
-        $detailViewModel = $eventSvc->getDetailViewModel($event);
-
-        $detailViewModel['delete_form'] = $this->createDeleteForm($event)
-                                                ->createView();
-        $detailViewModel['enroll_form'] = $this->createEnrollForm($event,$event->getFreeDepartments())
-                                                ->createView();
-
-        return $this->render('event/show.html.twig', $detailViewModel);
-    }
-
-    /**
      * Creates a new Event entity.
      *
      * @Route("/new", name="event_new")
@@ -135,6 +106,39 @@ class EventController extends Controller
             'event' => $event,
             'form' => $form->createView(),
         ));
+    }
+
+    /**
+     * Finds and displays a Event entity.
+     *
+     * @Route("/{id}", name="event_show")
+     * @Method("GET")
+     * @Security("has_role('ROLE_USER')")
+     */
+    // Place this method at the end. Because the route is just /event/id.
+    // It must come after routes like /event/new or event/whaterever.
+    // Otherwise when the client calls /event/new, symfony tries to open
+    // an event with the id "new" (what a silly little framework...)
+    public function showAction(Request $request, Event $event)
+    {
+        //AppBundle\Service\EventService
+        $eventSvc = $this->get('app.event');
+        $auth = $this->get('app.auth');
+
+        $authResult = $auth->mayShowEventDetail($event);
+        if(!$authResult[Authorization::VALUE]){
+            $this->get('session')->getFlashBag()->add('danger', $authResult[Authorization::MESSAGE]);
+            return $this->redirectToRoute('event_index');
+        }
+
+        $detailViewModel = $eventSvc->getDetailViewModel($event);
+
+        $detailViewModel['delete_form'] = $this->createDeleteForm($event)
+                                                ->createView();
+        $detailViewModel['enroll_form'] = $this->createEnrollForm($event,$event->getFreeDepartments())
+                                                ->createView();
+
+        return $this->render('event/show.html.twig', $detailViewModel);
     }
 
     /**
