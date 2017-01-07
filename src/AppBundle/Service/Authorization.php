@@ -91,22 +91,26 @@ class Authorization
      * and returns an array if so or not and a message why.
      * @param  Event  $event The event.
      * @return array Array of two fields, stating if the event may be
-     * deleted or not and why. Use Authorization::VALUE and
+     * shown or not and why. Use Authorization::VALUE and
      * Authorization::MESSAGE to access the fields of the array
      */
     public function mayShowEventDetail(Event $event)
     {
         $returnValue = array();
-        if ($event->getIsForAssociationMembers()
-            && !$this->user->getIsAssociationMember())
+
+        if ($this->maySeeAllEvents()) {
+            $returnValue[Authorization::VALUE] = true;
+            $returnValue[Authorization::MESSAGE] = 'Der Benutzer darf alle Events sehen.';
+        }
+        else if ($event->getIsForAssociationMembers() && (!$this->isAssociationMember()))
         {
             $returnValue[Authorization::VALUE] = false;
-            $returnValue[Authorization::MESSAGE] = 'Dieser Event ist nur für Vereinsmitglieder sichtbar.';
+            $returnValue[Authorization::MESSAGE] = 'Dieser Event ist nur für Vereinsmitglieder sichtbar, der Benutzer ist aber nicht Vereinsmitglied.';
         }
         else
         {
             $returnValue[Authorization::VALUE] = true;
-            $returnValue[Authorization::MESSAGE] = '';
+            $returnValue[Authorization::MESSAGE] = 'Der Benutzer darf diesen Event sehen.';
         }
         return $returnValue;
     }
@@ -167,6 +171,11 @@ class Authorization
     public function isAssociationMember()
     {
         return $this->user->getIsAssociationMember();
+    }
+
+    public function maySeeAllEvents()
+    {
+        return $this->isGranted('ROLE_ADMIN');
     }
 
     public function maySeeUserPage()

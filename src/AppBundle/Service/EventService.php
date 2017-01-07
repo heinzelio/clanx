@@ -2,6 +2,7 @@
 namespace AppBundle\Service;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\QueryBuilder;
 use AppBundle\Service\Authorization;
 use AppBundle\Entity\Event;
 
@@ -51,15 +52,15 @@ class EventService
      */
     public function getUpcoming()
     {
-        // user.isMember = 1 --> may see event.forMembers = 0/1
-        // user.isMember = 0 --> may only see event.forMembers = 0
-        // hence event.forMembers <= user.isMember
-        $query = $this->repo->createQueryBuilder('e')
-                ->where('e.date >= :today AND e.isForAssociationMembers <= :userIsMember')
-                ->setParameters(array(
-                    'today' => new \DateTime("now"),
-                    'userIsMember' => $this->authorization->isAssociationMember()
-                ))
+        $qb = $this->repo->createQueryBuilder('e');
+
+        $assocExpression = $this->getAssociationExpression($qb, 'e');
+        $dateExpression = $qb->expr()->gte('e.date', ':today');
+        $qb->setParameter('today',new \DateTime("now"));
+
+        $query = $qb
+                ->where($dateExpression)
+                ->andWhere($assocExpression)
                 ->orderBy('e.date', 'ASC')
                 ->getQuery();
 
@@ -73,17 +74,18 @@ class EventService
      */
     public function getPassed()
     {
-        // user.isMember = 1 --> may see event.forMembers = 0/1
-        // user.isMember = 0 --> may only see event.forMembers = 0
-        // hence event.forMembers <= user.isMember
-        $query = $this->repo->createQueryBuilder('e')
-            ->where('e.date < :today AND e.isForAssociationMembers <= :userIsMember')
-            ->setParameters(array(
-                'today' => new \DateTime("now"),
-                'userIsMember' => $this->authorization->isAssociationMember()
-            ))
-            ->orderBy('e.date', 'DESC')
-            ->getQuery();
+        $qb = $this->repo->createQueryBuilder('e');
+
+        $assocExpression = $this->getAssociationExpression($qb, 'e');
+        $dateExpression = $qb->expr()->lt('e.date', ':today');
+        $qb->setParameter('today',new \DateTime("now"));
+
+        $query = $qb
+                ->where($dateExpression)
+                ->andWhere($assocExpression)
+                ->orderBy('e.date', 'DESC')
+                ->getQuery();
+
         return $query->getResult();
     }
 
@@ -172,16 +174,53 @@ class EventService
         $oneWeekInterval->invert=1; // negative interval. one week back.
         $aWeekAgo = new \DateTime();
         $aWeekAgo->add($oneWeekInterval);
-        $query = $this->repo->createQueryBuilder('e')
-            ->where('e.sticky = 1 AND e.date > :aWeekAgo AND e.isForAssociationMembers <= :userIsMember')
-            ->setParameters(array(
-                'aWeekAgo' => $aWeekAgo,
-                'userIsMember' => $this->authorization->isAssociationMember()
-            ))
+
+        $qb = $this->repo->createQueryBuilder('e');
+        $stickyExpr = $qb->expr()->eq('e.sticky',1);
+
+        $qb->setParameter(':aWeekAgo',$aWeekAgo);
+        $aWeekAgoExpr = $qb->expr()->gt('e.date',':aWeekAgo');
+
+        $associationExpression = $this->getAssociationExpression($qb, 'e');
+
+        $query = $qb
+            ->where($stickyExpr)
+            ->andWhere($aWeekAgoExpr)
+            ->andWhere($associationExpression)
+            ->orderBy('e.date', 'ASC')
             ->getQuery();
 
         return $query->getResult();
     }
+
+    /**
+     * returns a query expression to filter the assiciationMember field.
+     * When the user may see all events, the expression is simply '1=1',
+     * which evaluates to 'true' in the query (suitable for AND, but not for OR).
+     * @param  QueryBuilder $qb The QueryBuilder object.
+     * @param string $alias The alias for the event table.
+     * @return Doctrine\ORM\Query\Expr Returns an expression object.
+     */
+    private function getAssociationExpression(QueryBuilder $qb, $alias)
+    {
+        $p = 0;
+        if ($this->authorization->isAssociationMember()) {
+            $p = 1;
+        }
+
+        if ($this->authorization->maySeeAllEvents()) {
+            return $qb->expr()->eq(1,1);
+        } else {
+            // user.isMember = 1 --> may see event.forMembers = 0/1
+            // user.isMember = 0 --> may only see event.forMembers = 0
+            // hence event.forMembers <= user.isMember
+            //event.isForAssociationMembers <= :userIsMember'
+            $qb->setParameter(':userIsMember', $p);
+            return $qb->expr()->lte($alias . '.isForAssociationMembers',':userIsMember');
+        }
+
+    }
+
 }
 
 ?>
