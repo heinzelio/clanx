@@ -94,7 +94,7 @@ class DashboardController extends Controller
         $session->set(Mail::SESSION_KEY, $mailData);
 
         $backLink = new RedirectInfo();
-        $backLink->setRouteName('info_index')
+        $backLink->setRouteName('dashboard_index')
               ->setArguments(null)
               ;
 
