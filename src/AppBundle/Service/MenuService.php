@@ -11,10 +11,6 @@ class MenuService
      * @var AppBundle\Service\Authorization
      */
     protected $authorization;
-    /**
-     * The repository for the Event entity
-     * @var \Doctrine\ORM\EntityRepository
-     */
 
     public function __construct(
         Authorization $auth

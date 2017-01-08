@@ -111,6 +111,7 @@ class EventService
         $mayEnroll = (!$commitment) && (!$event->getLocked());
 
         $mayMail = $this->authorization->maySendEventMassMail();
+        $mayInvite = $this->authorization->maySendInvitation($event);
         $mayEdit = $this->authorization->mayEditEvent();
         $deleteAuth = $this->authorization->mayDelete($event);
 
@@ -122,6 +123,7 @@ class EventService
             'enrolledCount' => $enrolledCount,
             'commitment' => $commitment,
             'mayMail' => $mayMail,
+            'mayInvite' => $mayInvite,
             'mayEdit' => $mayEdit,
             'mayDelete' => $deleteAuth[Authorization::VALUE],
             'mayDeleteMessage' => $deleteAuth[Authorization::MESSAGE],

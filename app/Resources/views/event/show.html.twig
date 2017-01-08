@@ -15,6 +15,9 @@
                     <p>
                         Der Event
                         <strong>{{ event.name }}</strong>
+                        {% if event.isForAssociationMembers %}
+                            (nur für Vereinsmitglieder)
+                        {% endif %}
                         findet am
                         {% if event.date %}{{ event.date|date('d. M. Y') }}{% endif %}
                         statt.</p>
@@ -28,10 +31,7 @@
                         <p>Du bist Ressortleiter:
                             {% for dpt in myDepartmentsAsChief %}
                                 <br/>
-                                <a href="{{ path('department_show',{'id':dpt.Id}) }}"
-                                    class="btn btn-default"
-                                    data-toggle="tooltip"
-                                    title="Zeige Details des Ressorts {{dpt.name}}.">
+                                <a href="{{ path('department_show',{'id':dpt.Id}) }}" class="btn btn-default" data-toggle="tooltip" title="Zeige Details des Ressorts {{dpt.name}}.">
                                     <span class="fa fa-eye"></span>
                                     {{ dpt.name }}
                                 </a>
@@ -43,10 +43,7 @@
                         <p>Du bist stellvertretender Ressortleiter:
                             {% for dpt in myDepartmentsAsDeputy %}
                                 <br/>
-                                <a href="{{ path('department_show',{'id':dpt.Id}) }}"
-                                    class="btn btn-default"
-                                    data-toggle="tooltip"
-                                    title="Zeige Details des Ressorts {{dpt.name}}">
+                                <a href="{{ path('department_show',{'id':dpt.Id}) }}" class="btn btn-default" data-toggle="tooltip" title="Zeige Details des Ressorts {{dpt.name}}">
                                     <span class="fa fa-eye"></span>
                                     {{ dpt.name }}
                                 </a>
@@ -66,6 +63,18 @@
                             <span class="fa fa-envelope-o"></span>
                             Email schreiben
                         </a>
+                        <a class="btn btn-default"
+                            href="{{ path ('event_invite', {'id': event.id})}}"
+                            data-toggle="tooltip"
+                            {% if event.isForAssociationMembers %}
+                                title="Lade alle Vereinsmitglieder ein."
+                            {% else %}
+                                title="Lade alle registrierten Benutzer ein."
+                            {% endif %}
+                            >
+                            <span class="fa fa-envelope-o"></span>
+                            Einladen
+                        </a>
                     {% endif %}
 
                     {% if mayEdit %}
@@ -83,11 +92,7 @@
                     <!-- {{mayDeleteMessage}} -->
 
                     {% if mayDownload %}
-                        <a class="btn btn-default"
-                            href="{{ path('event_download', {'id': event.id}) }}"
-                            data-toggle="tooltip"
-                            title="Download Liste aller Hölfer von diesem Event."
-                            >
+                        <a class="btn btn-default" href="{{ path('event_download', {'id': event.id}) }}" data-toggle="tooltip" title="Download Liste aller Hölfer von diesem Event.">
                             <span class="fa fa-download"></span>
                             Download
                         </a>
@@ -132,10 +137,7 @@
                     <div class="panel-body">
                         <p>
                             Dein Ressort:
-                            <a class="btn btn-default"
-                                href="{{ path('department_show',{'id':commitment.department.id}) }}"
-                                data-toggle="tooltip"
-                                title="Zeige Details des Ressorts {{commitment.department.name}}">
+                            <a class="btn btn-default" href="{{ path('department_show',{'id':commitment.department.id}) }}" data-toggle="tooltip" title="Zeige Details des Ressorts {{commitment.department.name}}">
                                 <span class="fa fa-eye"></span>
                                 {{commitment.department.name}}
                             </a>
@@ -194,18 +196,16 @@
 
                     </div>
                     <div class="panel-footer">
-                        Bespreche Änderungen von deinem Einsatz direkt
-                        mit deinem Ressortleiter. Er wird die Daten dann
-                        für dich anpassen.
+                        Bespreche Änderungen von deinem Einsatz direkt mit deinem Ressortleiter. Er wird die Daten dann für dich anpassen.
                         <!-- {# if event.locked #}
                             <a class="btn btn-default" disabled="disabled"> -->
-                                <!-- tooltips gönd nöd uf disabledem Button :(
+                        <!-- tooltips gönd nöd uf disabledem Button :(
                 data-toggle="tooltip"
                 title="Ändern oder löschen ist nicht mehr möglich. Deine Teilnahme
                 ist definitiv. (Falls ein Problem besteht, nimm bitte mit deinem
                 Ressortleiter Kontakt auf.)"
             -->
-                                <!-- <span class="fa fa-lock"></span>
+                        <!-- <span class="fa fa-lock"></span>
                                 Bearbeiten nicht mehr möglich
                             </a>
                         {# else #}
@@ -214,11 +214,15 @@
                                 Bearbeiten
                             </a>
                         {# endif #} -->
-                    </div><!-- footer -->
-                </div><!--panel-->
+                    </div>
+                    <!-- footer -->
+                </div>
+                <!--panel-->
             {% endif %}
-        </div><!-- col -->
-    </div><!-- row -->
+        </div>
+        <!-- col -->
+    </div>
+    <!-- row -->
 {% endblock %}
 
 {% block javascripts %}

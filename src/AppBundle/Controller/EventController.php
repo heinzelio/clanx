@@ -382,7 +382,62 @@ class EventController extends Controller
         }
     }
 
+    /**
+     * send an invitation mail to all users who may enroll on the given event
+     * @param  Request $request The request.
+     * @param  Event   $event   The event.
+     * @return view           The view.
+     *
+     * @Route("/{id}/invite", name="event_invite")
+     * @Method({"GET","POST"})
+     */
+    public function invite(Request $request, Event $event)
+    {
+        $session = $request->getSession();
+        $auth = $this->get('app.auth');
+        $mayInvite = $auth->maySendInvitation($event);
 
+        if (!$mayInvite) {
+            $session->getFlashBag()->add('warning', 'Du darfst keine Einladungen versenden.');
+            return $this->redirectToRoute('event_show',array('id'=>$event->getId(),));
+        }
+
+        $mailData = new Mail();
+        $eventUrl = $this->generateUrl('event_show',
+                                 array('id' => $event->getId()),
+                                 UrlGeneratorInterface::ABSOLUTE_URL
+                             );
+
+        $mailData->setSubject($event->getName() . " - Einladung zum mitmachen!")
+            ->setSender($this->getUser()->getEmail())
+            ->setText('Link: '.$eventUrl)
+            ;
+
+        $userService = $this->get('app.user');
+        if ($event->getIsForAssociationMembers()) {
+            $users = $userService->getAllAssociationMembers();
+        } else {
+            $users = $userService->getAllUsers();
+        }
+
+        foreach ($users as $usr) {
+            $mail = $usr->getEmail();
+            $name = $usr->getForename().' '.$usr->getSurname();
+            $mailData->addBcc($mail, $name);
+        }
+
+        $session->set(Mail::SESSION_KEY, $mailData);
+
+        $backLink = new RedirectInfo();
+        $backLink->setRouteName('event_show')
+            ->setArguments(array('id'=>$event->getId()))
+            ;
+
+        $session->set(RedirectInfo::SESSION_KEY, $backLink);
+
+        return $this->redirectToRoute('mail_edit');
+
+    }
 
     /**
      * Finds and displays a Event entity.

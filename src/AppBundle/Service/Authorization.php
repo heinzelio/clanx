@@ -182,6 +182,20 @@ class Authorization
     {
         return $this->isGranted('ROLE_ADMIN');
     }
+
+    /**
+     * Checks if the logged in user may send invitations for the given event.
+     * @param  AppBundle\Entity\Event $event The event.
+     * @return boolean Returns true, if user may send invitation mails.
+     */
+    public function maySendInvitation($event)
+    {
+        if($this->isGranted('ROLE_ADMIN'))
+        {
+            return true;
+        }
+        return false;
+    }
 }
 
 ?>
