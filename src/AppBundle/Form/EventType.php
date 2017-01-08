@@ -21,6 +21,10 @@ class EventType extends AbstractType
             ->add('name',null, array(
                 'label'=>'Name',
             ))
+            ->add('isForAssociationMembers',CheckboxType::class, array(
+                    'label' => 'Für Vereinsmitglieder. Nur Vereinsmitglieder können diesen Event sehen.',
+                    'required' => false,
+            ))
             ->add('description',TextareaType::class, array(
                     'label' => 'Beschreibung',
                     'attr' => array(

@@ -23,6 +23,10 @@ class UserType extends AbstractType
             ->add('surname', null, array(
                 'label'=>'Nachname'
             ))
+            ->add('isAssociationMember', CheckboxType::class, array(
+                    'label'    => 'Ist Vereinsmitglied?',
+                    'required' => false,
+                ))
             ->add('gender', GenderType::class, array(
                 'label'=>'Geschlecht'
             ))

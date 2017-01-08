@@ -15,3 +15,4 @@
 /vendor/
 /web/bundles/
 /sql/out.tab
+/sql/run.bat

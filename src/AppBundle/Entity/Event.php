@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Event
@@ -16,6 +17,7 @@ class Event
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=200, nullable=false)
+     * @Assert\NotBlank
      */
     private $name;
 
@@ -23,6 +25,7 @@ class Event
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="date", nullable=false)
+     * @Assert\NotBlank
      */
     private $date;
 
@@ -55,10 +58,15 @@ class Event
 
     /**
      * @var boolean
-    * @ORM\Column(name="locked", type="boolean", nullable=false)
-    */
+     * @ORM\Column(name="locked", type="boolean", nullable=false)
+     */
     private $locked = false;
 
+    /**
+     * @var boolean
+     * @ORM\Column(name="is_for_association_members", type="boolean", nullable=false)
+     */
+    private $isForAssociationMembers = false;
 
     /**
      * Set name
@@ -246,6 +254,27 @@ class Event
     {
         return $this->locked;
     }
+
+    /**
+     * define if the event is for assoc member only
+     * @param boolean $isForMembers
+     * @return Event
+     */
+    public function setIsForAssociationMembers($isForMembers)
+    {
+        if(!$isForMembers){
+            $this->isForAssociationMembers = false;
+        }else{
+            $this->isForAssociationMembers = $isForMembers;
+        }
+        return $this;
+    }
+
+    /**
+     * Is the event for association members only?
+     * @return boolean
+     */
+    public function getIsForAssociationMembers(){return $this->isForAssociationMembers;}
 
     /**
      * Is the event in the future?

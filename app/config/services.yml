@@ -22,3 +22,23 @@ services:
     app.auth:
         class: AppBundle\Service\Authorization
         arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@security.authorization_checker"]
+
+    app.event:
+        class: AppBundle\Service\EventService
+        arguments: ["@app.auth", "@doctrine.orm.entity_manager", "@app.department", "@app.commitment"]
+
+    app.department:
+        class: AppBundle\Service\DepartmentService
+        arguments: ["@app.auth", "@doctrine.orm.entity_manager"]
+
+    app.commitment:
+        class: AppBundle\Service\CommitmentService
+        arguments: ["@app.auth", "@doctrine.orm.entity_manager"]
+
+    app.menu:
+        class: AppBundle\Service\MenuService
+        arguments: ["@app.auth"]
+
+    app.user:
+        class: AppBundle\Service\UserService
+        arguments: ["@doctrine.orm.entity_manager"]

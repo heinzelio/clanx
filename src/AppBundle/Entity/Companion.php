@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="companion", indexes={@ORM\Index(name="department_key", columns={"department_id"})})
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="AppBundle\Entity\CompanionRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CompanionRepository")
  */
 class Companion
 {

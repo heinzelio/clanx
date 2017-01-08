@@ -1,12 +1,14 @@
 <?php
 
-// src/AppBundle/Entity/CompanionRepository.php
-namespace AppBundle\Entity;
+// src/AppBundle/Repository/CompanionRepository.php
+namespace AppBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
 class CompanionRepository extends EntityRepository
 {
+    // not used anymore...
+    // still here for documentation purposes
     public function countFor($event)
     {
         //

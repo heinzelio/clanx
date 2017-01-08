@@ -26,6 +26,7 @@ use AppBundle\Entity\Mail;
 use AppBundle\Form\EventCreateType;
 use AppBundle\Form\ShirtSizeType;
 use AppBundle\Service\Authorization;
+use AppBundle\Service\EventService;
 
 /**
  * Event controller.
@@ -43,24 +44,14 @@ class EventController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
+        //AppBundle\Service\EventService
+        $eventSvc = $this->get('app.event');
 
-        $repository = $em->getRepository('AppBundle:Event');
+        // should be arrays of Event objects,
+        // ordered by date
+        $upcoming = $eventSvc->getUpcoming();
+        $passed = $eventSvc->getPassed();
 
-        $queryUpcoming = $repository->createQueryBuilder('e')
-            ->where('e.date >= :today')
-            ->setParameter('today', new \DateTime("now"))
-            ->orderBy('e.date', 'ASC')
-            ->getQuery();
-
-        $queryPassed = $repository->createQueryBuilder('e')
-            ->where('e.date < :today')
-            ->setParameter('today', new \DateTime("now"))
-            ->orderBy('e.date', 'DESC')
-            ->getQuery();
-
-        $upcoming = $queryUpcoming->getResult();
-        $passed = $queryPassed->getResult();
 
         return $this->render('event/index.html.twig', array(
             'upcomingEvents' => $upcoming,
@@ -124,64 +115,30 @@ class EventController extends Controller
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
+    // Place this method at the end. Because the route is just /event/id.
+    // It must come after routes like /event/new or event/whaterever.
+    // Otherwise when the client calls /event/new, symfony tries to open
+    // an event with the id "new" (what a silly little framework...)
     public function showAction(Request $request, Event $event)
     {
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->getUser();
-
-        $depRep = $em->getRepository('AppBundle:Department');
-        // find out of which departments i am a chief.
-        $myDepartmentsAsChief = $depRep->findBy(
-            array('chiefUser' => $user, 'event' => $event)
-        );
-        $myDepartmentsAsDeputy = $depRep->findBy(
-            array('deputyUser' => $user, 'event' => $event)
-        );
-
-        $enrollForm = $this->createEnrollForm($event,$event->getFreeDepartments());
-        $deleteForm = $this->createDeleteForm($event);
-
-        // todo: find the values for these:
-        // maybe consider the use of "voters"
-        // https://symfony.com/doc/current/cookbook/security/voters.html#how-to-use-the-voter-in-a-controller
-
-        $commitments = $em->getRepository('AppBundle:Commitment');
-        $companions = $em->getRepository('AppBundle:Companion');
-
-        $enrolledCount = $commitments->countFor($event)+$companions->countFor($event);
-
-        $commitment = $commitments->findOneBy(array(
-            'user' => $user,
-            'event' => $event,
-        ));
-
-        $mayEnroll = (!$commitment) && (!$event->getLocked());
-
-        $mayMail = $this->isGranted('ROLE_ADMIN');
-
-        $mayEdit = $this->isGranted('ROLE_ADMIN');
-
+        //AppBundle\Service\EventService
+        $eventSvc = $this->get('app.event');
         $auth = $this->get('app.auth');
-        $deleteAuth = $auth->mayDelete($event);
 
-        $mayDelete = $this->isGranted('ROLE_SUPER_ADMIN') && $event->mayDelete();
-        $mayDownload = $this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_OK');
+        $authResult = $auth->mayShowEventDetail($event);
+        if(!$authResult[Authorization::VALUE]){
+            $this->get('session')->getFlashBag()->add('danger', $authResult[Authorization::MESSAGE]);
+            return $this->redirectToRoute('event_index');
+        }
 
-        return $this->render('event/show.html.twig', array(
-            'event' => $event,
-            'delete_form' => $deleteForm->createView(),
-            'enroll_form' => $enrollForm->createView(),
-            'mayEnroll' => $mayEnroll,
-            'enrolledCount' => $enrolledCount,
-            'commitment' => $commitment,
-            'mayMail' => $mayMail,
-            'mayEdit' => $mayEdit,
-            'mayDelete' => $deleteAuth[Authorization::VALUE],
-            'mayDeleteMessage' => $deleteAuth[Authorization::MESSAGE],
-            'mayDownload' => $mayDownload,
-            'myDepartmentsAsChief' => $myDepartmentsAsChief,
-            'myDepartmentsAsDeputy' => $myDepartmentsAsDeputy,
-        ));
+        $detailViewModel = $eventSvc->getDetailViewModel($event);
+
+        $detailViewModel['delete_form'] = $this->createDeleteForm($event)
+                                                ->createView();
+        $detailViewModel['enroll_form'] = $this->createEnrollForm($event,$event->getFreeDepartments())
+                                                ->createView();
+
+        return $this->render('event/show.html.twig', $detailViewModel);
     }
 
     /**
@@ -425,7 +382,62 @@ class EventController extends Controller
         }
     }
 
+    /**
+     * send an invitation mail to all users who may enroll on the given event
+     * @param  Request $request The request.
+     * @param  Event   $event   The event.
+     * @return view           The view.
+     *
+     * @Route("/{id}/invite", name="event_invite")
+     * @Method({"GET","POST"})
+     */
+    public function invite(Request $request, Event $event)
+    {
+        $session = $request->getSession();
+        $auth = $this->get('app.auth');
+        $mayInvite = $auth->maySendInvitation($event);
 
+        if (!$mayInvite) {
+            $session->getFlashBag()->add('warning', 'Du darfst keine Einladungen versenden.');
+            return $this->redirectToRoute('event_show',array('id'=>$event->getId(),));
+        }
+
+        $mailData = new Mail();
+        $eventUrl = $this->generateUrl('event_show',
+                                 array('id' => $event->getId()),
+                                 UrlGeneratorInterface::ABSOLUTE_URL
+                             );
+
+        $mailData->setSubject($event->getName() . " - Einladung zum mitmachen!")
+            ->setSender($this->getUser()->getEmail())
+            ->setText('Link: '.$eventUrl)
+            ;
+
+        $userService = $this->get('app.user');
+        if ($event->getIsForAssociationMembers()) {
+            $users = $userService->getAllAssociationMembers();
+        } else {
+            $users = $userService->getAllUsers();
+        }
+
+        foreach ($users as $usr) {
+            $mail = $usr->getEmail();
+            $name = $usr->getForename().' '.$usr->getSurname();
+            $mailData->addBcc($mail, $name);
+        }
+
+        $session->set(Mail::SESSION_KEY, $mailData);
+
+        $backLink = new RedirectInfo();
+        $backLink->setRouteName('event_show')
+            ->setArguments(array('id'=>$event->getId()))
+            ;
+
+        $session->set(RedirectInfo::SESSION_KEY, $backLink);
+
+        return $this->redirectToRoute('mail_edit');
+
+    }
 
     /**
      * Finds and displays a Event entity.
