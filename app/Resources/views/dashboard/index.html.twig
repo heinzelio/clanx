@@ -11,14 +11,19 @@
         </div>
     </div> <!-- row for jumbotron -->
     <div class="row">
+        {% if ShowAssociationMembershipRequest %}
+            <div class="col-md-6">
+                {% include "dashboard/panel_association_membership_request.html.twig" %}
+            </div>
+        {% endif %}
+        {% if ShowProfileUpdate %}
+            <div class="col-md-6">
+                {% include "dashboard/panel_update_profile.html.twig" %}
+            </div>
+        {% endif %}
         <div class="col-md-6">
             {% include "dashboard/panel_application_note.html.twig" %}
         </div>
-        {% if ShowProfileUpdate %}
-        <div class="col-md-6">
-            {% include "dashboard/panel_update_profile.html.twig" %}
-        </div>
-        {% endif %}
         <div class="col-md-6">
             {% include "dashboard/panel_report_bug.html.twig" %}
         </div>
