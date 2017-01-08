@@ -1,6 +1,7 @@
 -- execute this if version is <11 !
 ALTER TABLE user ADD is_association_member tinyint(1) NOT NULL DEFAULT 0;
-ALTER TABLE event ADD is_for_association_members tinyint(1) NOT NULL DEFAULT 0;
+-- event is a keyword on mysql.
+ALTER TABLE `event` ADD is_for_association_members tinyint(1) NOT NULL DEFAULT 0;
 
 UPDATE info set version = 11;
 
