@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use AppBundle\Entity\RedirectInfo;
+use AppBundle\Entity\Mail;
 
 /**
  * Dashboard controller.
@@ -51,6 +53,7 @@ class DashboardController extends Controller
         }
 
         return $this->render('dashboard/index.html.twig', array(
+            'ShowAssociationMembershipRequest' => !$user->getIsAssociationMember(),
             'ShowProfileUpdate' => $missingProfileData!=null||$missingProfileData!="",
             'MissingProfilData' => $missingProfileData,
             'username' => $user->getUsername(),
@@ -62,6 +65,42 @@ class DashboardController extends Controller
             return $firstPart.$delimiter.$secondPart;
         }
         return $secondPart;
+    }
+    /**
+    * @Route("/becomeMember", name="send_membership_request")
+    * @Method("GET")
+    * @Security("has_role('ROLE_USER')")
+    */
+    public function sendMembershipRequest(Request $request)
+    {
+        $session = $request->getSession();
+
+        $mailData = new Mail();
+        $user =$this->getUser();
+        $text = "Vorname: ". $user->getForename()
+            . "\r\nNachname: ". $user->getSurname()
+            . "\r\nStrasse: ".$user->getStreet()
+            . "\r\nOrt: ".$user->getZip()." ".$user->getCity()
+            . "\r\nEMail: ".$user->getEmail()
+            . "\r\n"
+            . "\r\nGruss: ".(string)$user;
+
+        $mailData->setSubject("Ich möchte Vereinsmitglied werden!")
+             ->setSender($this->getUser()->getEmail())
+             ->setRecipient('verein@clanx.ch')
+             ->setText($text)
+             ;
+
+        $session->set(Mail::SESSION_KEY, $mailData);
+
+        $backLink = new RedirectInfo();
+        $backLink->setRouteName('info_index')
+              ->setArguments(null)
+              ;
+
+        $session->set(RedirectInfo::SESSION_KEY, $backLink);
+
+        return $this->redirectToRoute('mail_edit');
     }
 }
 
