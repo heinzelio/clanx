@@ -99,6 +99,12 @@ class User extends BaseUser
      */
     private $isAssociationMember = false;
 
+
+    /**
+     * @ORM\OneToMany(targetEntity="Commitment", mappedBy="user")
+     */
+    private $commitments;
+
     /**
      * Set forename
      * @param string $forename
@@ -383,6 +389,16 @@ class User extends BaseUser
             return false;
         }
         return $this->id==$department->getDeputyUser()->getId();
+    }
+
+    /**
+     * Get all commitments of this user
+     *
+     * @return array
+     */
+    public function getCommitments()
+    {
+        return $this->commitments->toArray();
     }
 
     /**
