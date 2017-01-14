@@ -113,6 +113,12 @@
         </div>
         <!-- col -->
         <div class="col-md-6">
+
+            {{
+                render(controller('AppBundle:EventCommitment:index',
+                    { 'id': event.id }))
+            }}
+
             {% if mayEnroll %}
                 <div class="panel panel-danger">
                     <div class="panel-heading">Jetzt als Hölfer eintragen</div>
