@@ -196,6 +196,25 @@ class Authorization
         }
         return false;
     }
+
+    /**
+     * Checks if the logged in user may enroll to the given event.
+     * @param  Event  $event The event.
+     * @return boolean        Returns true, if the user may enroll to the event
+     */
+    public function mayEnroll(Event $event)
+    {
+        if ($event->getIsForAssociationMembers() && !$this->user->getIsAssociationMember()) {
+            return false;
+        }
+        $commitments = $this->user->getCommitments();
+        foreach ($commitments as $commitment) {
+            if ($commitment->getEvent()->getId() == $event->getId()) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
 
 ?>
