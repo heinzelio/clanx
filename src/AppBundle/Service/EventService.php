@@ -5,6 +5,10 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use AppBundle\Service\Authorization;
 use AppBundle\Entity\Event;
+use AppBundle\ViewModel\Commitment\CommitmentViewModel;
+use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
+use AppBundle\ViewModel\Commitment\TextQuestionViewModel;
+use AppBundle\ViewModel\Commitment\SelectionQuestionViewModel;
 
 class EventService
 {
@@ -193,6 +197,29 @@ class EventService
             ->getQuery();
 
         return $query->getResult();
+    }
+
+    /**
+     * @param  Event  $event
+     * @return CommitmentViewModel
+     */
+    public function getCommitmentFormViewModel(Event $event)
+    {
+        // TODO: Make this real data.
+        $q1 = new YesNoQuestionViewModel(5);
+        $q1->setText('Wotsch es Schlagzueg?')->setHint('Wo n mais macht?');
+        $q2 = new YesNoQuestionViewModel(7);
+        $q2->setText('Und e Gitarre?');
+        $q3 = new TextQuestionViewModel(42);
+        $q3->setText('Wa wotsch?');
+        $q4 = new SelectionQuestionViewModel(1);
+        $q4->setText('Wa för e Tischi wotsch?');
+        $q4->addChoice('Mann, L')->addChoice('Frau, L')->addChoice('Mann, S')->addChoice('Frau, S');
+
+        $commitmentVM = new CommitmentViewModel();
+        $commitmentVM->addQuestion($q3)->addQuestion($q1)->addQuestion($q2)->addQuestion($q4);
+
+        return $commitmentVM->setDepartments($event->getFreeDepartments()); // TODO: dont make this on the entity. get it from a service or here.
     }
 
     /**

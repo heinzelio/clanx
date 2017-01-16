@@ -8,5 +8,29 @@
         <p>
             Hier steht alles für die Anmeldung.
         </p>
+        <p>
+            {# find details of this form in AppBundle\Form\Commitment\CommitmentType #}
+            {{ form_start(enroll_form, {
+                'name': 'enroll_form',
+                'action': path('event_commitment_show',{'id': event_id}),
+                }) }}
+                {{ form_errors(enroll_form) }}
+
+
+                {{ form_widget(enroll_form) }}
+
+            {{ form_end(enroll_form) }}
+
+        </p>
+    </div>
+    <div class="panel-footer">
+            <a class="btn btn-primary"
+                onclick="formSubmit(enroll_form,this);"
+                data-toggle="tooltip"
+                title="{{save_tooltip}}">
+                <span class="fa fa-floppy-o"></span>
+                {{btn_save_text}}
+            </a>
+
     </div>
 </div> <!--panel-->
