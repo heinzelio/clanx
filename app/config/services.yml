@@ -25,7 +25,7 @@ services:
 
     app.event:
         class: AppBundle\Service\EventService
-        arguments: ["@app.auth", "@doctrine.orm.entity_manager", "@app.department", "@app.commitment"]
+        arguments: ["@doctrine.orm.entity_manager", "@app.auth", "@app.department", "@app.commitment"]
 
     app.department:
         class: AppBundle\Service\DepartmentService

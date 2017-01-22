@@ -3,6 +3,7 @@ namespace AppBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\Translation\TranslatorInterface;
 use AppBundle\Service\Authorization;
 use AppBundle\Entity\Event;
 use AppBundle\ViewModel\Commitment\CommitmentViewModel;
@@ -35,14 +36,14 @@ class EventService
     protected $commitmentService;
 
     public function __construct(
-        Authorization $auth,
         EntityManager $em,
+        Authorization $auth,
         DepartmentService $deptService,
         CommitmentService $cmmtService
     )
     {
-        $this->authorization = $auth;
         $this->entityManager = $em;
+        $this->authorization = $auth;
         $this->repo = $em->getRepository('AppBundle:Event');
         $this->departmentService = $deptService;
         $this->commitmentService = $cmmtService;

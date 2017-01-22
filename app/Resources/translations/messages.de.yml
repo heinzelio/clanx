@@ -1,0 +1,12 @@
+
+# PLACEHOLDERS : USE IT LIKE this
+# label.hello_name: Hello %name%
+# IN CODE:
+# $translated = $translator->trans('Hello %name%', array('%name%' => $name));
+
+
+'btn.save': Speichern
+'btn.cancel': Abbrechen
+
+'tip.save_and_return': Speichert "%entity%" und kehrt zurück zu "%return%"
+'tip.cancel_and_return': Verwirft Änderungen an "%entity%" und kehrt zurück zu "%return%"

@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Translation\Translator;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -35,12 +36,15 @@ class EventCommitmentController extends Controller
     public function showAction(Request $request, Event $event)
     {
         $authService = $this->get('app.auth');
+        $trans = $this->get('translator');
+        $trans->setLocale('de'); // TODO: use real localization here.
+
         if(!$authService->mayEnroll($event)){
             return $this->render('event/may_not_enroll.html.twig');
         }
 
         $eventService = $this->get('app.event');
-        $formVM = $eventService->getCommitmentFormViewModel($event);
+        $formVM = $eventService->getCommitmentFormViewModel($event); //CommitmentViewModel
 
         $enrollForm = $this->getEnrollForm($formVM);
 
@@ -57,8 +61,6 @@ class EventCommitmentController extends Controller
 
         return $this->render('event/enroll.html.twig', array(
             'enroll_form' => $enrollForm->createView(),
-            'save_tooltip' => 'save and send notification. or not. who knows.',
-            'btn_save_text' => 'speicheln',
             'event_id' => $event->getId(),
         ));
     }
