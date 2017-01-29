@@ -1,5 +1,10 @@
+USE clanx;
+
+SELECT version from info;
 -- execute this if version is <12 !
 
+-- -----------------------------------------------
+SELECT 'CREATE TABLE `question`' AS next_step;
 CREATE TABLE `question` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `event_id` int(11) NOT NULL,
@@ -14,6 +19,8 @@ CREATE TABLE `question` (
     CONSTRAINT `event_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`)
  );
 
+-- -----------------------------------------------
+SELECT 'CREATE TABLE `answer`' AS next_step;
 CREATE TABLE `answer` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `question_id` int(11) NOT NULL,
@@ -26,13 +33,31 @@ CREATE TABLE `answer` (
     CONSTRAINT `commitment_ibfk_1` FOREIGN KEY (`commitment_id`) REFERENCES `commitment` (`id`)
 );
 
+-- -----------------------------------------------
+SELECT 'CREATE VIEW `event_question_stat`' AS next_step;
+CREATE 
+    ALGORITHM = UNDEFINED
+VIEW clanx.event_question_stat 
+AS
+	SELECT q.event_id, q.text, a.answer, count('x') AS `count`
+	FROM question q
+	INNER JOIN answer a
+	ON q.id = a.question_id
+	WHERE q.aggregate=1
+	AND q.event_id = 1
+	GROUP BY q.event_id, q.text, a.answer
+	ORDER BY q.event_id, q.text, a.answer
+;
 
--- transform column "remark"
+
+-- -----------------------------------------------
+SELECT 'transform column "commitment.remark"' AS next_step;
 SET @text = 'Bemerkung / Wunsch';
 SET @optional = 1;
+SET @aggregate = 0;
 
-INSERT INTO question (event_id, `text`, optional)
-SELECT id, @text, @optional from event;
+INSERT INTO question (event_id, `text`, optional, aggregate)
+SELECT id, @text, @optional, @aggregate from event;
 
 INSERT INTO answer (answer, commitment_id, question_id)
 SELECT c.remark, c.id, q.id
@@ -41,12 +66,14 @@ INNER JOIN event e ON q.event_id = e.id
 INNER JOIN commitment c ON e.id = c.event_id
 WHERE q.text LIKE @text AND c.remark IS NOT NULL;
 
--- transform column "possible_start"
+-- -----------------------------------------------
+SELECT 'transform column "commitment.possible_start"' AS next_step;
 SET @text = 'Ich helfe an folgenden Tagen';
 SET @hint = 'bitte auch Zeit angeben';
+SET @aggregate = 0;
 
-INSERT INTO question (event_id, `text`, hint)
-SELECT id, @text, @hint from event;
+INSERT INTO question (event_id, `text`, hint, aggregate)
+SELECT id, @text, @hint, @aggregate from event;
 
 INSERT INTO answer (answer, commitment_id, question_id)
 SELECT c.possible_start, c.id, q.id
@@ -55,7 +82,8 @@ INNER JOIN event e ON q.event_id = e.id
 INNER JOIN commitment c ON e.id = c.event_id
 WHERE q.text LIKE @text AND c.possible_start IS NOT NULL;
 
--- transform column "shirt_size"
+-- -----------------------------------------------
+SELECT 'transform column "commitment.shirt_size"' AS next_step;
 SET @text = 'TShirt Grösse';
 SET @hint = 'H = Herrenschnitt, D = Damenschnitt';
 SET @type = 'S';
@@ -82,11 +110,12 @@ INNER JOIN commitment c ON e.id = c.event_id
 INNER JOIN user u ON c.user_id = u.id
 WHERE q.text LIKE @text AND c.possible_start IS NOT NULL AND u.gender LIKE 'F';
 
--- transform column "need_train_ticket"
+-- -----------------------------------------------
+SELECT 'transform column "commitment.need_train_ticket"' AS next_step;
 SET @text = 'Ich brauche ein Zugbillet';
 SET @type = 'F';
 SET @optional = 0;
-SET @aggregate = 0;
+SET @aggregate = 1;
 
 INSERT INTO question (event_id, `text`, type, optional, aggregate)
 SELECT id, @text, @type, @optional, @aggregate from event;
@@ -99,7 +128,10 @@ INNER JOIN commitment c ON e.id = c.event_id
 WHERE q.text LIKE @text;
 
 
+-- -----------------------------------------------
+SELECT 'update db version' AS next_step;
 UPDATE info set version = 12;
+SELECT version from info;
 
 -- The "info" table with the "version" column is a nice thought.
 -- But without the possibility of using flow control statements
