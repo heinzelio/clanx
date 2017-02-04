@@ -9,6 +9,7 @@ use AppBundle\ViewModel\Commitment\CommitmentViewModel;
 use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
 use AppBundle\ViewModel\Commitment\TextQuestionViewModel;
 use AppBundle\ViewModel\Commitment\SelectionQuestionViewModel;
+use AppBundle\ViewModel\Event\EventStatisticsViewModel;
 
 class EventService
 {
@@ -220,6 +221,22 @@ class EventService
         return $commitmentVM->setDepartments($event->getFreeDepartments()); // TODO: dont make this on the entity. get it from a service or here.
     }
 
+    public function getStatisticsViewModels(Event $event)
+    {
+        $viewModels = array();
+
+        $qs = $event->getQuestions();
+        foreach ($qs as $q) {
+            if($q->getAggregate()){
+                $viewModel = new EventStatisticsViewModel();
+                $viewModel->setText($q->getText());
+                $viewModel->setValues($this->questionService->countAnswers($q));
+                $viewModels[] = $viewModel;
+            }
+        }
+        return $viewModels;
+    }
+
     /**
      * returns a query expression to filter the assiciationMember field.
      * When the user may see all events, the expression is simply '1=1',
@@ -245,7 +262,6 @@ class EventService
             $qb->setParameter(':userIsMember', $p);
             return $qb->expr()->lte($alias . '.isForAssociationMembers',':userIsMember');
         }
-
     }
 }
 

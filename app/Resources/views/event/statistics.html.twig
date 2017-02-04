@@ -16,25 +16,14 @@
         role="tabpanel"
         aria-labelledby="headingOne">
         <div class="panel-body">
-            <p>
-                Benötigte Zugbillete: <b>{{tickets}}</b>
-            </p>
-            <p>
-                Benötigte Herrenshirts:<br />
-                {% for shirtCategory,count in maleShirtSizes %}
-                    {{shirtCategory}}: <b>{{count}}</b> <br />
-                {% endfor %}
-            </p>
-            <p>
-                Benötigte Damenshirts:<br />
-                {% for shirtCategory,count in femaleShirtSizes %}
-                    {{shirtCategory}}: <b>{{count}}</b> <br />
-                {% endfor %}
-            </p>
-            <p>
-                Für die korrekte Anzahl TShirts beachte zusätzlich die Sonderwünsche in
-                den Kommentaren. Zähle ausserdem noch die OK Mitglieder dazu.
-            </p>
+            {% for viewModel in viewModels %}
+                <p>{{viewModel.text}}</p>
+                <ul>
+                    {% for key,count in viewModel.values %}
+                        <li>{{key}}: <b>{{count}}</b></li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
         </div>
     </div>
 </div> <!--panel-->
