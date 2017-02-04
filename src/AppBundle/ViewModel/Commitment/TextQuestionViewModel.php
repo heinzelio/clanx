@@ -2,6 +2,7 @@
 namespace AppBundle\ViewModel\Commitment;
 
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use AppBundle\Entity\Question;
 
 /**
  * yes/no question data to show on the commitment form
@@ -12,6 +13,20 @@ class TextQuestionViewModel extends BaseQuestionViewModel
      * @var string
      */
     private $answer;
+
+    /**
+     * @param Question $q
+     */
+    function __construct(Question $q)
+    {
+        parent::__construct($q);
+    }
+
+    /**
+     * Gets the string that identifies this question type in the database.
+     * @return [type] [description]
+     */
+    public function getTypeString(){return "T";}
 
     /**
      * @return boolean True, if the answer is 'yes'
@@ -48,7 +63,23 @@ class TextQuestionViewModel extends BaseQuestionViewModel
         $attributes['attr'] = array('data-hint' => $this->getHint(), ); // TODO: does not work yet
         $attributes['required'] = $this->getRequired();
         $attributes['property_path'] = 'questions[' . $this->getId() . '].answer';
+        $attributes['data'] = $this->getDefaultText();
+        $attributes['required'] = $this->getRequired();
 
         return $attributes;
+    }
+
+    /**
+     * Gets the default text
+     * @return string
+     */
+    public function getDefaultText()
+    {
+        $arr = $this->getData();
+        if(isset($arr["default"]))
+        {
+            return $arr["default"];
+        }
+        return "";
     }
 }

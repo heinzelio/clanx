@@ -2,6 +2,7 @@
 namespace AppBundle\ViewModel\Commitment;
 
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use AppBundle\Entity\Question;
 
 /**
  * yes/no question data to show on the commitment form
@@ -14,6 +15,14 @@ class YesNoQuestionViewModel extends BaseQuestionViewModel
      * @var boolean
      */
     private $yes;
+
+    /**
+     * @param Question $q
+     */
+    function __construct(Question $q)
+    {
+        parent::__construct($q);
+    }
 
     /**
      * Is the answer `yes`
@@ -31,6 +40,12 @@ class YesNoQuestionViewModel extends BaseQuestionViewModel
         $this->yes = $value;
         return $this; // for setter chains
     }
+
+    /**
+     * Gets the string that identifies this question type in the database.
+     * @return [type] [description]
+     */
+    public function getTypeString(){return "F";}
 
     /**
      * @return boolean True, if the answer is 'yes'
@@ -62,10 +77,30 @@ class YesNoQuestionViewModel extends BaseQuestionViewModel
     public function fillAttributes($attributes)
     {
         $attributes['label'] = $this->getText();
-        $attributes['attr'] = array('data-hint' => $this->getHint(), ); // TODO: does not work yet
+        $attributes['attr'] = array(
+            'data-hint' => $this->getHint(), // TODO: does not work yet
+            'checked'=>$this->getDefaultAnswer(),
+        );
         $attributes['required'] = $this->getRequired();
         $attributes['property_path'] = 'questions[' . $this->getId() . '].answer';
+        $attributes['data'] = $this->getDefaultAnswer();
+        $attributes['required'] = $this->getRequired();
 
         return $attributes;
+    }
+
+    /**
+     * Gets the predefined answer, true of false.
+     * If no default is defined, the method returns false.
+     * @return boolean
+     */
+    public function getDefaultAnswer()
+    {
+        $arr = $this->getData();
+        if(isset($arr["default"]))
+        {
+            return $arr["default"];
+        }
+        return false;
     }
 }

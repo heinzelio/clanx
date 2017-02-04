@@ -2,9 +2,11 @@
 namespace AppBundle\ViewModel\Commitment;
 
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use AppBundle\Entity\Question;
 
 /**
- * Base class for all questions
+ * Base class for all questions.
+ * Questions are mapped to their domain model in the class QuestionService.
  */
 abstract class BaseQuestionViewModel
 {
@@ -32,11 +34,31 @@ abstract class BaseQuestionViewModel
     private $required;
 
     /**
+     * @var boolean
+     */
+    private $aggregate;
+
+    /**
+     * @var array
+     */
+    private $data;
+
+    /**
      * @param integer $id
      */
-    public function __construct($id)
+    public function __construct(Question $q)
     {
-        $this->setId($id);
+        $this->setId($q->getId());
+        $this->setText($q->getText());
+        $this->setHint($q->getHint());
+        $this->setRequired(!$q->getOptional());
+        $this->setAggregate($q->getAggregate());
+
+        try {
+            $this->setData(json_decode($q->getData(), true));
+        } catch (Exception $e) {
+            $this->setData(array());
+        }
     }
 
     /**
@@ -107,6 +129,45 @@ abstract class BaseQuestionViewModel
     }
 
     /**
+     * @return boolean
+     */
+    public function getAggregate(){return $this->aggregate;}
+
+    /**
+     * @param boolean $value
+     * @return BaseQuestionViewModel
+     */
+    public function setAggregate($value)
+    {
+        $this->aggregate = $value;
+        return $this; // for setter chains
+    }
+
+    /**
+     * @return array
+     */
+    public function getData(){return $this->data;}
+
+    /**
+     * @param array $value
+     * @return BaseQuestionViewModel
+     */
+    public function setData($value)
+    {
+        $this->data = $value;
+        return $this; // for setter chains
+    }
+
+    /**
+     * Returns the json encoded data
+     * @return string
+     */
+    public function getJsonData()
+    {
+        return json_encode($this->getData());
+    }
+
+    /**
      * @param  string $prefix
      * @param  string $postfix
      * @return string
@@ -115,6 +176,12 @@ abstract class BaseQuestionViewModel
     {
         return $prefix . 'answer' . $this->id . $postfix;
     }
+
+    /**
+     * Gets the string that identifies this question type in the database.
+     * @return [type] [description]
+     */
+    public abstract function getTypeString();
 
     /**
      * @return object This may be a bool, string, array, you name it.

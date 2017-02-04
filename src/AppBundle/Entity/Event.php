@@ -69,6 +69,11 @@ class Event
     private $isForAssociationMembers = false;
 
     /**
+     * @ORM\OneToMany(targetEntity="Question", mappedBy="event")
+     */
+    private $questions;
+
+    /**
      * Set name
      *
      * @param string $name
@@ -275,6 +280,11 @@ class Event
      * @return boolean
      */
     public function getIsForAssociationMembers(){return $this->isForAssociationMembers;}
+
+    /**
+     * @return Question[]
+     */
+    public function getQuestions(){return $this->questions;}
 
     /**
      * Is the event in the future?

@@ -3,6 +3,7 @@
 namespace AppBundle\ViewModel\Commitment;
 
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use AppBundle\Entity\Question;
 
 
 
@@ -14,9 +15,18 @@ class SelectionQuestionViewModel extends BaseQuestionViewModel
     private $answer;
 
     /**
-     * @var string[]
+     * @param Question $q
      */
-    private $choices = array();
+    function __construct(Question $q)
+    {
+        parent::__construct($q);
+    }
+
+    /**
+     * Gets the string that identifies this question type in the database.
+     * @return [type] [description]
+     */
+    public function getTypeString(){return "S";}
 
     /**
      * @param string $answer
@@ -42,7 +52,9 @@ class SelectionQuestionViewModel extends BaseQuestionViewModel
      */
     public function addChoice($choice='')
     {
-        $this->choices[$choice] = $choice;
+        $choices = $this->getChoices();
+        $choices[$choice] = $choice;
+        $this->setChoices($choices);
         return $this;
     }
 
@@ -52,10 +64,12 @@ class SelectionQuestionViewModel extends BaseQuestionViewModel
      */
     public function setChoices($choices)
     {
-        if ($choices==null) {
-            $choices = array();
+        $arr = $this->getData();
+        if(isset($arr["choices"]))
+        {
+            $arr["choices"]=$choices;
+            $this->setData($arr);
         }
-        $this->choices = $choices;
         return $this;
     }
 
@@ -64,7 +78,12 @@ class SelectionQuestionViewModel extends BaseQuestionViewModel
      */
     public function getChoices()
     {
-        return $this->choices;
+        $arr = $this->getData();
+        if(isset($arr["choices"]))
+        {
+            return $arr["choices"];
+        }
+        return array();
     }
 
     /**
@@ -86,7 +105,29 @@ class SelectionQuestionViewModel extends BaseQuestionViewModel
         $attributes['required'] = $this->getRequired();
         $attributes['property_path'] = 'questions[' . $this->getId() . '].answer';
         $attributes['choices'] = $this->getChoices();
+        $attributes['data'] = $this->getDefault();
+        $attributes['required'] = $this->getRequired();
+
+        // todo:
+        // if not required
+        //      'placeholder' => 'Choose your gender',
+        //     'required'    => false,
+        //         'empty_data'  => null
 
         return $attributes;
+    }
+
+    /**
+     * Gets the default selection.
+     * @return string
+     */
+    public function getDefault()
+    {
+        $arr = $this->getData();
+        if(isset($arr["default"]))
+        {
+            return $arr["default"];
+        }
+        return "";
     }
 }

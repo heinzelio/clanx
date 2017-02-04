@@ -4,7 +4,6 @@ namespace AppBundle\Service;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Translation\TranslatorInterface;
-use AppBundle\Service\Authorization;
 use AppBundle\Entity\Event;
 use AppBundle\ViewModel\Commitment\CommitmentViewModel;
 use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
@@ -35,11 +34,17 @@ class EventService
      */
     protected $commitmentService;
 
+    /**
+     * @var QuestionService
+     */
+    protected $questionService;
+
     public function __construct(
         EntityManager $em,
         Authorization $auth,
         DepartmentService $deptService,
-        CommitmentService $cmmtService
+        CommitmentService $cmmtService,
+        QuestionService $questionService
     )
     {
         $this->entityManager = $em;
@@ -47,6 +52,7 @@ class EventService
         $this->repo = $em->getRepository('AppBundle:Event');
         $this->departmentService = $deptService;
         $this->commitmentService = $cmmtService;
+        $this->questionService = $questionService;
     }
 
     /**
@@ -206,20 +212,11 @@ class EventService
      */
     public function getCommitmentFormViewModel(Event $event)
     {
-        // TODO: Make this real data.
-        $q1 = new YesNoQuestionViewModel(5);
-        $q1->setText('Wotsch es Schlagzueg?')->setHint('Wo n mais macht?');
-        $q2 = new YesNoQuestionViewModel(7);
-        $q2->setText('Und e Gitarre?');
-        $q3 = new TextQuestionViewModel(42);
-        $q3->setText('Wa wotsch?');
-        $q4 = new SelectionQuestionViewModel(1);
-        $q4->setText('Wa för e Tischi wotsch?');
-        $q4->addChoice('Mann, L')->addChoice('Frau, L')->addChoice('Mann, S')->addChoice('Frau, S');
-
         $commitmentVM = new CommitmentViewModel();
-        $commitmentVM->addQuestion($q3)->addQuestion($q1)->addQuestion($q2)->addQuestion($q4);
-
+        foreach ($event->getQuestions() as $q) {
+            $qVM = $this->questionService->getQuestionViewModel($q);
+            $commitmentVM->addQuestion($qVM);
+        }
         return $commitmentVM->setDepartments($event->getFreeDepartments()); // TODO: dont make this on the entity. get it from a service or here.
     }
 

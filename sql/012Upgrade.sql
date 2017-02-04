@@ -35,9 +35,9 @@ CREATE TABLE `answer` (
 
 -- -----------------------------------------------
 SELECT 'CREATE VIEW `event_question_stat`' AS next_step;
-CREATE 
+CREATE
     ALGORITHM = UNDEFINED
-VIEW clanx.event_question_stat 
+VIEW clanx.event_question_stat
 AS
 	SELECT q.event_id, q.text, a.answer, count('x') AS `count`
 	FROM question q
@@ -70,10 +70,11 @@ WHERE q.text LIKE @text AND c.remark IS NOT NULL;
 SELECT 'transform column "commitment.possible_start"' AS next_step;
 SET @text = 'Ich helfe an folgenden Tagen';
 SET @hint = 'bitte auch Zeit angeben';
+SET @data = '{"default":"1. Jan 2000 19:00 - 31. Dez 2000 21:00"}';
 SET @aggregate = 0;
 
-INSERT INTO question (event_id, `text`, hint, aggregate)
-SELECT id, @text, @hint, @aggregate from event;
+INSERT INTO question (event_id, `text`, hint, aggregate, data)
+SELECT id, @text, @hint, @aggregate, @data from event;
 
 INSERT INTO answer (answer, commitment_id, question_id)
 SELECT c.possible_start, c.id, q.id
@@ -87,7 +88,7 @@ SELECT 'transform column "commitment.shirt_size"' AS next_step;
 SET @text = 'TShirt Grösse';
 SET @hint = 'H = Herrenschnitt, D = Damenschnitt';
 SET @type = 'S';
-SET @data = '{"choices":["H-XS","H-S","H-M","H-L","H-XL","H-XXL","D-XS","D-S","D-M","D-L","D-XL","D-XXL"]}';
+SET @data = '{"default":"H-M","choices":{"Herren":{"H-XS":"H-XS","H-S":"H-S","H-M":"H-M","H-L":"H-L","H-XL":"H-XL","H-XXL":"H-XXL"},"Damen":{"D-XS":"D-XS","D-S":"D-S","D-M":"D-M","D-L":"D-L","D-XL":"D-XL","D-XXL":"D-XXL"}}}';
 SET @aggregate = 1;
 
 INSERT INTO question (event_id, `text`, hint, type, data, aggregate)
@@ -117,8 +118,8 @@ SET @type = 'F';
 SET @optional = 0;
 SET @aggregate = 1;
 
-INSERT INTO question (event_id, `text`, type, optional, aggregate)
-SELECT id, @text, @type, @optional, @aggregate from event;
+INSERT INTO question (event_id, `text`, type, optional, aggregate, data)
+SELECT id, @text, @type, @optional, @aggregate, '{"default":true}' from event;
 
 INSERT INTO answer (answer, commitment_id, question_id)
 SELECT c.need_train_ticket, c.id, q.id
