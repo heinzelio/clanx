@@ -73,7 +73,12 @@ class Question
      */
     private $event;
 
-
+    /**
+     * @var Answer[]
+     *
+     * @ORM\OneToMany(targetEntity="Answer", mappedBy="question")
+     */
+    private $answers;
 
     /**
      * Set text
@@ -251,5 +256,13 @@ class Question
     public function getEvent()
     {
         return $this->event;
+    }
+
+    /**
+     * @return Answer[]
+     */
+    public function getAnswers()
+    {
+        return $this->answers;
     }
 }
