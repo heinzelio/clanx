@@ -45,3 +45,7 @@ services:
 
     app.question:
         class: AppBundle\Service\QuestionService
+
+    app.mail:
+        class: AppBundle\Service\MailService
+        arguments: ["@app.auth"]
