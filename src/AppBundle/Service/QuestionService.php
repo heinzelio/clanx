@@ -39,40 +39,55 @@ class QuestionService
      */
     public function countAnswers(Question $q)
     {
-        $answers = $q->getAnswers();
+        // create ordered array
         $answerStats = $this->getVoidStatistics($q);
-        foreach ($answers as $answer) {
-            $answerValue = $this->getMeaningfulAnswer($answer,$q);
 
-            if(!array_key_exists($answerValue, $answerStats))
-            {
+        // fill array
+        $answers = $q->getAnswers();
+        foreach ($answers as $answer) {
+            $answerValue = $answer->getAnswer();
+            if (!array_key_exists($answerValue, $answerStats)) {
                 $answerStats[$answerValue] = 0;
             }
             $answerStats[$answerValue]++;
         }
-        return $answerStats;
+
+        // create readable keys
+        $ret = array();
+        foreach ($answerStats as $key => $value) {
+            if ($key===1) {
+                $ret["Ja"] = $value;
+            } else if ($key === 0) {
+                $ret["Nein"] = $value;
+            } else {
+                $ret[$key] = $value;
+            }
+        }
+        return $ret;
     }
 
     private function getMeaningfulAnswer(Answer $answer, Question $question)
     {
         if($question->getType() == YesNoQuestionViewModel::getTypeString()){
-            if($answer->getAnswer()==1) {
+            if ($answer->getAnswer()==1) {
                 return "Ja";
-            }else{
+            } else {
                 return "Nein";
             }
         }
         return $answer->getAnswer();
     }
+
+    /**
+     * @param  Question $q
+     * @return array
+     */
     private function getVoidStatistics(Question $q)
     {
-        $arr=array();
-        if($q->getType() == SelectionQuestionViewModel::getTypeString()){
-            $vm = $this->getQuestionViewModel($q);
-            $choices = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($vm->getChoices()));
-            foreach($choices as $choice) {
-              $arr[$choice] = 0;
-            }
+        $vm = $this->getQuestionViewModel($q);
+        $arr = array();
+        foreach ($vm->getSelection() as $key => $value) {
+            $arr[$key] = 0;
         }
         return $arr;
     }

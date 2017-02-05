@@ -70,6 +70,15 @@ class TextQuestionViewModel extends BaseQuestionViewModel
     }
 
     /**
+     * Gets an array of selection possibilities
+     * @return array
+     */
+    public function getSelection()
+    {
+        return array();
+    }
+
+    /**
      * Gets the default text
      * @return string
      */

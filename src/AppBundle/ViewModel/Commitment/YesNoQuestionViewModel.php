@@ -90,6 +90,15 @@ class YesNoQuestionViewModel extends BaseQuestionViewModel
     }
 
     /**
+     * Gets an array of selection possibilities
+     * @return array
+     */
+    public function getSelection()
+    {
+        return array(true => true, false => false);
+    }
+
+    /**
      * Gets the predefined answer, true of false.
      * If no default is defined, the method returns false.
      * @return boolean

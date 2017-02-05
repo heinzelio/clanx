@@ -204,4 +204,10 @@ abstract class BaseQuestionViewModel
      * This is an out parameter, it will be changed (filled) by this method
      */
     abstract public function fillAttributes($attributes);
+
+    /**
+     * Gets an array of selection possibilities
+     * @return array
+     */
+    abstract public function getSelection();
 }

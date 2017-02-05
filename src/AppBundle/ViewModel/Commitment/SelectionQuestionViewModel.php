@@ -118,6 +118,15 @@ class SelectionQuestionViewModel extends BaseQuestionViewModel
     }
 
     /**
+     * Gets an array of selection possibilities
+     * @return array
+     */
+    public function getSelection()
+    {
+        return $this->getFlatChoices();
+    }
+
+    /**
      * Gets the default selection.
      * @return string
      */
@@ -129,5 +138,19 @@ class SelectionQuestionViewModel extends BaseQuestionViewModel
             return $arr["default"];
         }
         return "";
+    }
+
+    private function getFlatChoices()
+    {
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveArrayIterator($this->getChoices())
+        );
+
+        $arr=array();
+        foreach($iterator as $choice) {
+          $arr[$choice] = 0;
+        }
+        
+        return $arr;
     }
 }
