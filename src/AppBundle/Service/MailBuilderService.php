@@ -4,7 +4,7 @@ namespace AppBundle\Service;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Service\Authorization;
 
-class MailService
+class MailBuilderService
 {
     /**
      * Authorization service
