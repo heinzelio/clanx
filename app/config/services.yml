@@ -33,7 +33,7 @@ services:
 
     app.commitment:
         class: AppBundle\Service\CommitmentService
-        arguments: ["@app.auth", "@doctrine.orm.entity_manager"]
+        arguments: ["@app.auth", "@doctrine.orm.entity_manager", "@logger"]
 
     app.menu:
         class: AppBundle\Service\MenuService

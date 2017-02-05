@@ -4,5 +4,5 @@
 'warning': 'Whatch out!'
 'danger': 'Whoa!'
 
-'flash.enroll_failed': 'Your commitment has NOT been saved.'
-'flash.enroll_succeeded': 'Your commitment has been saved.'
+'flash.enroll_failed': 'Save failed. You are NOT enrolled.'
+'flash.enroll_succeeded': 'You are enrolled. Check your emails for more information (If you do not find any mail from us, please also check the spam filter).'

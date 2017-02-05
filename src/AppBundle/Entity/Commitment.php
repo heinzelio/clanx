@@ -3,6 +3,9 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use AppBundle\Entity\Event;
+use AppBundle\Entity\Department;
+use AppBundle\Entity\User;
 
 /**
  * Commitment
@@ -23,7 +26,7 @@ class Commitment
     private $id;
 
     /**
-     * @var \AppBundle\Entity\Department
+     * @var Department
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Department")
      * @ORM\JoinColumns({
@@ -33,9 +36,9 @@ class Commitment
     private $department;
 
     /**
-     * @var \AppBundle\Entity\Event
+     * @var Event
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Event")
+     * @ORM\ManyToOne(targetEntity="Event")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="event_id", referencedColumnName="id")
      * })
@@ -46,10 +49,10 @@ class Commitment
      * name of the mapped member $event
      * @var string
      */
-    const EVENT = 'event';    
+    const EVENT = 'event';
 
     /**
-     * @var \AppBundle\Entity\User
+     * @var User
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinColumns({
@@ -103,11 +106,11 @@ class Commitment
     /**
      * Set department
      *
-     * @param \AppBundle\Entity\Department $department
+     * @param Department $department
      *
      * @return Commitment
      */
-    public function setDepartment(\AppBundle\Entity\Department $department = null)
+    public function setDepartment(Department $department = null)
     {
         $this->department = $department;
 
@@ -117,7 +120,7 @@ class Commitment
     /**
      * Get department
      *
-     * @return \AppBundle\Entity\Department
+     * @return Department
      */
     public function getDepartment()
     {
@@ -127,11 +130,11 @@ class Commitment
     /**
      * Set event
      *
-     * @param \AppBundle\Entity\Event $event
+     * @param Event $event
      *
      * @return Commitment
      */
-    public function setEvent(\AppBundle\Entity\Event $event = null)
+    public function setEvent(Event $event = null)
     {
         $this->event = $event;
 
@@ -141,7 +144,7 @@ class Commitment
     /**
      * Get event
      *
-     * @return \AppBundle\Entity\Event
+     * @return Event
      */
     public function getEvent()
     {
@@ -151,11 +154,11 @@ class Commitment
     /**
      * Set user
      *
-     * @param \AppBundle\Entity\User $user
+     * @param User $user
      *
      * @return Commitment
      */
-    public function setUser(\AppBundle\Entity\User $user = null)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
 
@@ -165,7 +168,7 @@ class Commitment
     /**
      * Get user
      *
-     * @return \AppBundle\Entity\User
+     * @return User
      */
     public function getUser()
     {

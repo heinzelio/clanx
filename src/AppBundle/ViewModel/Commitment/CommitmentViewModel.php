@@ -28,7 +28,7 @@ class CommitmentViewModel
 
     /**
      * Gets the department.
-     * @return department The department.
+     * @return Department The department.
      */
     public function getDepartment()
     {

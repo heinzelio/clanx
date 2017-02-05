@@ -52,7 +52,15 @@ class EventCommitmentController extends Controller
         if ($enrollForm->isSubmitted() && $enrollForm->isValid()) {
             // TODO: get a service, send the model to the service and redirect to
             // event show.
-             $this->get('session')->getFlashBag()->add('success', "Boing.");
+            $commitmentService = $this->get('app.commitment');
+            $commitment = $commitmentService->saveCommitment($event, $formVM);
+            if ($commitment != null) {
+                //TODO finish here
+                $this->sendMail($commitment);
+                $this->addFlash('success','flash.enroll_succeeded');
+            } else {
+                $this->addFlash('warning','flash.enroll_failed');
+            }
 
             return $this->redirectToRoute('event_show', array(
                 'id' => $event->getId(),
@@ -74,7 +82,7 @@ class EventCommitmentController extends Controller
         $options = array(
             CommitmentType::DEPARTMENT_CHOICES_KEY => $vm->getDepartments(),
             CommitmentType::USE_DEPARTMENTS_KEY => $vm->hasDepartments(),
-            CommitmentType::USE_VOLUNTEER_NOTIFICATION_KEY => true,
+            CommitmentType::USE_VOLUNTEER_NOTIFICATION_KEY => false,
         );
 
         $form = $this->createForm('AppBundle\Form\Commitment\CommitmentType', $vm, $options);
@@ -87,4 +95,81 @@ class EventCommitmentController extends Controller
         }
         return $form;
     }
+
+    /**
+     * Send the commitment comfirmation mayMail
+     * @param  Commitment $commitment
+     */
+    private function sendMail($commitment){
+        $user = $commitment->getUser();
+        $event = $commitment->getEvent();
+        $dep = $commitment->getDepartment();
+
+        $message = \Swift_Message::newInstance();
+        $message->setSubject('Clanx Hölfer Bestätigung')
+            ->setFrom(array('no-reply@clanx.ch'=>'Clanx Hölfer DB'))
+            ->setTo($user->getEmail())
+            ->setBody(
+                $this->renderView(
+                    // app/Resources/views/emails/commitmentConfirmation.html.twig
+                    'emails/commitmentConfirmation.html.twig',
+                    array(
+                        'Forename' => $user->getForename(),
+                        'Gender' => $user->getGender(),
+                        'Event' => $event->getName(),
+                        'EventID' => $event->getId(),
+                        'EventDate' => $event->getDate(),
+                        'Department' => $dep->getName(),
+                    )
+                ),
+                'text/html'
+            )
+            ->addPart(
+                $this->renderView(
+                    // app/Resources/views/emails/commitmentConfirmation.txt.twig
+                    'emails/commitmentConfirmation.txt.twig',
+                    array('Forename' => $user->getForename(),
+                        'Gender' => $user->getGender(),
+                        'Event' => $event->getName(),
+                        'EventID' => $event->getId(),
+                        'EventDate' => $event->getDate(),
+                        'Department' => $dep->getName(),
+                    )
+                ),
+                'text/plain'
+            )
+        ;
+        $this->get('mailer')->send($message);
+
+        $chiefUser = $dep->getChiefUser();
+        if($chiefUser)
+        {
+            $messageToChief = \Swift_Message::newInstance();
+            $messageToChief->setSubject('Neue Hölferanmeldung im Ressort '.$dep->getName())
+                ->setFrom(array($user->getEmail()=>$user))
+                ->setTo($chiefUser->getEmail())
+                ->setBody(
+                    $this->renderView('emails\commitmentNotificationToChief.html.twig',
+                        array('chief' => $chiefUser,
+                            'user' => $user,
+                            'department' => $dep,
+                            'commitment' => $commitment,
+                        )
+                    ),
+                    'text/html'
+                )
+                ->addPart(
+                    $this->renderView('emails\commitmentNotificationToChief.txt.twig',
+                        array('chief' => $chiefUser,
+                            'user' => $user,
+                            'department' => $dep,
+                            'commitment' => $commitment,
+                        )
+                    ),
+                    'text/plain'
+                );
+                $this->get('mailer')->send($messageToChief);
+        }
+    }
+
 }
