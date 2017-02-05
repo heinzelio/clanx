@@ -69,7 +69,7 @@ class QuestionService
     private function getMeaningfulAnswer(Answer $answer, Question $question)
     {
         if($question->getType() == YesNoQuestionViewModel::getTypeString()){
-            if ($answer->getAnswer()==1) {
+            if ($answer->getAnswer()=="1") {
                 return "Ja";
             } else {
                 return "Nein";
