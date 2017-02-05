@@ -48,4 +48,4 @@ services:
 
     app.mail_builder:
         class: AppBundle\Service\MailBuilderService
-        arguments: ["@app.auth"]
+        arguments: ["@twig"]

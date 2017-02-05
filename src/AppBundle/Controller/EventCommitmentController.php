@@ -100,75 +100,20 @@ class EventCommitmentController extends Controller
      * Send the commitment comfirmation mayMail
      * @param  Commitment $commitment
      */
-    private function sendMail($commitment){
-        $user = $commitment->getUser();
-        $event = $commitment->getEvent();
-        $dep = $commitment->getDepartment();
+    private function sendMail($commitment)
+    {
+        if (!$commitment) {
+            return;
+        }
 
-        $message = \Swift_Message::newInstance();
-        $message->setSubject('Clanx Hölfer Bestätigung')
-            ->setFrom(array('no-reply@clanx.ch'=>'Clanx Hölfer DB'))
-            ->setTo($user->getEmail())
-            ->setBody(
-                $this->renderView(
-                    // app/Resources/views/emails/commitmentConfirmation.html.twig
-                    'emails/commitmentConfirmation.html.twig',
-                    array(
-                        'Forename' => $user->getForename(),
-                        'Gender' => $user->getGender(),
-                        'Event' => $event->getName(),
-                        'EventID' => $event->getId(),
-                        'EventDate' => $event->getDate(),
-                        'Department' => $dep->getName(),
-                    )
-                ),
-                'text/html'
-            )
-            ->addPart(
-                $this->renderView(
-                    // app/Resources/views/emails/commitmentConfirmation.txt.twig
-                    'emails/commitmentConfirmation.txt.twig',
-                    array('Forename' => $user->getForename(),
-                        'Gender' => $user->getGender(),
-                        'Event' => $event->getName(),
-                        'EventID' => $event->getId(),
-                        'EventDate' => $event->getDate(),
-                        'Department' => $dep->getName(),
-                    )
-                ),
-                'text/plain'
-            )
-        ;
-        $this->get('mailer')->send($message);
+        $mailBuilder = $this->get('app.mail_builder');
+        $mailer = $this->get('mailer');
+        $message = $mailBuilder->buildCommitmentConfirmation($commitment);
+        $mailer->send($message);
 
-        $chiefUser = $dep->getChiefUser();
-        if($chiefUser)
-        {
-            $messageToChief = \Swift_Message::newInstance();
-            $messageToChief->setSubject('Neue Hölferanmeldung im Ressort '.$dep->getName())
-                ->setFrom(array($user->getEmail()=>$user))
-                ->setTo($chiefUser->getEmail())
-                ->setBody(
-                    $this->renderView('emails\commitmentNotificationToChief.html.twig',
-                        array('chief' => $chiefUser,
-                            'user' => $user,
-                            'department' => $dep,
-                            'commitment' => $commitment,
-                        )
-                    ),
-                    'text/html'
-                )
-                ->addPart(
-                    $this->renderView('emails\commitmentNotificationToChief.txt.twig',
-                        array('chief' => $chiefUser,
-                            'user' => $user,
-                            'department' => $dep,
-                            'commitment' => $commitment,
-                        )
-                    ),
-                    'text/plain'
-                );
-                $this->get('mailer')->send($messageToChief);
+        if ($commitment->getDepartment() && $commitment->getDepartment()->getChiefUser()) {
+            $messageToChief = $mailBuilder->buildNotificationToChief($commitment);
+            $mailer->send($messageToChief);
         }
     }
 

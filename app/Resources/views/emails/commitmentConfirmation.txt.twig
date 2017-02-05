@@ -1,22 +1,24 @@
 {# app/Resources/views/emails/commitmentConfirmation.txt.twig #}
-{% if Gender == 'M' %}
-    Lieber {{ Forename }}
+{% if ViewModel.User.Gender == 'M' %}
+    Lieber {{ ViewModel.User.Forename }}
 {% else %}
-    Liebe {{ Forename }}
+    Liebe {{ ViewModel.User.Forename }}
 {% endif %}
 
-Du hast dich beim Event {{ Event }} als Hölfer im Ressort {{ Department }} eingetragen.
+Du hast dich beim Event {{ ViewModel.Event.Name }} als Hölfer eingetragen.
 
 Dafür schonmal
 VIELEN DANK!
 
-Der Event findet statt am <strong>{{ EventDate|date('d.M.Y') }}</strong>.
+Der Event findet statt am <strong>{{ ViewModel.Event.Date|date('d.M.Y') }}</strong>.
 Du wirst zu gegebender Zeit von uns zum Hölferinformationsanlass eingeladen.
-Du hast als gewünschtes Einsatzressort <strong>{{ Department }}</strong> angegeben.
-Bitte beachte, dass wir dir keinen Einsatz in deinem gewünschten Ressort garantieren können.
+{% if ViewModel.Department %}
+    Du hast als gewünschtes Einsatzressort <strong>{{ ViewModel.Department.Name }}</strong> angegeben.
+    Bitte beachte, dass wir dir keinen Einsatz in deinem gewünschten Ressort garantieren können.
+{% endif %}
 
 Du kannst mit folgender URL jederzeit Details zum Event abrufen:
-{{ absolute_url(path('event_show', { 'id': EventID })) }}
+{{ absolute_url(path('event_show', { 'id': ViewModel.Event.Id })) }}
 
 Liebe Grüsse:
 das Clanx Team
