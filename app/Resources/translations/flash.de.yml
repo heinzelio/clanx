@@ -1,0 +1,8 @@
+
+'success': 'OK'
+'info': 'Zur Information:'
+'warning': 'Obacht!'
+'danger': 'Obacht!'
+
+'flash.enroll_failed': 'Anmeldung konnte NICHT gespeichert werden.'
+'flash.enroll_succeeded': 'Anmeldung wurde gespeichert.'

@@ -1,0 +1,8 @@
+
+'success': 'OK'
+'info': 'For your information:'
+'warning': 'Whatch out!'
+'danger': 'Whoa!'
+
+'flash.enroll_failed': 'Your commitment has NOT been saved.'
+'flash.enroll_succeeded': 'Your commitment has been saved.'
