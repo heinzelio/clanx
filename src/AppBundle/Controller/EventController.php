@@ -131,14 +131,17 @@ class EventController extends Controller
             return $this->redirectToRoute('event_index');
         }
 
+        //EventShowViewModel
         $detailViewModel = $eventSvc->getDetailViewModel($event);
+        $detailViewModel
+            ->setDeleteForm(
+                $this->createDeleteForm($event)->createView()
+            )
+            ->setEnrollForm(
+                $this->createEnrollForm($event,$event->getFreeDepartments())->createView()
+            );
 
-        $detailViewModel['delete_form'] = $this->createDeleteForm($event)
-                                                ->createView();
-        $detailViewModel['enroll_form'] = $this->createEnrollForm($event,$event->getFreeDepartments())
-                                                ->createView();
-
-        return $this->render('event/show.html.twig', $detailViewModel);
+        return $this->render('event/show.html.twig', array('ViewModel'=>$detailViewModel));
     }
 
     /**

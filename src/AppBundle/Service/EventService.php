@@ -10,6 +10,7 @@ use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
 use AppBundle\ViewModel\Commitment\TextQuestionViewModel;
 use AppBundle\ViewModel\Commitment\SelectionQuestionViewModel;
 use AppBundle\ViewModel\Event\EventStatisticsViewModel;
+use AppBundle\ViewModel\Event\EventShowViewModel;
 
 class EventService
 {
@@ -103,8 +104,8 @@ class EventService
 
     /**
      * Collects all necessary data to fill in the "show" view of the Event page
-     * @param  Event  $event [description]
-     * @return [type]        [description]
+     * @param  Event  $event
+     * @return EventShowViewModel
      */
     public function getDetailViewModel(Event $event)
     {
@@ -112,16 +113,8 @@ class EventService
         $myDepartmentsAsDeputy = $this->departmentService->getMyDepartmentsAsDeputy($event);
 
         $enrolledCount = $this->CountVolunteersFor($event);
-
-        $commitment = null;
         $myCommitments = $this->commitmentService->getCurrentUsersCommitmentsFor($event);
-        if(count($myCommitments)>0)
-        {
-            $commitment = $myCommitments[0];
-        }
-
-        $mayEnroll = (!$commitment) && (!$event->getLocked());
-
+        $mayEnroll = $this->authorization->mayEnroll($event);
         $mayMail = $this->authorization->maySendEventMassMail();
         $mayInvite = $this->authorization->maySendInvitation($event);
         $mayEdit = $this->authorization->mayEditEvent();
@@ -129,20 +122,21 @@ class EventService
 
         $mayDownload = $this->authorization->mayDownloadFromEvent();
 
-        return array(
-            'event' => $event,
-            'mayEnroll' => $mayEnroll,
-            'enrolledCount' => $enrolledCount,
-            'commitment' => $commitment,
-            'mayMail' => $mayMail,
-            'mayInvite' => $mayInvite,
-            'mayEdit' => $mayEdit,
-            'mayDelete' => $deleteAuth[Authorization::VALUE],
-            'mayDeleteMessage' => $deleteAuth[Authorization::MESSAGE],
-            'mayDownload' => $mayDownload,
-            'myDepartmentsAsChief' => $myDepartmentsAsChief,
-            'myDepartmentsAsDeputy' => $myDepartmentsAsDeputy,
-        );
+        $vm = new EventShowViewModel();
+        $vm ->setEvent($event)
+        ->setMayEnroll($mayEnroll)
+        ->setEnrolledCount($enrolledCount) //todo: fix for multiple commitments
+        ->setCommitments($myCommitments)
+        ->setMayMail($mayMail)
+        ->setMayInvite($mayInvite)
+        ->setMayEdit($mayEdit)
+        ->setMayDelete($deleteAuth[Authorization::VALUE])
+        ->setMayDeleteMessage($deleteAuth[Authorization::MESSAGE])
+        ->setMayDownload($mayDownload)
+        ->setMyDepartmentsAsChief($myDepartmentsAsChief)
+        ->setMyDepartmentsAsDeputy($myDepartmentsAsDeputy);
+
+        return $vm;
     }
 
     /**

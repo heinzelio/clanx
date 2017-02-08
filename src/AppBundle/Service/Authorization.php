@@ -204,15 +204,13 @@ class Authorization
      */
     public function mayEnroll(Event $event)
     {
+        if ($event->getLocked()) {
+            return false;
+        }
         if ($event->getIsForAssociationMembers() && !$this->user->getIsAssociationMember()) {
             return false;
         }
-        $commitments = $this->user->getCommitments();
-        foreach ($commitments as $commitment) {
-            if ($commitment->getEvent()->getId() == $event->getId()) {
-                return false;
-            }
-        }
+
         return true;
     }
 }
