@@ -29,11 +29,11 @@ class EventCommitmentController extends Controller
     /**
      * Shows the enroll view.
      *
-     * @Route("/{id}", name="event_commitment_show")
+     * @Route("/{id}", name="event_commitment_show_enroll")
      * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_USER')")
      */
-    public function showAction(Request $request, Event $event)
+    public function showEnrollAction(Request $request, Event $event)
     {
         $authService = $this->get('app.auth');
         $trans = $this->get('translator');

@@ -7,7 +7,7 @@ use AppBundle\Entity\Department;
 /**
  * A view model for the commitment form.
  */
-class CommitmentViewModel
+class EnrollViewModel
 {
     /**
      * The department.
@@ -38,7 +38,7 @@ class CommitmentViewModel
     /**
      * Sets the department.
      * @param department $department The department.
-     * @return CommitmentViewModel
+     * @return EnrollViewModel
      */
     public function setDepartment($department)
     {
@@ -58,7 +58,7 @@ class CommitmentViewModel
     /**
      * Sets the questions
      * @param BaseQuestionViewModel[] $questions The questions.
-     * @return CommitmentViewModel
+     * @return EnrollViewModel
      */
     public function setQuestions($questions)
     {
@@ -71,7 +71,7 @@ class CommitmentViewModel
 
     /**
      * @param BaseQuestionViewModel $question
-     * @return CommitmentViewModel
+     * @return EnrollViewModel
      */
     public function addQuestion(BaseQuestionViewModel $question)
     {
@@ -89,7 +89,7 @@ class CommitmentViewModel
 
     /**
      * @param Department[] $departments
-     * @return CommitmentViewModel
+     * @return EnrollViewModel
      */
     public function setDepartments($departments)
     {

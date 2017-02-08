@@ -7,7 +7,7 @@ use AppBundle\Service\Authorization;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Commitment;
 use AppBundle\Entity\Answer;
-use AppBundle\ViewModel\Commitment\CommitmentViewModel;
+use AppBundle\ViewModel\Commitment\EnrollViewModel;
 
 class CommitmentService
 {
@@ -65,10 +65,10 @@ class CommitmentService
      * Saves the commitment for the logged in user and the
      * given event.
      * @param  Event $event
-     * @param  CommitmentViewModel $vm
+     * @param  EnrollViewModel $vm
      * @return Commitment Returns null, if the operation failed.
      */
-    public function saveCommitment(Event $event, CommitmentViewModel $vm)
+    public function saveCommitment(Event $event, EnrollViewModel $vm)
     {
         $user = $this->authorization->getUser();
         $dept = $vm->getDepartment(); // Entity
