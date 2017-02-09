@@ -174,9 +174,12 @@ class CommitmentController extends Controller
             $this->sendMail($message,$commitment,$this->getUser());
             $volunteer = $commitment->getUser();
             $em = $this->getDoctrine()->getManager();
+            foreach ($commitment->getAnswers() as $answer) {
+                $em->remove($answer);
+            }
             $em->remove($commitment);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('success', "Dieser Einsatz wurde gelöscht. ".$volunteer." wurde benachrichtigt.");
+            $this->addFlash('success', "Dieser Einsatz wurde gelöscht. ".$volunteer." wurde benachrichtigt.");
         }
 
         return $this->redirectToRoute('department_show', array(

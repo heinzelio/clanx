@@ -9,7 +9,7 @@
             {# find details of this form in AppBundle\Form\Commitment\CommitmentType #}
             {{ form_start(enroll_form, {
                 'name': 'enroll_form',
-                'action': path('event_commitment_show',{'id': event_id}),
+                'action': path('event_commitment_show_enroll',{'id': event_id}),
                 }) }}
             {{ form_errors(enroll_form) }}
 

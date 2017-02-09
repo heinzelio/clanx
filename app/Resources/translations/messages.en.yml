@@ -8,5 +8,8 @@
 'btn.save': Save
 'btn.cancel': Cancel
 
+'lbl.yes': 'Yes'
+'lbl.no': 'No'
+
 'tip.save_and_return': Saves "%entity%" and returns to "%return%"
 'tip.cancel_and_return': Discards changes on "%entity%" and returns to "%return%"

@@ -4,3 +4,17 @@ h1{
 .hot{
     background: #f9b82b;
 }
+
+.accordion-toggle-link > a {
+  display: block;
+  position: relative;
+}
+.accordion-toggle-link > a:after {
+  content: "\f078"; /* fa-chevron-down */
+  font-family: 'FontAwesome';
+  position: absolute;
+  right: 0;
+}
+.accordion-toggle-link > a[aria-expanded="true"]:after {
+  content: "\f077"; /* fa-chevron-up */
+}

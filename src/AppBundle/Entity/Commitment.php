@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Department;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Answer;
 
 /**
  * Commitment
@@ -92,6 +93,11 @@ class Commitment
     */
     private $needTrainTicket = false;
 
+    /**
+     * @var Answer
+     * @ORM\OneToMany(targetEntity="Answer", mappedBy="commitment")
+     */
+    private $answers;
 
     /**
      * Get id
@@ -256,5 +262,20 @@ class Commitment
     public function getNeedTrainTicket()
     {
         return $this->needTrainTicket;
+    }
+
+    /**
+     * @return Answer[]
+     */
+    public function getAnswers(){ return $this->answers; }
+
+    /**
+     * @param Answer[] answers
+     * @return self
+     */
+    public function setAnswers($answers)
+    {
+        $this->answers = $answers;
+        return $this;
     }
 }

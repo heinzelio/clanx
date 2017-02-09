@@ -8,5 +8,8 @@
 'btn.save': Speichern
 'btn.cancel': Abbrechen
 
+'lbl.yes': 'Ja'
+'lbl.no': 'Nein'
+
 'tip.save_and_return': Speichert "%entity%" und kehrt zurück zu "%return%"
 'tip.cancel_and_return': Verwirft Änderungen an "%entity%" und kehrt zurück zu "%return%"

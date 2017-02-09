@@ -14,7 +14,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Department;
+use AppBundle\Entity\Commitment;
 use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
+use AppBundle\ViewModel\Commitment\EnrollViewModel;
 use AppBundle\ViewModel\Commitment\CommitmentViewModel;
 use AppBundle\Form\Commitment\CommitmentType;
 use AppBundle\Form\Commitment\TextQuestionViewModel;
@@ -26,6 +28,18 @@ use AppBundle\Form\Commitment\TextQuestionViewModel;
  */
 class EventCommitmentController extends Controller
 {
+    public function showCommitmentAction(Request $request, Commitment $commitment)
+    {
+        $trans = $this->get('translator');
+        $trans->setLocale('de'); // TODO: use real localization here.
+
+        //$vm = $this->get('app.commitment')->getCommitmentViewModel();
+
+        return $this->render('event/commitment.html.twig', array(
+            'Commitment' => $commitment,
+        ));
+    }
+
     /**
      * Shows the enroll view.
      *
@@ -44,7 +58,7 @@ class EventCommitmentController extends Controller
         }
 
         $eventService = $this->get('app.event');
-        $formVM = $eventService->getCommitmentFormViewModel($event); //CommitmentViewModel
+        $formVM = $eventService->getCommitmentFormViewModel($event); //EnrollViewModel
 
         $enrollForm = $this->getEnrollForm($formVM);
 
@@ -74,10 +88,10 @@ class EventCommitmentController extends Controller
     }
 
     /**
-     * @param  CommitmentViewModel $vm
+     * @param  EnrollViewModel $vm
      * @return FormType
      */
-    private function getEnrollForm(CommitmentViewModel $vm)
+    private function getEnrollForm(EnrollViewModel $vm)
     {
         $options = array(
             CommitmentType::DEPARTMENT_CHOICES_KEY => $vm->getDepartments(),

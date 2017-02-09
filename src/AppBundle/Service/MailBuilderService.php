@@ -57,6 +57,7 @@ class MailBuilderService
 
         }
 
+        $user = $commitment->getUser();
         $dep = $commitment->getDepartment();
         $chiefUser = $dep->getChiefUser();
 

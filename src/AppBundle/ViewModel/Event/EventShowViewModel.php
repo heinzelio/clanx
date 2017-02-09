@@ -11,7 +11,6 @@ class EventShowViewModel //extends ViewModelBase
      * @var integer
      */
     private $mayEnroll;
-
     private $event;
     private $enrolledCount;
     private $commitments;
