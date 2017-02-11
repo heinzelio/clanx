@@ -59,11 +59,17 @@ class TextQuestionViewModel extends BaseQuestionViewModel
      */
     public function fillAttributes($attributes)
     {
+        if (!$this->getAnswer()) {
+            $attributes['data'] = $this->getDefaultAnswer();
+        } else {
+            // I know, this looks silly, right?
+            $attributes['data'] = $this->getAnswer()->getAnswer();
+        }
+
         $attributes['label'] = $this->getText();
         $attributes['attr'] = array('data-hint' => $this->getHint(), ); // TODO: does not work yet
         $attributes['required'] = $this->getRequired();
         $attributes['property_path'] = 'questions[' . $this->getId() . '].answer';
-        $attributes['data'] = $this->getDefaultText();
         $attributes['required'] = $this->getRequired();
 
         return $attributes;
@@ -79,16 +85,12 @@ class TextQuestionViewModel extends BaseQuestionViewModel
     }
 
     /**
-     * Gets the default text
-     * @return string
+     * returns the default answer that is used when 'default' is not defined
+     * in the data field.
+     * @return boolean
      */
-    public function getDefaultText()
+    protected  function getUndefiniedDefaultAnswer()
     {
-        $arr = $this->getData();
-        if(isset($arr["default"]))
-        {
-            return $arr["default"];
-        }
         return "";
     }
 }

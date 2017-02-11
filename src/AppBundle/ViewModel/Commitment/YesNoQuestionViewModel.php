@@ -76,11 +76,15 @@ class YesNoQuestionViewModel extends BaseQuestionViewModel
      */
     public function fillAttributes($attributes)
     {
+        if (!$this->getAnswer()) {
+            $attributes['attr']['checked'] = $this->getDefaultAnswer();
+        } else {
+            // I know, this looks silly, right?
+            $attributes['attr']['checked'] = $this->getAnswer()->getAnswer();
+        }
+
         $attributes['label'] = $this->getText();
-        $attributes['attr'] = array(
-            'data-hint' => $this->getHint(), // TODO: does not work yet
-            'checked'=>$this->getDefaultAnswer(),
-        );
+        $attributes['attr']['data-hint'] = $this->getHint(); // TODO: does not work yet
         $attributes['required'] = $this->getRequired();
         $attributes['property_path'] = 'questions[' . $this->getId() . '].answer';
         $attributes['data'] = $this->getDefaultAnswer();
@@ -99,17 +103,12 @@ class YesNoQuestionViewModel extends BaseQuestionViewModel
     }
 
     /**
-     * Gets the predefined answer, true of false.
-     * If no default is defined, the method returns false.
+     * returns the default answer that is used when 'default' is not defined
+     * in the data field.
      * @return boolean
      */
-    public function getDefaultAnswer()
+    protected  function getUndefiniedDefaultAnswer()
     {
-        $arr = $this->getData();
-        if(isset($arr["default"]))
-        {
-            return $arr["default"];
-        }
         return false;
     }
 }

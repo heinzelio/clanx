@@ -178,6 +178,21 @@ abstract class BaseQuestionViewModel
     }
 
     /**
+     * Gets the predefined answer, depanding if it defined.
+     * If no default is defined, the method returns false.
+     * @return mixed
+     */
+    public function getDefaultAnswer()
+    {
+        $arr = $this->getData();
+        if(isset($arr["default"]))
+        {
+            return $arr["default"];
+        }
+        return $this->getUndefiniedDefaultAnswer();
+    }
+
+    /**
      * Gets the string that identifies this question type in the database.
      * @return [type] [description]
      */
@@ -210,4 +225,11 @@ abstract class BaseQuestionViewModel
      * @return array
      */
     abstract public function getSelection();
+
+    /**
+     * returns the default answer that is used when 'default' is not defined
+     * in the data field.
+     * @return mixed
+     */
+    protected abstract function getUndefiniedDefaultAnswer();
 }

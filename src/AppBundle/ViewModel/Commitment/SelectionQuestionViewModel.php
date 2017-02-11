@@ -100,19 +100,24 @@ class SelectionQuestionViewModel extends BaseQuestionViewModel
      */
     public function fillAttributes($attributes)
     {
+        if (!$this->getAnswer()) {
+            $attributes['data'] = $this->getDefaultAnswer();
+            $attributes['placeholder'] = 'Bitte wählen'; // TODO: translate!
+            if (!$this->getRequired()) {
+                # code...
+                $attributes['empty_data'] = null;
+            }
+        } else {
+            // I know, this looks silly, right?
+            $attributes['data'] = $this->getAnswer()->getAnswer();
+        }
+
         $attributes['label'] = $this->getText();
         $attributes['attr'] = array('data-hint' => $this->getHint(), ); // TODO: does not work yet
         $attributes['required'] = $this->getRequired();
         $attributes['property_path'] = 'questions[' . $this->getId() . '].answer';
         $attributes['choices'] = $this->getChoices();
-        $attributes['data'] = $this->getDefault();
         $attributes['required'] = $this->getRequired();
-
-        // todo:
-        // if not required
-        //      'placeholder' => 'Choose your gender',
-        //     'required'    => false,
-        //         'empty_data'  => null
 
         return $attributes;
     }
@@ -127,17 +132,13 @@ class SelectionQuestionViewModel extends BaseQuestionViewModel
     }
 
     /**
-     * Gets the default selection.
+     * returns the default answer that is used when 'default' is not defined
+     * in the data field.
      * @return string
      */
-    public function getDefault()
+    protected  function getUndefiniedDefaultAnswer()
     {
-        $arr = $this->getData();
-        if(isset($arr["default"]))
-        {
-            return $arr["default"];
-        }
-        return "";
+        return null;
     }
 
     private function getFlatChoices()
@@ -150,7 +151,7 @@ class SelectionQuestionViewModel extends BaseQuestionViewModel
         foreach($iterator as $choice) {
           $arr[$choice] = 0;
         }
-        
+
         return $arr;
     }
 }

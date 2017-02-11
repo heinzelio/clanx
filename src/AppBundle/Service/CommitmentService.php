@@ -8,7 +8,6 @@ use AppBundle\Entity\Event;
 use AppBundle\Entity\Commitment;
 use AppBundle\Entity\Answer;
 use AppBundle\ViewModel\Commitment\EnrollViewModel;
-use AppBundle\ViewModel\Commitment\CommitmentViewModel;
 
 class CommitmentService
 {

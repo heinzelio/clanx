@@ -206,4 +206,26 @@ class CommitmentController extends Controller
             ->getForm()
         ;
     }
+
+    /**
+     * @param  EnrollViewModel $vm
+     * @return FormType
+     */
+    private function getEnrollForm(EnrollViewModel $vm)
+    {
+        $options = array(
+            CommitmentType::DEPARTMENT_CHOICES_KEY => $vm->getDepartments(),
+            CommitmentType::USE_DEPARTMENTS_KEY => $vm->hasDepartments(),
+            CommitmentType::USE_VOLUNTEER_NOTIFICATION_KEY => true,
+        );
+
+        $form = $this->createForm('AppBundle\Form\Commitment\CommitmentType', $vm, $options);
+
+        foreach ($vm->getQuestions() as $q) {
+            $attributes = array();
+            $attributes = $q->fillAttributes($attributes);
+            $form->add($q->getFormFieldName(), $q->getFormType(), $attributes);
+        }
+        return $form;
+    }
 }
