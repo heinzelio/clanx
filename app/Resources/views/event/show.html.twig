@@ -142,15 +142,15 @@
         <!-- col -->
         <div class="col-md-6">
 
+            {% for commitment in ViewModel.commitments %}
+                {{ render(controller('AppBundle:EventCommitment:showCommitment',
+                {'id': commitment.id}))}}
+            {% endfor %}
+
             {% if ViewModel.mayEnroll %}
                 {{ render(controller('AppBundle:EventCommitment:showEnroll', { 'id':
                 ViewModel.event.id })) }}
             {% endif %}
-
-            {% for commitment in ViewModel.commitments %}
-                {{ render(controller('AppBundle:EventCommitment:showCommitment',
-                    {'id': commitment.id}))}}
-            {% endfor %}
 
             {% if ViewModel.mayEnroll %}
                 <div class="panel panel-danger">
