@@ -16,7 +16,6 @@ use AppBundle\Entity\Department;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\User;
 use AppBundle\Entity\RedirectInfo;
-use AppBundle\Form\CommitmentType;
 
 /**
  * Commitment controller.
@@ -45,12 +44,13 @@ class CommitmentController extends Controller
             ));
         }
 
-        $deleteForm = $this->createDeleteForm($commitment);
+        $deleteForm = $this->createDeleteForm($commitment); //???
 
-        $options = array(
-            'departmentChoices' => $event->getDepartments()
-        );
-        $editForm = $this->createForm('AppBundle\Form\CommitmentType', $commitment, $options);
+        $eventService = $this->get('app.event');
+        $formVM = $eventService->getCommitmentFormViewModel($event); //CommitmentViewModel
+
+        $editForm = $this->getEnrollForm($formVM);
+
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
