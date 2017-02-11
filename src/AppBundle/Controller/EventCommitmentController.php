@@ -16,7 +16,6 @@ use AppBundle\Entity\Event;
 use AppBundle\Entity\Department;
 use AppBundle\Entity\Commitment;
 use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
-use AppBundle\ViewModel\Commitment\EnrollViewModel;
 use AppBundle\ViewModel\Commitment\CommitmentViewModel;
 use AppBundle\Form\Commitment\CommitmentType;
 use AppBundle\Form\Commitment\TextQuestionViewModel;
@@ -58,7 +57,7 @@ class EventCommitmentController extends Controller
         }
 
         $eventService = $this->get('app.event');
-        $formVM = $eventService->getCommitmentFormViewModel($event); //EnrollViewModel
+        $formVM = $eventService->getCommitmentFormViewModel($event); //CommitmentViewModel
 
         $enrollForm = $this->getEnrollForm($formVM);
 
@@ -88,10 +87,10 @@ class EventCommitmentController extends Controller
     }
 
     /**
-     * @param  EnrollViewModel $vm
+     * @param  CommitmentViewModel $vm
      * @return FormType
      */
-    private function getEnrollForm(EnrollViewModel $vm)
+    private function getEnrollForm(CommitmentViewModel $vm)
     {
         $options = array(
             CommitmentType::DEPARTMENT_CHOICES_KEY => $vm->getDepartments(),

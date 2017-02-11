@@ -208,10 +208,10 @@ class CommitmentController extends Controller
     }
 
     /**
-     * @param  EnrollViewModel $vm
+     * @param  CommitmentViewModel $vm
      * @return FormType
      */
-    private function getEnrollForm(EnrollViewModel $vm)
+    private function getEnrollForm(CommitmentViewModel $vm)
     {
         $options = array(
             CommitmentType::DEPARTMENT_CHOICES_KEY => $vm->getDepartments(),

@@ -58,7 +58,7 @@ class CommitmentType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\ViewModel\Commitment\EnrollViewModel',
+            'data_class' => 'AppBundle\ViewModel\Commitment\CommitmentViewModel',
             CommitmentType::DEPARTMENT_CHOICES_KEY => array(),
             CommitmentType::USE_DEPARTMENTS_KEY => true,
             CommitmentType::USE_VOLUNTEER_NOTIFICATION_KEY => true,

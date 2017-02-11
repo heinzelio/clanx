@@ -5,7 +5,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Translation\TranslatorInterface;
 use AppBundle\Entity\Event;
-use AppBundle\ViewModel\Commitment\EnrollViewModel;
+use AppBundle\ViewModel\Commitment\CommitmentViewModel;
 use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
 use AppBundle\ViewModel\Commitment\TextQuestionViewModel;
 use AppBundle\ViewModel\Commitment\SelectionQuestionViewModel;
@@ -203,11 +203,11 @@ class EventService
 
     /**
      * @param  Event  $event
-     * @return EnrollViewModel
+     * @return CommitmentViewModel
      */
     public function getCommitmentFormViewModel(Event $event)
     {
-        $commitmentVM = new EnrollViewModel();
+        $commitmentVM = new CommitmentViewModel();
         foreach ($event->getQuestions() as $q) {
             $qVM = $this->questionService->getQuestionViewModel($q);
             $commitmentVM->addQuestion($qVM);
