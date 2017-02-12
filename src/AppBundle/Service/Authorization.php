@@ -213,6 +213,27 @@ class Authorization
 
         return true;
     }
+    /**
+     * Checks if the logged in user may change or delete the given commitment.
+     * @param  Commitment $commitment
+     * @return boolean
+     */
+    public function mayEditOrDeleteCommitment($commitment)
+    {
+        $operator = $this->getUser();
+        $department = $commitment->getDepartment();
+        $event = $commitment->getEvent();
+
+        // user must be either chief of deputy of the department,
+        // or he must be at least admin.
+        // Furthermore the event may not be locked.
+        return (
+                     $this->user->isChiefOf($department)
+                    ||  $this->user->isDeputyOf($department)
+                    ||  $this->isGranted('ROLE_ADMIN')
+                )
+                && !$event->getLocked();
+    }
 }
 
 ?>

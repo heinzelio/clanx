@@ -4,6 +4,7 @@ namespace AppBundle\ViewModel\Commitment;
 
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use AppBundle\Entity\Question;
+use AppBundle\Entity\Answer;
 
 
 
@@ -16,10 +17,14 @@ class SelectionQuestionViewModel extends BaseQuestionViewModel
 
     /**
      * @param Question $q
+     * @param Anser $a
      */
-    function __construct(Question $q)
+    function __construct(Question $q, Answer $a=null)
     {
         parent::__construct($q);
+        if ($a) {
+            $this->answer = $a->getAnswer();
+        }
     }
 
     /**
@@ -108,8 +113,7 @@ class SelectionQuestionViewModel extends BaseQuestionViewModel
                 $attributes['empty_data'] = null;
             }
         } else {
-            // I know, this looks silly, right?
-            $attributes['data'] = $this->getAnswer()->getAnswer();
+            $attributes['data'] = $this->getAnswer();
         }
 
         $attributes['label'] = $this->getText();

@@ -98,6 +98,37 @@ class CommitmentService
 
         return $cmt;
     }
+
+    /**
+     * updates the commitment and its answers
+     * @param  CommitmentViewModel $vm
+     * @param  Commitment          $commitment
+     * @return boolean true if update succeeded.
+     */
+    public function updateCommitment(CommitmentViewModel $vm, Commitment $commitment)
+    {
+        if (!$vm) {
+            return;
+        }
+
+        $answerRepo = $this->entityManager->getRepository('AppBundle:Answer');
+        foreach ($vm->getQuestions() as $vmQuestion) { //BaseQuestionViewModel[]
+            $criteria = array('question' => $vmQuestion->getId(), 'commitment' => $commitment );
+            $answer = $answerRepo->findOneBy($criteria);
+            $answer->setAnswer($vmQuestion->getAnswer());
+            $this->entityManager->persist($answer);
+        }
+        $commitment->setDepartment($vm->getDepartment());
+        $this->entityManager->persist($commitment);
+
+        try {
+            $this->entityManager->flush();
+            return true;
+        } catch (Exception $e) {
+            $logger->debug(print_r($e->getMessage(),true));
+            return false;
+        }
+    }
 }
 
 ?>

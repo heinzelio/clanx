@@ -3,6 +3,7 @@ namespace AppBundle\ViewModel\Commitment;
 
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use AppBundle\Entity\Question;
+use AppBundle\Entity\Answer;
 
 /**
  * Base class for all questions.
@@ -44,9 +45,10 @@ abstract class BaseQuestionViewModel
     private $data;
 
     /**
-     * @param integer $id
+     * @param Question $q
+     * @param Anser $a
      */
-    public function __construct(Question $q)
+    function __construct(Question $q, Answer $a=null)
     {
         $this->setId($q->getId());
         $this->setText($q->getText());

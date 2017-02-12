@@ -44,7 +44,6 @@ AS
 	INNER JOIN answer a
 	ON q.id = a.question_id
 	WHERE q.aggregate=1
-	AND q.event_id = 1
 	GROUP BY q.event_id, q.text, a.answer
 	ORDER BY q.event_id, q.text, a.answer
 ;

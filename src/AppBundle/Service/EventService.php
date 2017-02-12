@@ -5,6 +5,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Translation\TranslatorInterface;
 use AppBundle\Entity\Event;
+use AppBundle\Entity\Commitment ;
 use AppBundle\ViewModel\Commitment\CommitmentViewModel;
 use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
 use AppBundle\ViewModel\Commitment\TextQuestionViewModel;
@@ -213,6 +214,18 @@ class EventService
             $commitmentVM->addQuestion($qVM);
         }
         return $commitmentVM->setDepartments($event->getFreeDepartments()); // TODO: dont make this on the entity. get it from a service or here.
+    }
+
+    public function getCommitmentFormViewModelForEdit(Commitment $commitment)
+    {
+        $commitmentVM = new CommitmentViewModel();
+        foreach ($commitment->getAnswers() as $a) {
+            $qVM = $this->questionService->getQuestionViewModel($a->getQuestion(), $a);
+            $commitmentVM->addQuestion($qVM);
+        }
+        $commitmentVM->setDepartments($commitment->getEvent()->getDepartments());
+        $commitmentVM->setDepartment($commitment->getDepartment());
+        return $commitmentVM;
     }
 
     public function getStatisticsViewModels(Event $event)

@@ -16,18 +16,18 @@ class QuestionService
      * @param  Question $q
      * @return BaseQuestionViewModel
      */
-    public function getQuestionViewModel(Question $q)
+    public function getQuestionViewModel(Question $q, Answer $a=null)
     {
         switch ($q->getType()) {
             case YesNoQuestionViewModel::getTypeString():
-                return new YesNoQuestionViewModel($q);
+                return new YesNoQuestionViewModel($q, $a);
 
             case SelectionQuestionViewModel::getTypeString():
-                return new SelectionQuestionViewModel($q);
+                return new SelectionQuestionViewModel($q, $a);
 
             case TextQuestionViewModel::getTypeString():
             default:
-                return new TextQuestionViewModel($q);
+                return new TextQuestionViewModel($q, $a);
         }
     }
 

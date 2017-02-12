@@ -3,6 +3,7 @@ namespace AppBundle\ViewModel\Commitment;
 
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use AppBundle\Entity\Question;
+use AppBundle\Entity\Answer;
 
 /**
  * yes/no question data to show on the commitment form
@@ -17,11 +18,22 @@ class YesNoQuestionViewModel extends BaseQuestionViewModel
     private $yes;
 
     /**
-     * @param Question $q
+     * true, if the question has been answered.
+     * @var boolean
      */
-    function __construct(Question $q)
+    private $answered = false;
+
+    /**
+     * @param Question $q
+     * @param Anser $a
+     */
+    function __construct(Question $q, Answer $a=null)
     {
         parent::__construct($q);
+        if ($a) {
+            $this->yes = ($a->getAnswer()=='1');
+            $this->answered = true;
+        }
     }
 
     /**
@@ -38,6 +50,7 @@ class YesNoQuestionViewModel extends BaseQuestionViewModel
     public function setYes($value)
     {
         $this->yes = $value;
+        $this->answered = true;
         return $this; // for setter chains
     }
 
@@ -48,17 +61,24 @@ class YesNoQuestionViewModel extends BaseQuestionViewModel
     public function getTypeString(){return "F";}
 
     /**
-     * @return boolean True, if the answer is 'yes'
+     * @return string '1', if the answer is 'yes', otherwise '0'
      */
-    public function getAnswer(){return $this->getYes();}
+    public function getAnswer(){
+        if ($this->getYes()) {
+            return '1';
+        } else {
+            return '0';
+        }
+    }
 
     /**
-     * @param boolean $value True, if the answer is 'yes'
+     * @param string $value '1', if the answer is 'yes', otherwise '0'
      * @return YesNoQuestionViewModel
      */
     public function setAnswer($value)
     {
         $this->setYes($value);
+        $this->answered = true;
         return $this; // for setter chains
     }
 
@@ -76,18 +96,17 @@ class YesNoQuestionViewModel extends BaseQuestionViewModel
      */
     public function fillAttributes($attributes)
     {
-        if (!$this->getAnswer()) {
-            $attributes['attr']['checked'] = $this->getDefaultAnswer();
+        if ($this->answered) {
+            $data = $this->getYes();
         } else {
-            // I know, this looks silly, right?
-            $attributes['attr']['checked'] = $this->getAnswer()->getAnswer();
+            $data = $this->getDefaultAnswer();
         }
-
         $attributes['label'] = $this->getText();
+        $attributes['data'] = $data;
+        $attributes['attr']['checked'] = $data;
         $attributes['attr']['data-hint'] = $this->getHint(); // TODO: does not work yet
         $attributes['required'] = $this->getRequired();
         $attributes['property_path'] = 'questions[' . $this->getId() . '].answer';
-        $attributes['data'] = $this->getDefaultAnswer();
         $attributes['required'] = $this->getRequired();
 
         return $attributes;

@@ -33,8 +33,21 @@ class CommitmentType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // TODO Localization
+        if ($options[CommitmentType::USE_VOLUNTEER_NOTIFICATION_KEY]) {
+            $builder->add('message', TextareaType::class, array(
+                         'label' => "Beim speichern diese Nachricht an den Hölfer senden:",
+                         'required' => false,
+                         'mapped' => false,
+                         'attr' => array('class'=>'clx-commitment-message'),
+             ))
+             ->add('noMessage', CheckboxType::class, array(
+                 'label' => "Keine Nachricht an den Hölfer senden.",
+                 'required' => false,
+                 'mapped' => false,
+             ));
+        }
         if ($options[CommitmentType::USE_DEPARTMENTS_KEY]) {
-
             $builder->add('department', EntityType::class, array(
                 'class'=>'AppBundle:Department',
                 'label' => 'Für Ressort (ohne Garantie)',
@@ -42,13 +55,8 @@ class CommitmentType extends AbstractType
                 'choice_label' => function ($dpt) {
                                         return $dpt->getLongText();
                                     }
-            ));
-        }
 
-        if ($options[CommitmentType::USE_VOLUNTEER_NOTIFICATION_KEY]) {
-            $builder->add('notify_volunteer', CheckboxType::class, array(
-                'mapped' => false,
-             ));
+            ));
         }
     }
 
