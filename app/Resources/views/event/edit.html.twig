@@ -28,16 +28,16 @@
                 <a class="btn btn-primary"
                     onclick="formSubmit(form_event_edit,this);"
                     data-toggle="tooltip"
-                    title="Änderungen übernehmen und in der Datenbank speichern.">
+                    title="{{'tip.save_and_return1'|trans({'entity':event.name,})}}">
                     <span class="fa fa-floppy-o"></span>
-                    Speichern
+                    {{'btn.save'|trans}}
                 </a>
                 <a class="btn btn-default"
                     href="{{ path('event_show',{'id':event.id}) }}"
                     data-toggle="tooltip"
-                    title="Nicht speichern und zurück zur Detailansicht.">
+                    title="{{'tip.cancel_and_return1'|trans({'entity':event.name,})}}">
                     <span class="fa fa-times"></span>
-                    Abbrechen
+                    {{'btn.cancel'|trans}}
                 </a>
             </div>
         </div>
@@ -86,6 +86,31 @@
             </a>
         </div>
     </div><!-- Panel "Departments" -->
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {{ 'title.questions'|trans({}, 'event') }}
+        </div>
+        <table class="table">
+            <tbody>
+                {% for question in event.questions %}
+                    <tr>
+                        <td>{{question}}</td>
+                        <td>
+                            {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('question_edit', { 'id': question.id }) }}"
+                                class="btn btn-default"
+                                data-toggle="tooltip"
+                                title="{{'tip.editQuestion'|trans({'question':question.text,},'event')}}">
+                                <span class="fa fa-pencil"></span>
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div><!-- Panel "Question" -->
     </div>
 </div>
 {% endblock %}

@@ -7,9 +7,16 @@
 
 'btn.save': Save
 'btn.cancel': Cancel
+'btn.delete': Delete
 
 'lbl.yes': 'Yes'
 'lbl.no': 'No'
 
-'tip.save_and_return': Saves "%entity%" and returns to "%return%"
-'tip.cancel_and_return': Discards changes on "%entity%" and returns to "%return%"
+'tip.save_changes_to_database': Save changes to database
+'tip.save_and_return0': Save and returns
+'tip.save_and_return1': Saves "%entity%" and returns
+'tip.save_and_return2': Saves "%entity%" and returns to "%return%"
+'tip.cancel_and_return0': Discards changes and returns
+'tip.cancel_and_return1': Discards changes on "%entity%" and returns
+'tip.cancel_and_return2': Discards changes on "%entity%" and returns to "%return%"
+'tip.delete_from_database': Delete from database.

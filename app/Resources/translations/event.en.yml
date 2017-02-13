@@ -1,3 +1,6 @@
 text.youCommitedParticipation: 'You agreed on participation'
 
 title.commitment: 'Commitment'
+title.questions: 'Questions'
+
+tip.editQuestion: Edit details of the question "%question%"

@@ -4,5 +4,7 @@
 'warning': 'Obacht!'
 'danger': 'Obacht!'
 
+'successfully_saved': 'Daten wurden erfolgreich gespeichert'
+
 'flash.enroll_failed': 'Speichern fehlgeschlagen. Du bist NICHT eingetragen worden.'
 'flash.enroll_succeeded': 'Du bist jetzt eingetragen. Prüfe deine Emails für mehr Infos (Wenn du kein Email von uns findest, schau bitte auch im Spamordner nach).'

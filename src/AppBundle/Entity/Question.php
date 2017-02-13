@@ -265,4 +265,13 @@ class Question
     {
         return $this->answers;
     }
+
+    /**
+     * Gets a string representing the question
+     * @return string
+     */
+    public function __toString()
+    {
+        return strval($this->type.': '.$this->text);
+    }
 }
