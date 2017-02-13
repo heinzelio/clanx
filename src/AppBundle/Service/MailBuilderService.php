@@ -176,7 +176,7 @@ class MailBuilderService
     {
         if ($value==null) {
             //TODO Localize
-            throw new Exception("Not sufficient data to build a message", 1);
+            throw new \Exception("Not sufficient data to build a message", 1);
         }
     }
 
@@ -188,7 +188,7 @@ class MailBuilderService
     {
         if ($value==null || $value=="") {
             //TODO Localize
-            throw new Exception("Not sufficient data to build a message", 1);
+            throw new \Exception("Not sufficient data to build a message", 1);
         }
     }
 
@@ -197,11 +197,11 @@ class MailBuilderService
         $this->AssertNotNull($commitment);
         $this->AssertNotNull($commitment->getUser());
         $this->AssertNotNull($commitment->getEvent());
-        $this->AssertNotNull($commitment->getDepartment());
+        //$this->AssertNotNull($commitment->getDepartment()); // MAY BE NULL
 
         $user = $commitment->getUser();
         $event = $commitment->getEvent();
-        $dep = $commitment->getDepartment();
+
         $viewModel = new CommitmentConfirmationViewModel();
         $viewModel->setUser($commitment->getUser())
                 ->setEvent($commitment->getEvent())
