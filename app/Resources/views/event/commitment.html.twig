@@ -1,7 +1,7 @@
-<div class="panel panel-default">
+<div class="panel panel-default panel-danger">
     {% set collapseId = 'CollapseCommitment' ~ Commitment.Id %}
     <div class="panel-heading">
-        <h4 class="accordion-toggle-link">
+        <span class="accordion-toggle-link">
             <a role="button"
                 data-toggle="collapse"
                 data-parent="#accordion"
@@ -10,7 +10,7 @@
                 aria-controls="{{collapseId}}">
                 {{ 'text.youCommitedParticipation'|trans({}, 'event') }}
             </a>
-        </h4>
+        </span>
     </div>
     <div id="{{collapseId}}"
         class="panel-collapse collapse"
