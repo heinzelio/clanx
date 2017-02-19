@@ -14,7 +14,7 @@
 
 {% block workspace %}
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 Event: <mark>{{ event.name }}</mark>
@@ -42,75 +42,17 @@
             </div>
         </div>
     </div>
-    <div class="col-md-8">
-    <div class="panel panel-default">
-        <div class="panel-heading">Ressorts für diesen Event</div>
-        <table class="table">
-            <tbody>
-            {% for department in departments %}
-                <tr>
-                    <td>
-                        {% if department.locked %}
-                            <span class="fa fa-lock"></span>
-                        {% endif %}
-                        {{ department.name }}
-                        {% if department.requirement %}
-                            <small>({{ department.requirement }})</small>
-                        {% endif %}
-                        {% if department.chiefUser  %}
-                            - {{ department.chiefUser }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('department_edit', { 'id': department.id }) }}"
-                            class="btn btn-default"
-                            data-toggle="tooltip"
-                            title="Ressortdetails von '{{department.name}}' bearbeiten.">
-                            <span class="fa fa-pencil"></span>
-                        </a>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <div class="col-md-6">
 
-        <div class="panel-footer">
-            <a class="btn btn-default"
-                href="{{ path('department_new',{'event_id' : event.id}) }}"
-                data-toggle="tooltip"
-                title="Der Buttontext sagt schon alles. Da gibt es nichts
-                hinzuzufügen.">
-                Neues Ressort anlegen
-            </a>
-        </div>
-    </div><!-- Panel "Departments" -->
+        {% if event.departments %}
+            {{ render(controller('AppBundle:EventDepartment:eventList', { 'id': event.id })) }}
+        {% else %}
+            <h1>TODO</h1>
+            <h2>If no departments, then show the enrolled users here!</h2>
+        {% endif %}
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            {{ 'title.questions'|trans({}, 'event') }}
-        </div>
-        <table class="table">
-            <tbody>
-                {% for question in event.questions %}
-                    <tr>
-                        <td>{{question}}</td>
-                        <td>
-                            {% if is_granted('ROLE_ADMIN') %}
-                            <a href="{{ path('question_edit', { 'id': question.id }) }}"
-                                class="btn btn-default"
-                                data-toggle="tooltip"
-                                title="{{'tip.editQuestion'|trans({'question':question.text,},'event')}}">
-                                <span class="fa fa-pencil"></span>
-                            </a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div><!-- Panel "Question" -->
+        {{ render(controller('AppBundle:EventQuestion:questionsList', { 'id': event.id })) }}
+
     </div>
 </div>
 {% endblock %}

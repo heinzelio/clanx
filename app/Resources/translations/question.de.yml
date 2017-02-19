@@ -5,4 +5,13 @@
 # $translated = $translator->trans('Hello %name%', array('%name%' => $name));
 
 
-'title': Frage
+title: Frage
+
+btn.create: Neue
+
+tip.create_new: Neue Frage erstellen
+
+text.questions_for_this_event: Fragen für diesen Event
+text.yes_no_question: Ja/Neinfrage
+text.selection: Auswahl
+text.text_question: Textfrage

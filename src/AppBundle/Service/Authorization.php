@@ -6,6 +6,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Question;
 
 class Authorization
 {
@@ -234,6 +235,44 @@ class Authorization
                 )
                 && !$event->getLocked();
     }
-}
 
-?>
+    /**
+     * You may see departments if you are an admin.
+     * @param  Event  $event
+     * @return boolean
+     */
+    public function mayShowDepartmentsOfEvent(Event $event)
+    {
+        return $this->isGranted('ROLE_ADMIN');
+    }
+
+    /**
+     * You may see departments if you are an admin.
+     * @param  Event  $event
+     * @return boolean
+     */
+    public function mayShowQuestionsOfEvent(Event $event)
+    {
+        return $this->isGranted('ROLE_ADMIN');
+    }
+
+    /**
+     * you can edit questions if you are admin
+     * @param  Question $question
+     * @return boolean
+     */
+    public function mayEditQuestion(Question $question)
+    {
+        return $this->isGranted('ROLE_ADMIN');
+    }
+
+    /**
+     * You can add questions to this event if you are admin
+     * @param  Event $event
+     * @return boolean
+     */
+    public function mayAddQuestion(Event $event)
+    {
+        return $this->isGranted('ROLE_ADMIN');
+    }
+}

@@ -5,18 +5,20 @@
 # $translated = $translator->trans('Hello %name%', array('%name%' => $name));
 
 
-'btn.save': Speichern
-'btn.cancel': Abbrechen
-'btn.delete': Löschen
+btn.save: Speichern
+btn.cancel: Abbrechen
+btn.delete: Löschen
+btn.new: Neu erstellen
 
-'lbl.yes': 'Ja'
-'lbl.no': 'Nein'
+lbl.yes: Ja
+lbl.no: Nein
 
-'tip.save_changes_to_database': Änderungen übernehmen und in der Datenbank speichern
-'tip.save_and_return0': Speichern und zurück
-'tip.save_and_return1': Speichert "%entity%" und kehrt zurück
-'tip.save_and_return2': Speichert "%entity%" und kehrt zurück zu "%return%"
-'tip.cancel_and_return0': Verwerfe Änderungen und kehre zurück
-'tip.cancel_and_return1': Verwerfe Änderungen an "%entity%" und kehre zurück
-'tip.cancel_and_return2': Verwerfe Änderungen an "%entity%" und kehre zurück zu "%return%"
-'tip.delete_from_database': Lösche aus der Datenbank
+tip.save_changes_to_database: Änderungen übernehmen und in der Datenbank speichern
+tip.save_and_return0: Speichern und zurück
+tip.save_and_return1: Speichert "%entity%" und kehrt zurück
+tip.save_and_return2: Speichert "%entity%" und kehrt zurück zu "%return%"
+tip.cancel_and_return0: Verwerfe Änderungen und kehre zurück
+tip.cancel_and_return1: Verwerfe Änderungen an "%entity%" und kehre zurück
+tip.cancel_and_return2: Verwerfe Änderungen an "%entity%" und kehre zurück zu "%return%"
+tip.delete_from_database: Lösche aus der Datenbank
+tip.change_detials_of: Details von "%entity%" bearbeiten
