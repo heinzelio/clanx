@@ -103,7 +103,7 @@ class CommitmentController extends Controller
     public function deleteAction(Request $request, Commitment $commitment)
     {
         $department = $commitment->getDepartment();
-        $event = $department->getEvent();
+        $event = $commitment->getEvent();
         $auth = $this->get('app.auth');
         if (!$auth->mayEditOrDeleteCommitment($commitment))
         {
@@ -135,9 +135,17 @@ class CommitmentController extends Controller
             $this->addFlash('success', "Dieser Einsatz wurde gelöscht. ".$volunteer." wurde benachrichtigt.");
         }
 
-        return $this->redirectToRoute('department_show', array(
-            'id' => $department->getId(),
-        ));
+        //TODO: Solve this with referers. see https://github.com/chriglburri/clanx/issues/118
+        if ($department) {
+            return $this->redirectToRoute('department_show', array(
+                'id' => $department->getId(),
+            ));
+        } else {
+            return $this->redirectToRoute('event_edit', array(
+                'id' => $event->getId(),
+            ));
+        }
+
     }
 
     /**

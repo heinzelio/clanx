@@ -25,13 +25,27 @@
             <span class="fa fa-floppy-o"></span>
             Speichern
         </a>
-        <a class="btn btn-default"
-            href="{{ path('department_show',{'id':department.id}) }}"
-            data-toggle="tooltip"
-            title="Nicht speichern und zurück zu {{department}}">
-            <span class="fa fa-times"></span>
-            Abbrechen
-        </a>
+
+        <!-- TODO: better solve this with referers (request.getReferer. or so.) -->
+        <!-- see https://github.com/chriglburri/clanx/issues/118 -->
+        {% if department %}
+            <a class=f"btn btn-default"
+                href="{{ path('department_show',{'id':department.id}) }}"
+                data-toggle="tooltip"
+                title="Nicht speichern und zurück zu {{department}}">
+                <span class="fa fa-times"></span>
+                Abbrechen
+            </a>
+        {% elseif department %}
+            <a class="btn btn-default"
+                href="{{ path('event_edit',{'id':event.id}) }}"
+                data-toggle="tooltip"
+                title="Nicht speichern und zurück zu {{event}}">
+                <span class="fa fa-times"></span>
+                Abbrechen
+            </a>
+        {% endif %}
+
         <a onclick="formSubmit(form_commitment_delete,this);"
             class="btn btn-danger"
             data-toggle="tooltip"

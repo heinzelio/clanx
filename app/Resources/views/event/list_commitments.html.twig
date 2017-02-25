@@ -1,0 +1,29 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        {{'title.commitments'|trans({},'event')}}
+    </div>
+    <table class="table">
+        <tbody>
+        {% for c in commitments %}
+            <tr>
+                <td>
+                    {{c.user}}
+                </td>
+                <td>
+                    {% if may_edit_commitment %}
+                        <a href="{{ path('commitment_edit', { 'id': c.id }) }}"
+                            class="btn btn-default"
+                            data-toggle="tooltip"
+                            title="{{'tip.change_details_of'|trans({'%entity%':c.user})}}">
+                            <span class="fa fa-pencil"></span>
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <!-- <div class="panel-footer">
+
+    </div> -->
+</div>

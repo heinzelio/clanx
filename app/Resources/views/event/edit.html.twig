@@ -43,15 +43,14 @@
         </div>
     </div>
     <div class="col-md-6">
-
         {% if event.departments %}
             {{ render(controller('AppBundle:EventDepartment:eventList', { 'id': event.id })) }}
-        {% else %}
-            <h1>TODO</h1>
-            <h2>If no departments, then show the enrolled users here!</h2>
+        {% elseif event.commitments %}
+            {{ render(controller('AppBundle:EventCommitment:listCommitment', { 'id': event.id })) }}
         {% endif %}
 
         {{ render(controller('AppBundle:EventQuestion:questionsList', { 'id': event.id })) }}
+
 
     </div>
 </div>

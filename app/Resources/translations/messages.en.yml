@@ -22,3 +22,4 @@ tip.cancel_and_return1: Discards changes on "%entity%" and returns
 tip.cancel_and_return2: Discards changes on "%entity%" and returns to "%return%"
 tip.delete_from_database: Delete from database.
 tip.change_details_of: Change details of "%entity%"
+tip.view_details_of: View details of "%entity%"

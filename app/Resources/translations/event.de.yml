@@ -1,6 +1,7 @@
 text.youCommitedParticipation: 'Du hast deine Teilnahme zugesagt.'
 
 title.commitment: 'Zusage'
+title.commitments: 'Zusagen'
 title.questions: 'Fragen'
 
 tip.editQuestion: Bearbeite Details der Frage "%question%"

@@ -157,7 +157,6 @@ class EventController extends Controller
         $editForm = $this->createForm('AppBundle\Form\EventType', $event);
         $editForm->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
-        $departments = $em->getRepository('AppBundle:Department')->findByEvent($event);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em->persist($event);
@@ -171,8 +170,7 @@ class EventController extends Controller
         return $this->render('event/edit.html.twig', array(
             'event' => $event,
             'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-            'departments' => $departments
+            'delete_form' => $deleteForm->createView()
         ));
     }
 

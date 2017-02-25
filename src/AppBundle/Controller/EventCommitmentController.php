@@ -39,6 +39,21 @@ class EventCommitmentController extends Controller
         ));
     }
 
+    public function listCommitmentAction(Event $event)
+    {
+        $trans = $this->get('translator');
+        $trans->setLocale('de'); // TODO: use real localization here.
+
+        $commitments = $event->getCommitments();
+        $auth = $this->get('app.auth');
+
+
+        return $this->render('event\list_commitments.html.twig', array(
+            'commitments' => $commitments,
+            'may_edit_commitment' => $auth->mayEditOrDeleteCommitments($event)
+        ));
+    }
+
     /**
      * Shows the enroll view.
      *

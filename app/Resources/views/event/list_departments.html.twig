@@ -22,6 +22,12 @@
                 </td>
                 <td>
                     {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('department_show', { 'id': department.id }) }}"
+                            class="btn btn-default"
+                            data-toggle="tooltip"
+                            title="{{'tip.view_details_of'|trans({'%entity%':department.name})}}">
+                            <span class="fa fa-eye"></span>
+                        </a>
                         <a href="{{ path('department_edit', { 'id': department.id }) }}"
                             class="btn btn-default"
                             data-toggle="tooltip"

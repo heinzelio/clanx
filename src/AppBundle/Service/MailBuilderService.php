@@ -253,13 +253,12 @@ class MailBuilderService
     public function buildCommitmentVolunteerNotification($text,Commitment $commitment, User $operator)
     {
         $this->AssertNotNull($commitment);
-        $this->AssertNotNull($commitment->getDepartment());
         $this->AssertNotNull($commitment->getUser());
-        $this->AssertNotNull($commitment->getDepartment()->getEvent());
+        $this->AssertNotNull($commitment->getEvent());
         $this->AssertNotNull($operator);
         $this->AssertNotNullOrEmpty($operator->getEmail());
 
-        $event = $commitment->getDepartment()->getEvent();
+        $event = $commitment->getEvent();
         $volunteer = $commitment->getUser();
 
         $templateValues = array(

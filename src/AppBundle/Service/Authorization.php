@@ -5,6 +5,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use AppBundle\Entity\Event;
+use AppBundle\Entity\Commitment;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Question;
 
@@ -56,6 +57,15 @@ class Authorization
     private function isGranted($role)
     {
         return $this->authorizationChecker->isGranted($role);
+    }
+
+    /**
+     * Checks if the logged in user is super admin
+     * @return boolean
+     */
+    private function isSA()
+    {
+        return ($this->isGranted('ROLE_SUPER_ADMIN'));
     }
 
     /**
@@ -214,13 +224,28 @@ class Authorization
 
         return true;
     }
+
+    /**
+     * Checks if the logged in user may change commitments of the given event.
+     * @param  Event  $event
+     * @return boolean
+     */
+    public function mayEditOrDeleteCommitments(Event $event)
+    {
+        if($this->isSA()) return true;
+
+        return $this->isGranted('ROLE_ADMIN') && !$event->getLocked();
+    }
+
     /**
      * Checks if the logged in user may change or delete the given commitment.
      * @param  Commitment $commitment
      * @return boolean
      */
-    public function mayEditOrDeleteCommitment($commitment)
+    public function mayEditOrDeleteCommitment(Commitment $commitment)
     {
+        if($this->isSA()) return true;
+
         $operator = $this->getUser();
         $department = $commitment->getDepartment();
         $event = $commitment->getEvent();
