@@ -45,6 +45,7 @@ services:
 
     app.question:
         class: AppBundle\Service\QuestionService
+        arguments: ["@doctrine.orm.entity_manager"]
 
     app.mail_builder:
         class: AppBundle\Service\MailBuilderService

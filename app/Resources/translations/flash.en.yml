@@ -11,3 +11,6 @@ flash.enroll_succeeded: You are enrolled. Check your emails for more information
 
 flash.mayNotShowDepartments: You may not see departments. Ask the system administrator for permission.
 flash.mayNotShowQuestions: You may not see questions for events. Ask the system administrator for permission.
+
+flash.could_not_create_question: Could not create question.
+flash.question_created: Question created. Please adjust now text and values.

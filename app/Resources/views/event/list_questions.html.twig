@@ -9,9 +9,15 @@
         {% for questionModel in model.questions %}
             {% set question = questionModel.question %}
             <tr>
-                <td>
-                {{ question.text }}
-                </td>
+                {% if question.text == 'Please change text and values of this question.' %}
+                    <td class='danger'>
+                        {{ question.text }}
+                    </td>
+                {% else %}
+                    <td>
+                        {{ question.text }}
+                    </td>
+                {% endif %}
                 <td>
                     {% if question.type == 'F' %}
                         <span class="fa fa-check-square-o"></span>

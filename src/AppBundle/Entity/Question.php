@@ -45,14 +45,14 @@ class Question
      *
      * @ORM\Column(name="optional", type="boolean", nullable=false)
      */
-    private $optional = '0';
+    private $optional = false;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="aggregate", type="boolean", nullable=false)
      */
-    private $aggregate = '1';
+    private $aggregate = true;
 
     /**
      * @var integer

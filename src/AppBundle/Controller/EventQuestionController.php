@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Department;
 use AppBundle\Entity\Commitment;
@@ -57,12 +58,23 @@ class EventQuestionController extends Controller
     /**
      * Handle the event, when the "create" button is clicked.
      *
-     * @Route("/{id}/questions/add", name="question_new")
+     * @Route("/{event_id}/questions/add/{type}", name="question_new")
      * @Method({"GET"})
      * @Security("has_role('ROLE_ADMIN')")
+     * @ParamConverter("event", class="AppBundle:Event", options={"id" = "event_id"})
      */
-    public function newQuestionAction(Event $event)
+    public function newQuestionAction(Event $event, $type='T')
     {
+        $questionService = $this->get('app.question');
+        try {
+            $questionService->CreateNew($event, $type);
+            $this->addFlash('success','flash.question_created');
+        } catch (Exception $e) {
+            $this->addFlash('danger','flash.could_not_create_question');
+            $this->addFlash('info',$e->getMessage());
+        }
+
+        return $this->redirectToRoute('event_edit', array('id' => $event->getId()));
 
     }
 }

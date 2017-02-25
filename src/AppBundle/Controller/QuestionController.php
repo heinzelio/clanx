@@ -16,33 +16,6 @@ use AppBundle\Form\QuestionType;
  */
 class QuestionController extends Controller
 {
-
-    /**
-     * Creates a new Question entity.
-     *
-     * @Route("/new", name="question_new")
-     * @Method({"GET", "POST"})
-     */
-    public function newAction(Request $request)
-    {
-        $question = new Question();
-        $form = $this->createForm('AppBundle\Form\QuestionType', $question);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($question);
-            $em->flush();
-
-            return $this->redirectToRoute('question_show', array('id' => $question->getId()));
-        }
-
-        return $this->render('question/new.html.twig', array(
-            'question' => $question,
-            'form' => $form->createView(),
-        ));
-    }
-
     /**
      * Displays a form to edit an existing Question entity.
      *
