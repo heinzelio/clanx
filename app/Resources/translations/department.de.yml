@@ -1,0 +1,14 @@
+
+# PLACEHOLDERS : USE IT LIKE this
+# label.hello_name: Hello %name%
+# IN CODE:
+# $translated = $translator->trans('Hello %name%', array('%name%' => $name));
+
+
+title: Ressort
+
+btn.create: Erstellen
+
+tip.create_new: Neues Ressort erstellen
+
+text.departments_for_this_event: Ressorts für diesen Event

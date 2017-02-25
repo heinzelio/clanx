@@ -14,9 +14,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Entity\Commitment;
 use AppBundle\Entity\Department;
 use AppBundle\Entity\Event;
-use AppBundle\Entity\User;
-use AppBundle\Entity\RedirectInfo;
-use AppBundle\Form\CommitmentType;
+use AppBundle\ViewModel\Commitment\CommitmentViewModel;
+use AppBundle\Form\Commitment\CommitmentType;
 
 /**
  * Commitment controller.
@@ -34,23 +33,25 @@ class CommitmentController extends Controller
      */
     public function editAction(Request $request, Commitment $commitment)
     {
-        $operator = $this->getUser();
         $department = $commitment->getDepartment();
         $event = $commitment->getEvent();
-        if (!$this->mayEditOrDelete($commitment))
+        $auth = $this->get('app.auth');
+        if (!$auth->mayEditOrDeleteCommitment($commitment))
         {
-            $this->get('session')->getFlashBag()->add('warning', "Eintrag kann nicht geändert werden.");
+            //TODO: Localization
+            $this->addFlash('warning', "Eintrag kann nicht geändert werden.");
             return $this->redirectToRoute('department_show', array(
                 'id' => $department->getId(),
             ));
         }
 
-        $deleteForm = $this->createDeleteForm($commitment);
+        $deleteForm = $this->createDeleteForm($commitment); //???
 
-        $options = array(
-            'departmentChoices' => $event->getDepartments()
-        );
-        $editForm = $this->createForm('AppBundle\Form\CommitmentType', $commitment, $options);
+        $eventService = $this->get('app.event');
+        $formVM = $eventService->getCommitmentFormViewModelForEdit($commitment); //CommitmentViewModel
+
+        $editForm = $this->getEnrollForm($formVM);
+
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -58,15 +59,25 @@ class CommitmentController extends Controller
             $mailFlashMsg = $commitment->getUser()." wurde NICHT benachrichtigt.";
             if(!$noMessage)
             {
-                $message = $editForm->get('message')->getData();
-                $this->sendMail($message,$commitment,$operator);
+                $text = $editForm->get('message')->getData();
+                $operator = $this->getUser();
+
+                $mailBuilder = $this->get('app.mail_builder');
+                $message = $mailBuilder->buildCommitmentVolunteerNotification($text,$commitment,$operator);
+                $this->get('mailer')->send($message);
+
                 $mailFlashMsg = $commitment->getUser()." wurde benachrichtigt.";
             }
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($commitment);
-            $em->flush();
 
-            $this->get('session')->getFlashBag()->add('success', "Änderung gespeichert, ".$mailFlashMsg);
+            $commitmentService = $this->get('app.commitment');
+            $success = $commitmentService->updateCommitment($formVM, $commitment);
+
+            //TODO: Localization
+            if ($success) {
+                $this->addFlash('success', "Änderung gespeichert, ".$mailFlashMsg);
+            } else {
+                $this->addFlash('danger', 'Änderungen konnten NICHT gespeichert werden!');
+            }
             return $this->redirectToRoute('department_show', array(
                 'id' => $department->getId(),
             ));
@@ -82,70 +93,6 @@ class CommitmentController extends Controller
         ));
     }
 
-    private function mayEditOrDelete($commitment)
-    {
-        $operator = $this->getUser();
-        $department = $commitment->getDepartment();
-        $event = $commitment->getEvent();
-
-        return (
-                     $operator->isChiefOf($department)
-                    ||  $operator->isDeputyOf($department)
-                    ||  $this->isGranted('ROLE_ADMIN')
-                )
-                && !$event->getLocked();
-    }
-
-    private function sendMail($text,$commitment,$operator)
-    {
-        // This is for debugging in an EATON facility, where smtp does not work.
-        // $volunteer = $commitment->getUser();
-        // $this->get('session')->getFlashBag()
-        // ->add('info', "Mail Dummy. To "
-        //       .$volunteer->getEmail()
-        //       ." From "
-        //       .$operator->getEmail()
-        //       ." Text: "
-        //       .$text
-        //       ." in template emails/commitment_changed.html.twig");
-        // return;
-
-        $event = $commitment->getDepartment()->getEvent();
-        $volunteer = $commitment->getUser();
-        $message = \Swift_Message::newInstance();
-        $message->setSubject('Dein Einsatz am '.(string)$event.' - Einsatzänderung!')
-            ->setFrom($operator->getEmail())
-            ->setTo($volunteer->getEmail())
-            ->setBody(
-                $this->renderView(
-                    // app/Resources/views/emails/commitmentConfirmation.html.twig
-                    'emails/commitment_changed.html.twig',
-                    array(
-                        'text' => $text,
-                        'event' => $commitment->getDepartment()->getEvent(),
-                        'operator' => $operator,
-                        'volunteer' => $volunteer,
-                    )
-                ),
-                'text/html'
-            )
-            ->addPart(
-                $this->renderView(
-                    // app/Resources/views/emails/commitmentConfirmation.txt.twig
-                    'emails/commitment_changed.txt.twig',
-                    array(
-                        'text' => $text,
-                        'event' => $commitment->getDepartment()->getEvent(),
-                        'operator' => $operator,
-                        'volunteer' => $volunteer,
-                    )
-                ),
-                'text/plain'
-            )
-        ;
-        return $this->get('mailer')->send($message);
-    }
-
     /**
      * Deletes a Commitment entity.
      *
@@ -156,10 +103,12 @@ class CommitmentController extends Controller
     public function deleteAction(Request $request, Commitment $commitment)
     {
         $department = $commitment->getDepartment();
-        $event = $department->getEvent();
-        if (!$this->mayEditOrDelete($commitment))
+        $event = $commitment->getEvent();
+        $auth = $this->get('app.auth');
+        if (!$auth->mayEditOrDeleteCommitment($commitment))
         {
-            $this->get('session')->getFlashBag()->add('warning', "Eintrag kann nicht gelöscht werden.");
+            // TODO: Localization
+            $this->addFlash('warning', "Eintrag kann nicht gelöscht werden.");
             return $this->redirectToRoute('department_show', array(
                 'id' => $department->getId(),
             ));
@@ -169,19 +118,34 @@ class CommitmentController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $text = $form->get('message')->getData();
+            $operator = $this->getUser();
 
-            $message = $form->get('message')->getData();
-            $this->sendMail($message,$commitment,$this->getUser());
+            $mailBuilder = $this->get('app.mail_builder');
+            $message = $mailBuilder->buildCommitmentVolunteerNotification($text,$commitment,$operator);
+            $this->get('mailer')->send($message);
+
             $volunteer = $commitment->getUser();
             $em = $this->getDoctrine()->getManager();
+            foreach ($commitment->getAnswers() as $answer) {
+                $em->remove($answer);
+            }
             $em->remove($commitment);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('success', "Dieser Einsatz wurde gelöscht. ".$volunteer." wurde benachrichtigt.");
+            $this->addFlash('success', "Dieser Einsatz wurde gelöscht. ".$volunteer." wurde benachrichtigt.");
         }
 
-        return $this->redirectToRoute('department_show', array(
-            'id' => $department->getId(),
-        ));
+        //TODO: Solve this with referers. see https://github.com/chriglburri/clanx/issues/118
+        if ($department) {
+            return $this->redirectToRoute('department_show', array(
+                'id' => $department->getId(),
+            ));
+        } else {
+            return $this->redirectToRoute('event_edit', array(
+                'id' => $event->getId(),
+            ));
+        }
+
     }
 
     /**
@@ -202,5 +166,27 @@ class CommitmentController extends Controller
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    /**
+     * @param  CommitmentViewModel $vm
+     * @return FormType
+     */
+    private function getEnrollForm(CommitmentViewModel $vm)
+    {
+        $options = array(
+            CommitmentType::DEPARTMENT_CHOICES_KEY => $vm->getDepartments(),
+            CommitmentType::USE_DEPARTMENTS_KEY => $vm->hasDepartments(),
+            CommitmentType::USE_VOLUNTEER_NOTIFICATION_KEY => true,
+        );
+
+        $form = $this->createForm('AppBundle\Form\Commitment\CommitmentType', $vm, $options);
+
+        foreach ($vm->getQuestions() as $q) {
+            $attributes = array();
+            $attributes = $q->fillAttributes($attributes);
+            $form->add($q->getFormFieldName(), $q->getFormType(), $attributes);
+        }
+        return $form;
     }
 }

@@ -1,20 +1,28 @@
 {# app/Resources/views/emails/commitmentConfirmation.html.twig #}
-{% if Gender == 'M' %}
-    <h3>Lieber {{ Forename }}</h3>
+{# ViewModel is of type "CommitmentConfirmationViewModel" #}
+<h3>
+{% if ViewModel.User.Gender == 'M' %}
+    Lieber
 {% else %}
-    <h3>Liebe {{ Forename }}</h3>
+    Liebe
 {% endif %}
+{{ ViewModel.User.Forename }}
+</h3>
+
+{% set event_url = absolute_url(path('event_show', { 'id': ViewModel.Event.Id })) %}
 
 <p> Du hast dich beim Event
-    <a href="{{ absolute_url(path('event_show', { 'id': EventID })) }}"><strong>{{ Event }}</strong></a>
+    <a href="{{ event_url }}"><strong>{{ ViewModel.Event.Name }}</strong></a>
     als Hölfer eingetragen.</p>
 
 <p> Dafür schonmal <span style="font-size: 150%">DANKE!</span></p>
 
-<p> Der Event findet statt am <strong>{{ EventDate|date('d.M.Y') }}</strong>.</p>
+<p> Der Event findet statt am <strong>{{ ViewModel.Event.Date|date('d.M.Y') }}</strong>.</p>
 <p> Du wirst zu gegebender Zeit von uns zum Hölferinformationsanlass eingeladen.</p>
-<p> Du hast als gewünschtes Einsatzressort <strong>{{ Department }}</strong> angegeben.</br>
-    Bitte beachte, dass wir dir keinen Einsatz in deinem gewünschten Ressort garantieren können.</p>
+{% if ViewModel.Department %}
+    <p> Du hast als gewünschtes Einsatzressort <strong>{{ ViewModel.Department.Name }}</strong> angegeben.</br>
+        Bitte beachte, dass wir den Einsatz in deinem gewünschten Ressort nicht garantieren können.</p>
+{% endif %}
 
 <p>Liebe Grüsse: </p>
 <h3>das Clanx Team</h3>

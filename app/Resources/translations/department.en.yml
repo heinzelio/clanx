@@ -1,0 +1,14 @@
+
+# PLACEHOLDERS : USE IT LIKE this
+# label.hello_name: Hello %name%
+# IN CODE:
+# $translated = $translator->trans('Hello %name%', array('%name%' => $name));
+
+
+title: Department
+
+btn.create: Create
+
+tip.create_new: Create new department
+
+text.departments_for_this_event: Departments for this event

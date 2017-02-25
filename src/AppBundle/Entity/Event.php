@@ -57,6 +57,11 @@ class Event
     private $departments;
 
     /**
+     * @ORM\OneToMany(targetEntity="Commitment", mappedBy="event")
+     */
+    private $commitments;
+
+    /**
      * @var boolean
      * @ORM\Column(name="locked", type="boolean", nullable=false)
      */
@@ -67,6 +72,11 @@ class Event
      * @ORM\Column(name="is_for_association_members", type="boolean", nullable=false)
      */
     private $isForAssociationMembers = false;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Question", mappedBy="event")
+     */
+    private $questions;
 
     /**
      * Set name
@@ -174,12 +184,13 @@ class Event
     /**
      * Get all departments of this event
      *
-     * @return array
+     * @return Department[]
      */
     public function getDepartments()
     {
-        return $this->departments->toArray();
+        return $this->departments->toArray();;
     }
+
     /**
      * Gets all departments which are not locked.
      *
@@ -196,17 +207,11 @@ class Event
     /**
      * Gets all commitments of this event.
      *
-     * @return array
+     * @return Commitment[]
      */
     public function getCommitments()
     {
-        $arr = array();
-        foreach ($this->getDepartments() as $department) {
-            foreach ($department->getCommitments() as $commitment) {
-                array_push($arr,$commitment);
-            }
-        }
-        return  $arr;
+        return $this->commitments->toArray();;
     }
 
     /**
@@ -275,6 +280,11 @@ class Event
      * @return boolean
      */
     public function getIsForAssociationMembers(){return $this->isForAssociationMembers;}
+
+    /**
+     * @return Question[]
+     */
+    public function getQuestions(){return $this->questions;}
 
     /**
      * Is the event in the future?

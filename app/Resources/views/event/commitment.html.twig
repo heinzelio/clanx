@@ -1,0 +1,90 @@
+<div class="panel panel-default panel-danger">
+    {% set collapseId = 'CollapseCommitment' ~ Commitment.Id %}
+    <div class="panel-heading">
+        <span class="accordion-toggle-link">
+            <a role="button"
+                data-toggle="collapse"
+                data-parent="#accordion"
+                href="#{{collapseId}}"
+                aria-expanded="false"
+                aria-controls="{{collapseId}}">
+                {{ 'text.youCommitedParticipation'|trans({}, 'event') }}
+            </a>
+        </span>
+    </div>
+    <div id="{{collapseId}}"
+        class="panel-collapse collapse"
+        role="tabpanel"
+        aria-labelledby="headingOne">
+        <div class="panel-body">
+            {% if Commitment.department %}
+                <p class="alert alert-info">
+                    Bespreche Änderungen von deinem Einsatz direkt mit deinem Ressortleiter. Er wird
+                    die Daten dann für dich anpassen.
+                </p>
+                <p>
+                    Dein Ressort:
+                    <a
+                        class="btn btn-default"
+                        href="{{ path('department_show',{'id':Commitment.department.id}) }}"
+                        data-toggle="tooltip"
+                        title="Zeige Details des Ressorts {{Commitment.department.name}}">
+                        <span class="fa fa-eye"></span>
+                        {{Commitment.department.name}}
+                    </a>
+                </p>
+                {% if Commitment.department.chiefUser %}
+                    <p>
+                        Ressortleiter:
+                        <a
+                            class="btn btn-default"
+                            href="{{ path('event_redirect_mail_to',{
+                                    'id':Commitment.event.id,
+                                    'user_id':Commitment.department.chiefUser.id})
+                                    }}"
+                            data-toggle="tooltip"
+                            title="Schreibe ein Email an {{Commitment.department.chiefUser}}.">
+                            <span class="fa fa-envelope-o"></span>
+                            {{Commitment.department.chiefUser}}
+                        </a>
+                    </p>
+                {% endif %} {# if Commitment.department.chiefUser #}
+                {% if Commitment.department.deputyUser %}
+                    <p>
+                        Stellvertretender Leiter:
+                        <a
+                            class="btn btn-default"
+                            href="{{ path('event_redirect_mail_to',{
+                                'id':Commitment.event.id,
+                                'user_id':Commitment.department.deputyUser.id})
+                            }}"
+                            data-toggle="tooltip"
+                            title="Schreibe ein Email an {{Commitment.department.deputyUser}}.">
+                            <span class="fa fa-envelope-o"></span>
+                            {{Commitment.department.deputyUser}}
+
+                        </a>
+                    </p>
+                {% endif %} {# if Commitment.department.deputyUser #}
+            {% endif %} {# if Commitment.department #}
+            {% for answer in Commitment.answers %}
+                {% if answer.question %}
+                    <p>
+                        {{ answer.question.text }}
+                    </p>
+                    <p><blockquote>
+                        {% if answer.question.type == 'F' %}
+                            {% if answer.answer == '1' %}
+                                {{ 'lbl.yes'|trans }}
+                            {% else %}
+                                {{ 'lbl.no'|trans }}
+                            {% endif %}
+                        {% else %}
+                            {{ answer.answer }}
+                        {% endif %}
+                    </blockquote></p>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div> <!--panel-->

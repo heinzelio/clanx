@@ -1,0 +1,10 @@
+
+# PLACEHOLDERS : USE IT LIKE this
+# label.hello_name: Hello %name%
+# IN CODE:
+# $translated = $translator->trans('Hello %name%', array('%name%' => $name));
+
+
+'tip.save_commitment': Speichert deine Teilnahme am Event.
+
+'title.enroll': Einschreiben für Teilnahme

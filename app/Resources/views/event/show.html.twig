@@ -1,7 +1,7 @@
 {% extends 'base_nav.html.twig' %}
 
 {% block title %}
-    {{ event.name }}
+    {{ ViewModel.event.name }}
 {% endblock %}
 
 {% block workspace %}
@@ -10,28 +10,36 @@
         <div class="col-md-6">
 
             <div class="panel panel-primary">
-                <div class="panel-heading">{{event.name}}</div>
+                <div class="panel-heading">
+                    {{ViewModel.event.name}}
+                </div>
                 <div class="panel-body">
                     <p>
                         Der Event
-                        <strong>{{ event.name }}</strong>
-                        {% if event.isForAssociationMembers %}
+                        <strong>{{ ViewModel.event.name }}</strong>
+                        {% if ViewModel.event.isForAssociationMembers %}
                             (nur für Vereinsmitglieder)
                         {% endif %}
                         findet am
-                        {% if event.date %}{{ event.date|date('d. M. Y') }}{% endif %}
+                        {% if ViewModel.event.date %}
+                            {{ ViewModel.event.date|date('d. M. Y') }}
+                        {% endif %}
                         statt.</p>
                     <p class="small">
-                        {{ event.description|nl2br}}
+                        {{ ViewModel.event.description|nl2br}}
                     </p>
                     <p>Bis jetzt eingetragene Hölfer:
-                        {{ enrolledCount }}</p>
+                        {{ ViewModel.enrolledCount }}</p>
 
-                    {% if myDepartmentsAsChief %}
+                    {% if ViewModel.myDepartmentsAsChief %}
                         <p>Du bist Ressortleiter:
-                            {% for dpt in myDepartmentsAsChief %}
+                            {% for dpt in ViewModel.myDepartmentsAsChief %}
                                 <br/>
-                                <a href="{{ path('department_show',{'id':dpt.Id}) }}" class="btn btn-default" data-toggle="tooltip" title="Zeige Details des Ressorts {{dpt.name}}.">
+                                <a
+                                    href="{{ path('department_show',{'id':dpt.Id}) }}"
+                                    class="btn btn-default"
+                                    data-toggle="tooltip"
+                                    title="Zeige Details des Ressorts {{dpt.name}}.">
                                     <span class="fa fa-eye"></span>
                                     {{ dpt.name }}
                                 </a>
@@ -39,11 +47,15 @@
                         </p>
                     {% endif %}
 
-                    {% if myDepartmentsAsDeputy %}
+                    {% if ViewModel.myDepartmentsAsDeputy %}
                         <p>Du bist stellvertretender Ressortleiter:
-                            {% for dpt in myDepartmentsAsDeputy %}
+                            {% for dpt in ViewModel.myDepartmentsAsDeputy %}
                                 <br/>
-                                <a href="{{ path('department_show',{'id':dpt.Id}) }}" class="btn btn-default" data-toggle="tooltip" title="Zeige Details des Ressorts {{dpt.name}}">
+                                <a
+                                    href="{{ path('department_show',{'id':dpt.Id}) }}"
+                                    class="btn btn-default"
+                                    data-toggle="tooltip"
+                                    title="Zeige Details des Ressorts {{dpt.name}}">
                                     <span class="fa fa-eye"></span>
                                     {{ dpt.name }}
                                 </a>
@@ -53,46 +65,68 @@
                 </div>
                 <div class="panel-footer">
 
-                    <a class="btn btn-default" href="{{ path('event_index') }}" data-toggle="tooltip" title="Gehe zurück zur Eventübersicht">
+                    <a
+                        class="btn btn-default"
+                        href="{{ path('event_index') }}"
+                        data-toggle="tooltip"
+                        title="Gehe zurück zur Eventübersicht">
                         <span class="fa fa-times"></span>
                         Abbrechen
                     </a>
 
-                    {% if mayMail %}
-                        <a class="btn btn-default" href="{{ path ('event_mail_enrolled', {'id': event.id})}}" data-toggle="tooltip" title="Schreibe ein Email an alle Hölfer von diesem Event.">
+                    {% if ViewModel.mayMail %}
+                        <a
+                            class="btn btn-default"
+                            href="{{ path ('event_mail_enrolled', {'id': ViewModel.event.id})}}"
+                            data-toggle="tooltip"
+                            title="Schreibe ein Email an alle Hölfer von diesem Event.">
                             <span class="fa fa-envelope-o"></span>
                             Email schreiben
                         </a>
-                        <a class="btn btn-default"
-                            href="{{ path ('event_invite', {'id': event.id})}}"
+                        <a
+                            class="btn btn-default"
+                            href="{{ path ('event_invite', {'id': ViewModel.event.id})}}"
                             data-toggle="tooltip"
-                            {% if event.isForAssociationMembers %}
+                            {% if ViewModel.event.isForAssociationMembers %}
                                 title="Lade alle Vereinsmitglieder ein."
                             {% else %}
                                 title="Lade alle registrierten Benutzer ein."
-                            {% endif %}
-                            >
+                            {% endif %}>
                             <span class="fa fa-envelope-o"></span>
                             Einladen
                         </a>
                     {% endif %}
 
-                    {% if mayEdit %}
-                        <a class="btn btn-default" href="{{ path('event_edit', { 'id': event.id }) }}" data-toggle="tooltip" title="Details von {{event.name}} bearbeiten.">
+                    {% if ViewModel.mayEdit %}
+                        <a
+                            class="btn btn-default"
+                            href="{{ path('event_edit', { 'id': ViewModel.event.id }) }}"
+                            data-toggle="tooltip"
+                            title="Details von {{ViewModel.event.name}} bearbeiten.">
                             <span class="fa fa-pencil"></span>
                             Bearbeiten
                         </a>
                     {% endif %}
 
-                    {% if mayDelete %}
-                        {{ form_start(delete_form) }}
-                        <input class="btn btn-danger" type="submit" value="Löschen" onclick="return confirm('{{event.name}} wirklich löschen?')" data-toggle="tooltip" title="Den Event {{event.name}} aus der Datenbank löschen."/>
-                        {{ form_end(delete_form) }}
+                    {% if ViewModel.mayDelete %}
+                        {{ form_start(ViewModel.deleteForm) }}
+                        <input
+                            class="btn btn-danger"
+                            type="submit"
+                            value="Löschen"
+                            onclick="return confirm('{{ViewModel.event.name}} wirklich löschen?')"
+                            data-toggle="tooltip"
+                            title="Den Event {{ViewModel.event.name}} aus der Datenbank löschen."/>
+                        {{ form_end(ViewModel.deleteForm) }}
                     {% endif %}
-                    <!-- {{mayDeleteMessage}} -->
+                    <!-- {{ViewModel.mayDeleteMessage}} -->
 
-                    {% if mayDownload %}
-                        <a class="btn btn-default" href="{{ path('event_download', {'id': event.id}) }}" data-toggle="tooltip" title="Download Liste aller Hölfer von diesem Event.">
+                    {% if ViewModel.mayDownload %}
+                        <a
+                            class="btn btn-default"
+                            href="{{ path('event_download', {'id': ViewModel.event.id}) }}"
+                            data-toggle="tooltip"
+                            title="Download Liste aller Hölfer von diesem Event.">
                             <span class="fa fa-download"></span>
                             Download
                         </a>
@@ -102,123 +136,24 @@
                 <!-- footer -->
             </div>
             <!-- panel -->
-            {{
-                render(controller('AppBundle:EventStatistics:index',
-                    { 'id': event.id }))
-            }}
-            {{
-                render(controller('AppBundle:EventVolunteers:index',
-                    { 'id': event.id }))
-            }}
+            {{ render(controller('AppBundle:EventStatistics:index', { 'id':
+            ViewModel.event.id })) }}
+            {{ render(controller('AppBundle:EventVolunteers:index', { 'id':
+            ViewModel.event.id })) }}
         </div>
         <!-- col -->
         <div class="col-md-6">
-            {% if mayEnroll %}
-                <div class="panel panel-danger">
-                    <div class="panel-heading">Jetzt als Hölfer eintragen</div>
-                    <div class="panel-body">
-                        {# find details of this form in EventController.createEnrollForm() #}
-                        {{ form_start(enroll_form, {'name': 'event_enroll_form'}) }}
-                        {{form_widget(enroll_form) }}
-                        {#submit button is being generated in the controller.#}
-                        {{ form_end(enroll_form) }}
 
-                        <a class="btn btn-danger" onclick="formSubmit(event_enroll_form,this)" data-toggle="tooltip" title="Änderungen übernehmen und in der Datenbank speichern.">
-                            <span class="fa fa-floppy-o"></span>
-                            Eintragen
-                        </a>
-                    </div>
-                </div>
-                <!--panel-->
+            {% for commitment in ViewModel.commitments %}
+                {{ render(controller('AppBundle:EventCommitment:showCommitment',
+                {'id': commitment.id}))}}
+            {% endfor %}
+
+            {% if ViewModel.mayEnroll %}
+                {{ render(controller('AppBundle:EventCommitment:showEnroll', { 'id':
+                ViewModel.event.id })) }}
             {% endif %}
-            {% if commitment %}
-                <div class="panel panel-success">
-                    <div class="panel-heading">Du bist als Hölfer eingetragen.</div>
-                    <div class="panel-body">
-                        <p>
-                            Dein Ressort:
-                            <a class="btn btn-default" href="{{ path('department_show',{'id':commitment.department.id}) }}" data-toggle="tooltip" title="Zeige Details des Ressorts {{commitment.department.name}}">
-                                <span class="fa fa-eye"></span>
-                                {{commitment.department.name}}
-                            </a>
-                        </p>
-                        {% if commitment.department.chiefUser %}
-                            <p>
-                                Ressortleiter:
-                                <a
-                                    class="btn btn-default"
-                                    href="{{ path('event_redirect_mail_to',{
-                                            'id':event.id,
-                                            'user_id':commitment.department.chiefUser.id})
-                                            }}"
-                                    data-toggle="tooltip"
-                                    title="Schreibe ein Email an {{commitment.department.chiefUser}}.">
-                                    <span class="fa fa-envelope-o"></span>
-                                    {{commitment.department.chiefUser}}
-                                </a>
-                            </p>
-                        {% endif %}
 
-                        {% if commitment.department.deputyUser %}
-                            <p>
-                                Stellvertretender Leiter:
-                                <a
-                                    class="btn btn-default"
-                                    href="{{ path('event_redirect_mail_to',{
-                        'id':event.id,
-                        'user_id':commitment.department.deputyUser.id})
-                    }}"
-                                    data-toggle="tooltip"
-                                    title="Schreibe ein Email an {{commitment.department.deputyUser}}.">
-                                    <span class="fa fa-envelope-o"></span>
-                                    {{commitment.department.deputyUser}}
-
-                                </a>
-                            </p>
-                        {% endif %}
-
-                        {% if commitment.possibleStart %}
-                            <p>
-                                Ich helfe an folgenden Tagen:<br/>
-                                <mark>{{commitment.possibleStart}}</mark>
-                            </p>
-                        {% endif %}
-                        <p>
-                            Deine TShirt Grösse:<br/>
-                            <mark>{{commitment.shirtSize}}</mark>
-                        </p>
-                        {% if commitment.remark %}
-                            <p>
-                                Deine Bemerkung / Wunsch:<br/>
-                                <mark>{{commitment.remark|nl2br}}</mark>
-                            </p>
-                        {% endif %}
-
-                    </div>
-                    <div class="panel-footer">
-                        Bespreche Änderungen von deinem Einsatz direkt mit deinem Ressortleiter. Er wird die Daten dann für dich anpassen.
-                        <!-- {# if event.locked #}
-                            <a class="btn btn-default" disabled="disabled"> -->
-                        <!-- tooltips gönd nöd uf disabledem Button :(
-                data-toggle="tooltip"
-                title="Ändern oder löschen ist nicht mehr möglich. Deine Teilnahme
-                ist definitiv. (Falls ein Problem besteht, nimm bitte mit deinem
-                Ressortleiter Kontakt auf.)"
-            -->
-                        <!-- <span class="fa fa-lock"></span>
-                                Bearbeiten nicht mehr möglich
-                            </a>
-                        {# else #}
-                            <a class="btn btn-default" href="{#{path('commitment_edit',{'id':commitment.id})}#}" data-toggle="tooltip" title="Ändere oder lösche deine Eintragung als Hölfer.">
-                                <span class="fa fa-pencil"></span>
-                                Bearbeiten
-                            </a>
-                        {# endif #} -->
-                    </div>
-                    <!-- footer -->
-                </div>
-                <!--panel-->
-            {% endif %}
         </div>
         <!-- col -->
     </div>

@@ -25,7 +25,7 @@ services:
 
     app.event:
         class: AppBundle\Service\EventService
-        arguments: ["@app.auth", "@doctrine.orm.entity_manager", "@app.department", "@app.commitment"]
+        arguments: ["@doctrine.orm.entity_manager", "@app.auth", "@app.department", "@app.commitment", "@app.question"]
 
     app.department:
         class: AppBundle\Service\DepartmentService
@@ -33,7 +33,7 @@ services:
 
     app.commitment:
         class: AppBundle\Service\CommitmentService
-        arguments: ["@app.auth", "@doctrine.orm.entity_manager"]
+        arguments: ["@app.auth", "@doctrine.orm.entity_manager", "@logger"]
 
     app.menu:
         class: AppBundle\Service\MenuService
@@ -42,3 +42,11 @@ services:
     app.user:
         class: AppBundle\Service\UserService
         arguments: ["@doctrine.orm.entity_manager"]
+
+    app.question:
+        class: AppBundle\Service\QuestionService
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.mail_builder:
+        class: AppBundle\Service\MailBuilderService
+        arguments: ["@twig"]

@@ -1,0 +1,33 @@
+<!-- this is a nested template. See "event/show.html.twig" for context -->
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        {{ 'title.enroll'|trans({}, 'enroll') }}
+    </div>
+    <div class="panel-body">
+        <p>
+            {# find details of this form in AppBundle\Form\Commitment\CommitmentType #}
+            {{ form_start(enroll_form, {
+                'name': 'enroll_form',
+                'action': path('event_commitment_show_enroll',{'id': event_id}),
+                }) }}
+            {{ form_errors(enroll_form) }}
+
+            {{ form_widget(enroll_form) }}
+
+            {{ form_end(enroll_form) }}
+
+        </p>
+    </div>
+    <div class="panel-footer">
+        <a class="btn btn-primary"
+            onclick="formSubmit(enroll_form,this);"
+            data-toggle="tooltip"
+            title="{{ 'tip.save_commitment'|trans({}, 'enroll') }}">
+            <span class="fa fa-floppy-o"></span>
+            {{'btn.save'|trans}}
+        </a>
+
+    </div>
+</div>
+<!--panel-->

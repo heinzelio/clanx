@@ -1,0 +1,77 @@
+<!-- this is a nested template. See "event/show.html.twig" for context -->
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        {{'text.questions_for_this_event'|trans({},'question')}}
+    </div>
+    <table class="table">
+        <tbody>
+        {% for questionModel in model.questions %}
+            {% set question = questionModel.question %}
+            <tr>
+                {% if question.text == 'Please change text and values of this question.' %}
+                    <td class='danger'>
+                        {{ question.text }}
+                    </td>
+                {% else %}
+                    <td>
+                        {{ question.text }}
+                    </td>
+                {% endif %}
+                <td>
+                    {% if question.type == 'F' %}
+                        <span class="fa fa-check-square-o"></span>
+                        {{'text.yes_no_question'|trans({},'question')}}
+                    {% elseif question.type == 'S'  %}
+                        <span class="fa fa-align-left"></span>
+                        {{'text.selection'|trans({},'question')}}
+                    {% elseif question.type == 'T' %}
+                        <span class="fa fa-pencil-square-o"></span>
+                        {{'text.text_question'|trans({},'question')}}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if questionModel.mayEdit %}
+                        <a href="{{ path('question_edit', { 'id': question.id }) }}"
+                            class="btn btn-default"
+                            data-toggle="tooltip"
+                            title="{{'tip.change_details_of'|trans({'%entity%':question.text})}}">
+                            <span class="fa fa-pencil"></span>
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="panel-footer">
+        {% if model.mayCreate %}
+            <a class="btn btn-default"
+                href="{{ path('question_new',{'event_id' : model.event.id, 'type':'F'}) }}"
+                data-toggle="tooltip"
+                title="{{'tip.create_new'|trans({},'question')}}">
+                    {{'btn.create'|trans({},'question')}}
+                    {{'text.yes_no_question'|trans({},'question')}}
+                    <span class="fa fa-check-square-o"></span>
+            </a>
+            <a class="btn btn-default"
+                href="{{ path('question_new',{'event_id' : model.event.id, 'type':'S'}) }}"
+                data-toggle="tooltip"
+                title="{{'tip.create_new'|trans({},'question')}}">
+                    {{'btn.create'|trans({},'question')}}
+                    {{'text.selection'|trans({},'question')}}
+                    <span class="fa fa-align-left"></span>
+            </a>
+            <a class="btn btn-default"
+                href="{{ path('question_new',{'event_id' : model.event.id, 'type':'T'}) }}"
+                data-toggle="tooltip"
+                title="{{'tip.create_new'|trans({},'question')}}">
+                    {{'btn.create'|trans({},'question')}}
+                    {{'text.text_question'|trans({},'question')}}
+                    <span class="fa fa-pencil-square-o"></span>
+            </a>
+
+        {% endif %}
+    </div>
+</div><!-- Panel "question" -->

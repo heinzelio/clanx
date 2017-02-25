@@ -5,7 +5,9 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use AppBundle\Entity\Event;
+use AppBundle\Entity\Commitment;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Question;
 
 class Authorization
 {
@@ -55,6 +57,15 @@ class Authorization
     private function isGranted($role)
     {
         return $this->authorizationChecker->isGranted($role);
+    }
+
+    /**
+     * Checks if the logged in user is super admin
+     * @return boolean
+     */
+    private function isSA()
+    {
+        return ($this->isGranted('ROLE_SUPER_ADMIN'));
     }
 
     /**
@@ -196,6 +207,97 @@ class Authorization
         }
         return false;
     }
-}
 
-?>
+    /**
+     * Checks if the logged in user may enroll to the given event.
+     * @param  Event  $event The event.
+     * @return boolean        Returns true, if the user may enroll to the event
+     */
+    public function mayEnroll(Event $event)
+    {
+        if ($event->getLocked()) {
+            return false;
+        }
+        if ($event->getIsForAssociationMembers() && !$this->user->getIsAssociationMember()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if the logged in user may change commitments of the given event.
+     * @param  Event  $event
+     * @return boolean
+     */
+    public function mayEditOrDeleteCommitments(Event $event)
+    {
+        if($this->isSA()) return true;
+
+        return $this->isGranted('ROLE_ADMIN') && !$event->getLocked();
+    }
+
+    /**
+     * Checks if the logged in user may change or delete the given commitment.
+     * @param  Commitment $commitment
+     * @return boolean
+     */
+    public function mayEditOrDeleteCommitment(Commitment $commitment)
+    {
+        if($this->isSA()) return true;
+
+        $operator = $this->getUser();
+        $department = $commitment->getDepartment();
+        $event = $commitment->getEvent();
+
+        // user must be either chief of deputy of the department,
+        // or he must be at least admin.
+        // Furthermore the event may not be locked.
+        return (
+                     $this->user->isChiefOf($department)
+                    ||  $this->user->isDeputyOf($department)
+                    ||  $this->isGranted('ROLE_ADMIN')
+                )
+                && !$event->getLocked();
+    }
+
+    /**
+     * You may see departments if you are an admin.
+     * @param  Event  $event
+     * @return boolean
+     */
+    public function mayShowDepartmentsOfEvent(Event $event)
+    {
+        return $this->isGranted('ROLE_ADMIN');
+    }
+
+    /**
+     * You may see departments if you are an admin.
+     * @param  Event  $event
+     * @return boolean
+     */
+    public function mayShowQuestionsOfEvent(Event $event)
+    {
+        return $this->isGranted('ROLE_ADMIN');
+    }
+
+    /**
+     * you can edit questions if you are admin
+     * @param  Question $question
+     * @return boolean
+     */
+    public function mayEditQuestion(Question $question)
+    {
+        return $this->isGranted('ROLE_ADMIN');
+    }
+
+    /**
+     * You can add questions to this event if you are admin
+     * @param  Event $event
+     * @return boolean
+     */
+    public function mayAddQuestion(Event $event)
+    {
+        return $this->isGranted('ROLE_ADMIN');
+    }
+}

@@ -131,14 +131,17 @@ class EventController extends Controller
             return $this->redirectToRoute('event_index');
         }
 
+        //EventShowViewModel
         $detailViewModel = $eventSvc->getDetailViewModel($event);
+        $detailViewModel
+            ->setDeleteForm(
+                $this->createDeleteForm($event)->createView()
+            )
+            ->setEnrollForm(
+                $this->createEnrollForm($event,$event->getFreeDepartments())->createView()
+            );
 
-        $detailViewModel['delete_form'] = $this->createDeleteForm($event)
-                                                ->createView();
-        $detailViewModel['enroll_form'] = $this->createEnrollForm($event,$event->getFreeDepartments())
-                                                ->createView();
-
-        return $this->render('event/show.html.twig', $detailViewModel);
+        return $this->render('event/show.html.twig', array('ViewModel'=>$detailViewModel));
     }
 
     /**
@@ -154,7 +157,6 @@ class EventController extends Controller
         $editForm = $this->createForm('AppBundle\Form\EventType', $event);
         $editForm->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
-        $departments = $em->getRepository('AppBundle:Department')->findByEvent($event);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em->persist($event);
@@ -168,8 +170,7 @@ class EventController extends Controller
         return $this->render('event/edit.html.twig', array(
             'event' => $event,
             'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-            'departments' => $departments
+            'delete_form' => $deleteForm->createView()
         ));
     }
 

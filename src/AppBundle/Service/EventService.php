@@ -3,8 +3,15 @@ namespace AppBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
-use AppBundle\Service\Authorization;
+use Symfony\Component\Translation\TranslatorInterface;
 use AppBundle\Entity\Event;
+use AppBundle\Entity\Commitment ;
+use AppBundle\ViewModel\Commitment\CommitmentViewModel;
+use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
+use AppBundle\ViewModel\Commitment\TextQuestionViewModel;
+use AppBundle\ViewModel\Commitment\SelectionQuestionViewModel;
+use AppBundle\ViewModel\Event\EventStatisticsViewModel;
+use AppBundle\ViewModel\Event\EventShowViewModel;
 
 class EventService
 {
@@ -30,18 +37,25 @@ class EventService
      */
     protected $commitmentService;
 
+    /**
+     * @var QuestionService
+     */
+    protected $questionService;
+
     public function __construct(
-        Authorization $auth,
         EntityManager $em,
+        Authorization $auth,
         DepartmentService $deptService,
-        CommitmentService $cmmtService
+        CommitmentService $cmmtService,
+        QuestionService $questionService
     )
     {
-        $this->authorization = $auth;
         $this->entityManager = $em;
+        $this->authorization = $auth;
         $this->repo = $em->getRepository('AppBundle:Event');
         $this->departmentService = $deptService;
         $this->commitmentService = $cmmtService;
+        $this->questionService = $questionService;
     }
 
     /**
@@ -91,8 +105,8 @@ class EventService
 
     /**
      * Collects all necessary data to fill in the "show" view of the Event page
-     * @param  Event  $event [description]
-     * @return [type]        [description]
+     * @param  Event  $event
+     * @return EventShowViewModel
      */
     public function getDetailViewModel(Event $event)
     {
@@ -100,16 +114,8 @@ class EventService
         $myDepartmentsAsDeputy = $this->departmentService->getMyDepartmentsAsDeputy($event);
 
         $enrolledCount = $this->CountVolunteersFor($event);
-
-        $commitment = null;
         $myCommitments = $this->commitmentService->getCurrentUsersCommitmentsFor($event);
-        if(count($myCommitments)>0)
-        {
-            $commitment = $myCommitments[0];
-        }
-
-        $mayEnroll = (!$commitment) && (!$event->getLocked());
-
+        $mayEnroll = $this->authorization->mayEnroll($event);
         $mayMail = $this->authorization->maySendEventMassMail();
         $mayInvite = $this->authorization->maySendInvitation($event);
         $mayEdit = $this->authorization->mayEditEvent();
@@ -117,20 +123,21 @@ class EventService
 
         $mayDownload = $this->authorization->mayDownloadFromEvent();
 
-        return array(
-            'event' => $event,
-            'mayEnroll' => $mayEnroll,
-            'enrolledCount' => $enrolledCount,
-            'commitment' => $commitment,
-            'mayMail' => $mayMail,
-            'mayInvite' => $mayInvite,
-            'mayEdit' => $mayEdit,
-            'mayDelete' => $deleteAuth[Authorization::VALUE],
-            'mayDeleteMessage' => $deleteAuth[Authorization::MESSAGE],
-            'mayDownload' => $mayDownload,
-            'myDepartmentsAsChief' => $myDepartmentsAsChief,
-            'myDepartmentsAsDeputy' => $myDepartmentsAsDeputy,
-        );
+        $vm = new EventShowViewModel();
+        $vm ->setEvent($event)
+        ->setMayEnroll($mayEnroll)
+        ->setEnrolledCount($enrolledCount) //todo: fix for multiple commitments
+        ->setCommitments($myCommitments)
+        ->setMayMail($mayMail)
+        ->setMayInvite($mayInvite)
+        ->setMayEdit($mayEdit)
+        ->setMayDelete($deleteAuth[Authorization::VALUE])
+        ->setMayDeleteMessage($deleteAuth[Authorization::MESSAGE])
+        ->setMayDownload($mayDownload)
+        ->setMyDepartmentsAsChief($myDepartmentsAsChief)
+        ->setMyDepartmentsAsDeputy($myDepartmentsAsDeputy);
+
+        return $vm;
     }
 
     /**
@@ -196,6 +203,48 @@ class EventService
     }
 
     /**
+     * @param  Event  $event
+     * @return CommitmentViewModel
+     */
+    public function getCommitmentFormViewModel(Event $event)
+    {
+        $commitmentVM = new CommitmentViewModel();
+        foreach ($event->getQuestions() as $q) {
+            $qVM = $this->questionService->getQuestionViewModel($q);
+            $commitmentVM->addQuestion($qVM);
+        }
+        return $commitmentVM->setDepartments($event->getFreeDepartments()); // TODO: dont make this on the entity. get it from a service or here.
+    }
+
+    public function getCommitmentFormViewModelForEdit(Commitment $commitment)
+    {
+        $commitmentVM = new CommitmentViewModel();
+        foreach ($commitment->getAnswers() as $a) {
+            $qVM = $this->questionService->getQuestionViewModel($a->getQuestion(), $a);
+            $commitmentVM->addQuestion($qVM);
+        }
+        $commitmentVM->setDepartments($commitment->getEvent()->getDepartments());
+        $commitmentVM->setDepartment($commitment->getDepartment());
+        return $commitmentVM;
+    }
+
+    public function getStatisticsViewModels(Event $event)
+    {
+        $viewModels = array();
+
+        $qs = $event->getQuestions();
+        foreach ($qs as $q) {
+            if($q->getAggregate()){
+                $viewModel = new EventStatisticsViewModel();
+                $viewModel->setText($q->getText());
+                $viewModel->setValues($this->questionService->countAnswers($q));
+                $viewModels[] = $viewModel;
+            }
+        }
+        return $viewModels;
+    }
+
+    /**
      * returns a query expression to filter the assiciationMember field.
      * When the user may see all events, the expression is simply '1=1',
      * which evaluates to 'true' in the query (suitable for AND, but not for OR).
@@ -220,7 +269,6 @@ class EventService
             $qb->setParameter(':userIsMember', $p);
             return $qb->expr()->lte($alias . '.isForAssociationMembers',':userIsMember');
         }
-
     }
 }
 

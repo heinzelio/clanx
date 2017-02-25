@@ -1,0 +1,16 @@
+
+success: OK
+info: Zur Information:
+warning: Obacht!
+danger: Obacht!
+
+successfully_saved: Daten wurden erfolgreich gespeichert
+
+flash.enroll_failed: Speichern fehlgeschlagen. Du bist NICHT eingetragen worden.
+flash.enroll_succeeded: Du bist jetzt eingetragen. Prüfe deine Emails für mehr Infos (Wenn du kein Email von uns findest, schau bitte auch im Spamordner nach).
+
+flash.mayNotShowDepartments: Du darfst keine Ressorts sehen. Frage den Systemadministrator nach Berechtigung.
+flash.mayNotShowQuestions: Du darfst keine Eventfragen sehen. Frage den Systemadministrator nach Berechtigung.
+
+flash.could_not_create_question: Konnte Frage nicht erstellen.
+flash.question_created: Frage erstellt. Bitte jetzt Text und Daten anpassen.

@@ -1,0 +1,16 @@
+
+success: OK
+info: For your information:
+warning: Whatch out!
+danger: Whoa!
+
+successfully_saved: Data has been saved.
+
+flash.enroll_failed: Save failed. You are NOT enrolled.
+flash.enroll_succeeded: You are enrolled. Check your emails for more information (If you do not find any mail from us, please also check the spam filter).
+
+flash.mayNotShowDepartments: You may not see departments. Ask the system administrator for permission.
+flash.mayNotShowQuestions: You may not see questions for events. Ask the system administrator for permission.
+
+flash.could_not_create_question: Could not create question.
+flash.question_created: Question created. Please adjust now text and values.
