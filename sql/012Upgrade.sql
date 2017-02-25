@@ -1,5 +1,3 @@
-USE clanx;
-
 SELECT version from info;
 -- execute this if version is <12 !
 
