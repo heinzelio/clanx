@@ -29,7 +29,7 @@
                         <a href="{{ path('question_edit', { 'id': question.id }) }}"
                             class="btn btn-default"
                             data-toggle="tooltip"
-                            title="{{'tip.change_details_of'|trans({'entity':question.text})}}">
+                            title="{{'tip.change_details_of'|trans({'%entity%':question.text})}}">
                             <span class="fa fa-pencil"></span>
                         </a>
                     {% endif %}

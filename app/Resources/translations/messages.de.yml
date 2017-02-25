@@ -21,4 +21,4 @@ tip.cancel_and_return0: Verwerfe Änderungen und kehre zurück
 tip.cancel_and_return1: Verwerfe Änderungen an "%entity%" und kehre zurück
 tip.cancel_and_return2: Verwerfe Änderungen an "%entity%" und kehre zurück zu "%return%"
 tip.delete_from_database: Lösche aus der Datenbank
-tip.change_detials_of: Details von "%entity%" bearbeiten
+tip.change_details_of: Details von "%entity%" bearbeiten

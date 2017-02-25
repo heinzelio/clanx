@@ -2,7 +2,7 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        {{'text.RessortsForThisEvent'|trans({},'event')}}
+        {{'text.departments_for_this_event'|trans({},'department')}}
     </div>
     <table class="table">
         <tbody>
@@ -25,7 +25,7 @@
                         <a href="{{ path('department_edit', { 'id': department.id }) }}"
                             class="btn btn-default"
                             data-toggle="tooltip"
-                            title="{{'tip.change_details_of'|trans({'entity':department.name})}}">
+                            title="{{'tip.change_details_of'|trans({'%entity%':department.name})}}">
                             <span class="fa fa-pencil"></span>
                         </a>
                     {% endif %}
@@ -39,9 +39,8 @@
         <a class="btn btn-default"
             href="{{ path('department_new',{'event_id' : event.id}) }}"
             data-toggle="tooltip"
-            title="Der Buttontext sagt schon alles. Da gibt es nichts
-            hinzuzufügen.">
-            Neues Ressort anlegen
+            title="{{'tip.create_new'|trans({},'department')}}">
+            {{'btn.create'|trans({},'department')}}
         </a>
     </div>
 </div><!-- Panel "Departments" -->
