@@ -1,5 +1,3 @@
-USE clanx;
-
 SELECT version from info;
 -- execute this if version is <12 !
 
@@ -32,21 +30,6 @@ CREATE TABLE `answer` (
     CONSTRAINT `question_ibfk_1` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`),
     CONSTRAINT `commitment_ibfk_1` FOREIGN KEY (`commitment_id`) REFERENCES `commitment` (`id`)
 );
-
--- -----------------------------------------------
-SELECT 'CREATE VIEW `event_question_stat`' AS next_step;
-CREATE
-    ALGORITHM = UNDEFINED
-VIEW clanx.event_question_stat
-AS
-	SELECT q.event_id, q.text, a.answer, count('x') AS `count`
-	FROM question q
-	INNER JOIN answer a
-	ON q.id = a.question_id
-	WHERE q.aggregate=1
-	GROUP BY q.event_id, q.text, a.answer
-	ORDER BY q.event_id, q.text, a.answer
-;
 
 
 -- -----------------------------------------------
