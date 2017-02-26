@@ -1,7 +1,7 @@
 <?php
 namespace AppBundle\Service;
 
-use Symfony\Bridge\Monolog\Logger;
+// use Symfony\Bridge\Monolog\Logger; // TODO: Logger not working on PROD env on hostpoint. figure out why
 use Doctrine\ORM\EntityManager;
 use AppBundle\Service\Authorization;
 use AppBundle\Entity\Event;
@@ -28,7 +28,7 @@ class CommitmentService
     /**
      * @var Symfony\Bridge\Monolog\Logger
      */
-    protected $logger;
+    // protected $logger; // TODO: Logger not working on PROD env on hostpoint. figure out why
 
     /**
      * @param Authorization $auth
@@ -37,14 +37,14 @@ class CommitmentService
      */
     public function __construct(
         Authorization $auth,
-        EntityManager $em,
-        Logger $logger
+        EntityManager $em//,
+        // Logger $logger // TODO: Logger not working on PROD env on hostpoint. figure out why
     )
     {
         $this->authorization = $auth;
         $this->entityManager = $em;
         $this->repo = $em->getRepository('AppBundle:Commitment');
-        $this->logger = $logger;
+        // $this->logger = $logger; // TODO: Logger not working on PROD env on hostpoint. figure out why
     }
 
     /**
@@ -92,7 +92,8 @@ class CommitmentService
 
             $this->entityManager->flush();
         } catch (Exception $e) {
-            $logger->debug(print_r($e->getMessage(),true));
+            // TODO: Logger not working on PROD env on hostpoint. figure out why
+            // $logger->debug(print_r($e->getMessage(),true));
             return null;
         }
 
@@ -125,7 +126,8 @@ class CommitmentService
             $this->entityManager->flush();
             return true;
         } catch (Exception $e) {
-            $logger->debug(print_r($e->getMessage(),true));
+            // TODO: Logger not working on PROD env on hostpoint. figure out why
+            // $logger->debug(print_r($e->getMessage(),true));
             return false;
         }
     }
