@@ -68,6 +68,9 @@ class SuperAdminController extends Controller
         $userRepo = $em->getRepository('AppBundle:User');
         $legacyRepo = $em->getRepository('AppBundle:LegacyUser');
 
+        // run chuncks of 10 to avoid timeout
+        $count=0;
+
         foreach ($userRepo->findAll() as $u) {
             // Canonical mail adress is automatically updated
             // before persisting data. (fosUserBundle cares about it.)
@@ -101,6 +104,12 @@ class SuperAdminController extends Controller
                 $em->persist($legacyUser);
             }
             $em->persist($u);
+
+            $count++;
+            if ($count>=10) {
+                $em->flush();
+                $count=0;
+            }
         }
         $em->flush();
         return $this->redirectToRoute('user_index');
