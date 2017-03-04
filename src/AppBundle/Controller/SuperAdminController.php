@@ -55,6 +55,10 @@ class SuperAdminController extends Controller
     */
     public function makeTestDataAction(Request $request)
     {
+        $this->addFlash('danger','flash.can_not_do_this');
+        return $this->redirectToRoute('user_index');
+        // does not work at the moment. on hostpoint runs into timeout
+        //
         $roadNames = array('Bahnhof','Post','Lang','Schmid','Metzger'
             ,'Bank','Schiller','Markt', 'Edison','Tannen','Schönholz'
             ,'Zürcher','Schweizer',);
@@ -68,9 +72,10 @@ class SuperAdminController extends Controller
         $userRepo = $em->getRepository('AppBundle:User');
         $legacyRepo = $em->getRepository('AppBundle:LegacyUser');
 
-        // run chuncks of 10 to avoid timeout
-        $count=0;
+        set_time_limit(500);
 
+        $batchSize = 40;
+        $count = 0;
         foreach ($userRepo->findAll() as $u) {
             // Canonical mail adress is automatically updated
             // before persisting data. (fosUserBundle cares about it.)
@@ -106,12 +111,14 @@ class SuperAdminController extends Controller
             $em->persist($u);
 
             $count++;
-            if ($count>=10) {
-                $em->flush();
-                $count=0;
+            if (($count % $batchSize) === 0) {
+                $em->flush(); // Executes all updates.
+                //$em->clear(); // Detaches all objects from Doctrine!
             }
         }
         $em->flush();
+        $em->clear();
+
         return $this->redirectToRoute('user_index');
     }
 
