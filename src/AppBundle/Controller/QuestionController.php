@@ -63,7 +63,7 @@ class QuestionController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('question_index');
+        return $this->redirectToRoute('event_edit', array('id' => $question->getEvent()->getId()));
     }
 
     /**
