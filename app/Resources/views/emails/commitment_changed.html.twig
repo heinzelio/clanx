@@ -3,16 +3,16 @@
     Hallo {{volunteer}}!
 </p>
 
-<h3>Dein Einsatz am Event <strong>{{event}}</strong></h3>
+<h3>Deine Teilnahme am Event <strong>{{event}}</strong></h3>
 
 <p>
-    Deine Einsatzdaten wurden von <strong>{{operator}}</strong> angepasst oder gelöscht.
+    Deine Teilnahmedaten wurden von <strong>{{operator}}</strong> angepasst oder gelöscht.
 </p>
 
 <p>
     Besuche die Seite
     <a href="{{ absolute_url(path('event_show', { 'id': event.id })) }}">{{ event }}</a>
-    um dich über deine neuen Einsatzdaten zu informieren.
+    um dich über deine neuen Teilnahmedaten zu informieren.
 </p>
 {% if text %}
     <p>
