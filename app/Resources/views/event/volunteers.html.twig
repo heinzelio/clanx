@@ -38,7 +38,7 @@
 </div>
 
 {% else %}
-<div class="panel-heading">Eingeschriebene Benutzer</div>
+<div class="panel-heading">{{ 'title.enrolledUsers'|trans({},'event') }}</div>
 <div class="panel-body">
     <ul>
         {% for commitment in event.commitments %}
