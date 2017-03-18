@@ -19,7 +19,7 @@
     </div>
     <div class="panel-footer">
         <a class="btn btn-primary"
-            onclick="formSubmit(form_commitment_edit,this);"
+            onclick="Clanx.AppBundle.Form.submitAndLock(form_commitment_edit,this);"
             data-toggle="tooltip"
             title="Änderungen übernehmen und in der Datenbank speichern. Der Hölfer wird benachrichtigt.">
             <span class="fa fa-floppy-o"></span>
@@ -46,7 +46,7 @@
             </a>
         {% endif %}
 
-        <a onclick="formSubmit(form_commitment_delete,this);"
+        <a onclick="Clanx.AppBundle.Form.submitAndLock(form_commitment_delete,this);"
             class="btn btn-danger"
             data-toggle="tooltip"
             title="Lösche den Eintrag. Der Hölfer wird benachrichtigt.">

@@ -182,7 +182,7 @@ Ressort: {{ department.name }}
                                     name="{{formName}}"
                                     method="post">
                                         <input type="hidden" name="_method" value="DELETE" />
-                                        <a onclick="formSubmit({{formName}},this);"
+                                        <a onclick="Clanx.AppBundle.Form.submitAndLock({{formName}},this);"
                                             class="btn btn-default"
                                             data-toggle="tooltip"
                                             title="Lösche den Hölfer {{companion.name}}.">
