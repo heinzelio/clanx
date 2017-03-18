@@ -2,9 +2,24 @@
 
 {% block body %}
 <div class="container">
+    <!-- this renders the menu, aka navigation -->
     {{ render(controller('AppBundle:NavBar:index')) }}
 
+    <!-- Alert aka flash message aka messagebox. -->
+    {% if app.request.hasPreviousSession %}
+        {% for type, messages in app.session.flashbag.all() %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }} alert-dismissable fade in">
+    			    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    				<strong>{{ type|trans({}, 'flash') }}!</strong> {{ message|trans({}, 'flash') }}
+    			</div>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
 
-    {% block workspace %}{% endblock %}
+    <!-- here goes the content -->
+    {% block workspace %}
+
+    {% endblock %}
 </div>
 {% endblock %}
