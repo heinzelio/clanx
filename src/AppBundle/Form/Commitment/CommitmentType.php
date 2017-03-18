@@ -39,12 +39,15 @@ class CommitmentType extends AbstractType
                          'label' => "Beim speichern diese Nachricht an den Hölfer senden:",
                          'required' => false,
                          'mapped' => false,
+                         // used to copy parts of edit form to delete form
                          'attr' => array('class'=>'clx-commitment-message'),
              ))
              ->add('noMessage', CheckboxType::class, array(
                  'label' => "Keine Nachricht an den Hölfer senden.",
                  'required' => false,
                  'mapped' => false,
+                 // used to copy parts of edit form to delete form
+                 'attr' => array('class'=>'clx-commitment-noMessage'),
              ));
         }
         if ($options[CommitmentType::USE_DEPARTMENTS_KEY]) {

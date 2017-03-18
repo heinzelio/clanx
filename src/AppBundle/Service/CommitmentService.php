@@ -131,6 +131,34 @@ class CommitmentService
             return false;
         }
     }
+
+    /**
+     * deletes the given commitment. Does nothing, if commitment is not definied.
+     * @param  Commitment $commitment
+     * @return boolean                 true if successful
+     */
+    public function deleteCommitment(Commitment $commitment)
+    {
+        if (!$commitment) {
+            return;
+        }
+
+        $volunteer = $commitment->getUser();
+        $em = $this->entityManager;
+        foreach ($commitment->getAnswers() as $answer) {
+            $em->remove($answer);
+        }
+        $em->remove($commitment);
+
+        try {
+            $em->flush();
+            return true;
+        } catch (\Exception $e) {
+            // TODO: Logger not working on PROD env on hostpoint. figure out why
+            // $logger->debug(print_r($e->getMessage(),true));
+            return false;
+        }
+    }
 }
 
 ?>
