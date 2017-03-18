@@ -29,14 +29,14 @@
         <!-- TODO: better solve this with referers (request.getReferer. or so.) -->
         <!-- see https://github.com/chriglburri/clanx/issues/118 -->
         {% if department %}
-            <a class=f"btn btn-default"
+            <a class="btn btn-default"
                 href="{{ path('department_show',{'id':department.id}) }}"
                 data-toggle="tooltip"
                 title="Nicht speichern und zurück zu {{department}}">
                 <span class="fa fa-times"></span>
                 Abbrechen
             </a>
-        {% elseif department %}
+        {% else %}
             <a class="btn btn-default"
                 href="{{ path('event_edit',{'id':event.id}) }}"
                 data-toggle="tooltip"
