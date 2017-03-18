@@ -50,3 +50,11 @@
 </div>
 </div>
 {% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+{% endblock %}
