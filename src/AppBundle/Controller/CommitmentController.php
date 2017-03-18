@@ -33,16 +33,22 @@ class CommitmentController extends Controller
      */
     public function editAction(Request $request, Commitment $commitment)
     {
-        $department = $commitment->getDepartment();
+        $department = $commitment->getDepartment(); // may be null!
         $event = $commitment->getEvent();
         $auth = $this->get('app.auth');
         if (!$auth->mayEditOrDeleteCommitment($commitment))
         {
             //TODO: Localization
             $this->addFlash('warning', "Eintrag kann nicht geändert werden.");
-            return $this->redirectToRoute('department_show', array(
-                'id' => $department->getId(),
-            ));
+            if ($department) {
+                return $this->redirectToRoute('department_show', array(
+                    'id' => $department->getId(),
+                ));
+            } else {
+                return $this->redirectToRoute('event_edit', array(
+                    'id' => $event->getId(),
+                ));
+            }
         }
 
         $deleteForm = $this->createDeleteForm($commitment); //???
@@ -78,9 +84,15 @@ class CommitmentController extends Controller
             } else {
                 $this->addFlash('danger', 'Änderungen konnten NICHT gespeichert werden!');
             }
-            return $this->redirectToRoute('department_show', array(
-                'id' => $department->getId(),
-            ));
+            if ($department) {
+                return $this->redirectToRoute('department_show', array(
+                    'id' => $department->getId(),
+                ));
+            } else {
+                return $this->redirectToRoute('event_edit', array(
+                    'id' => $event->getId(),
+                ));
+            }
         }
 
         return $this->render('commitment/edit.html.twig', array(
