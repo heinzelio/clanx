@@ -33,7 +33,7 @@ class CommitmentType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // TODO Localization
+        // TODO: Localization
         if ($options[CommitmentType::USE_VOLUNTEER_NOTIFICATION_KEY]) {
             $builder->add('message', TextareaType::class, array(
                          'label' => "Beim speichern diese Nachricht an den Hölfer senden:",

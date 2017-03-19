@@ -7,6 +7,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Doctrine\Common\Collections\Criteria;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Department;
@@ -49,16 +51,22 @@ class SuperAdminController extends Controller
     }
 
     /**
-    * @Route("/make/test/data", name="admin_make_test_data")
+    * @Route("/make/test/data/in/range/{from}/{to}",
+    *   defaults={"from": "0", "to": 20},
+    *   name="admin_make_test_data")
     * @Method({"GET"})
     * @Security("has_role('ROLE_SUPER_ADMIN')")
+    *
+    * Randomizes user data. Makes real data anonymous.
+    * We can not randomize all data at once, it runs into a timeout.
+    * So we need to set a range.
+    * @param  Request $request
+    * @param  integer  $from    id range start (incl)
+    * @param  integer  $to      id range end (incl)
+    * @return            view
     */
-    public function makeTestDataAction(Request $request)
+    public function makeTestDataAction(Request $request, $from, $to)
     {
-        $this->addFlash('danger','flash.can_not_do_this');
-        return $this->redirectToRoute('user_index');
-        // does not work at the moment. on hostpoint runs into timeout
-        //
         $roadNames = array('Bahnhof','Post','Lang','Schmid','Metzger'
             ,'Bank','Schiller','Markt', 'Edison','Tannen','Schönholz'
             ,'Zürcher','Schweizer',);
@@ -76,7 +84,15 @@ class SuperAdminController extends Controller
 
         $batchSize = 40;
         $count = 0;
-        foreach ($userRepo->findAll() as $u) {
+
+        $criteria = new Criteria();
+        $criteria->where($criteria->expr()->gte('id', $from))
+                ->andWhere($criteria->expr()->lte('id', $to))
+                ->andWhere($criteria->expr()->eq('isProtected', 0));
+
+        $userRange = $userRepo->matching($criteria);
+
+        foreach ($userRange as $u) {
             // Canonical mail adress is automatically updated
             // before persisting data. (fosUserBundle cares about it.)
             // Password will also be encoded.
@@ -113,11 +129,26 @@ class SuperAdminController extends Controller
             $count++;
             if (($count % $batchSize) === 0) {
                 $em->flush(); // Executes all updates.
-                //$em->clear(); // Detaches all objects from Doctrine!
             }
         }
         $em->flush();
         $em->clear();
+
+        $trans = $this->get('translator');
+        $trans->setLocale('de'); // TODO: use real localization here.
+
+        $translated = $trans->trans('flash.successfully_made_user_data_anonymous',
+            array('%count%' => $count, '%from%' => $from,'%to%' => $to),
+            'flash'
+        );
+        $type = 'success';
+        if ($count==0) {
+            $type = 'warning';
+        }
+        $this->addFlash($type, $translated);
+
+        $url = $this->generateUrl('admin_make_test_data', array('from' => $to+1, 'to' => $to+20), UrlGeneratorInterface::ABSOLUTE_URL);
+        $this->addFlash('link', $url);
 
         return $this->redirectToRoute('user_index');
     }
