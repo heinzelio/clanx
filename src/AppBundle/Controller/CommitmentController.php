@@ -33,19 +33,26 @@ class CommitmentController extends Controller
      */
     public function editAction(Request $request, Commitment $commitment)
     {
-        $department = $commitment->getDepartment();
+        $department = $commitment->getDepartment(); // may be null!
         $event = $commitment->getEvent();
         $auth = $this->get('app.auth');
         if (!$auth->mayEditOrDeleteCommitment($commitment))
         {
             //TODO: Localization
             $this->addFlash('warning', "Eintrag kann nicht geändert werden.");
-            return $this->redirectToRoute('department_show', array(
-                'id' => $department->getId(),
-            ));
+            //TODO: Solve this with referers. see https://github.com/chriglburri/clanx/issues/118
+            if ($department) {
+                return $this->redirectToRoute('department_show', array(
+                    'id' => $department->getId(),
+                ));
+            } else {
+                return $this->redirectToRoute('event_edit', array(
+                    'id' => $event->getId(),
+                ));
+            }
         }
 
-        $deleteForm = $this->createDeleteForm($commitment); //???
+        $deleteForm = $this->createDeleteForm($commitment); // for delete button!
 
         $eventService = $this->get('app.event');
         $formVM = $eventService->getCommitmentFormViewModelForEdit($commitment); //CommitmentViewModel
@@ -78,9 +85,16 @@ class CommitmentController extends Controller
             } else {
                 $this->addFlash('danger', 'Änderungen konnten NICHT gespeichert werden!');
             }
-            return $this->redirectToRoute('department_show', array(
-                'id' => $department->getId(),
-            ));
+            //TODO: Solve this with referers. see https://github.com/chriglburri/clanx/issues/118
+            if ($department) {
+                return $this->redirectToRoute('department_show', array(
+                    'id' => $department->getId(),
+                ));
+            } else {
+                return $this->redirectToRoute('event_edit', array(
+                    'id' => $event->getId(),
+                ));
+            }
         }
 
         return $this->render('commitment/edit.html.twig', array(
@@ -109,30 +123,47 @@ class CommitmentController extends Controller
         {
             // TODO: Localization
             $this->addFlash('warning', "Eintrag kann nicht gelöscht werden.");
-            return $this->redirectToRoute('department_show', array(
-                'id' => $department->getId(),
-            ));
+            //TODO: Solve this with referers. see https://github.com/chriglburri/clanx/issues/118
+            if ($department) {
+                return $this->redirectToRoute('department_show', array(
+                    'id' => $department->getId(),
+                ));
+            } else {
+                return $this->redirectToRoute('event_edit', array(
+                    'id' => $event->getId(),
+                ));
+            }
+
         }
 
         $form = $this->createDeleteForm($commitment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $text = $form->get('message')->getData();
-            $operator = $this->getUser();
+            // here, noMessage is a hidden field. have to cheat it into bool.
+            $noMessage = $form->get('noMessage')->getData()=='1';
+            $mailFlashMsg = $commitment->getUser()." wurde NICHT benachrichtigt.";
+            if(!$noMessage)
+            {
+                $text = $form->get('message')->getData();
+                $operator = $this->getUser();
 
-            $mailBuilder = $this->get('app.mail_builder');
-            $message = $mailBuilder->buildCommitmentVolunteerNotification($text,$commitment,$operator);
-            $this->get('mailer')->send($message);
+                $mailBuilder = $this->get('app.mail_builder');
+                $message = $mailBuilder->buildCommitmentVolunteerNotification($text,$commitment,$operator);
+                $this->get('mailer')->send($message);
 
-            $volunteer = $commitment->getUser();
-            $em = $this->getDoctrine()->getManager();
-            foreach ($commitment->getAnswers() as $answer) {
-                $em->remove($answer);
+                $mailFlashMsg = $commitment->getUser()." wurde benachrichtigt.";
             }
-            $em->remove($commitment);
-            $em->flush();
-            $this->addFlash('success', "Dieser Einsatz wurde gelöscht. ".$volunteer." wurde benachrichtigt.");
+
+            $commitmentService = $this->get('app.commitment');
+            $success = $commitmentService->deleteCommitment($commitment);
+
+            //TODO: Localization
+            if ($success) {
+                $this->addFlash('success', "Daten wurden gelöscht."." ".$mailFlashMsg);
+            } else {
+                $this->addFlash('danger', 'Änderungen konnten NICHT gelöscht werden!');
+            }
         }
 
         //TODO: Solve this with referers. see https://github.com/chriglburri/clanx/issues/118
@@ -159,7 +190,11 @@ class CommitmentController extends Controller
     {
         return $this->createFormBuilder()
             ->add('message', HiddenType::class, array(
-                'attr' => array('class'=>'clx-commitment-delete-message'), )) // on btn click, data will be copied from the commitment form
+                // on btn click, data will be copied from the commitment form
+                'attr' => array('class'=>'clx-commitment-delete-message'), ))
+            ->add('noMessage', HiddenType::class, array(
+                // on btn click, data will be copied from the commitment form
+                'attr' => array('class'=>'clx-commitment-delete-noMessage'), ))
             ->setAction($this->generateUrl('commitment_delete', array(
                 'id' => $commitment->getId())
             ))

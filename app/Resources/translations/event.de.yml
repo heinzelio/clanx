@@ -1,7 +1,8 @@
-text.youCommitedParticipation: 'Du hast deine Teilnahme zugesagt.'
+text.youCommitedParticipation: Du hast deine Teilnahme zugesagt.
 
-title.commitment: 'Zusage'
-title.commitments: 'Zusagen'
-title.questions: 'Fragen'
+title.commitment: Zusage
+title.commitments: Zusagen
+title.questions: Fragen
+title.enrolledUsers: Eingeschriebene Benutzer
 
 tip.editQuestion: Bearbeite Details der Frage "%question%"

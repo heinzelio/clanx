@@ -99,6 +99,12 @@ class User extends BaseUser
      */
     private $isAssociationMember = false;
 
+    /**
+     * @var boolean
+     * @ORM\Column(name="is_protected", type="boolean", nullable=false)
+     */
+    private $isProtected = false;
+
 
     /**
      * @ORM\OneToMany(targetEntity="Commitment", mappedBy="user")
@@ -356,6 +362,20 @@ class User extends BaseUser
      */
     public function getIsAssociationMember(){return $this->isAssociationMember;}
 
+    /**
+     * @return boolean
+     */
+    public function getIsProtected(){ return $this->isProtected; }
+
+    /** 
+     * @param boolean isProtected
+     * @return self
+     */
+    public function setIsProtected($isProtected)
+    {
+        $this->isProtected = $isProtected;
+        return $this;
+    }
 
     /**
      * Returns true, if the user is chief of the given department.

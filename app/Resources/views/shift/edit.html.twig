@@ -21,7 +21,7 @@
             {{ form_end(delete_form) }}
         </div>
         <div class="panel-footer">
-            <a onclick="formSubmit(form_shift_edit,this);"
+            <a onclick="Clanx.AppBundle.Form.submitAndLock(form_shift_edit,this);"
                 class="btn btn-primary"
                 data-toggle="tooltip"
                 title="Änderungen übernehmen und in der Datenbank speichern.">
@@ -35,7 +35,7 @@
                 <span class="fa fa-times"></span>
                 Abbrechen
             </a>
-            <a onclick="formSubmit(form_shift_delete,this);"
+            <a onclick="Clanx.AppBundle.Form.submitAndLock(form_shift_delete,this);"
                 class="btn btn-danger"
                 data-toggle="tooltip"
                 title="Diese Schicht aus der Datenbank löschen.">

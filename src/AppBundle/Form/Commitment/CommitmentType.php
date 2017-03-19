@@ -33,18 +33,21 @@ class CommitmentType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // TODO Localization
+        // TODO: Localization
         if ($options[CommitmentType::USE_VOLUNTEER_NOTIFICATION_KEY]) {
             $builder->add('message', TextareaType::class, array(
                          'label' => "Beim speichern diese Nachricht an den Hölfer senden:",
                          'required' => false,
                          'mapped' => false,
+                         // used to copy parts of edit form to delete form
                          'attr' => array('class'=>'clx-commitment-message'),
              ))
              ->add('noMessage', CheckboxType::class, array(
                  'label' => "Keine Nachricht an den Hölfer senden.",
                  'required' => false,
                  'mapped' => false,
+                 // used to copy parts of edit form to delete form
+                 'attr' => array('class'=>'clx-commitment-noMessage'),
              ));
         }
         if ($options[CommitmentType::USE_DEPARTMENTS_KEY]) {

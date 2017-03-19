@@ -1,6 +1,7 @@
 <!-- this is a nested template. See "event/show.html.twig" for context -->
 
 <div class="panel panel-primary">
+{% if departments %}
 <div class="panel-heading">Hölfer pro Ressort</div>
 <div class="panel-body">
     {% for dept in departments %}
@@ -35,6 +36,19 @@
         </ul>
     {% endfor %}
 </div>
+
+{% else %}
+<div class="panel-heading">{{ 'title.enrolledUsers'|trans({},'event') }}</div>
+<div class="panel-body">
+    <ul>
+        {% for commitment in event.commitments %}
+            <li>
+                {{ commitment.user }}
+            </li>
+        {% endfor %}
+    </ul>
+</div> <!-- panel-body -->
+{% endif %}
 <div class="panel-footer">
 </div><!-- footer -->
 </div> <!--panel-->

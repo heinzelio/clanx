@@ -22,7 +22,7 @@
 
         </div>
         <div class="panel-footer">
-            <a onclick="formSubmit(form_question_edit,this);"
+            <a onclick="Clanx.AppBundle.Form.submitAndLock(form_question_edit,this);"
                 class="btn btn-primary"
                 data-toggle="tooltip"
                 title="{{'tip.save_changes_to_database'|trans}}">
@@ -37,7 +37,7 @@
                 {{'btn.cancel'|trans}}
             </a>
             {% if may_delete %}
-                <a onclick="formSubmit(form_question_delete,this);"
+                <a onclick="Clanx.AppBundle.Form.submitAndLock(form_question_delete,this);"
                     class="btn btn-danger"
                     data-toggle="tooltip"
                     title="{{'tip.delete_from_database'|trans}}">
@@ -49,4 +49,12 @@
     </div>
 </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 {% endblock %}

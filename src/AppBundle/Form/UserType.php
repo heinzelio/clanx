@@ -16,6 +16,7 @@ class UserType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        //TODO: Localization
         $builder
             ->add('forename', null, array(
                 'label'=>'Vorname'
@@ -26,7 +27,7 @@ class UserType extends AbstractType
             ->add('isAssociationMember', CheckboxType::class, array(
                     'label'    => 'Ist Vereinsmitglied?',
                     'required' => false,
-                ))
+            ))
             ->add('gender', GenderType::class, array(
                 'label'=>'Geschlecht'
             ))
@@ -64,7 +65,11 @@ class UserType extends AbstractType
             ->add('isRegular', CheckboxType::class, array(
                     'label'    => 'Ist Stammhölfer?',
                     'required' => false,
-                ))
+            ))
+            ->add('isProtected', CheckboxType::class, array(
+                    'label'    => 'Nicht überschreiben beim anonymisieren',
+                    'required' => false,
+            ))
         ;
     }
 

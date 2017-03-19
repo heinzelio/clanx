@@ -14,3 +14,6 @@ flash.mayNotShowQuestions: Du darfst keine Eventfragen sehen. Frage den Systemad
 
 flash.could_not_create_question: Konnte Frage nicht erstellen.
 flash.question_created: Frage erstellt. Bitte jetzt Text und Daten anpassen.
+
+flash.can_not_do_this: Diese Operation kann im Moment nicht ausgeführt werden.
+flash.successfully_made_user_data_anonymous: %count% Datensätze wurden erfolgreich anonymisiert. (id von %from% bis %to%.)

@@ -26,16 +26,16 @@
             </div>
             <div class="panel-footer">
                 <a class="btn btn-primary"
-                    onclick="formSubmit(form_event_edit,this);"
+                    onclick="Clanx.AppBundle.Form.submitAndLock(form_event_edit,this);"
                     data-toggle="tooltip"
-                    title="{{'tip.save_and_return1'|trans({'entity':event.name,})}}">
+                    title="{{'tip.save_and_return1'|trans({'%entity%':event.name,})}}">
                     <span class="fa fa-floppy-o"></span>
                     {{'btn.save'|trans}}
                 </a>
                 <a class="btn btn-default"
                     href="{{ path('event_show',{'id':event.id}) }}"
                     data-toggle="tooltip"
-                    title="{{'tip.cancel_and_return1'|trans({'entity':event.name,})}}">
+                    title="{{'tip.cancel_and_return1'|trans({'%entity%':event.name,})}}">
                     <span class="fa fa-times"></span>
                     {{'btn.cancel'|trans}}
                 </a>
