@@ -2,6 +2,7 @@
 namespace AppBundle\ViewModel\Commitment;
 
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use AppBundle\Entity\Question;
 use AppBundle\Entity\Answer;
 
@@ -106,7 +107,7 @@ class YesNoQuestionViewModel extends BaseQuestionViewModel
         $attributes['attr']['checked'] = $data;
         $attributes['attr']['data-hint'] = $this->getHint(); // TODO: does not work yet
         $attributes['required'] = $this->getRequired();
-        $attributes['property_path'] = 'questions[' . $this->getId() . '].answer';
+        $attributes['property_path'] = $this->getPropertyPath();
         $attributes['required'] = $this->getRequired();
 
         return $attributes;
@@ -129,5 +130,14 @@ class YesNoQuestionViewModel extends BaseQuestionViewModel
     protected  function getUndefiniedDefaultAnswer()
     {
         return false;
+    }
+
+    /**
+     * Validation callback method (defined in base class)
+     * @param  ExecutionContextInterface $context
+     */
+    public function validateAnswer(ExecutionContextInterface $context)
+    {
+        //does not do anything. when yes/no always have a default.
     }
 }

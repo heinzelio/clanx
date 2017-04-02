@@ -3,6 +3,7 @@
 namespace AppBundle\ViewModel\Commitment;
 
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use AppBundle\Entity\Question;
 use AppBundle\Entity\Answer;
 
@@ -119,7 +120,7 @@ class SelectionQuestionViewModel extends BaseQuestionViewModel
         $attributes['label'] = $this->getText();
         $attributes['attr'] = array('data-hint' => $this->getHint(), ); // TODO: does not work yet
         $attributes['required'] = $this->getRequired();
-        $attributes['property_path'] = 'questions[' . $this->getId() . '].answer';
+        $attributes['property_path'] = $this->getPropertyPath();
         $attributes['choices'] = $this->getChoices();
         $attributes['required'] = $this->getRequired();
 
@@ -157,5 +158,18 @@ class SelectionQuestionViewModel extends BaseQuestionViewModel
         }
 
         return $arr;
+    }
+
+    /**
+     * Validation callback method (defined in base class)
+     * @param  ExecutionContextInterface $context
+     */
+    public function validateAnswer(ExecutionContextInterface $context)
+    {
+        if ($this->getRequired() && !$this->getAnswer()) {
+            $context->buildViolation('answer required')
+                ->atPath($this->getPropertyPath())
+                ->addViolation();
+        }
     }
 }

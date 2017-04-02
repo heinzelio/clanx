@@ -3,6 +3,8 @@
 namespace AppBundle\ViewModel\Commitment;
 
 use AppBundle\Entity\Department;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * A view model for the commitment form.
@@ -105,4 +107,16 @@ class CommitmentViewModel
         return count($this->departments)>0;
     }
 
+    /**
+     * @Assert\Callback()
+     *
+     * Validation callback method (defined in base class)
+     * @param  ExecutionContextInterface $context
+     */
+    public function validateAnswer(ExecutionContextInterface $context)
+    {
+        foreach ($this->getQuestions() as $q ) {
+            $q->validateAnswer($context);
+        }
+    }
 }
