@@ -5,15 +5,17 @@
     Liebe {{ ViewModel.User.Forename }}
 {% endif %}
 
-Du hast dich beim Event {{ ViewModel.Event.Name }} als Hölfer eingetragen.
+Du hast dich für den Event {{ ViewModel.Event.Name }} eingetragen.
 
-Dafür schonmal
 VIELEN DANK!
 
-Der Event findet statt am <strong>{{ ViewModel.Event.Date|date('d.M.Y') }}</strong>.
-Du wirst zu gegebender Zeit von uns zum Hölferinformationsanlass eingeladen.
+Der Event findet statt am {{ ViewModel.Event.Date|date('d.M.Y') }}.
+
+Diese Anmeldung ist verbindlich. Wir erwarten, dass du dir für die Dauer des Events
+Zeit reservierst. Wir werden dich rechtzeitig über das weitere Vorgehen informieren.
+
 {% if ViewModel.Department %}
-    Du hast als gewünschtes Einsatzressort <strong>{{ ViewModel.Department.Name }}</strong> angegeben.
+    Du hast als gewünschtes Einsatzressort {{ ViewModel.Department.Name }} angegeben.
     Bitte beachte, dass wir dir keinen Einsatz in deinem gewünschten Ressort garantieren können.
 {% endif %}
 
