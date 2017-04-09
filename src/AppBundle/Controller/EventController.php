@@ -148,7 +148,7 @@ class EventController extends Controller
         //EventShowViewModel
         $detailViewModel = $eventSvc->getDetailViewModel($event);
         $detailViewModel->setDeleteForm($this->createDeleteForm($event)->createView());
-        if ($enrollForm) {
+        if (isset($enrollForm)) {
             $detailViewModel->setEnrollForm($enrollForm->createView());
         }
 
