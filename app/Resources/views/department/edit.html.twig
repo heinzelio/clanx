@@ -6,16 +6,18 @@
 
 {% block workspace %}
 <div class="row">
-<div class="col-md-4">
+<div class="col-md-6">
 <div class="panel panel-default">
     <div class="panel-heading">
-        Ressort <mark>„{{ department.name }}“</mark><br />
-        <small>vom Event <mark>„{{ event.name }}“</mark></small>
+        {% set vars = {'department': department} %}
+        {% include 'department/header.html.twig' with vars only %}
     </div>
     <div class="panel-body">
         {{ form_start(edit_form, {'name': 'form_department_edit'}) }}
             {{ form_widget(edit_form) }}
         {{ form_end(edit_form) }}
+        {{ form_start(delete_form, {'name': 'form_department_delete'}) }}
+        {{ form_end(delete_form) }}
     </div>
     <div class="panel-footer">
         <a onclick="Clanx.AppBundle.Form.submitAndLock(form_department_edit,this);"
@@ -26,20 +28,21 @@
             Speichern
         </a>
         <a class="btn btn-default"
-            href="{{ path('event_edit',{'id':event.id}) }}"
+            href="{{ path('department_show',{'id':department.id}) }}"
             data-toggle="tooltip"
-            title="Nicht speichern und zurück zu {{event.name}}">
+            title="Nicht speichern und zurück zu {{department.name}}">
             <span class="fa fa-times"></span>
             Abbrechen
         </a>
-        {{ form_start(delete_form) }}
-            <input class="btn btn-danger"
-                type="submit"
-                value="Delete"
+        {% if may_delete %}
+            <a onclick="Clanx.AppBundle.Form.submitAndLock(form_department_delete,this);"
+                class="btn btn-danger"
                 data-toggle="tooltip"
-                title="Dieses Ressort aus der Datenbank löschen.
-                (Geht nur, solange keine Hölfer zugewiesen sind.)">
-        {{ form_end(delete_form) }}
+                title="{{'tip.delete_from_database'|trans}} (Geht nur, solange keine Hölfer zugewiesen sind.)">
+                <span class="fa fa-trash-o"></span>
+                {{'btn.delete'|trans}}
+            </a>
+        {% endif %}
     </div>
 </div><!--panel-->
 </div>

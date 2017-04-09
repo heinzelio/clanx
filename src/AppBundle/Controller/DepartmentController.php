@@ -84,12 +84,12 @@ class DepartmentController extends Controller
         return $this->render('department/show.html.twig', array(
             'department' => $department,
             'event' => $department->getEvent(),
-            'mayDelete' => $mayDelete,
+            'may_delete' => $mayDelete,
             'delete_form' => $deleteForm->createView(),
             'commitments' => $commitments,
             'companions' => $companions,
-            'userIsChief' => $userIsChief,
-            'userIsDeputy' => $userIsDeputy,
+            'user_is_chief' => $userIsChief,
+            'user_is_deputy' => $userIsDeputy,
         ));
     }
 
@@ -116,11 +116,21 @@ class DepartmentController extends Controller
             return $this->redirectToRoute('event_edit', array('id' => $department->getEvent()->getId()));
         }
 
+        $shifts = $department->getShifts();
+        $commitments = $department->getCommitments();
+        $companions = $department->getCompanions();
+
+        $mayDelete = $this->isGranted('ROLE_ADMIN');
+        $mayDelete = $mayDelete && count($shifts) == 0;
+        $mayDelete = $mayDelete && count($commitments) == 0;
+        $mayDelete = $mayDelete && count($companions) == 0;
+
         return $this->render('department/edit.html.twig', array(
             'department' => $department,
             'event' => $department->getEvent(),
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'may_delete' => $mayDelete,
         ));
     }
 

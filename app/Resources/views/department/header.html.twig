@@ -1,0 +1,12 @@
+Ressort: <strong>{{ department.name }}</strong> <br/>
+Event: <a class="panel-title" href="{{ path('event_show',{'id':department.event.id}) }}">
+    {{ department.event.name }}
+</a>
+{% if is_granted('ROLE_SUPER_ADMIN')%}
+    ID: {{ department.id }}
+{% endif %}
+{% if department.locked %}
+    <br/>
+    <span class="fa fa-lock"></span>
+    Dieses Ressort ist gesperrt. Einschreiben nicht mehr möglich.
+{% endif %}
