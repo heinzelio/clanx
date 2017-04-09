@@ -1,7 +1,7 @@
 {% extends 'base_nav.html.twig' %}
 
 {% block title %}
-    {{ ViewModel.event.name }}
+    {{ view_model.event.name }}
 {% endblock %}
 
 {% block workspace %}
@@ -11,30 +11,30 @@
 
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    {% set vars = {'event' : ViewModel.event} %}
+                    {% set vars = {'event' : view_model.event} %}
                     {% include 'event/header.html.twig' with vars only %}
                 </div>
                 <div class="panel-body">
                     <p>
                         Der Event
-                        <strong>{{ ViewModel.event.name }}</strong>
-                        {% if ViewModel.event.isForAssociationMembers %}
+                        <strong>{{ view_model.event.name }}</strong>
+                        {% if view_model.event.isForAssociationMembers %}
                             (nur für Vereinsmitglieder)
                         {% endif %}
                         findet am
-                        {% if ViewModel.event.date %}
-                            {{ ViewModel.event.date|date('d. M. Y') }}
+                        {% if view_model.event.date %}
+                            {{ view_model.event.date|date('d. M. Y') }}
                         {% endif %}
                         statt.</p>
                     <p class="small">
-                        {{ ViewModel.event.description|nl2br}}
+                        {{ view_model.event.description|nl2br}}
                     </p>
                     <p>Bis jetzt eingetragene Hölfer:
-                        {{ ViewModel.enrolledCount }}</p>
+                        {{ view_model.enrolledCount }}</p>
 
-                    {% if ViewModel.myDepartmentsAsChief %}
+                    {% if view_model.myDepartmentsAsChief %}
                         <p>Du bist Ressortleiter:
-                            {% for dpt in ViewModel.myDepartmentsAsChief %}
+                            {% for dpt in view_model.myDepartmentsAsChief %}
                                 <br/>
                                 <a
                                     href="{{ path('department_show',{'id':dpt.Id}) }}"
@@ -48,9 +48,9 @@
                         </p>
                     {% endif %}
 
-                    {% if ViewModel.myDepartmentsAsDeputy %}
+                    {% if view_model.myDepartmentsAsDeputy %}
                         <p>Du bist stellvertretender Ressortleiter:
-                            {% for dpt in ViewModel.myDepartmentsAsDeputy %}
+                            {% for dpt in view_model.myDepartmentsAsDeputy %}
                                 <br/>
                                 <a
                                     href="{{ path('department_show',{'id':dpt.Id}) }}"
@@ -75,10 +75,10 @@
                         Abbrechen
                     </a>
 
-                    {% if ViewModel.mayMail %}
+                    {% if view_model.mayMail %}
                         <a
                             class="btn btn-default"
-                            href="{{ path ('event_mail_enrolled', {'id': ViewModel.event.id})}}"
+                            href="{{ path ('event_mail_enrolled', {'id': view_model.event.id})}}"
                             data-toggle="tooltip"
                             title="Schreibe ein Email an alle Hölfer von diesem Event.">
                             <span class="fa fa-envelope-o"></span>
@@ -86,9 +86,9 @@
                         </a>
                         <a
                             class="btn btn-default"
-                            href="{{ path ('event_invite', {'id': ViewModel.event.id})}}"
+                            href="{{ path ('event_invite', {'id': view_model.event.id})}}"
                             data-toggle="tooltip"
-                            {% if ViewModel.event.isForAssociationMembers %}
+                            {% if view_model.event.isForAssociationMembers %}
                                 title="Lade alle Vereinsmitglieder ein."
                             {% else %}
                                 title="Lade alle registrierten Benutzer ein."
@@ -98,34 +98,34 @@
                         </a>
                     {% endif %}
 
-                    {% if ViewModel.mayEdit %}
+                    {% if view_model.mayEdit %}
                         <a
                             class="btn btn-default"
-                            href="{{ path('event_edit', { 'id': ViewModel.event.id }) }}"
+                            href="{{ path('event_edit', { 'id': view_model.event.id }) }}"
                             data-toggle="tooltip"
-                            title="Details von {{ViewModel.event.name}} bearbeiten.">
+                            title="Details von {{view_model.event.name}} bearbeiten.">
                             <span class="fa fa-pencil"></span>
                             Bearbeiten
                         </a>
                     {% endif %}
 
-                    {% if ViewModel.mayDelete %}
-                        {{ form_start(ViewModel.deleteForm) }}
+                    {% if view_model.mayDelete %}
+                        {{ form_start(view_model.deleteForm) }}
                         <input
                             class="btn btn-danger"
                             type="submit"
                             value="Löschen"
-                            onclick="return confirm('{{ViewModel.event.name}} wirklich löschen?')"
+                            onclick="return confirm('{{view_model.event.name}} wirklich löschen?')"
                             data-toggle="tooltip"
-                            title="Den Event {{ViewModel.event.name}} aus der Datenbank löschen."/>
-                        {{ form_end(ViewModel.deleteForm) }}
+                            title="Den Event {{view_model.event.name}} aus der Datenbank löschen."/>
+                        {{ form_end(view_model.deleteForm) }}
                     {% endif %}
-                    <!-- {{ViewModel.mayDeleteMessage}} -->
+                    <!-- {{view_model.mayDeleteMessage}} -->
 
-                    {% if ViewModel.mayDownload %}
+                    {% if view_model.mayDownload %}
                         <a
                             class="btn btn-default"
-                            href="{{ path('event_download', {'id': ViewModel.event.id}) }}"
+                            href="{{ path('event_download', {'id': view_model.event.id}) }}"
                             data-toggle="tooltip"
                             title="Download Liste aller Hölfer von diesem Event.">
                             <span class="fa fa-download"></span>
@@ -138,19 +138,19 @@
             </div>
             <!-- panel -->
             {{ render(controller('AppBundle:EventStatistics:index', { 'id':
-            ViewModel.event.id })) }}
+            view_model.event.id })) }}
             {{ render(controller('AppBundle:EventVolunteers:index', { 'id':
-            ViewModel.event.id })) }}
+            view_model.event.id })) }}
         </div>
         <!-- col -->
         <div class="col-md-6">
 
-            {% for commitment in ViewModel.commitments %}
+            {% for commitment in view_model.commitments %}
                 {{ render(controller('AppBundle:EventCommitment:showCommitment',
                 {'id': commitment.id}))}}
             {% endfor %}
 
-            {% if ViewModel.mayEnroll %}
+            {% if view_model.mayEnroll %}
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         {{ 'title.enroll'|trans({}, 'enroll') }}
@@ -158,15 +158,15 @@
                     <div class="panel-body">
                         <p>
                             {# find details of this form in AppBundle\Form\Commitment\CommitmentType #}
-                            {{ form_start(ViewModel.enrollForm, {
+                            {{ form_start(view_model.enrollForm, {
                                 'name': 'enroll_form',
-                                'action': path('event_show',{'id': ViewModel.event.id}),
+                                'action': path('event_show',{'id': view_model.event.id}),
                                 }) }}
-                            {{ form_errors(ViewModel.enrollForm) }}
+                            {{ form_errors(view_model.enrollForm) }}
 
-                            {{ form_widget(ViewModel.enrollForm) }}
+                            {{ form_widget(view_model.enrollForm) }}
 
-                            {{ form_end(ViewModel.enrollForm) }}
+                            {{ form_end(view_model.enrollForm) }}
 
                         </p>
                     </div>
@@ -191,9 +191,4 @@
 
 {% block javascripts %}
     <script src="{{ asset('js/datepicker.js')}}"></script>
-    <script>
-        $(document).ready(function() {
-            $('[data-toggle="tooltip"]').tooltip();
-        });
-    </script>
 {% endblock %}

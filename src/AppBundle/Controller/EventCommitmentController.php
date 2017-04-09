@@ -21,6 +21,9 @@ class EventCommitmentController extends Controller
         $trans = $this->get('translator');
         $trans->setLocale('de'); // TODO: use real localization here.
 
+        $em = $this->getDoctrine()->getManager();
+        $em->refresh($commitment);
+
         return $this->render('event/commitment.html.twig', array(
             'Commitment' => $commitment,
         ));

@@ -152,7 +152,7 @@ class EventController extends Controller
             $detailViewModel->setEnrollForm($enrollForm->createView());
         }
 
-        return $this->render('event/show.html.twig', array('ViewModel'=>$detailViewModel));
+        return $this->render('event/show.html.twig', array('view_model'=>$detailViewModel));
     }
     /**
      *
