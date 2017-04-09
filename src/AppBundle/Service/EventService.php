@@ -3,7 +3,6 @@ namespace AppBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Translation\TranslatorInterface;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Commitment ;
 use AppBundle\Entity\Answer ;

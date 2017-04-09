@@ -166,8 +166,10 @@ class SelectionQuestionViewModel extends BaseQuestionViewModel
      */
     public function validateAnswer(ExecutionContextInterface $context)
     {
+        // TODO: localization
+        $message = "Antwort erforderlich";
         if ($this->getRequired() && !$this->getAnswer()) {
-            $context->buildViolation('answer required')
+            $context->buildViolation($message)
                 ->atPath($this->getPropertyPath())
                 ->addViolation();
         }

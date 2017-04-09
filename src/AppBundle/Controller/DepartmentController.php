@@ -375,7 +375,7 @@ class DepartmentController extends Controller
             ->setTo($volunteer->getEmail())
             ->setBody(
                 $this->renderView(
-                    // app/Resources/views/emails/commitmentConfirmation.html.twig
+                    // app/Resources/views/emails/department_changed.html.twig
                     'emails/department_changed.html.twig',
                     array(
                         'text' => $text,
@@ -390,7 +390,7 @@ class DepartmentController extends Controller
             )
             ->addPart(
                 $this->renderView(
-                    // app/Resources/views/emails/commitmentConfirmation.txt.twig
+                    // app/Resources/views/emails/department_changed.txt.twig
                     'emails/department_changed.txt.twig',
                     array(
                         'text' => $text,

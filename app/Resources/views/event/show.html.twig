@@ -150,8 +150,38 @@
             {% endfor %}
 
             {% if ViewModel.mayEnroll %}
-                {{ render(controller('AppBundle:EventCommitment:showEnroll', { 'id':
-                ViewModel.event.id })) }}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {{ 'title.enroll'|trans({}, 'enroll') }}
+                </div>
+                <div class="panel-body">
+                    <p>
+                        {# find details of this form in AppBundle\Form\Commitment\CommitmentType #}
+                        {{ form_start(ViewModel.enrollForm, {
+                            'name': 'enroll_form',
+                            'action': path('event_show',{'id': ViewModel.event.id}),
+                            }) }}
+                        {{ form_errors(ViewModel.enrollForm) }}
+
+                        {{ form_widget(ViewModel.enrollForm) }}
+
+                        {{ form_end(ViewModel.enrollForm) }}
+
+                    </p>
+                </div>
+                <div class="panel-footer">
+                    <a class="btn btn-primary"
+                        onclick="Clanx.AppBundle.Form.submitAndLock(enroll_form,this);"
+                        data-toggle="tooltip"
+                        title="{{ 'tip.save_commitment'|trans({}, 'enroll') }}">
+                        <span class="fa fa-floppy-o"></span>
+                        {{'btn.save'|trans}}
+                    </a>
+
+                </div>
+            </div>
+            {% else %}
+                {% include 'event/may_not_enroll.html.twig' %}\
             {% endif %}
 
         </div>
