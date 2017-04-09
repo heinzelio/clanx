@@ -1,5 +1,5 @@
 Ressort: <strong>{{ department.name }}</strong> <br/>
-Event: <a class="panel-title" href="{{ path('event_show',{'id':department.event.id}) }}">
+Event: <a class="bg-primary" href="{{ path('event_show',{'id':department.event.id}) }}">
     {{ department.event.name }}
 </a>
 {% if is_granted('ROLE_SUPER_ADMIN')%}

@@ -11,7 +11,8 @@
 
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    {{ViewModel.event.name}}
+                    {% set vars = {'event' : ViewModel.event} %}
+                    {% include 'event/header.html.twig' with vars only %}
                 </div>
                 <div class="panel-body">
                     <p>

@@ -11,12 +11,8 @@
     <div class="col-md-6">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                Event: <a class="bg-primary"
-                            href="{{ path('event_show',{'id':event.id}) }}"
-                            data-toggle="tooltip"
-                            title="{{'tip.cancel_and_return1'|trans({'%entity%':event.name,})}}">
-                            {{ event.name }}
-                        </a>
+                {% set vars = {'event' : event} %}
+                {% include 'event/header.html.twig' with vars only %}
             </div>
             <div class="panel-body">
                 {{ form_start(edit_form, {'name': 'form_event_edit'}) }}
