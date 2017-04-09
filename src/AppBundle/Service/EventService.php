@@ -115,7 +115,13 @@ class EventService
 
         $enrolledCount = $this->CountVolunteersFor($event);
         $myCommitments = $this->commitmentService->getCurrentUsersCommitmentsFor($event);
-        $mayEnroll = $this->authorization->mayEnroll($event);
+        if (!$myCommitments) {
+            $mayEnroll = $this->authorization->mayEnroll($event);
+        } else {
+            $mayEnroll = false;
+        }
+
+
         $mayMail = $this->authorization->maySendEventMassMail();
         $mayInvite = $this->authorization->maySendInvitation($event);
         $mayEdit = $this->authorization->mayEditEvent();
