@@ -11,14 +11,15 @@
 
 {% set event_url = absolute_url(path('event_show', { 'id': ViewModel.Event.Id })) %}
 
-<p> Du hast dich beim Event
+<p> Du hast dich für den Event
     <a href="{{ event_url }}"><strong>{{ ViewModel.Event.Name }}</strong></a>
-    als Hölfer eingetragen.</p>
+    eingetragen.</p>
 
-<p> Dafür schonmal <span style="font-size: 150%">DANKE!</span></p>
+<p><span style="font-size: 150%">VIELEN DANK!</span></p>
 
 <p> Der Event findet statt am <strong>{{ ViewModel.Event.Date|date('d.M.Y') }}</strong>.</p>
-<p> Du wirst zu gegebender Zeit von uns zum Hölferinformationsanlass eingeladen.</p>
+<p> Diese Anmeldung ist verbindlich. Wir erwarten, dass du dir für die Dauer des Events
+Zeit reservierst. Wir werden dich rechtzeitig über das weitere Vorgehen informieren.</p>
 {% if ViewModel.Department %}
     <p> Du hast als gewünschtes Einsatzressort <strong>{{ ViewModel.Department.Name }}</strong> angegeben.</br>
         Bitte beachte, dass wir den Einsatz in deinem gewünschten Ressort nicht garantieren können.</p>

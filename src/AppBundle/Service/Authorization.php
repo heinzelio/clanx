@@ -221,6 +221,9 @@ class Authorization
         if ($event->getIsForAssociationMembers() && !$this->user->getIsAssociationMember()) {
             return false;
         }
+        if ($event->getDate() < new \DateTime()) {
+            return false;
+        }
 
         return true;
     }

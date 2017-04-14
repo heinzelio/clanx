@@ -2,6 +2,7 @@
 namespace AppBundle\ViewModel\Commitment;
 
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use AppBundle\Entity\Question;
 use AppBundle\Entity\Answer;
 
@@ -194,6 +195,16 @@ abstract class BaseQuestionViewModel
         return $this->getUndefiniedDefaultAnswer();
     }
 
+    public function hasDefault()
+    {
+        return isset($arr["default"]);
+    }
+
+    public function getPropertyPath()
+    {
+        return 'questions[' . $this->getId() . '].answer';
+    }
+
     /**
      * Gets the string that identifies this question type in the database.
      * @return [type] [description]
@@ -234,4 +245,10 @@ abstract class BaseQuestionViewModel
      * @return mixed
      */
     protected abstract function getUndefiniedDefaultAnswer();
+
+    /**
+     * Validates the answer
+     * @param  ExecutionContextInterface $context
+     */
+    public abstract function validateAnswer(ExecutionContextInterface $context);
 }

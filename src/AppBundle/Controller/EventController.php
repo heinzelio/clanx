@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -23,6 +24,10 @@ use AppBundle\Entity\Department;
 use AppBundle\Entity\User;
 use AppBundle\Entity\RedirectInfo;
 use AppBundle\Entity\Mail;
+use AppBundle\ViewModel\Commitment\CommitmentViewModel;
+use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
+use AppBundle\Form\Commitment\CommitmentType;
+use AppBundle\Form\Commitment\TextQuestionViewModel;
 use AppBundle\Form\EventCreateType;
 use AppBundle\Form\ShirtSizeType;
 use AppBundle\Service\Authorization;
@@ -112,7 +117,7 @@ class EventController extends Controller
      * Finds and displays a Event entity.
      *
      * @Route("/{id}", name="event_show")
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_USER')")
      */
     // Place this method at the end. Because the route is just /event/id.
@@ -121,6 +126,9 @@ class EventController extends Controller
     // an event with the id "new" (what a silly little framework...)
     public function showAction(Request $request, Event $event)
     {
+        $trans = $this->get('translator');
+        $trans->setLocale('de'); // TODO: use real localization here.
+
         //AppBundle\Service\EventService
         $eventSvc = $this->get('app.event');
         $auth = $this->get('app.auth');
@@ -131,17 +139,69 @@ class EventController extends Controller
             return $this->redirectToRoute('event_index');
         }
 
+        if($auth->mayEnroll($event)){
+            $formVM = $eventSvc->getCommitmentFormViewModel($event); //CommitmentViewModel
+            $enrollForm = $this->createEnrollForm($formVM); //Symfony\Component\Form\Form
+            $this->handleEnrollForm($request, $enrollForm, $formVM, $event);
+        }
+
         //EventShowViewModel
         $detailViewModel = $eventSvc->getDetailViewModel($event);
-        $detailViewModel
-            ->setDeleteForm(
-                $this->createDeleteForm($event)->createView()
-            )
-            ->setEnrollForm(
-                $this->createEnrollForm($event,$event->getFreeDepartments())->createView()
-            );
+        $detailViewModel->setDeleteForm($this->createDeleteForm($event)->createView());
+        if (isset($enrollForm)) {
+            $detailViewModel->setEnrollForm($enrollForm->createView());
+        }
 
-        return $this->render('event/show.html.twig', array('ViewModel'=>$detailViewModel));
+        return $this->render('event/show.html.twig', array('view_model'=>$detailViewModel));
+    }
+    /**
+     *
+     * @param  CommitmentViewModel $vm
+     * @return Symfony\Component\Form\Form
+     */
+    public function createEnrollForm(CommitmentViewModel $vm)
+    {
+        $options = array(
+            CommitmentType::DEPARTMENT_CHOICES_KEY => $vm->getDepartments(),
+            CommitmentType::USE_DEPARTMENTS_KEY => $vm->hasDepartments(),
+            CommitmentType::USE_VOLUNTEER_NOTIFICATION_KEY => false,
+        );
+
+        $form = $this->createForm('AppBundle\Form\Commitment\CommitmentType', $vm, $options);
+
+        foreach ($vm->getQuestions() as $q) {
+            $attributes = array();
+            $attributes = $q->fillAttributes($attributes);
+
+            $form->add($q->getFormFieldName(), $q->getFormType(), $attributes);
+        }
+        return $form;
+    }
+
+    public function handleEnrollForm(Request $request, Form $enrollForm, CommitmentViewModel $formVM, Event $event)
+    {
+        $enrollForm->handleRequest($request);
+        if(!$enrollForm->isSubmitted())
+        {
+            return;
+        }
+        if ($enrollForm->isValid()) {
+            $commitmentService = $this->get('app.commitment');
+            $commitment = $commitmentService->saveCommitment($event, $formVM);
+            if ($commitment != null) {
+                //TODO finish here
+                $this->sendMail($commitment);
+                $this->addFlash('success','flash.enroll_succeeded');
+            } else {
+                $this->addFlash('warning','flash.enroll_failed');
+            }
+
+            return $this->redirectToRoute('event_show', array(
+                'id' => $event->getId(),
+            ));
+        } else {
+            $this->addFlash('danger','flash.enroll_required_data_missing');
+        }
     }
 
     /**
@@ -216,170 +276,23 @@ class EventController extends Controller
     }
 
     /**
-     *
+     * Send the commitment comfirmation mayMail
+     * @param  Commitment $commitment
      */
-    private function createEnrollForm(Event $event, $departments)
+    private function sendMail($commitment)
     {
-        $threeDays = new \DateInterval('P2D');
-        $laterDate = clone $event->getDate();
-        $laterDate->add($threeDays);
-        $emptyData = $event->getDate()->format('D, d.m.Y')
-        ." 08:00 - "
-        .$laterDate->format('D, d.m.Y')
-        . " 20:00";
-        return $this->createFormBuilder()
-            ->add('department', EntityType::class, array(
-                'class'=>'AppBundle:Department',
-                'label' => 'Für Ressort (ohne Garantie)',
-                'choices' => $departments,
-                'choice_label' => function ($dpt) {
-                                        return $dpt->getLongText();
-                                    }
-            ))
-            ->add('possibleStart', TextareaType::class, array(
-                'label' => 'Ich helfe an folgenden Tagen (bitte auch Zeit angeben)',
-                'data' => $emptyData,
-                'attr' => array(
-                    'rows' => 4
-                )
-            ))
-            ->add('shirtSize',ShirtSizeType::class,array(
-                'label' => 'TShirt Grösse',
-            ))
-            ->add('needTrainTicket', CheckboxType::class, array(
-                'label' => 'Ich brauche ein Zugbillet',
-                'attr' => array('checked'=>false),
-                'required' => false,
-            ))
-            ->add('remark', TextareaType::class, array(
-                'label' => "Bemerkung / Wunsch",
-                'required' => false,
-                'attr' => array(
-                    'rows' => 4
-                )
-            ))
-            ->setAction($this->generateUrl('event_enroll', array('id' => $event->getID())))
-            ->setMethod('POST')
-            ->getForm()
-        ;
-    }
-
-    /**
-     * Enrolls user as volunteer.
-     *
-     * @Route("/enroll/{id}", name="event_enroll")
-     * @Method("POST")
-     * @Security("has_role('ROLE_USER')")
-     */
-    public function enrollAction(Request $request, Event $event)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $depRep = $em->getRepository('AppBundle:Department');
-        $form = $this->createEnrollForm($event,$event->getDepartments());
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $depId = $form->get('department')->getData();
-            $startDate = $form->get('possibleStart')->getData();
-            $possStartFormItem = $form->get('possibleStart');
-            $shirtSize = $form->get('shirtSize')->getData();
-            $needTrainTicket = $form->get('needTrainTicket')->getData();
-            $remark = $form->get('remark')->getData();
-            $dep = $depRep->findOneById($depId);
-            $user = $this->getUser();
-            $c = new Commitment();
-            $c->setUser($user);
-            $c->setEvent($event);
-            $c->setDepartment($dep);
-            $c->setPossibleStart($startDate);
-            $c->setShirtSize($shirtSize);
-            $c->setNeedTrainTicket($needTrainTicket);
-            $c->setRemark($remark);
-            $session = $request->getSession();
-            if($dep->commitmentExists($c))
-            {
-                $session->getFlashBag()->add('warning', 'Du bist bereits in diesem Ressort als Hölfer eingetragen.');
-            }
-            else {
-                try{
-                    $em->persist($c);
-                    $em->flush();
-                    $this->sendMail($user, $dep, $event, $c);
-                    $session->getFlashBag()->add('success', 'Du bist als Hölfer eingetragen. Checke deine Emails für mehr Infos (Wenn du kein Email findest, schau bitte auch im Spamordner nach).');
-                }catch(Exception $ex){
-                    $session->getFlashBag()->add('error', 'Speichern fehlgeschlagen. Du bist NICHT eingetragen. Versuche es später nochmal.');
-                }
-            }
+        if (!$commitment) {
+            return;
         }
 
-        return $this->redirectToRoute('event_show', array('id' => $event->getID()));
-    }
+        $mailBuilder = $this->get('app.mail_builder');
+        $mailer = $this->get('mailer');
+        $message = $mailBuilder->buildCommitmentConfirmation($commitment);
+        $mailer->send($message);
 
-    private function sendMail($user,$dep,$event,$commitment){
-        $message = \Swift_Message::newInstance();
-        $message->setSubject('Clanx Hölfer Bestätigung')
-            ->setFrom(array('no-reply@clanx.ch'=>'Clanx Hölfer DB'))
-            ->setTo($user->getEmail())
-            ->setBody(
-                $this->renderView(
-                    // app/Resources/views/emails/commitmentConfirmation.html.twig
-                    'emails/commitmentConfirmation.html.twig',
-                    array(
-                        'Forename' => $user->getForename(),
-                        'Gender' => $user->getGender(),
-                        'Event' => $event->getName(),
-                        'EventID' => $event->getId(),
-                        'EventDate' => $event->getDate(),
-                        'Department' => $dep->getName(),
-                    )
-                ),
-                'text/html'
-            )
-            ->addPart(
-                $this->renderView(
-                    // app/Resources/views/emails/commitmentConfirmation.txt.twig
-                    'emails/commitmentConfirmation.txt.twig',
-                    array('Forename' => $user->getForename(),
-                        'Gender' => $user->getGender(),
-                        'Event' => $event->getName(),
-                        'EventID' => $event->getId(),
-                        'EventDate' => $event->getDate(),
-                        'Department' => $dep->getName(),
-                    )
-                ),
-                'text/plain'
-            )
-        ;
-        $this->get('mailer')->send($message);
-
-        $chiefUser = $dep->getChiefUser();
-        if($chiefUser)
-        {
-            $messageToChief = \Swift_Message::newInstance();
-            $messageToChief->setSubject('Neue Hölferanmeldung im Ressort '.$dep->getName())
-                ->setFrom(array($user->getEmail()=>$user))
-                ->setTo($chiefUser->getEmail())
-                ->setBody(
-                    $this->renderView('emails\commitmentNotificationToChief.html.twig',
-                        array('chief' => $chiefUser,
-                            'user' => $user,
-                            'department' => $dep,
-                            'commitment' => $commitment,
-                        )
-                    ),
-                    'text/html'
-                )
-                ->addPart(
-                    $this->renderView('emails\commitmentNotificationToChief.txt.twig',
-                        array('chief' => $chiefUser,
-                            'user' => $user,
-                            'department' => $dep,
-                            'commitment' => $commitment,
-                        )
-                    ),
-                    'text/plain'
-                );
-                $this->get('mailer')->send($messageToChief);
+        if ($commitment->getDepartment() && $commitment->getDepartment()->getChiefUser()) {
+            $messageToChief = $mailBuilder->buildNotificationToChief($commitment);
+            $mailer->send($messageToChief);
         }
     }
 
@@ -524,7 +437,7 @@ class EventController extends Controller
      * @Method({"GET","POST"})
      * @Security("has_role('ROLE_USER')")
      */
-    public function downloadActiom(Request $request, Event $event)
+    public function downloadAction(Request $request, Event $event)
     {
         if(! $this->isGranted('ROLE_ADMIN') && !$this->isGranted('ROLE_OK'))
         {
@@ -611,6 +524,7 @@ class EventController extends Controller
         return $response;
 
     }
+
 
     private function array2csv($arrayRow)
     {

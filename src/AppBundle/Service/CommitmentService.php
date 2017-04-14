@@ -116,6 +116,12 @@ class CommitmentService
         foreach ($vm->getQuestions() as $vmQuestion) { //BaseQuestionViewModel[]
             $criteria = array('question' => $vmQuestion->getId(), 'commitment' => $commitment );
             $answer = $answerRepo->findOneBy($criteria);
+            if (!$answer) {
+                $answer = new Answer();
+                $answer->setQuestion($this->entityManager->getReference('\AppBundle\Entity\Question', $vmQuestion->getId()));
+                $answer->setCommitment($commitment);
+                $answer->setAnswer($vmQuestion->getAnswer());
+            }
             $answer->setAnswer($vmQuestion->getAnswer());
             $this->entityManager->persist($answer);
         }

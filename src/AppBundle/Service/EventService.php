@@ -3,9 +3,9 @@ namespace AppBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Translation\TranslatorInterface;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Commitment ;
+use AppBundle\Entity\Answer ;
 use AppBundle\ViewModel\Commitment\CommitmentViewModel;
 use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
 use AppBundle\ViewModel\Commitment\TextQuestionViewModel;
@@ -115,7 +115,13 @@ class EventService
 
         $enrolledCount = $this->CountVolunteersFor($event);
         $myCommitments = $this->commitmentService->getCurrentUsersCommitmentsFor($event);
-        $mayEnroll = $this->authorization->mayEnroll($event);
+        if (!$myCommitments) {
+            $mayEnroll = $this->authorization->mayEnroll($event);
+        } else {
+            $mayEnroll = false;
+        }
+
+
         $mayMail = $this->authorization->maySendEventMassMail();
         $mayInvite = $this->authorization->maySendInvitation($event);
         $mayEdit = $this->authorization->mayEditEvent();
@@ -219,8 +225,16 @@ class EventService
     public function getCommitmentFormViewModelForEdit(Commitment $commitment)
     {
         $commitmentVM = new CommitmentViewModel();
-        foreach ($commitment->getAnswers() as $a) {
-            $qVM = $this->questionService->getQuestionViewModel($a->getQuestion(), $a);
+        foreach ($commitment->getEvent()->getQuestions() as $q) {
+            $a = $commitment->getAnswers()->filter(
+                    function($answer) use ($q) {return $answer->getQuestion()->getId()==$q->getId();}
+            )->first();
+            if(!$a){
+                $qVM = $this->questionService->getQuestionViewModel($q);
+            } else {
+                $qVM = $this->questionService->getQuestionViewModel($q, $a);
+            }
+
             $commitmentVM->addQuestion($qVM);
         }
         $commitmentVM->setDepartments($commitment->getEvent()->getDepartments());

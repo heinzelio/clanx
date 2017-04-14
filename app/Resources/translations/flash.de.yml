@@ -7,6 +7,7 @@ danger: Obacht!
 successfully_saved: Daten wurden erfolgreich gespeichert
 
 flash.enroll_failed: Speichern fehlgeschlagen. Du bist NICHT eingetragen worden.
+flash.enroll_required_data_missing: Es wurden nicht alle erforderlichen Fragen beantwortet.
 flash.enroll_succeeded: Du bist jetzt eingetragen. Prüfe deine Emails für mehr Infos (Wenn du kein Email von uns findest, schau bitte auch im Spamordner nach).
 
 flash.mayNotShowDepartments: Du darfst keine Ressorts sehen. Frage den Systemadministrator nach Berechtigung.

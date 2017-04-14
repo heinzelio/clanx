@@ -2,6 +2,7 @@
 namespace AppBundle\ViewModel\Commitment;
 
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use AppBundle\Entity\Question;
 use AppBundle\Entity\Answer;
 
@@ -34,15 +35,15 @@ class TextQuestionViewModel extends BaseQuestionViewModel
     public function getTypeString(){return "T";}
 
     /**
-     * @return boolean True, if the answer is 'yes'
+     * @return string The answer text
      */
     public function getAnswer(){
         return $this->answer;
     }
 
     /**
-     * @param boolean $value True, if the answer is 'yes'
-     * @return YesNoQuestionViewModel
+     * @param string $value the answer text
+     * @return TextQuestionViewModel
      */
     public function setAnswer($value)
     {
@@ -65,7 +66,9 @@ class TextQuestionViewModel extends BaseQuestionViewModel
     public function fillAttributes($attributes)
     {
         if (!$this->getAnswer()) {
-            $attributes['data'] = $this->getDefaultAnswer();
+            if ($this->hasDefault()) {
+                $attributes['data'] = $this->getDefaultAnswer();
+            }
         } else {
             $attributes['data'] = $this->getAnswer();
         }
@@ -73,7 +76,7 @@ class TextQuestionViewModel extends BaseQuestionViewModel
         $attributes['label'] = $this->getText();
         $attributes['attr'] = array('data-hint' => $this->getHint(), ); // TODO: does not work yet
         $attributes['required'] = $this->getRequired();
-        $attributes['property_path'] = 'questions[' . $this->getId() . '].answer';
+        $attributes['property_path'] = $this->getPropertyPath();
         $attributes['required'] = $this->getRequired();
 
         return $attributes;
@@ -96,5 +99,20 @@ class TextQuestionViewModel extends BaseQuestionViewModel
     protected  function getUndefiniedDefaultAnswer()
     {
         return "";
+    }
+
+    /**
+     * Validation callback method (defined in base class)
+     * @param  ExecutionContextInterface $context
+     */
+    public function validateAnswer(ExecutionContextInterface $context)
+    {
+        // TODO: localization
+        $message = "Antwort erforderlich";
+        if ($this->getRequired() && !$this->getAnswer()) {
+            $context->buildViolation($message)
+                ->atPath($this->getPropertyPath())
+                ->addViolation();
+        }
     }
 }
