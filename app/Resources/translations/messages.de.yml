@@ -12,6 +12,7 @@ btn.new: Neu erstellen
 
 lbl.yes: Ja
 lbl.no: Nein
+lbl.all: Alle
 
 tip.save_changes_to_database: Änderungen übernehmen und in der Datenbank speichern
 tip.save_and_return0: Speichern und zurück

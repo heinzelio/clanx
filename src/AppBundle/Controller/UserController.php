@@ -7,9 +7,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use AppBundle\Entity\User;
+use AppBundle\Entity\Bulk;
+use AppBundle\Entity\BulkEntry;
 use AppBundle\Entity\Mail;
 use AppBundle\Entity\RedirectInfo;
+use AppBundle\Entity\User;
+use AppBundle\Form\BulkType;
 use AppBundle\Form\UserType;
 
 /**
@@ -28,23 +31,38 @@ class UserController extends Controller
      */
     public function indexAction()
     {
+        //TODO: add a service for this.
         $em = $this->getDoctrine()->getManager();
 
-        $users = $em->getRepository('AppBundle:User')->findAll();
+        $users = array();
         $roles = array();
-        foreach ($users as $u) {
+        $bulk = new Bulk();
+        foreach ($em->getRepository('AppBundle:User')->findAll() as $u) {
+            $users[$u->getId()] = $u;
             $ctRoles = $u->getRoles();
             $roleStr = '';
             if(in_array('ROLE_ADMIN',$ctRoles)){$roleStr = $roleStr."Adm, ";}
             if(in_array('ROLE_SUPER_ADMIN',$ctRoles)){$roleStr = $roleStr."SA, ";}
             if(in_array('ROLE_OK',$ctRoles)){$roleStr = $roleStr."OK, ";}
 
-            $roles[$u->getId()] = substr($roleStr, 0, -2);;
+            $roles[$u->getId()] = substr($roleStr, 0, -2);
+
+
+            $entry = new BulkEntry();
+            $entry->setId($u->getId());
+            $bulk->addEntry($entry);
         }
+        $choices = array(
+            'Ist Vereinsmitglied' => 'make_member_key',
+            'Ist nicht Vereinsmitglied' => 'remove_member_key',
+            'Sende Email' => 'send_mail',
+        );
+        $form = $this->createForm(BulkType::class, $bulk, array('choices' => $choices, ));
 
         return $this->render('user/index.html.twig', array(
             'users' => $users,
             'roles' => $roles,
+            'form' => $form->createView(),
         ));
     }
 

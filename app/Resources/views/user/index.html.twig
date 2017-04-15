@@ -9,14 +9,19 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">Benutzerübersicht</div>
-
+                {{ form_start(form, {'name': 'form_bulk_actions'}) }}
                 <!-- Table -->
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Vorname</th>
-                            <th>Nachname</th>
-                            <th>EMail</th>
+                            <th>
+                                <input id="box_7d22bc72-52cf-450b-8df7-097adbc936d4"
+                                    type="checkbox" name="select_all" />
+                                <label for="box_7d22bc72-52cf-450b-8df7-097adbc936d4">
+                                    {{'lbl.all'|trans}}
+                                </label>
+                            </th>
+                            <th>Nachname, Vorname</th>
                             <th>Ort</th>
                             <th>Beruf / Spezialität</th>
                             <th>Role</th>
@@ -28,13 +33,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for user in users %}
+                        {% for bulkEntry in form.bulkEntries %}
+                            {% set user = users[bulkEntry.vars.value.id] %}
                             <tr>
+                                <td>{{ form_widget(bulkEntry.checked) }}</td>
                                 <td>{{ user.forename }}</td>
                                 <td>{{ user.surname }}</td>
-                                <td>{{ user.email }}</td>
                                 <td>{{ user.city }}</td>
-                                <td>{{ user.occupation }}</td>
+                                <td>{{ user.occupation[:50] ~ '...' }}</td>
                                 <td>{{ attribute(roles,user.id) }}</td>
                                 <td>
                                     {% if user.isRegular %}
@@ -61,7 +67,14 @@
                     </tbody>
                 </table>
                 <div class="panel-footer">
-
+                    {{ form_row(form.bulkAction,{'attr': {'class': 'form-inline'}}) }}
+                    <a onclick="Clanx.AppBundle.Form.submitAndLock(form_bulk_actions,this);"
+                        class="btn btn-primary"
+                        data-toggle="tooltip"
+                        title="{{'tip.save_changes_to_database'|trans}}">
+                        <span class="fa fa-floppy-o"></span>
+                        {{'btn.save'|trans}}
+                    </a>
                     <a class="btn btn-default" href="{{ path('user_mail_all') }}" data-toggle="tooltip" title="Schreibe ein Email an alle registrierten Benutzer.">
                         <span class="fa fa-envelope-o"></span>
                         Email
@@ -72,7 +85,7 @@
                             <span class="fa fa-upload fa-2x"></span>
                             Upload legacy user data</a>
                         <a class="btn btn-danger"
-                            href="{{ path('admin_make_test_data',{'from':0,'to':20}) }}" 
+                            href="{{ path('admin_make_test_data',{'from':0,'to':20}) }}"
                             data-toggle="tooltip"
                             title="Ersetze persönliche Daten durch Pseudodaten für Testzwecke (nicht umkehrbar!)">
                             <span class="fa fa-bomb fa-2x"></span>
@@ -80,6 +93,7 @@
                             Randomize data for tests</a>
                     {% endif %}
                 </div>
+                {{ form_end(form) }}
             </div>
             <!-- Panel -->
         </div>

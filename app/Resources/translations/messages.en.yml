@@ -12,6 +12,7 @@ btn.new: Create new
 
 lbl.yes: Yes
 lbl.no: No
+lbl.all: All
 
 tip.save_changes_to_database: Save changes to database
 tip.save_and_return0: Save and returns
