@@ -9,6 +9,7 @@ btn.save: Speichern
 btn.cancel: Abbrechen
 btn.delete: Löschen
 btn.new: Neu erstellen
+btn.execute_bulk_action: Ausführen
 
 lbl.yes: Ja
 lbl.no: Nein
@@ -24,3 +25,4 @@ tip.cancel_and_return2: Verwerfe Änderungen an "%entity%" und kehre zurück zu 
 tip.delete_from_database: Lösche aus der Datenbank
 tip.change_details_of: Details von "%entity%" bearbeiten
 tip.view_details_of: Details von "%entity%" anzeigen
+tip.execute_bulk_action: Für jeden ausgewählten Eintrag diese Aktion ausführen

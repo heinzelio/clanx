@@ -1,47 +1,47 @@
 {% extends 'base_nav.html.twig' %}
 
 {% block title %}
-    Benutzerübersicht
+    {{view_model.title}}
 {% endblock %}
 
 {% block workspace %}
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading">Benutzerübersicht</div>
-                {{ form_start(form, {'name': 'form_bulk_actions'}) }}
+                <div class="panel-heading">{{view_model.title}}</div>
+                {% form_theme view_model.bulkFormView 'form/bulk_theme.html.twig' %}
+                {{ form_start(view_model.bulkFormView, {'name': 'form_bulk_actions', 'attr': {'class': 'form-inline'}}) }}
                 <!-- Table -->
-                <table class="table">
+                <table class="table table-striped table-bordered table-responsive">
                     <thead>
                         <tr>
                             <th>
+                                <span class="fa fa-repeat" data-toggle="tooltip"
+                                title="{{'lbl.is_regular'|trans({}, 'user')}}"></span>
+                                <span class="fa fa-ship" data-toggle="tooltip"
+                                title="{{'lbl.is_association_member'|trans({}, 'user')}}"></span>
+                            </th>
+                            <th>
                                 <input id="box_7d22bc72-52cf-450b-8df7-097adbc936d4"
                                     type="checkbox" name="select_all" />
-                                <label for="box_7d22bc72-52cf-450b-8df7-097adbc936d4">
-                                    {{'lbl.all'|trans}}
-                                </label>
+                                {{'lbl.all'|trans}}
                             </th>
-                            <th>Nachname, Vorname</th>
-                            <th>Ort</th>
-                            <th>Beruf / Spezialität</th>
-                            <th>Role</th>
-                            <th>
-                                <span class="fa fa-repeat" data-toggle="tooltip" title="Ist Stammhölfer."></span>
-                                <span class="fa fa-ship" data-toggle="tooltip" title="Ist Vereinsmitglied"></span>
-                            </th>
+                            <th>{{'lbl.surname'|trans({},'user') }}</th>
+                            <th>{{'lbl.forename'|trans({},'user') }}</th>
+                            <th>{{'lbl.city'|trans({}, 'user')}}</th>
+                            <th>{{'lbl.occupation_speciality'|trans({}, 'user')}}</th>
+                            <th>{{'lbl.role'|trans({}, 'user')}}</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for bulkEntry in form.bulkEntries %}
-                            {% set user = users[bulkEntry.vars.value.id] %}
+                        {# "entries" is a collection of FormViews. Because our form consists of a list of forms.#}
+                         {% for formView in view_model.bulkFormView.entries %}
+                         {#vars.value is a BulkEntry#}
+                            {% set bulkEntry = formView.vars.value %}
+                            {% set userIndexEntry = view_model.users[bulkEntry.id] %}
+                            {% set user = userIndexEntry.user %}
                             <tr>
-                                <td>{{ form_widget(bulkEntry.checked) }}</td>
-                                <td>{{ user.forename }}</td>
-                                <td>{{ user.surname }}</td>
-                                <td>{{ user.city }}</td>
-                                <td>{{ user.occupation[:50] ~ '...' }}</td>
-                                <td>{{ attribute(roles,user.id) }}</td>
                                 <td>
                                     {% if user.isRegular %}
                                         <span class="fa fa-repeat"></span>
@@ -50,31 +50,55 @@
                                         <span class="fa fa-ship"></span>
                                     {% endif %}
                                 </td>
+                                <td>{{ form_widget(formView) }}</td>
+                                <td>{{ user.surname }}</td>
+                                <td>{{ user.forename }}</td>
+                                <td>{{ user.city }}</td>
+                                {% set truncateAfter = 30 %}
+                                <td>{{ user.occupation[:truncateAfter]}}{% if user.occupation|length > truncateAfter %}&hellip;{% endif %}</td>
+                                <td>{{ userIndexEntry.roleString }}</td>
                                 <td>
                                     <div>
-                                        <a class="btn btn-default btn-xs" href="{{ path('user_show', { 'id': user.id }) }}" data-toggle="tooltip" title="Details von {{user}} anzeigen.">
-                                            Zeigen
+                                        <a class="btn btn-default btn-xs"
+                                            href="{{ path('user_show', { 'id': user.id }) }}"
+                                            data-toggle="tooltip"
+                                            title="{{'tip.view_details_of'|trans({'%entity%':user})}}">
+                                            <span class="fa fa-eye"></span>
                                         </a>
-                                    </div>
-                                    <div>
-                                        <a class="btn btn-default btn-xs" href="{{ path('user_edit', { 'id': user.id }) }}" data-toggle="tooltip" title="Daten von {{user}} bearbeiten.">
-                                            Bearbeiten
+                                        <a class="btn btn-default btn-xs"
+                                            href="{{ path('user_edit', { 'id': user.id }) }}"
+                                            data-toggle="tooltip"
+                                            title="{{'tip.change_details_of'|trans({'%entity%':user})}}">
+                                            <span class="fa fa-pencil"></span>
                                         </a>
                                     </div>
                                 </td>
                             </tr>
                         {% endfor %}
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input id="box_303b1e02-2616-4aca-8c61-2e37db6166a9"
+                                    type="checkbox" name="select_all" />
+                                {{'lbl.all'|trans}}
+                            </td>
+                             <td colspan="42"> <!--Magic! (basically means: colspan="all") -->
+                                {{ form_widget(view_model.bulkFormView.action) }}
+                                <a onclick="Clanx.AppBundle.Form.submitAndLock(form_bulk_actions,this);"
+                                    class="btn btn-primary"
+                                    data-toggle="tooltip"
+                                    title="{{'tip.execute_bulk_action'|trans}}">
+                                    <span class="fa fa-cogs"></span>
+                                    {{'btn.execute_bulk_action'|trans}}
+                                </a>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
+                {{ form_end(view_model.bulkFormView) }}
                 <div class="panel-footer">
-                    {{ form_row(form.bulkAction,{'attr': {'class': 'form-inline'}}) }}
-                    <a onclick="Clanx.AppBundle.Form.submitAndLock(form_bulk_actions,this);"
-                        class="btn btn-primary"
-                        data-toggle="tooltip"
-                        title="{{'tip.save_changes_to_database'|trans}}">
-                        <span class="fa fa-floppy-o"></span>
-                        {{'btn.save'|trans}}
-                    </a>
                     <a class="btn btn-default" href="{{ path('user_mail_all') }}" data-toggle="tooltip" title="Schreibe ein Email an alle registrierten Benutzer.">
                         <span class="fa fa-envelope-o"></span>
                         Email
@@ -93,7 +117,6 @@
                             Randomize data for tests</a>
                     {% endif %}
                 </div>
-                {{ form_end(form) }}
             </div>
             <!-- Panel -->
         </div>
@@ -103,7 +126,7 @@
 {% block javascripts %}
     <script>
         $(document).ready(function() {
-            $('[data-toggle="tooltip"]').tooltip();
+            Clanx.AppBundle.Bulk.initialize('input[name="select_all"]');
         });
     </script>
 {% endblock %}

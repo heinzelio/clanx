@@ -41,7 +41,7 @@ services:
 
     app.user:
         class: AppBundle\Service\UserService
-        arguments: ["@doctrine.orm.entity_manager"]
+        arguments: ["@doctrine.orm.entity_manager", "@translator"]
 
     app.question:
         class: AppBundle\Service\QuestionService

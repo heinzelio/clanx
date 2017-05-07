@@ -17,11 +17,11 @@ class BulkType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('bulkEntries', CollectionType::class, array(
+        $builder->add('entries', CollectionType::class, array(
             'entry_type' => BulkEntryType::class
         ));
 
-        $builder->add('bulkAction', ChoiceType::class, array(
+        $builder->add('action', ChoiceType::class, array(
             'choices' => $options['choices']
         ));
     }

@@ -1,0 +1,22 @@
+
+# PLACEHOLDERS : USE IT LIKE this
+# label.hello_name: Hello %name%
+# IN CODE:
+# $translated = $translator->trans('Hello %name%', array('%name%' => $name),'enroll');
+# IN TWIG:
+# {{ 'Hello %name%'|trans({'Schorsch'},'enroll') }}
+
+lbl.name: Name
+lbl.forename: Vorname
+lbl.surname: Nachname
+lbl.city: Ort
+lbl.occupation_speciality: Beruf, Spezialität
+lbl.role: Rolle
+lbl.is_regular: Ist Stammhölfer
+lbl.is_association_member: Ist Vereinsmitglied
+
+lbl.toggle_member: Umschalten Mitgliederflag
+lbl.toggle_regular: Umschalten Stammhölferflag
+lbl.send_mail: Sende Email
+
+title.user_index: Benutzerübersicht

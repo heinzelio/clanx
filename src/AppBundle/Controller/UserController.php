@@ -26,43 +26,34 @@ class UserController extends Controller
      * Lists all User entities.
      *
      * @Route("/", name="user_index")
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        //TODO: add a service for this.
-        $em = $this->getDoctrine()->getManager();
+        $trans = $this->get('translator');
+        $trans->setLocale('de'); // TODO: use real localization here.
 
-        $users = array();
-        $roles = array();
-        $bulk = new Bulk();
-        foreach ($em->getRepository('AppBundle:User')->findAll() as $u) {
-            $users[$u->getId()] = $u;
-            $ctRoles = $u->getRoles();
-            $roleStr = '';
-            if(in_array('ROLE_ADMIN',$ctRoles)){$roleStr = $roleStr."Adm, ";}
-            if(in_array('ROLE_SUPER_ADMIN',$ctRoles)){$roleStr = $roleStr."SA, ";}
-            if(in_array('ROLE_OK',$ctRoles)){$roleStr = $roleStr."OK, ";}
+        $userService = $this->get('app.user');
 
-            $roles[$u->getId()] = substr($roleStr, 0, -2);
+        $users = $userService->getAllUsers();
+        $vm = $userService->getIndexViewModel();
 
+        $form = $this->createForm(BulkType::class, $vm->getBulk(), array('choices' => $vm->getBulk()->getActionChoices(), ));
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $flashMessages = $userService->handleUserIndexFormSubmit($vm);
+            foreach ($flashMessages as $message) {
+                $this->addFlash($message[0], $message[1]); //TODO: change dict into object
+            }
 
-            $entry = new BulkEntry();
-            $entry->setId($u->getId());
-            $bulk->addEntry($entry);
+            // redirect to same page. To avoid resubmitting form, when pressing [F5]
+            return $this->redirectToRoute('user_index');
         }
-        $choices = array(
-            'Ist Vereinsmitglied' => 'make_member_key',
-            'Ist nicht Vereinsmitglied' => 'remove_member_key',
-            'Sende Email' => 'send_mail',
-        );
-        $form = $this->createForm(BulkType::class, $bulk, array('choices' => $choices, ));
 
+        $vm->setBulkFormView($form->createView());
         return $this->render('user/index.html.twig', array(
-            'users' => $users,
-            'roles' => $roles,
-            'form' => $form->createView(),
+            'view_model' => $vm,
         ));
     }
 

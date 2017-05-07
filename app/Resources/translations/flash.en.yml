@@ -4,7 +4,10 @@ info: For your information:
 warning: Whatch out!
 danger: Whoa!
 
-successfully_saved: Data has been saved.
+flash.successfully_saved: Data has been saved.
+flash.save_failed: Saving failed.
+flash.not_yet_implemented: This function is not yet implemented.
+flash.no_record_affected: No record has been affected by this action.
 
 flash.enroll_failed: Save failed. You are NOT enrolled.
 flash.enroll_required_data_missing: Not all required questions have been answerd.
