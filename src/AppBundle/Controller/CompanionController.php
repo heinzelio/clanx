@@ -50,7 +50,7 @@ class CompanionController extends Controller
             $companion->setDepartment($department);
             $em->persist($companion);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('success', "'".$companion->getName()."' gespeichert.");
+            $this->addFlash('success', "'".$companion->getName()."' gespeichert.");
 
             return $this->redirectToRoute('department_show', array(
                 'id' => $department->getId(),
@@ -79,16 +79,12 @@ class CompanionController extends Controller
             && ! $user->isDeputyOf($department)
             && ! $this->isGranted('ROLE_ADMIN'))
         {
-            $this->get('session')
-                ->getFlashBag()
-                ->add('warning', "Du bist dafür nicht authorisiert.");
+            $this->addFlash('warning', "Du bist dafür nicht authorisiert.");
         }else{
             $em = $this->getDoctrine()->getManager();
             $em->remove($companion);
             $em->flush();
-            $this->get('session')
-                ->getFlashBag()
-                ->add('success', "Hölfer ".$companion->getName()." gelöscht.");
+            $this->addFlash('success', "Hölfer ".$companion->getName()." gelöscht.");
         }
 
         return $this->redirectToRoute('department_show',array(

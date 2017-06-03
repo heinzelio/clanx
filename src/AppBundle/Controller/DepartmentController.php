@@ -111,7 +111,7 @@ class DepartmentController extends Controller
             $em->persist($department);
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add('success', "'".$department->getName()."' gespeichert.");
+            $this->addFlash('success', "'".$department->getName()."' gespeichert.");
 
             return $this->redirectToRoute('event_edit', array('id' => $department->getEvent()->getId()));
         }
@@ -162,7 +162,7 @@ class DepartmentController extends Controller
             $em->persist($department);
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add('success', "'".$department->getName()."' gespeichert.");
+            $this->addFlash('success', "'".$department->getName()."' gespeichert.");
 
             return $this->redirectToRoute('department_show',array(
                 'id'=>$department->getId(),
@@ -193,7 +193,7 @@ class DepartmentController extends Controller
             $em->remove($department);
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add('success', "Ressort ".(string)$department." erfolgreich gelöscht.");
+            $this->addFlash('success', "Ressort ".(string)$department." erfolgreich gelöscht.");
         }
 
         return $this->redirectToRoute('event_show', array(
@@ -297,8 +297,7 @@ class DepartmentController extends Controller
             $chiefUser= $department->getChiefUser();
             if ($operator->getId()!=$chiefUser->getId())
             {
-                $this->get('session')->getFlashBag()
-                    ->add('warning', "Du musst Admin oder Ressortleiter sein, um Hölfer verschieben zu können.");
+                $this->addFlash('warning', "Du musst Admin oder Ressortleiter sein, um Hölfer verschieben zu können.");
                 return $this->redirectToRoute('department_show',array(
                     'id'=>$department->getId(),
                 ));
@@ -331,7 +330,7 @@ class DepartmentController extends Controller
             }else{
               $flashMsg=$flashMsg.'Nachricht nicht gesendet.';
             }
-            $this->get('session')->getFlashBag()->add('success',$flashMsg);
+            $this->addFlash('success',$flashMsg);
 
             return $this->redirectToRoute('department_show',array(
                 'id'=>$department->getId(),
@@ -468,8 +467,7 @@ class DepartmentController extends Controller
                 $operator->getId() != $deputyUser->getId()
             )
             {
-                $this->get('session')->getFlashBag()
-                    ->add('warning', "Du musst Admin, Ressortleiter oder Stellvertreter sein, um Hölferdate drucken zu können.");
+                $this->addFlash('warning', "Du musst Admin, Ressortleiter oder Stellvertreter sein, um Hölferdate drucken zu können.");
                 return $this->redirectToRoute('department_show',array(
                     'id'=>$department->getId(),
                 ));
@@ -563,8 +561,7 @@ class DepartmentController extends Controller
                 $operator->getId() != $deputyUser->getId()
             )
             {
-                $this->get('session')->getFlashBag()
-                    ->add('warning', "Du musst Admin, Ressortleiter oder Stellvertreter sein, um Hölferdate drucken zu können.");
+                $this->addFlash('warning', "Du musst Admin, Ressortleiter oder Stellvertreter sein, um Hölferdate drucken zu können.");
                 return $this->redirectToRoute('department_show',array(
                     'id'=>$department->getId(),
                 ));
