@@ -1,8 +1,8 @@
-
-success: OK
-info: For your information:
-warning: Whatch out!
-danger: Whoa!
+#Do not use prefixes for this. They are also class names!
+flash.success: OK
+flash.info: For your information:
+flash.warning: Whatch out!
+flash.danger: Whoa!
 
 flash.successfully_saved: Data has been saved.
 flash.save_failed: Saving failed.

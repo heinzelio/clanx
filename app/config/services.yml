@@ -50,3 +50,7 @@ services:
     app.mail_builder:
         class: AppBundle\Service\MailBuilderService
         arguments: ["@twig"]
+
+    app.flash:
+        class: AppBundle\Service\Flash\FlashService
+        arguments: ["@session"]

@@ -102,8 +102,7 @@ class EventController extends Controller
             }
 
             $em->flush();
-
-            $this->addFlash('success', "'".$event->getName()."' gespeichert.");
+            $this->addFlash('success','flash.successfully_saved');
             return $this->redirectToRoute('event_show', array('id' => $event->getId()));
         }
 

@@ -1,8 +1,8 @@
-
-success: OK
-info: Zur Information:
-warning: Obacht!
-danger: Obacht!
+#Do not use prefixes for this. They are also class names!
+flash.success: OK
+flash.info: Zur Information:
+flash.warning: Obacht!
+flash.danger: Obacht!
 
 flash.successfully_saved: Daten wurden erfolgreich gespeichert
 flash.save_failed: Speichern fehlgeschlagen
