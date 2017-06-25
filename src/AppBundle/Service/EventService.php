@@ -69,12 +69,14 @@ class EventService
         $qb = $this->repo->createQueryBuilder('e');
 
         $assocExpression = $this->getAssociationExpression($qb, 'e');
+        $visibleExpression = $this->getVisibleExpression($qb, 'e');
         $dateExpression = $qb->expr()->gte('e.date', ':today');
         $qb->setParameter('today',new \DateTime("now"));
 
         $query = $qb
                 ->where($dateExpression)
                 ->andWhere($assocExpression)
+                ->andWhere($visibleExpression)
                 ->orderBy('e.date', 'ASC')
                 ->getQuery();
 
@@ -91,12 +93,14 @@ class EventService
         $qb = $this->repo->createQueryBuilder('e');
 
         $assocExpression = $this->getAssociationExpression($qb, 'e');
+        $visibleExpression = $this->getVisibleExpression($qb, 'e');
         $dateExpression = $qb->expr()->lt('e.date', ':today');
         $qb->setParameter('today',new \DateTime("now"));
 
         $query = $qb
                 ->where($dateExpression)
                 ->andWhere($assocExpression)
+                ->andWhere($visibleExpression)
                 ->orderBy('e.date', 'DESC')
                 ->getQuery();
 
@@ -197,11 +201,13 @@ class EventService
         $aWeekAgoExpr = $qb->expr()->gt('e.date',':aWeekAgo');
 
         $associationExpression = $this->getAssociationExpression($qb, 'e');
+        $visibleExpression = $this->getVisibleExpression($qb, 'e');
 
         $query = $qb
             ->where($stickyExpr)
             ->andWhere($aWeekAgoExpr)
             ->andWhere($associationExpression)
+            ->andWhere($visibleExpression)
             ->orderBy('e.date', 'ASC')
             ->getQuery();
 
@@ -282,6 +288,17 @@ class EventService
             //event.isForAssociationMembers <= :userIsMember'
             $qb->setParameter(':userIsMember', $p);
             return $qb->expr()->lte($alias . '.isForAssociationMembers',':userIsMember');
+        }
+    }
+
+    private function getVisibleExpression(QueryBuilder $qb, $alias)
+    {
+        if ($this->authorization->maySeeAllEvents()) {
+            return $qb->expr()->eq(1,1);
+        } else {
+            $paramName = ':eventIsVisible';
+            $qb->setParameter($paramName, 1);
+            return $qb->expr()->eq($alias . '.isVisible',$paramName);
         }
     }
 }

@@ -25,6 +25,10 @@ class EventType extends AbstractType
                     'label' => 'Für Vereinsmitglieder. Nur Vereinsmitglieder können diesen Event sehen.',
                     'required' => false,
             ))
+            ->add('isVisible',CheckboxType::class, array(
+                    'label' => 'Ist Event sichtbar für Hölfer? (Ausschalten für Vorbereitung)',
+                    'required' => false,
+            ))
             ->add('description',TextareaType::class, array(
                     'label' => 'Beschreibung',
                     'attr' => array(

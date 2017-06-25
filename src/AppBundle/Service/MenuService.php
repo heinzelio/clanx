@@ -66,9 +66,13 @@ class MenuService
      */
     public function getEventMenu(Event $event)
     {
+        $icon = null;
+        if(!$event->getIsVisible()){
+            $icon = 'fa fa-eye-slash';
+        }
         return $this->createItem(
             $event->getName(),
-            null,
+            $icon,
             'event_show',
             'id',
             $event->getId(),
