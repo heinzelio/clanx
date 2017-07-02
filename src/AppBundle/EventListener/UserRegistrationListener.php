@@ -13,10 +13,10 @@ use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\LegacyUser;
 
 /**
- * Listener responsible to import legacy user data after registration
+ * Listener to customize the registration flow.
  * (Registration in File app/config/services.yml --> )
  */
-class UserRegistrationConrimedListener implements EventSubscriberInterface
+class UserRegistrationListener implements EventSubscriberInterface
 {
     private $entityManager;
     private $router;
