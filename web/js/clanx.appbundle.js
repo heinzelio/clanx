@@ -16,6 +16,11 @@ var Clanx = Clanx || {
                 form.submit();
             },
         },
+        Link:{
+            lockAndFollow: function(sender) {
+                $(sender).addClass('disabled');
+            }
+        },
         Bulk:{
             initialize: function(checkAllSelector) {
                  $(checkAllSelector).click(function () {

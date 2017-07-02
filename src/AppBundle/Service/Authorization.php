@@ -303,4 +303,9 @@ class Authorization
     {
         return $this->isGranted('ROLE_ADMIN');
     }
+
+    public function MayChangeSettings()
+    {
+        return $this->isGranted('ROLE_ADMIN');
+    }
 }

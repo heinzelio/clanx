@@ -6,6 +6,7 @@ flash.danger: Whoa!
 
 flash.successfully_saved: Data has been saved.
 flash.save_failed: Saving failed.
+flash.save_failed_error: Saving failed. "%error%"
 flash.not_yet_implemented: This function is not yet implemented.
 flash.no_record_affected: No record has been affected by this action.
 

@@ -6,6 +6,7 @@ flash.danger: Obacht!
 
 flash.successfully_saved: Daten wurden erfolgreich gespeichert
 flash.save_failed: Speichern fehlgeschlagen
+flash.save_failed_error: Speichern fehlgeschlagen. "%error%"
 flash.not_yet_implemented: Diese Funktion ist noch nicht implementiert
 flash.no_record_affected: Kein Datensatz von der Aktion betroffen.
 

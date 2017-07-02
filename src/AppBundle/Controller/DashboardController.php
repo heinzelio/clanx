@@ -52,7 +52,26 @@ class DashboardController extends Controller
             $missingProfileData = $this->joinTxt($missingProfileData,"Telefonnummer");
         }
 
+        $showAdminRegistrationSwitch=false;
+        $adminRegistrationInfoText='';
+        $adminRegistrationButtonIcon='';
+        $auth = $this->get('app.auth');
+        if($auth->MayChangeSettings()){
+            $settings = $this->get('app.settings');
+            $showAdminRegistrationSwitch=true;
+            if ($settings->canRegister()) {
+                $adminRegistrationInfoText='Neue Benutzer zugelassen.';
+                $adminRegistrationButtonIcon='fa-toggle-on';
+            }else {
+                $adminRegistrationInfoText='Es dürfen sich zur Zeit keine neuen Benutzer auf der Datenbank registrieren.';
+                $adminRegistrationButtonIcon='fa-toggle-off';
+            }
+        }
+
         return $this->render('dashboard/index.html.twig', array(
+            'ShowAdminRegistrationSwitch' => $showAdminRegistrationSwitch,
+            'AdminRegistrationInfoText' => $adminRegistrationInfoText,
+            'AdminRegistrationButtonIcon' => $adminRegistrationButtonIcon,
             'ShowAssociationMembershipRequest' => !$user->getIsAssociationMember(),
             'ShowProfileUpdate' => $missingProfileData!=null||$missingProfileData!="",
             'MissingProfilData' => $missingProfileData,

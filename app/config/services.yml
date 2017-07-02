@@ -9,7 +9,7 @@ services:
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
     user_register_listener:
         class: AppBundle\EventListener\UserRegistrationConrimedListener
-        arguments: ["@doctrine.orm.entity_manager"]
+        arguments: ["@doctrine.orm.entity_manager", "@router"]
         tags:
             - { name: kernel.event_subscriber }
 
@@ -54,3 +54,7 @@ services:
     app.flash:
         class: AppBundle\Service\Flash\FlashService
         arguments: ["@session"]
+
+    app.settings:
+        class: AppBundle\Service\SettingsService
+        arguments: ["@doctrine.orm.entity_manager"]
