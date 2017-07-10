@@ -102,8 +102,7 @@ class EventController extends Controller
             }
 
             $em->flush();
-
-            $this->get('session')->getFlashBag()->add('success', "'".$event->getName()."' gespeichert.");
+            $this->addFlash('success','flash.successfully_saved');
             return $this->redirectToRoute('event_show', array('id' => $event->getId()));
         }
 
@@ -135,7 +134,7 @@ class EventController extends Controller
 
         $authResult = $auth->mayShowEventDetail($event);
         if(!$authResult[Authorization::VALUE]){
-            $this->get('session')->getFlashBag()->add('danger', $authResult[Authorization::MESSAGE]);
+            $this->addFlash('danger', $authResult[Authorization::MESSAGE]);
             return $this->redirectToRoute('event_index');
         }
 
@@ -222,7 +221,7 @@ class EventController extends Controller
             $em->persist($event);
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add('success', "Änderung gespeichert.");
+            $this->addFlash('success', "Änderung gespeichert.");
 
             return $this->redirectToRoute('event_show', array('id' => $event->getId()));
         }
@@ -312,7 +311,7 @@ class EventController extends Controller
         $mayInvite = $auth->maySendInvitation($event);
 
         if (!$mayInvite) {
-            $session->getFlashBag()->add('warning', 'Du darfst keine Einladungen versenden.');
+            $this->addFlash('warning', 'Du darfst keine Einladungen versenden.');
             return $this->redirectToRoute('event_show',array('id'=>$event->getId(),));
         }
 
@@ -441,8 +440,7 @@ class EventController extends Controller
     {
         if(! $this->isGranted('ROLE_ADMIN') && !$this->isGranted('ROLE_OK'))
         {
-            $this->get('session')->getFlashBag()
-                ->add('warning', "Du musst Admin oder OK Mitglied sein, um Hölferdaten herunterladen zu können.");
+            $this->addFlash('warning', "Du musst Admin oder OK Mitglied sein, um Hölferdaten herunterladen zu können.");
             return $this->redirectToRoute('event_show',array(
                 'id'=>$event->getId(),
             ));

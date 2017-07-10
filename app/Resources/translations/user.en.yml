@@ -1,0 +1,15 @@
+
+lbl.name: Name
+lbl.forename: Forename
+lbl.surname: Surname
+lbl.city: City
+lbl.occupation_speciality: Occupation, Speciality
+lbl.role: Role
+lbl.is_regular: Is regular volunteer
+lbl.is_association_member: Is association member
+
+lbl.toggle_member: Toggle member flag
+lbl.toggle_regular: Toggle regular flag
+lbl.send_mail: Send email
+
+title.user_index: User overview

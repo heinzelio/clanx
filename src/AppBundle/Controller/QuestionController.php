@@ -34,7 +34,7 @@ class QuestionController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($question);
             $em->flush();
-            $this->addFlash('success','successfully_saved');
+            $this->addFlash('success','flash.successfully_saved');
             return $this->redirectToRoute('event_edit', array('id' => $question->getEvent()->getId()));
         }
 

@@ -74,6 +74,12 @@ class Event
     private $isForAssociationMembers = false;
 
     /**
+     * @var boolean
+     * @ORM\Column(name="is_visible", type="boolean", nullable=false)
+     */
+    private $isVisible = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="Question", mappedBy="event")
      */
     private $questions;
@@ -280,6 +286,29 @@ class Event
      * @return boolean
      */
     public function getIsForAssociationMembers(){return $this->isForAssociationMembers;}
+
+    /**
+     * Is event visible?
+     *
+     * @return boolean
+     */
+    public function getIsVisible()
+    {
+        return $this->isVisible;
+    }
+
+    /**
+     * Set if event is visible
+     *
+     * @param boolean isVisible
+     *
+     * @return self
+     */
+    public function setIsVisible($isVisible)
+    {
+        $this->isVisible = $isVisible;
+        return $this;
+    }
 
     /**
      * @return Question[]

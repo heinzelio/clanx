@@ -8,8 +8,8 @@ services:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
     user_register_listener:
-        class: AppBundle\EventListener\UserRegistrationConrimedListener
-        arguments: ["@doctrine.orm.entity_manager"]
+        class: AppBundle\EventListener\UserRegistrationListener
+        arguments: ["@doctrine.orm.entity_manager", "@router"]
         tags:
             - { name: kernel.event_subscriber }
 
@@ -41,7 +41,7 @@ services:
 
     app.user:
         class: AppBundle\Service\UserService
-        arguments: ["@doctrine.orm.entity_manager"]
+        arguments: ["@doctrine.orm.entity_manager", "@translator"]
 
     app.question:
         class: AppBundle\Service\QuestionService
@@ -50,3 +50,11 @@ services:
     app.mail_builder:
         class: AppBundle\Service\MailBuilderService
         arguments: ["@twig"]
+
+    app.flash:
+        class: AppBundle\Service\Flash\FlashService
+        arguments: ["@session"]
+
+    app.settings:
+        class: AppBundle\Service\SettingsService
+        arguments: ["@doctrine.orm.entity_manager"]

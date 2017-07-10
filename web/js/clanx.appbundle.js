@@ -15,6 +15,20 @@ var Clanx = Clanx || {
                 $(sender).addClass('disabled');
                 form.submit();
             },
+        },
+        Link:{
+            lockAndFollow: function(sender) {
+                $(sender).addClass('disabled');
+            }
+        },
+        Bulk:{
+            initialize: function(checkAllSelector) {
+                 $(checkAllSelector).click(function () {
+                    $('input[data-clanx-bulk-box="true"]').not(this).prop('checked', this.checked);
+                    // if there is one on the top and one on the bottom, also do the other one.
+                    $(checkAllSelector).not(this).prop('checked', this.checked);
+                 });
+            },
         }
     }
 };

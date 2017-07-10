@@ -7,9 +7,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use AppBundle\Entity\User;
+use AppBundle\Entity\Bulk;
+use AppBundle\Entity\BulkEntry;
 use AppBundle\Entity\Mail;
 use AppBundle\Entity\RedirectInfo;
+use AppBundle\Entity\User;
+use AppBundle\Form\BulkType;
 use AppBundle\Form\UserType;
 
 /**
@@ -23,28 +26,34 @@ class UserController extends Controller
      * Lists all User entities.
      *
      * @Route("/", name="user_index")
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
+        $trans = $this->get('translator');
+        $trans->setLocale('de'); // TODO: use real localization here.
 
-        $users = $em->getRepository('AppBundle:User')->findAll();
-        $roles = array();
-        foreach ($users as $u) {
-            $ctRoles = $u->getRoles();
-            $roleStr = '';
-            if(in_array('ROLE_ADMIN',$ctRoles)){$roleStr = $roleStr."Adm, ";}
-            if(in_array('ROLE_SUPER_ADMIN',$ctRoles)){$roleStr = $roleStr."SA, ";}
-            if(in_array('ROLE_OK',$ctRoles)){$roleStr = $roleStr."OK, ";}
+        $userService = $this->get('app.user');
 
-            $roles[$u->getId()] = substr($roleStr, 0, -2);;
+        $users = $userService->getAllUsers();
+        $vm = $userService->getIndexViewModel();
+
+        $form = $this->createForm(BulkType::class, $vm->getBulk(), array('choices' => $vm->getBulk()->getActionChoices(), ));
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $flashMessages = $userService->handleUserIndexFormSubmit($vm);
+            foreach ($flashMessages as $message) {
+                $this->addFlash($message[0], $message[1]); //TODO: change dict into object
+            }
+
+            // redirect to same page. To avoid resubmitting form, when pressing [F5]
+            return $this->redirectToRoute('user_index');
         }
 
+        $vm->setBulkFormView($form->createView());
         return $this->render('user/index.html.twig', array(
-            'users' => $users,
-            'roles' => $roles,
+            'view_model' => $vm,
         ));
     }
 

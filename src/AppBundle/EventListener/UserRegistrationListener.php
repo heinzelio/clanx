@@ -5,6 +5,7 @@ namespace AppBundle\EventListener;
 use FOS\UserBundle\FOSUserEvents;
 use FOS\UserBundle\Event\FormEvent;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
+use FOS\UserBundle\Event\GetResponseUserEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -12,17 +13,20 @@ use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\LegacyUser;
 
 /**
- * Listener responsible to import legacy user data after registration
+ * Listener to customize the registration flow.
  * (Registration in File app/config/services.yml --> )
  */
-class UserRegistrationConrimedListener implements EventSubscriberInterface
+class UserRegistrationListener implements EventSubscriberInterface
 {
-    protected $entityManager;
+    private $entityManager;
+    private $router;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, UrlGeneratorInterface $router)
     {
         $this->entityManager = $em;
+        $this->router = $router;
     }
+
     /**
      * {@inheritDoc}
      */
@@ -30,7 +34,22 @@ class UserRegistrationConrimedListener implements EventSubscriberInterface
     {
         return array(
             FOSUserEvents::REGISTRATION_CONFIRMED => 'onUserRegistrationConfirmed',
+            FOSUserEvents::REGISTRATION_INITIALIZE => 'onUserRegistrationInitialize',
         );
+    }
+
+    public function onUserRegistrationInitialize(GetResponseUserEvent $event)
+    {
+        $em = $this->entityManager;
+        $repository = $em->getRepository('AppBundle:Setting');
+        $settings = $repository->findAll()[0];
+
+        if (!$settings->getCanRegister()) {
+            $url = $this->router->generate('registration_denied');
+            //$url = $request->router->generate('registration_denied');
+            $response = new RedirectResponse($url);
+            $event->setResponse(new RedirectResponse($url));
+        }
     }
 
     public function onUserRegistrationConfirmed(FilterUserResponseEvent $event)

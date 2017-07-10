@@ -1,0 +1,18 @@
+<!-- Alert aka flash message aka messagebox. -->
+{% if app.request.hasPreviousSession %}
+    {% for type, messages in app.session.flashbag.all() %}
+        {% for message in messages %}
+            {% if type == 'link' %}
+                <div class="alert alert-info alert-dismissable fade in">
+        			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <a href="{{message}}" class="alert-link">{{message}}</a>
+    			</div>
+            {% else %}
+                <div class="alert alert-{{ flash.getBootstrapClass(type) }} alert-dismissable fade in">
+    			    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    				<strong>{{ flash.getTranslatorKey(type)|trans({}, 'flash') }}</strong> {{ message|trans({}, 'flash') }}
+    			</div>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% endif %}

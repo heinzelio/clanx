@@ -1,6 +1,6 @@
 Please also have a look at the [dev wiki](https://github.com/chriglburri/clanx/wiki)!
 
-lanx Hölfer DB
+Clanx Hölfer DB
 ===============
 
 (A Symfony project created on March 23, 2016, 7:29 pm.)

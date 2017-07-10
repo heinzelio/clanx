@@ -1,10 +1,14 @@
+#Do not use prefixes for this. They are also class names!
+flash.success: OK
+flash.info: Zur Information:
+flash.warning: Obacht!
+flash.danger: Obacht!
 
-success: OK
-info: Zur Information:
-warning: Obacht!
-danger: Obacht!
-
-successfully_saved: Daten wurden erfolgreich gespeichert
+flash.successfully_saved: Daten wurden erfolgreich gespeichert
+flash.save_failed: Speichern fehlgeschlagen
+flash.save_failed_error: Speichern fehlgeschlagen. "%error%"
+flash.not_yet_implemented: Diese Funktion ist noch nicht implementiert
+flash.no_record_affected: Kein Datensatz von der Aktion betroffen.
 
 flash.enroll_failed: Speichern fehlgeschlagen. Du bist NICHT eingetragen worden.
 flash.enroll_required_data_missing: Es wurden nicht alle erforderlichen Fragen beantwortet.

@@ -106,11 +106,11 @@ class MailController extends Controller
 
             if ($numSent)
             {
-                $session->getFlashBag()->add('success', 'EMail gesendet.');
+                $this->addFlash('success', 'EMail gesendet.');
             }
             else
             {
-                $session->getFlashBag()->add('warning','Keine Email gesendet.');
+                $this->addFlash('warning','Keine Email gesendet.');
             }
 
             $redirectInfo = $session->remove(RedirectInfo::SESSION_KEY);
@@ -146,7 +146,7 @@ class MailController extends Controller
              $redirectInfo = new RedirectInfo();
              $redirectInfo->setRouteName('dashboard_index');
          }
-         $session->getFlashBag()->add('warning','Email wurde nicht gesendet.');
+         $this->addFlash('warning','Email wurde nicht gesendet.');
 
          $args = $redirectInfo->getArguments();
          if(!$args)

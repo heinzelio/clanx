@@ -11,6 +11,11 @@
         </div>
     </div> <!-- row for jumbotron -->
     <div class="row">
+        {% if ShowAdminRegistrationSwitch %}
+            <div class="col-md-6">
+                {% include "dashboard/panel_user_registration.html.twig" %}
+            </div>
+        {% endif %}
         {% if ShowAssociationMembershipRequest %}
             <div class="col-md-6">
                 {% include "dashboard/panel_association_membership_request.html.twig" %}

@@ -18,7 +18,7 @@ class DefaultController extends Controller
         if($this->isGranted('ROLE_USER')){
             return $this->redirectToRoute('dashboard_index');
         }
-        
+
         return $this->render('default/index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..'),
         ]);
@@ -34,6 +34,17 @@ class DefaultController extends Controller
     public function helpRegistrationAction()
     {
         return $this->render('default/help_registration.html.twig');
+    }
+
+    /**
+     * Shows a message, that registration is not possible at the moment.
+     *
+     * @Route("/deny/registration", name="registration_denied")
+     * @Method("GET")
+     */
+    public function registrationDeniedAction()
+    {
+        return $this->render('default/registration_denied.html.twig');
     }
 
 }

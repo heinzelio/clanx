@@ -1,0 +1,11 @@
+{% block checkbox_widget -%}
+    <input type="checkbox" {{ block('widget_attributes') }}
+    {% if value is defined %}
+        value="{{ value }}"
+    {% endif %}
+    {% if checked %}
+        checked="checked"
+    {% endif %}
+        data-clanx-bulk-box="true"
+    />
+{%- endblock checkbox_widget %}
