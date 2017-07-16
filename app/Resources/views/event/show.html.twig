@@ -133,6 +133,18 @@
                         </a>
                     {% endif %}
 
+                    {% if view_model.mayCopy %}
+                        <a
+                            class="btn btn-default"
+                            href="{{ path('event_copy', {'id': view_model.event.id}) }}"
+                            data-toggle="tooltip"
+                            title="Erstelle eine Kopie mit allen Ressorts und allen Fragen.
+                            Hölfer werden NICHT kopiert. Der neue Event ist unsichtbar.">
+                            <span class="fa fa-copy"></span>
+                            Kopieren
+                        </a>
+                    {% endif %}
+
                 </div>
                 <!-- footer -->
             </div>

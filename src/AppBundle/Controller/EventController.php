@@ -524,6 +524,47 @@ class EventController extends Controller
     }
 
 
+    /**
+     * Copy the given event with all departments and questions, but without commitments.
+     *
+     * @Route("/{id}/copy", name="event_copy")
+     * @Method({"GET","POST"})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function copyAction(Request $request, Event $event)
+    {
+        //AppBundle\Service\EventService
+        $eventSvc = $this->get('app.event');
+        $depSvc = $this->get('app.department');
+        $questionSvc = $this->get('app.question');
+
+        $newEvent = $eventSvc->getCopy($event);
+        $newDepartments = $depSvc->getCopyOfEvent($event);
+        $newQuestions = $questionSvc->getCopyOfEvent($event);
+        $eventSvc->setRelations($newEvent, $newDepartments, $newQuestions);
+
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($newEvent);
+            foreach ($newDepartments as $department) {
+                $em->persist($department);
+            }
+            foreach ($newQuestions as $question ) {
+                $em->persist($question);
+            }
+            $em->flush();
+
+            $this->addFlash('success','flash.successfully_saved');
+
+        } catch (Exception $e) {
+            $this->addFlash('danger','flash.copy_failed_error');
+            $this->addFlash('danger',$e->getMessage());
+        }
+
+        return $this->redirectToRoute('event_edit', array('id' => $newEvent->getId()));
+    }
+
+
     private function array2csv($arrayRow)
     {
         // https://stackoverflow.com/questions/4249432/export-to-csv-via-php

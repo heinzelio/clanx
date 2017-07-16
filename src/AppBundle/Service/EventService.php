@@ -132,6 +132,7 @@ class EventService
         $deleteAuth = $this->authorization->mayDelete($event);
 
         $mayDownload = $this->authorization->mayDownloadFromEvent();
+        $mayCopy = $this->authorization->mayCopyEvent();
 
         $vm = new EventShowViewModel();
         $vm ->setEvent($event)
@@ -144,6 +145,7 @@ class EventService
         ->setMayDelete($deleteAuth[Authorization::VALUE])
         ->setMayDeleteMessage($deleteAuth[Authorization::MESSAGE])
         ->setMayDownload($mayDownload)
+        ->setMayCopy($mayCopy)
         ->setMyDepartmentsAsChief($myDepartmentsAsChief)
         ->setMyDepartmentsAsDeputy($myDepartmentsAsDeputy);
 
@@ -262,6 +264,45 @@ class EventService
             }
         }
         return $viewModels;
+    }
+
+    /**
+     * Creates a copy of the given event and returns int.
+     * A copy is always invisible and not locked.
+     * @param  Event  $event
+     * @return Event
+     */
+    public function getCopy(Event $event)
+    {
+        $newEvent = new Event();
+        $newEvent->setName('Kopie von "'.$event->getName().'"');
+        $newEvent->setDate($event->getDate());
+        $newEvent->setSticky($event->getSticky());
+        $descAddition = 'Dieser Event ist eine Kopie.'.PHP_EOL
+            .'Bearbeite Datum, Name und Beschreibung'.PHP_EOL
+            .'Der Event ist nicht sichtbar für User. Schalte ihn sichtbar wenn du bereit bist.'.PHP_EOL
+            .PHP_EOL;
+        $newEvent->setDescription($descAddition.$event->getDescription());
+        $newEvent->setLocked(false);
+        $newEvent->setIsForAssociationMembers($event->getIsForAssociationMembers());
+        $newEvent->setIsVisible(false);
+        return $newEvent;
+    }
+
+    /**
+     * Sets the relations betwenn the given event and the given departments / questions
+     * @param Event $event
+     * @param array $departments
+     * @param array $questions
+     */
+    public function setRelations(Event $event, $departments=array(), $questions=array())
+    {
+        foreach ($departments as $department) {
+            $department->setEvent($event);
+        }
+        foreach ($questions as $question) {
+            $question->setEvent($event);
+        }
     }
 
     /**

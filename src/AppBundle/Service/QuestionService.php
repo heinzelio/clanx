@@ -86,7 +86,11 @@ class QuestionService
         return $ret;
     }
 
-
+    /**
+     * Creates and returns a new Question
+     * @param Event  $event
+     * @param string $type  Type of question. use 'T' for text, 'F' for flag, 'S' for selection.
+     */
     public function CreateNew(Event $event, $type='T')
     {
         $q = new Question();
@@ -115,8 +119,39 @@ class QuestionService
         return $q;
     }
 
+    /**
+     * Creates and returns a copy of all questions of the given event.
+     * New questions are not assiciated with an event.
+     * Call EventService.setRelations() for this.
+     * @param  Event  $event
+     * @return Question[]
+     */
+    public function getCopyOfEvent(Event $event)
+    {
+        $newQuestions = array();
+        foreach ($event->getQuestions() as $question) {
+            $newQuestion = new Question();
+            $newQuestion->setText($question->getText());
+            $newQuestion->setHint($question->getHint());
+            $newQuestion->setType($question->getType());
+            $newQuestion->setData($question->getData());
+            $newQuestion->setOptional($question->getOptional());
+            $newQuestion->setAggregate($question->getAggregate());
+            array_push($newQuestions,$newQuestion);
+        }
+        return $newQuestions;
+    }
+
+    /**
+     * returns a readable text for an answer.
+     * E.g.: for a boolean 1/0 return Yes/No
+     * @param  Answer   $answer
+     * @param  Question $question
+     * @return string
+     */
     private function getMeaningfulAnswer(Answer $answer, Question $question)
     {
+        //TODO: use localization
         if($question->getType() == YesNoQuestionViewModel::getTypeString()){
             if ($answer->getAnswer()=="1") {
                 return "Ja";
