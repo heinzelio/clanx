@@ -197,6 +197,7 @@ abstract class BaseQuestionViewModel
 
     public function hasDefault()
     {
+        $arr = $this->getData();
         return isset($arr["default"]);
     }
 
