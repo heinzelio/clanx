@@ -22,3 +22,6 @@ flash.question_created: Question created. Please adjust now text and values.
 
 flash.can_not_do_this: This operation can not be executed at the moment.
 flash.successfully_made_user_data_anonymous: Successfully made %count% user records anonymous. (id from %from% to %to%.)
+
+flash.copy_succeeded: Data has been successfully copied.
+flash.copy_failed: Copying failed.

@@ -175,6 +175,11 @@ class Authorization
         return $this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_OK');
     }
 
+    public function mayCopyEvent()
+    {
+        return $this->isGranted('ROLE_ADMIN');
+    }
+
     /**
      * Tells if current logged in user is member of the association.
      * @return boolean true, if the user is member of the association.

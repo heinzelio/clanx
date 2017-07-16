@@ -57,6 +57,29 @@ class DepartmentService
             array(Department::DEPUTY_USER => $this->auth->getUser(), Department::EVENT => $event)
         );
     }
+
+    /**
+     * Creates and returns a copy of all departments of the given event.
+     * New departments are never locked.
+     * New departments are not assiciated with an event.
+     * Call EventService.setRelations() for this.
+     * @param  Event  $event
+     * @return Department[]
+     */
+    public function getCopyOfEvent(Event $event)
+    {
+        $newDepartments = array();
+        foreach ($event->getDepartments() as $department) {
+            $newDepartment = new Department();
+            $newDepartment->setName($department->getName());
+            $newDepartment->setRequirement($department->getRequirement());
+            $newDepartment->setChiefUser($department->getChiefUser());
+            $newDepartment->setDeputyUser($department->getDeputyUser());
+            $newDepartment->setLocked(false);
+            array_push($newDepartments,$newDepartment);
+        }
+        return $newDepartments;
+    }
 }
 
 ?>

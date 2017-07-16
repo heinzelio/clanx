@@ -20,6 +20,7 @@ class EventShowViewModel //extends ViewModelBase
     private $mayDelete;
     private $mayDeleteMessage;
     private $mayDownload;
+    private $mayCopy;
     private $myDepartmentsAsChief;
     private $myDepartmentsAsDeputy;
     private $deleteForm;
@@ -161,12 +162,12 @@ class EventShowViewModel //extends ViewModelBase
         return $this;
     }
 
-          /**
+    /**
      * @return mixed
      */
     public function getMayDownload(){ return $this->mayDownload; }
 
-          /**
+    /**
      * @param mixed mayDownload
      * @return self
      */
@@ -176,12 +177,31 @@ class EventShowViewModel //extends ViewModelBase
         return $this;
     }
 
-          /**
+    /**
+     * @return mixed
+     */
+    public function getMayCopy()
+    {
+        return $this->mayCopy;
+    }
+
+    /**
+     * @param mixed mayCopy
+     *
+     * @return self
+     */
+    public function setMayCopy($mayCopy)
+    {
+        $this->mayCopy = $mayCopy;
+        return $this;
+    }
+
+    /**
      * @return mixed
      */
     public function getMyDepartmentsAsChief(){ return $this->myDepartmentsAsChief; }
 
-          /**
+    /**
      * @param mixed myDepartmentsAsChief
      * @return self
      */
