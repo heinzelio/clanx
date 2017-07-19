@@ -480,13 +480,14 @@ class DepartmentController extends Controller
         }
 
 
-         $columns1 = array("Hölfer\nEmail\nTelefon",
-                         "Stammhölfer\nBeruf\nGeb.Datum",
-                         'Ich helfe an folgenden Tagen',
-                         'Bemerkung',
-                         'Shirt',
-                         'Zugbillet',
+        $columns1 = array("Hölfer\nEmail\nTelefon",
+                         "Stammhölfer\nBeruf\nGeb.Datum"
                     );
+        $questionOrder = array();
+        foreach ($department->getEvent()->getQuestions() as $question) {
+            array_push($columns1,$question->getText());
+            array_push($questionOrder, $question->getId());
+        }
         $commitments = $department->getCommitments();
         $rows1 = array();
         foreach ($commitments as $cmt) {
@@ -504,12 +505,15 @@ class DepartmentController extends Controller
                 "\n".$user->getOccupation().
                 "\n".$dob;
             $row = array($usrTxt,
-                        $usrText2,
-                        $cmt->getPossibleStart(),
-                        $cmt->getRemark(),
-                        $cmt->getShirtSize(),
-                        $cmt->getNeedTrainTicket(),
+                        $usrText2
                     );
+            $answers = array();
+            foreach ($cmt->getAnswers() as $answer) {
+                $answers[$answer->getQuestion()->getId()] = $answer->getAnswer();
+            }
+            foreach ($questionOrder as $questionId) {
+                array_push($row,$answers[$questionId]);
+            }
             array_push($rows1,$row);
         }
 
