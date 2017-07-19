@@ -67,7 +67,12 @@ class DepartmentController extends Controller
         $deleteForm = $this->createDeleteForm($department);
 
         $shifts = $department->getShifts();
-        $commitments = $department->getCommitments();
+        $eventSvc = $this->get('app.event');
+        $commitments = array();
+        foreach ($department->getCommitments() as $commitment) {
+            $c = $eventSvc->getCommitmentFormViewModelForEdit($commitment);
+            array_push($commitments, $c);
+        }
         $companions = $department->getCompanions();
 
         $mayDelete = $this->isGranted('ROLE_ADMIN');

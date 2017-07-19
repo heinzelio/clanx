@@ -37,6 +37,7 @@ Ressort: {{ department.name }}
         </strong></p>
         <table class="table">
         <tbody>
+            <!-- commitments are of type "CommitmentViewModel" -->
             {% for cmt in commitments %}
             <tr>
                 {% set vol = cmt.user %}
@@ -92,16 +93,17 @@ Ressort: {{ department.name }}
                         </a>
                     {% endif %}
                     {% if user_is_chief or user_is_deputy or is_granted('ROLE_ADMIN') or is_granted('ROLE_OK') %}
-                        <span class="fa fa-calendar"
-                            data-toggle="tooltip"
-                            title="{{cmt.possibleStart}}">
-                        </span>
-                        {% if cmt.remark %}
-                            <span class="fa fa-commenting-o fa-lg"
-                                data-toggle="tooltip"
-                                title="{{cmt.remark}}">
-                            </span>
-                        {% endif %}
+
+                        {% for q in cmt.questions %}
+                            {% if q.answer is not null and q.answer is not empty %}
+                                <span class="fa fa-info-circle"
+                                    data-toggle="tooltip"
+                                    data-html="true"
+                                    title="<b>{{q.text}}</b><br><br><i>{{q.answer}}</i>">
+                                    {#You can make line breaks thanks to "data-html" #}
+                                </span>
+                            {% endif %}
+                        {% endfor %}
                     {% endif %}
                 </td>
             </tr>

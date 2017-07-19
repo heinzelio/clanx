@@ -247,6 +247,8 @@ class EventService
         }
         $commitmentVM->setDepartments($commitment->getEvent()->getDepartments());
         $commitmentVM->setDepartment($commitment->getDepartment());
+        $commitmentVM->setUser($commitment->getUser());
+        $commitmentVM->setId($commitment->getId());
         return $commitmentVM;
     }
 
