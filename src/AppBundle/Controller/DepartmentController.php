@@ -462,6 +462,7 @@ class DepartmentController extends Controller
      */
     public function printAllAction(Request $request, Department $department)
     {
+        // TODO: Make same as in "downloadAction()""
         if(!$this->isGranted('ROLE_ADMIN'))
         {
             $chiefUser= $department->getChiefUser();
@@ -560,24 +561,29 @@ class DepartmentController extends Controller
      */
     public function downloadAction(Request $request, Department $department)
     {
-        if(!$this->isGranted('ROLE_ADMIN'))
-        {
-            $chiefUser= $department->getChiefUser();
-            $deputyUser = $department->getDeputyUser();
-            $operator=$this->getUser();
-            if ($operator->getId() != $chiefUser->getId()
-                &&
-                $operator->getId() != $deputyUser->getId()
-            )
-            {
-                $this->addFlash('warning', "Du musst Admin, Ressortleiter oder Stellvertreter sein, um Hölferdate drucken zu können.");
-                return $this->redirectToRoute('department_show',array(
-                    'id'=>$department->getId(),
-                ));
-            }
+        $trans = $this->get('translator');
+        $trans->setLocale('de'); // TODO: use real localization here.
+        $auth = $this->get('app.auth');
+        if(!$auth->maySeeCommitments($department)){
+            $this->addFlash('warning', 'flash.authorization_denied');
+            return $this->redirectToRoute('department_show',array(
+                'id'=>$department->getId(),
+            ));
+        }
+        $commitments = $department->getCommitments();
+        if(count($commitments)==0){
+            $this->addFlash('warning', 'flash.no_data');
+            return $this->redirectToRoute('department_show',array(
+                'id'=>$department->getId(),
+            ));
         }
 
-        $head = $this->array2csv(array(
+        $questionService = $this->get('app.question');
+
+        $questions = $questionService->getQuestionsSorted($department->getEvent());
+
+        $rows = array();
+        $head = array(
             'Vorname',
             'Nachname',
             'Geschlecht',
@@ -588,19 +594,17 @@ class DepartmentController extends Controller
             'Email',
             'Telefon',
             'Beruf',
-            'Stammhölfer',
-            'T-Shirt',
-            'Zugbillet',
-            'Mögliche Arbeitstage',
-            'Bemerkung',
-        ));
+            'Stammhölfer');
+        $event = $department->getEvent();
 
+        foreach ($questions as $qvm) {
+            array_push($head,$qvm->getText());
+        }
+        array_push($rows,$head);
 
-
-        $rows = array();
         foreach ($department->getCommitments() as $commitment) {
             $user=$commitment->getUser();
-            $row = $this->array2csv(array(
+            $row = array(
                 $user->getForename() ,
                 $user->getSurname() ,
                 $user->getGender() ,
@@ -611,59 +615,40 @@ class DepartmentController extends Controller
                 $user->getEmail() ,
                 $user->getPhone() ,
                 $user->getOccupation() ,
-                $user->getIsRegular()==1?"Ja":"Nein" ,
-                $commitment->getShirtSize() ,
-                $commitment->getNeedTrainTicket()==1?"Ja":"Nein" ,
-                $commitment->getPossibleStart() ,
-                $commitment->getRemark() ,
-            ));
+                $user->getIsRegular()==1?"Ja":"Nein"
+            );
+            foreach ($questionService->getQuestionsAndAnswersSorted($commitment) as $q) {
+                array_push($row,$q->getAnswer());
+            }
             array_push($rows,$row);
         }
+        array_push($rows,array());
+        $head2 = array(
+            'Name',
+            'Email',
+            'Telefon',
+            'Stammhölfer',
+            'Bemerkung',
+        );
+        array_push($rows,$head2);
         foreach ($department->getCompanions() as $companion) {
-            $row = $this->array2csv(array(
+            $row = array(
                 $companion->getName() ,
-                '' ,
-                '' ,
-                '' ,
-                '' ,
-                '' ,
-                '' ,
-                $user->getEmail() ,
-                $user->getPhone() ,
-                '' ,
-                $user->getIsRegular()==1?"Ja":"Nein" ,
-                '' ,
-                '' ,
-                '' ,
+                $companion->getEmail() ,
+                $companion->getPhone() ,
+                $companion->getIsRegular()==1?"Ja":"Nein" ,
                 $commitment->getRemark() ,
-            ));
+            );
             array_push($rows,$row);
         }
 
-        $response = $this->render('export.csv.twig',array(
-            'head' => $head,
-            'rows' => $rows
+        $exportService = $this->get('app.export');
+        $response = $this->render('export_raw.twig',array(
+            'content' => $exportService->getCsvText($rows)
         ));
         $response->headers->set('Content-Type', 'text/csv');
-        $response->headers->set('Content-Disposition', 'attachment; filename="export.csv"');
+        $fileName = 'Helfer_'.$department->getName().'_'.$department->getEvent()->getName().'.csv';
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$fileName.'"');
         return $response;
-
-    }
-
-    private function array2csv($arrayRow)
-    {
-        // https://stackoverflow.com/questions/4249432/export-to-csv-via-php
-        //$delimiter = chr(9); // tab (for excel)
-        $delimiter = ';';
-        $enclosure = '"';
-        $escape = '\\';
-
-        ob_start();
-        $df = fopen("php://output", 'w');
-        //add BOM to fix UTF-8 in Excel
-        fputs($df, $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) ));
-        fputcsv($df, $arrayRow, $delimiter,$enclosure);
-        fclose($df);
-        return ob_get_clean();
     }
 }

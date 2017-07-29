@@ -7,6 +7,8 @@ use Doctrine\ORM\EntityRepository;
 use AppBundle\Entity\Question;
 use AppBundle\Entity\Answer;
 use AppBundle\Entity\Event;
+use AppBundle\Entity\Department;
+use AppBundle\Entity\Commitment;
 use AppBundle\ViewModel\Commitment\QuestionViewModelBase;
 use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
 use AppBundle\ViewModel\Commitment\TextQuestionViewModel;
@@ -49,6 +51,37 @@ class QuestionService
             default:
                 return new TextQuestionViewModel($q, $a);
         }
+    }
+
+    /**
+     * gets an array of questions of the event, sorted by the id.
+     * @param  Event  $event
+     * @return QuestionViewModelBase[]
+     */
+    public function getQuestionsSorted(Event $event)
+    {
+        $arr = array();
+        foreach ($event->getQuestions() as $q) {
+            $arr[$q->getId()] = $this->getQuestionViewModel($q);
+        }
+        ksort($arr);
+        return $arr;
+    }
+
+    /**
+     * gets an array of questions with answers of the event, sorted by the id.
+     * @param  Event  $event
+     * @return QuestionViewModelBase[]
+     */
+    public function getQuestionsAndAnswersSorted(Commitment $commitment)
+    {
+        $arr = array();
+        foreach($commitment->getAnswers() as $a){
+            $q = $a->getQuestion();
+            $arr[$q->getId()] = $this->getQuestionViewModel($q, $a);
+        }
+        ksort($arr);
+        return $arr;
     }
 
     /**

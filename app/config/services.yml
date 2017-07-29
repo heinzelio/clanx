@@ -58,3 +58,6 @@ services:
     app.settings:
         class: AppBundle\Service\SettingsService
         arguments: ["@doctrine.orm.entity_manager"]
+
+    app.export:
+        class: AppBundle\Service\ExportService

@@ -4,10 +4,11 @@ namespace AppBundle\Service;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
-use AppBundle\Entity\Event;
 use AppBundle\Entity\Commitment;
-use AppBundle\Entity\User;
+use AppBundle\Entity\Department;
+use AppBundle\Entity\Event;
 use AppBundle\Entity\Question;
+use AppBundle\Entity\User;
 
 class Authorization
 {
@@ -309,8 +310,31 @@ class Authorization
         return $this->isGranted('ROLE_ADMIN');
     }
 
+    // TODO: add comment, use naming conventions.
     public function MayChangeSettings()
     {
         return $this->isGranted('ROLE_ADMIN');
+    }
+
+    /**
+     * returns true if the logged in user may download volunteer data of the given department.
+     * @param  Department $department
+     * @return boolean
+     */
+    public function maySeeCommitments(Department $department)
+    {
+        if(!$this->isGranted('ROLE_ADMIN'))
+        {
+            $chiefUser= $department->getChiefUser();
+            $deputyUser = $department->getDeputyUser();
+            if ($this->user->getId() != $chiefUser->getId()
+                &&
+                $this->user->getId() != $deputyUser->getId()
+            )
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }
