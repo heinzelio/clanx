@@ -442,39 +442,47 @@ class EventController extends Controller
      */
     public function downloadAction(Request $request, Event $event)
     {
-        if(! $this->isGranted('ROLE_ADMIN') && !$this->isGranted('ROLE_OK'))
-        {
-            $this->addFlash('warning', "Du musst Admin oder OK Mitglied sein, um Hölferdaten herunterladen zu können.");
+        $trans = $this->get('translator');
+        $trans->setLocale('de'); // TODO: use real localization here.
+        $auth = $this->get('app.auth');
+        if(!$auth->mayDownloadFromEvent($event)){
+            $this->addFlash('warning', 'flash.authorization_denied');
             return $this->redirectToRoute('event_show',array(
                 'id'=>$event->getId(),
             ));
         }
 
-        $head = $this->array2csv(array(
-            'Ressort',
-            'Vorname',
-            'Nachname',
-            'Geschlecht',
-            'Geb.Datum',
-            'Strasse',
-            'PLZ',
-            'Ort',
-            'Email',
-            'Telefon',
-            'Beruf',
-            'Stammhölfer',
-            'T-Shirt',
-            'Zugbillet',
-            'Mögliche Arbeitstage',
-            'Bemerkung',
-        ));
-        $rows = array();
+        // todo: make common function for event download and department download
 
-        foreach ($event->getDepartments() as $department ) {
+        $questionService = $this->get('app.question');
+
+        $questions = $questionService->getQuestionsSorted($event);
+
+        $rows = array();
+        foreach ($event->getDepartments() as $department) {
+            $head = array(
+                'Registriete Hölfer im Ressort',
+                'Vorname',
+                'Nachname',
+                'Geschlecht',
+                'Geb.Datum',
+                'Strasse',
+                'PLZ',
+                'Ort',
+                'Email',
+                'Telefon',
+                'Beruf',
+                'Stammhölfer',
+            );
+
+            foreach ($questions as $qvm) {
+                array_push($head,$qvm->getText());
+            }
+            array_push($rows,$head);
 
             foreach ($department->getCommitments() as $commitment) {
                 $user=$commitment->getUser();
-                $row = $this->array2csv(array(
+                $row = array(
                     (string)$department,
                     $user->getForename() ,
                     $user->getSurname() ,
@@ -486,45 +494,64 @@ class EventController extends Controller
                     $user->getEmail() ,
                     $user->getPhone() ,
                     $user->getOccupation() ,
-                    $user->getIsRegular()==1?"Ja":"Nein" ,
-                    $commitment->getShirtSize() ,
-                    $commitment->getNeedTrainTicket()==1?"Ja":"Nein" ,
-                    $commitment->getPossibleStart() ,
-                    $commitment->getRemark() ,
-                ));
+                    $user->getIsRegular()==1?"Ja":"Nein"
+                );
+                foreach ($questionService->getQuestionsAndAnswersSorted($commitment) as $q) {
+                    array_push($row,$q->getAnswer());
+                }
                 array_push($rows,$row);
             }
-            foreach ($department->getCompanions() as $companion) {
-                $row = $this->array2csv(array(
-                    (string)$department,
-                    $companion->getName() ,
+            array_push($rows,array());
+
+            $companions = $department->getCompanions();
+            if(count($companions)>0)
+            {
+                $head2 = array(
+                    'Nicht registrierte Hölfer im Ressort',
+                    'Name',
                     '' ,
                     '' ,
                     '' ,
                     '' ,
                     '' ,
                     '' ,
-                    $user->getEmail() ,
-                    $user->getPhone() ,
+                    'Email',
+                    'Telefon',
+                    'Stammhölfer',
                     '' ,
-                    $user->getIsRegular()==1?"Ja":"Nein" ,
-                    '' ,
-                    '' ,
-                    '' ,
-                    $commitment->getRemark() ,
-                ));
-                array_push($rows,$row);
+                    'Bemerkung',
+                );
+                array_push($rows,$head2);
+                foreach ($companions as $companion) {
+                    $row = array(
+                        (string)$department,
+                        $companion->getName() ,
+                        '' ,
+                        '' ,
+                        '' ,
+                        '' ,
+                        '' ,
+                        '' ,
+                        $companion->getEmail() ,
+                        $companion->getPhone() ,
+                        $companion->getIsRegular()==1?"Ja":"Nein" ,
+                        '' ,
+                        $commitment->getRemark() ,
+                    );
+                    array_push($rows,$row);
+                }
+                array_push($rows,array());
             }
         }
 
-        $response = $this->render('export.csv.twig',array(
-            'head' => $head,
-            'rows' => $rows
+        $exportService = $this->get('app.export');
+        $response = $this->render('export_raw.twig',array(
+            'content' => $exportService->getCsvText($rows)
         ));
         $response->headers->set('Content-Type', 'text/csv');
-        $response->headers->set('Content-Disposition', 'attachment; filename="export.csv"');
+        $fileName = 'Helfer_'.$department->getName().'_'.$department->getEvent()->getName().'.csv';
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$fileName.'"');
         return $response;
-
     }
 
 
@@ -571,6 +598,7 @@ class EventController extends Controller
 
     private function array2csv($arrayRow)
     {
+        trigger_error("Deprecated function called.", E_USER_NOTICE);
         // https://stackoverflow.com/questions/4249432/export-to-csv-via-php
         //$delimiter = chr(9); // tab (for excel)
         $delimiter = ';';

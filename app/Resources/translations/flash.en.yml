@@ -25,3 +25,8 @@ flash.successfully_made_user_data_anonymous: Successfully made %count% user reco
 
 flash.copy_succeeded: Data has been successfully copied.
 flash.copy_failed: Copying failed.
+
+flash.download_denied: You have to be admin, chief-of-department oder deputy-of-department, to download volunteer data.
+flash.no_data: There is no data.
+
+flash.authorization_denied: Access to this function denied.

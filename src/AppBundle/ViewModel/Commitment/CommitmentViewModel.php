@@ -3,6 +3,7 @@
 namespace AppBundle\ViewModel\Commitment;
 
 use AppBundle\Entity\Department;
+use AppBundle\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -27,6 +28,18 @@ class CommitmentViewModel
      * @var BaseQuestionViewModel[]
      */
     private $questions = array();
+
+    /**
+     * user that made the commitment
+     * @var User
+     */
+    private $user;
+
+    /**
+     * id
+     * @var integer
+     */
+    private $id;
 
     /**
      * Gets the department.
@@ -119,4 +132,48 @@ class CommitmentViewModel
             $q->validateAnswer($context);
         }
     }
+
+    /**
+     * Get the user that made the commitment
+     *
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set the user that made the commitment
+     *
+     * @param User user
+     *
+     * @return self
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * Get the value of id
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the value of id
+     * @param integer id
+     * @return self
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
 }
