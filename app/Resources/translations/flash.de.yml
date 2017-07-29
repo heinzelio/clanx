@@ -28,3 +28,5 @@ flash.copy_failed: Ein Fehler trat auf beim kopieren.
 
 flash.download_denied: Du musst Admin, Ressortleiter oder Stellvertreter sein, um Hölferdaten herunterladen zu können.
 flash.no_data: Es gibt keine Daten.
+
+flash.authorization_denied: Zugriff auf die Funktion wurde verweigert.
