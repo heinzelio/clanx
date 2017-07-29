@@ -462,24 +462,22 @@ class DepartmentController extends Controller
      */
     public function printAllAction(Request $request, Department $department)
     {
-        // TODO: Make same as in "downloadAction()""
-        if(!$this->isGranted('ROLE_ADMIN'))
-        {
-            $chiefUser= $department->getChiefUser();
-            $deputyUser = $department->getDeputyUser();
-            $operator=$this->getUser();
-            if ($operator->getId() != $chiefUser->getId()
-                &&
-                $operator->getId() != $deputyUser->getId()
-            )
-            {
-                $this->addFlash('warning', "Du musst Admin, Ressortleiter oder Stellvertreter sein, um Hölferdate drucken zu können.");
-                return $this->redirectToRoute('department_show',array(
-                    'id'=>$department->getId(),
-                ));
-            }
+        $trans = $this->get('translator');
+        $trans->setLocale('de'); // TODO: use real localization here.
+        $auth = $this->get('app.auth');
+        if(!$auth->maySeeCommitments($department)){
+            $this->addFlash('warning', 'flash.authorization_denied');
+            return $this->redirectToRoute('department_show',array(
+                'id'=>$department->getId(),
+            ));
         }
-
+        $commitments = $department->getCommitments();
+        if(count($commitments)==0){
+            $this->addFlash('warning', 'flash.no_data');
+            return $this->redirectToRoute('department_show',array(
+                'id'=>$department->getId(),
+            ));
+        }
 
         $columns1 = array("Hölfer\nEmail\nTelefon",
                          "Stammhölfer\nBeruf\nGeb.Datum"
@@ -518,7 +516,7 @@ class DepartmentController extends Controller
             array_push($rows1,$row);
         }
 
-         $columns2 = array("Hölfer\nEmail\nTelefon",
+        $columns2 = array("Hölfer\nEmail\nTelefon",
                         'Stammhölfer',
                          'Bemerkung',
                     );
