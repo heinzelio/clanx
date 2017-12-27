@@ -1,7 +1,10 @@
--- execute this if version is =15 !
-DROP TABLE `setting`;
+-- execute this if version is =17 !
 
-UPDATE info set version = 14;
+UPDATE user set salt = '' where salt IS NULL;
+
+ALTER TABLE `user` CHANGE `salt` `salt` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;
+
+UPDATE info set version = 16;
 
 SELECT version from info;
 
