@@ -31,6 +31,8 @@ services:
     # Service Legacy Alias! TODO: remove when everything is refactored
     # app.event: '@AppBundle\Service\EventService'
     # user_register_listener: '@AppBundle\EventListener\UserRegistrationListener'
+    # app.form.profile: '@AppBundle\Form\ProfileFormType'
+
 
     #TODO: remove arguments when all services are autowired
 
@@ -42,14 +44,13 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    # TODO: switch all these services to autowired services
-
-    app.form.profile:
-        public: true
-        class: AppBundle\Form\ProfileFormType
-        arguments: ["\\AppBundle\\Entity\\User"]
+    AppBundle\Form\ProfileFormType:
+        arguments: ["\\AppBundle\\Entity\\User"] # keep this.
         tags:
             - { name: form.type, alias: app_user_profile }
+
+    # TODO: switch all these services to autowired services
+
 
     app.auth:
         public: true
