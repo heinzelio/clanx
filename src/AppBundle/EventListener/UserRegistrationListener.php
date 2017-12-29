@@ -9,7 +9,7 @@ use FOS\UserBundle\Event\GetResponseUserEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use AppBundle\Entity\LegacyUser;
 
 /**
@@ -21,7 +21,7 @@ class UserRegistrationListener implements EventSubscriberInterface
     private $entityManager;
     private $router;
 
-    public function __construct(EntityManager $em, UrlGeneratorInterface $router)
+    public function __construct(EntityManagerInterface $em, UrlGeneratorInterface $router)
     {
         $this->entityManager = $em;
         $this->router = $router;

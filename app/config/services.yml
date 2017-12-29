@@ -7,57 +7,94 @@ services:
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    AppBundle\: #namespace
+        resource: '../../src/AppBundle/*'
+        exclude: '../../src/AppBundle/{Entity,Migrations,Tests}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    AppBundle\Controller\:
+        resource: '../../src/AppBundle/Controller/*'
+        tags: ['controller.service_arguments']
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    # Service Legacy Alias! TODO: remove when everything is refactored
+    app.event: '@AppBundle\Service\EventService'
+
+    AppBundle\Service\EventService:
+        arguments: ["@doctrine.orm.entity_manager", "@app.auth", "@app.department", "@app.commitment", "@app.question"]
+
+
+    # TODO: switch all these services to autowired services
     user_register_listener:
+        public: true
         class: AppBundle\EventListener\UserRegistrationListener
         arguments: ["@doctrine.orm.entity_manager", "@router"]
         tags:
             - { name: kernel.event_subscriber }
 
     app.form.profile:
+        public: true
         class: AppBundle\Form\ProfileFormType
         arguments: ["\\AppBundle\\Entity\\User"]
         tags:
             - { name: form.type, alias: app_user_profile }
 
     app.auth:
+        public: true
         class: AppBundle\Service\Authorization
         arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@security.authorization_checker"]
 
-    app.event:
-        class: AppBundle\Service\EventService
-        arguments: ["@doctrine.orm.entity_manager", "@app.auth", "@app.department", "@app.commitment", "@app.question"]
-
     app.department:
+        public: true
         class: AppBundle\Service\DepartmentService
         arguments: ["@app.auth", "@doctrine.orm.entity_manager"]
 
     app.commitment:
+        public: true
         class: AppBundle\Service\CommitmentService
         arguments: ["@app.auth", "@doctrine.orm.entity_manager", "@logger"]
 
     app.menu:
+        public: true
         class: AppBundle\Service\MenuService
         arguments: ["@app.auth"]
 
     app.user:
+        public: true
         class: AppBundle\Service\UserService
         arguments: ["@doctrine.orm.entity_manager", "@translator"]
 
     app.question:
+        public: true
         class: AppBundle\Service\QuestionService
         arguments: ["@doctrine.orm.entity_manager"]
 
     app.mail_builder:
+        public: true
         class: AppBundle\Service\MailBuilderService
         arguments: ["@twig"]
 
     app.flash:
+        public: true
         class: AppBundle\Service\Flash\FlashService
         arguments: ["@session"]
 
     app.settings:
+        public: true
         class: AppBundle\Service\SettingsService
         arguments: ["@doctrine.orm.entity_manager"]
 
     app.export:
+        public: true
         class: AppBundle\Service\ExportService

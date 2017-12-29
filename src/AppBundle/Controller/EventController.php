@@ -31,7 +31,7 @@ use AppBundle\Form\Commitment\TextQuestionViewModel;
 use AppBundle\Form\EventCreateType;
 use AppBundle\Form\ShirtSizeType;
 use AppBundle\Service\Authorization;
-use AppBundle\Service\EventService;
+use AppBundle\Service\IEventService;
 
 /**
  * Event controller.
@@ -47,11 +47,8 @@ class EventController extends Controller
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
-    public function indexAction()
+    public function indexAction(IEventService $eventSvc)
     {
-        //AppBundle\Service\EventService
-        $eventSvc = $this->get('app.event');
-
         // should be arrays of Event objects,
         // ordered by date
         $upcoming = $eventSvc->getUpcoming();
@@ -123,13 +120,11 @@ class EventController extends Controller
     // It must come after routes like /event/new or event/whaterever.
     // Otherwise when the client calls /event/new, symfony tries to open
     // an event with the id "new" (what a silly little framework...)
-    public function showAction(Request $request, Event $event)
+    public function showAction(Request $request, Event $event, IEventService $eventSvc)
     {
         $trans = $this->get('translator');
         $trans->setLocale('de'); // TODO: use real localization here.
 
-        //AppBundle\Service\EventService
-        $eventSvc = $this->get('app.event');
         $auth = $this->get('app.auth');
 
         $authResult = $auth->mayShowEventDetail($event);
@@ -562,10 +557,8 @@ class EventController extends Controller
      * @Method({"GET","POST"})
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function copyAction(Request $request, Event $event)
+    public function copyAction(Request $request, Event $event, IEventService $eventSvc)
     {
-        //AppBundle\Service\EventService
-        $eventSvc = $this->get('app.event');
         $depSvc = $this->get('app.department');
         $questionSvc = $this->get('app.question');
 

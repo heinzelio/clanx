@@ -17,6 +17,7 @@ use AppBundle\Entity\User;
 use AppBundle\Entity\Mail;
 use AppBundle\Entity\RedirectInfo;
 use AppBundle\Form\DepartmentType;
+use AppBundle\Service\IEventService;
 
 /**
  * Department controller.
@@ -62,12 +63,11 @@ class DepartmentController extends Controller
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
-    public function showAction(Department $department)
+    public function showAction(Department $department, IEventService $eventSvc)
     {
         $deleteForm = $this->createDeleteForm($department);
 
         $shifts = $department->getShifts();
-        $eventSvc = $this->get('app.event');
         $commitments = array();
         foreach ($department->getCommitments() as $commitment) {
             $c = $eventSvc->getCommitmentFormViewModelForEdit($commitment);

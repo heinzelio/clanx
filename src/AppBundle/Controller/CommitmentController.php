@@ -16,6 +16,7 @@ use AppBundle\Entity\Department;
 use AppBundle\Entity\Event;
 use AppBundle\ViewModel\Commitment\CommitmentViewModel;
 use AppBundle\Form\Commitment\CommitmentType;
+use AppBundle\Service\IEventService;
 
 /**
  * Commitment controller.
@@ -31,7 +32,7 @@ class CommitmentController extends Controller
      * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_USER')")
      */
-    public function editAction(Request $request, Commitment $commitment)
+    public function editAction(Request $request, Commitment $commitment, IEventService $eventService)
     {
         $department = $commitment->getDepartment(); // may be null!
         $event = $commitment->getEvent();
@@ -54,7 +55,6 @@ class CommitmentController extends Controller
 
         $deleteForm = $this->createDeleteForm($commitment); // for delete button!
 
-        $eventService = $this->get('app.event');
         $formVM = $eventService->getCommitmentFormViewModelForEdit($commitment); //CommitmentViewModel
 
         $editForm = $this->getEnrollForm($formVM);

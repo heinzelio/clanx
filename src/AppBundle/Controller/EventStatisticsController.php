@@ -13,9 +13,10 @@ use AppBundle\Entity\Event;
 use AppBundle\Entity\Commitment;
 use AppBundle\Entity\Department;
 use AppBundle\Entity\User;
+use AppBundle\Service\IEventService;
 
 /**
- * Event controller.
+ * Event statistics controller.
  *
  * @Route("/event/statistics")
  */
@@ -24,12 +25,15 @@ class EventStatisticsController extends Controller
     /**
      * Shows statistics.
      *
+     * Partial view on event/show.html.twig
+     *
      * @Route("/{id}", name="event_statistics_index")
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
-    public function indexAction(Event $event)
+    public function indexAction(Event $event, IEventService $evSvc)
     {
+        $this->eventService = $evSvc;
         if($this->isGranted('ROLE_ADMIN')){
             return $this->renderAdminView($event);
         }
@@ -58,9 +62,7 @@ class EventStatisticsController extends Controller
      */
     private function renderCommitteeView(Event $event)
     {
-        $eventService = $this->get('app.event');
-
-        $viewModels = $eventService->getStatisticsViewModels($event);
+        $viewModels = $this->eventService->getStatisticsViewModels($event);
 
         return $this->render('event/statistics.html.twig', array(
             'viewModels' => $viewModels,

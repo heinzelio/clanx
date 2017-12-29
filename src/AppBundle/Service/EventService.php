@@ -13,25 +13,29 @@ use AppBundle\ViewModel\Commitment\SelectionQuestionViewModel;
 use AppBundle\ViewModel\Event\EventStatisticsViewModel;
 use AppBundle\ViewModel\Event\EventShowViewModel;
 
-class EventService
+class EventService implements IEventService
 {
     /**
      * @var Doctrine\ORM\EntityManager
      */
     protected $entityManager;
+
     /**
      * @var AppBundle\Service\Authorization
      */
     protected $authorization;
+
     /**
      * The repository for the Event entity
      * @var \Doctrine\ORM\EntityRepository
      */
     protected $repo;
+
     /**
      * @var AppBundle\Service\DepartmentService
      */
     protected $departmentService;
+
     /**
      * @var AppBundle\Service\CommitmentService
      */
