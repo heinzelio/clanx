@@ -32,6 +32,7 @@ use AppBundle\Form\EventCreateType;
 use AppBundle\Form\ShirtSizeType;
 use AppBundle\Service\Authorization;
 use AppBundle\Service\IEventService;
+use AppBundle\Service\IDepartmentService;
 
 /**
  * Event controller.
@@ -557,9 +558,8 @@ class EventController extends Controller
      * @Method({"GET","POST"})
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function copyAction(Request $request, Event $event, IEventService $eventSvc)
+    public function copyAction(Request $request, Event $event, IEventService $eventSvc, IDepartmentService $depSvc)
     {
-        $depSvc = $this->get('app.department');
         $questionSvc = $this->get('app.question');
 
         $newEvent = $eventSvc->getCopy($event);

@@ -32,7 +32,7 @@ class EventService implements IEventService
     protected $repo;
 
     /**
-     * @var AppBundle\Service\DepartmentService
+     * @var AppBundle\Service\IDepartmentService
      */
     protected $departmentService;
 
@@ -49,7 +49,7 @@ class EventService implements IEventService
     public function __construct(
         EntityManager $em,
         Authorization $auth,
-        DepartmentService $deptService,
+        IDepartmentService $deptService,
         CommitmentService $cmmtService,
         QuestionService $questionService
     )

@@ -32,12 +32,13 @@ services:
     # app.event: '@AppBundle\Service\EventService'
     # user_register_listener: '@AppBundle\EventListener\UserRegistrationListener'
     # app.form.profile: '@AppBundle\Form\ProfileFormType'
+    # app.department: '@AppBundle\Service\DepartmentService'
 
 
     #TODO: remove arguments when all services are autowired
 
     AppBundle\Service\EventService:
-        arguments: ["@doctrine.orm.entity_manager", "@app.auth", "@app.department", "@app.commitment", "@app.question"]
+        arguments: ["@doctrine.orm.entity_manager", "@app.auth", "@AppBundle\\Service\\IDepartmentService", "@app.commitment", "@app.question"]
 
     AppBundle\EventListener\UserRegistrationListener:
         arguments: ["@doctrine.orm.entity_manager", "@router"]
@@ -49,6 +50,9 @@ services:
         tags:
             - { name: form.type, alias: app_user_profile }
 
+    AppBundle\Service\DepartmentService:
+        arguments: ["@app.auth", "@doctrine.orm.entity_manager"]
+
     # TODO: switch all these services to autowired services
 
 
@@ -56,11 +60,6 @@ services:
         public: true
         class: AppBundle\Service\Authorization
         arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@security.authorization_checker"]
-
-    app.department:
-        public: true
-        class: AppBundle\Service\DepartmentService
-        arguments: ["@app.auth", "@doctrine.orm.entity_manager"]
 
     app.commitment:
         public: true

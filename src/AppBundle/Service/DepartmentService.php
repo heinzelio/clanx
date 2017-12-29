@@ -6,7 +6,7 @@ use AppBundle\Service\Authorization;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Department;
 
-class DepartmentService
+class DepartmentService implements IDepartmentService
 {
     /**
      * @var Doctrine\ORM\EntityManager
