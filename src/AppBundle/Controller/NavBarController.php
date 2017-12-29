@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Entity\Event;
 use AppBundle\Service\IEventService;
+use AppBundle\Service\IMenuService;
 
 /**
  * Event controller.
@@ -23,10 +24,8 @@ class NavBarController extends Controller
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
-    public function indexAction(IEventService $eventService)
+    public function indexAction(IEventService $eventService, IMenuService $menuService)
     {
-        $menuService = $this->get('app.menu');
-
         $items[] = $menuService->getHomeMenu();
         foreach ($eventService->getEventsForMenu() as $event) {
             $items[] = $menuService->getEventMenu($event);

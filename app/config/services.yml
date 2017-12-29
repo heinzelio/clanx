@@ -33,7 +33,7 @@ services:
     # user_register_listener: '@AppBundle\EventListener\UserRegistrationListener'
     # app.form.profile: '@AppBundle\Form\ProfileFormType'
     # app.department: '@AppBundle\Service\DepartmentService'
-
+    # app.menu: '@AppBundle\Service\MenuService'
 
     #TODO: remove arguments when all services are autowired
 
@@ -53,6 +53,9 @@ services:
     AppBundle\Service\DepartmentService:
         arguments: ["@app.auth", "@doctrine.orm.entity_manager"]
 
+    AppBundle\Service\MenuService:
+        arguments: ["@app.auth"]
+
     # TODO: switch all these services to autowired services
 
 
@@ -66,10 +69,7 @@ services:
         class: AppBundle\Service\CommitmentService
         arguments: ["@app.auth", "@doctrine.orm.entity_manager", "@logger"]
 
-    app.menu:
-        public: true
-        class: AppBundle\Service\MenuService
-        arguments: ["@app.auth"]
+
 
     app.user:
         public: true
