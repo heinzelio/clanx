@@ -29,19 +29,20 @@ services:
     # please note that last definitions always *replace* previous ones
 
     # Service Legacy Alias! TODO: remove when everything is refactored
-    app.event: '@AppBundle\Service\EventService'
+    # app.event: '@AppBundle\Service\EventService'
+    # user_register_listener: '@AppBundle\EventListener\UserRegistrationListener'
+
+    #TODO: remove arguments when all services are autowired
 
     AppBundle\Service\EventService:
         arguments: ["@doctrine.orm.entity_manager", "@app.auth", "@app.department", "@app.commitment", "@app.question"]
 
-
-    # TODO: switch all these services to autowired services
-    user_register_listener:
-        public: true
-        class: AppBundle\EventListener\UserRegistrationListener
+    AppBundle\EventListener\UserRegistrationListener:
         arguments: ["@doctrine.orm.entity_manager", "@router"]
         tags:
             - { name: kernel.event_subscriber }
+
+    # TODO: switch all these services to autowired services
 
     app.form.profile:
         public: true
