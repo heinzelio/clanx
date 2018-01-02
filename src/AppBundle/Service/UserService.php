@@ -3,7 +3,6 @@ namespace AppBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Translation\TranslatorInterface;
-use AppBundle\Service\Authorization;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\User;
 use AppBundle\ViewModel\User\UserIndex;

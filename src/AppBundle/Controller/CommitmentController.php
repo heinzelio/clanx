@@ -17,6 +17,7 @@ use AppBundle\Entity\Event;
 use AppBundle\ViewModel\Commitment\CommitmentViewModel;
 use AppBundle\Form\Commitment\CommitmentType;
 use AppBundle\Service\IEventService;
+use AppBundle\Service\IAuthorizationService;
 
 /**
  * Commitment controller.
@@ -32,11 +33,14 @@ class CommitmentController extends Controller
      * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_USER')")
      */
-    public function editAction(Request $request, Commitment $commitment, IEventService $eventService)
+    public function editAction(
+        Request $request,
+        Commitment $commitment,
+        IEventService $eventService,
+        IAuthorizationService $auth)
     {
         $department = $commitment->getDepartment(); // may be null!
         $event = $commitment->getEvent();
-        $auth = $this->get('app.auth');
         if (!$auth->mayEditOrDeleteCommitment($commitment))
         {
             //TODO: Localization
@@ -114,11 +118,13 @@ class CommitmentController extends Controller
      * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")
      */
-    public function deleteAction(Request $request, Commitment $commitment)
+    public function deleteAction(
+        Request $request,
+        Commitment $commitment,
+        IAuthorizationService $auth)
     {
         $department = $commitment->getDepartment();
         $event = $commitment->getEvent();
-        $auth = $this->get('app.auth');
         if (!$auth->mayEditOrDeleteCommitment($commitment))
         {
             // TODO: Localization

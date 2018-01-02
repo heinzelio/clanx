@@ -7,7 +7,7 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: de
-    
+
     #just add this following line to tell the symfony deprecation mechanism
     #that it should act as if it was already upgraded to 4.0
     #Then some serious autowiring issues would throw errors.
@@ -48,7 +48,7 @@ twig:
         - bootstrap_3_layout.html.twig
         #- bootstrap_3_horizontal_layout.html.twig
     globals:
-        flash: "@app.flash"
+        flash: "@AppBundle\\Service\\Flash\\FlashService"
 
 # Doctrine Configuration
 doctrine:

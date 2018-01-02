@@ -18,6 +18,7 @@ use AppBundle\Entity\Department;
 use AppBundle\Entity\Commitment;
 use AppBundle\ViewModel\Event\QuestionListViewModel;
 use AppBundle\ViewModel\Event\QuestionViewModel;
+use AppBundle\Service\IAuthorizationService;
 
 /**
  * Partial event question controller.
@@ -27,18 +28,20 @@ use AppBundle\ViewModel\Event\QuestionViewModel;
 class EventQuestionController extends Controller
 {
     /**
-     * Shows a list of all Departments of the given event
+     * Shows a list of all questions of the given event
      *
      * @Route("/{id}/questions", name="event_questions_list")
      * @Method({"GET"})
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function questionsListAction(Event $event)
+    public function questionsListAction(
+        Event $event,
+        IAuthorizationService $auth
+    )
     {
         $trans = $this->get('translator');
         $trans->setLocale('de'); // TODO: use real localization here.
 
-        $auth = $this->get('app.auth');
         if (!$auth->mayShowQuestionsOfEvent($event)) {
             $this->addFlash('danger','flash.mayNotShowQuestions');
             return new Response();

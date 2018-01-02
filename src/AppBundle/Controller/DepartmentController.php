@@ -18,6 +18,7 @@ use AppBundle\Entity\Mail;
 use AppBundle\Entity\RedirectInfo;
 use AppBundle\Form\DepartmentType;
 use AppBundle\Service\IEventService;
+use AppBundle\Service\IAuthorizationService;
 
 /**
  * Department controller.
@@ -460,11 +461,14 @@ class DepartmentController extends Controller
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
-    public function printAllAction(Request $request, Department $department)
+    public function printAllAction(
+        Request $request,
+        Department $department,
+        IAuthorizationService $auth
+    )
     {
         $trans = $this->get('translator');
         $trans->setLocale('de'); // TODO: use real localization here.
-        $auth = $this->get('app.auth');
         if(!$auth->maySeeCommitments($department)){
             $this->addFlash('warning', 'flash.authorization_denied');
             return $this->redirectToRoute('department_show',array(
@@ -557,11 +561,14 @@ class DepartmentController extends Controller
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
-    public function downloadAction(Request $request, Department $department)
+    public function downloadAction(
+        Request $request,
+        Department $department,
+        IAuthorizationService $auth
+    )
     {
         $trans = $this->get('translator');
         $trans->setLocale('de'); // TODO: use real localization here.
-        $auth = $this->get('app.auth');
         if(!$auth->maySeeCommitments($department)){
             $this->addFlash('warning', 'flash.authorization_denied');
             return $this->redirectToRoute('department_show',array(

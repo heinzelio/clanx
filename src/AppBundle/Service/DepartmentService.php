@@ -2,7 +2,7 @@
 namespace AppBundle\Service;
 
 use Doctrine\ORM\EntityManager;
-use AppBundle\Service\Authorization;
+use AppBundle\Service\IAuthorizationService;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Department;
 
@@ -13,7 +13,7 @@ class DepartmentService implements IDepartmentService
      */
     protected $entityManager;
     /**
-     * @var AppBundle\Service\Authorization
+     * @var AppBundle\Service\IAuthorizationService
      */
     protected $auth;
     /**
@@ -23,7 +23,7 @@ class DepartmentService implements IDepartmentService
     protected $repo;
 
     public function __construct(
-        Authorization $authorization,
+        IAuthorizationService $authorization,
         EntityManager $em
     )
     {

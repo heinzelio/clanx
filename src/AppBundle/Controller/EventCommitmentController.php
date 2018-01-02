@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Commitment;
+use AppBundle\Service\IAuthorizationService;
 
 /**
  * Partial event commitment controller.
@@ -29,13 +30,19 @@ class EventCommitmentController extends Controller
         ));
     }
 
-    public function listCommitmentAction(Event $event)
+
+    /**
+     * Partial action from event edit.html.twig
+     * @param  Event                 $event
+     * @param  IAuthorizationService $auth
+     * @return Response
+     */
+    public function listCommitmentAction(Event $event, IAuthorizationService $auth)
     {
         $trans = $this->get('translator');
         $trans->setLocale('de'); // TODO: use real localization here.
 
         $commitments = $event->getCommitments();
-        $auth = $this->get('app.auth');
 
         return $this->render('event\list_commitments.html.twig', array(
             'commitments' => $commitments,

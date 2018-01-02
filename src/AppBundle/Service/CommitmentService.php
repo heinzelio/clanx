@@ -3,7 +3,7 @@ namespace AppBundle\Service;
 
 // use Symfony\Bridge\Monolog\Logger; // TODO: Logger not working on PROD env on hostpoint. figure out why
 use Doctrine\ORM\EntityManager;
-use AppBundle\Service\Authorization;
+use AppBundle\Service\IAuthorizationService;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Commitment;
 use AppBundle\Entity\Answer;
@@ -16,7 +16,7 @@ class CommitmentService
      */
     protected $entityManager;
     /**
-     * @var AppBundle\Service\Authorization
+     * @var AppBundle\Service\IAuthorizationService
      */
     protected $authorization;
     /**
@@ -31,12 +31,12 @@ class CommitmentService
     // protected $logger; // TODO: Logger not working on PROD env on hostpoint. figure out why
 
     /**
-     * @param Authorization $auth
+     * @param IAuthorizationService $auth
      * @param EntityManager $em
      * @param object $logger
      */
     public function __construct(
-        Authorization $auth,
+        IAuthorizationService $auth,
         EntityManager $em//,
         // Logger $logger // TODO: Logger not working on PROD env on hostpoint. figure out why
     )

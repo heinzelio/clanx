@@ -30,7 +30,8 @@ use AppBundle\Form\Commitment\CommitmentType;
 use AppBundle\Form\Commitment\TextQuestionViewModel;
 use AppBundle\Form\EventCreateType;
 use AppBundle\Form\ShirtSizeType;
-use AppBundle\Service\Authorization;
+use AppBundle\Service\IAuthorizationService;
+use AppBundle\Service\AuthorizationService;
 use AppBundle\Service\IEventService;
 use AppBundle\Service\IDepartmentService;
 
@@ -121,16 +122,20 @@ class EventController extends Controller
     // It must come after routes like /event/new or event/whaterever.
     // Otherwise when the client calls /event/new, symfony tries to open
     // an event with the id "new" (what a silly little framework...)
-    public function showAction(Request $request, Event $event, IEventService $eventSvc)
+    public function showAction(
+        Request $request,
+        Event $event,
+        IEventService $eventSvc,
+        IAuthorizationService $auth
+    )
     {
         $trans = $this->get('translator');
         $trans->setLocale('de'); // TODO: use real localization here.
 
-        $auth = $this->get('app.auth');
 
         $authResult = $auth->mayShowEventDetail($event);
-        if(!$authResult[Authorization::VALUE]){
-            $this->addFlash('danger', $authResult[Authorization::MESSAGE]);
+        if(!$authResult[AuthorizationService::VALUE]){
+            $this->addFlash('danger', $authResult[AuthorizationService::MESSAGE]);
             return $this->redirectToRoute('event_index');
         }
 
@@ -304,10 +309,13 @@ class EventController extends Controller
      * @Route("/{id}/invite", name="event_invite")
      * @Method({"GET","POST"})
      */
-    public function invite(Request $request, Event $event)
+    public function invite(
+        Request $request,
+        Event $event,
+        IAuthorizationService $auth
+    )
     {
         $session = $request->getSession();
-        $auth = $this->get('app.auth');
         $mayInvite = $auth->maySendInvitation($event);
 
         if (!$mayInvite) {
@@ -436,11 +444,14 @@ class EventController extends Controller
      * @Method({"GET","POST"})
      * @Security("has_role('ROLE_USER')")
      */
-    public function downloadAction(Request $request, Event $event)
+    public function downloadAction(
+        Request $request,
+        Event $event,
+        IAuthorizationService $auth
+    )
     {
         $trans = $this->get('translator');
         $trans->setLocale('de'); // TODO: use real localization here.
-        $auth = $this->get('app.auth');
         if(!$auth->mayDownloadFromEvent($event)){
             $this->addFlash('warning', 'flash.authorization_denied');
             return $this->redirectToRoute('event_show',array(

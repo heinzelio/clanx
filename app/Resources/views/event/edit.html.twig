@@ -39,7 +39,7 @@
     </div>
     <div class="col-md-6">
         {% if event.departments %}
-            {{ render(controller('AppBundle:EventDepartment:eventList', { 'id': event.id })) }}
+            {{ render(controller('AppBundle:EventDepartment:listDepartments', { 'id': event.id })) }}
         {% elseif event.commitments %}
             {{ render(controller('AppBundle:EventCommitment:listCommitment', { 'id': event.id })) }}
         {% endif %}

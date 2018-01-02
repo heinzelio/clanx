@@ -33,12 +33,12 @@ services:
     # user_register_listener: '@AppBundle\EventListener\UserRegistrationListener'
     # app.form.profile: '@AppBundle\Form\ProfileFormType'
     # app.department: '@AppBundle\Service\DepartmentService'
-    # app.menu: '@AppBundle\Service\MenuService'
+    # app.auth: '@AppBundle\Service\AuthorizationService'
 
     #TODO: remove arguments when all services are autowired
 
     AppBundle\Service\EventService:
-        arguments: ["@doctrine.orm.entity_manager", "@app.auth", "@AppBundle\\Service\\IDepartmentService", "@app.commitment", "@app.question"]
+        arguments: ["@doctrine.orm.entity_manager", "@AppBundle\\Service\\IAuthorizationService", "@AppBundle\\Service\\IDepartmentService", "@app.commitment", "@app.question"]
 
     AppBundle\EventListener\UserRegistrationListener:
         arguments: ["@doctrine.orm.entity_manager", "@router"]
@@ -51,23 +51,25 @@ services:
             - { name: form.type, alias: app_user_profile }
 
     AppBundle\Service\DepartmentService:
-        arguments: ["@app.auth", "@doctrine.orm.entity_manager"]
+        arguments: ["@AppBundle\\Service\\IAuthorizationService", "@doctrine.orm.entity_manager"]
 
     AppBundle\Service\MenuService:
-        arguments: ["@app.auth"]
+        arguments: ["@AppBundle\\Service\\IAuthorizationService"]
+
+    AppBundle\Service\Flash\FlashService:
+        arguments: ["@session"]
+
+    AppBundle\Service\AuthorizationService:
+        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@security.authorization_checker"]
 
     # TODO: switch all these services to autowired services
 
 
-    app.auth:
-        public: true
-        class: AppBundle\Service\Authorization
-        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@security.authorization_checker"]
 
     app.commitment:
         public: true
         class: AppBundle\Service\CommitmentService
-        arguments: ["@app.auth", "@doctrine.orm.entity_manager", "@logger"]
+        arguments: ["@AppBundle\\Service\\IAuthorizationService", "@doctrine.orm.entity_manager", "@logger"]
 
 
 
@@ -85,11 +87,6 @@ services:
         public: true
         class: AppBundle\Service\MailBuilderService
         arguments: ["@twig"]
-
-    app.flash:
-        public: true
-        class: AppBundle\Service\Flash\FlashService
-        arguments: ["@session"]
 
     app.settings:
         public: true

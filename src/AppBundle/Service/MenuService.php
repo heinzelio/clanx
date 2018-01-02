@@ -2,18 +2,18 @@
 namespace AppBundle\Service;
 
 use Doctrine\ORM\EntityManager;
-use AppBundle\Service\Authorization;
+use AppBundle\Service\IAuthorizationService;
 use AppBundle\Entity\Event;
 
 class MenuService implements IMenuService
 {
     /**
-     * @var AppBundle\Service\Authorization
+     * @var AppBundle\Service\IAuthorizationService
      */
     protected $authorization;
 
     public function __construct(
-        Authorization $auth
+        IAuthorizationService $auth
     )
     {
         $this->authorization = $auth;

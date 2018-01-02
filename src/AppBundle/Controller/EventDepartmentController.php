@@ -19,6 +19,7 @@ use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
 use AppBundle\ViewModel\Commitment\CommitmentViewModel;
 use AppBundle\Form\Commitment\CommitmentType;
 use AppBundle\Form\Commitment\TextQuestionViewModel;
+use AppBundle\Service\IAuthorizationService;
 
 /**
  * Partial event commitment controller.
@@ -29,17 +30,20 @@ class EventDepartmentController extends Controller
 {
     /**
      * Shows a list of all Departments of the given event
+     * Partial action on event edit.html.twig
      *
      * @Route("/{id}/departments", name="event_departments_list")
      * @Method({"GET"})
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function eventListAction(Event $event)
+    public function listDepartmentsAction(
+        Event $event,
+        IAuthorizationService $auth
+    )
     {
         $trans = $this->get('translator');
         $trans->setLocale('de'); // TODO: use real localization here.
 
-        $auth = $this->get('app.auth');
         if (!$auth->mayShowDepartmentsOfEvent($event)) {
             $this->addFlash('danger','flash.mayNotShowDepartments');
             return new Response();

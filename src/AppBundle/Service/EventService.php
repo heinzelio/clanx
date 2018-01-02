@@ -21,7 +21,7 @@ class EventService implements IEventService
     protected $entityManager;
 
     /**
-     * @var AppBundle\Service\Authorization
+     * @var AppBundle\Service\IAuthorizationService
      */
     protected $authorization;
 
@@ -48,7 +48,7 @@ class EventService implements IEventService
 
     public function __construct(
         EntityManager $em,
-        Authorization $auth,
+        IAuthorizationService $auth,
         IDepartmentService $deptService,
         CommitmentService $cmmtService,
         QuestionService $questionService
@@ -146,8 +146,8 @@ class EventService implements IEventService
         ->setMayMail($mayMail)
         ->setMayInvite($mayInvite)
         ->setMayEdit($mayEdit)
-        ->setMayDelete($deleteAuth[Authorization::VALUE])
-        ->setMayDeleteMessage($deleteAuth[Authorization::MESSAGE])
+        ->setMayDelete($deleteAuth[AuthorizationService::VALUE])
+        ->setMayDeleteMessage($deleteAuth[AuthorizationService::MESSAGE])
         ->setMayDownload($mayDownload)
         ->setMayCopy($mayCopy)
         ->setMyDepartmentsAsChief($myDepartmentsAsChief)

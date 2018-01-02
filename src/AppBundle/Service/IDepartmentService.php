@@ -1,8 +1,6 @@
 <?php
 namespace AppBundle\Service;
 
-use Doctrine\ORM\EntityManager;
-use AppBundle\Service\Authorization;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Department;
 

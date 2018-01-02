@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\RedirectInfo;
 use AppBundle\Entity\Mail;
+use AppBundle\Service\IAuthorizationService;
 
 /**
  * Dashboard controller.
@@ -22,7 +23,7 @@ class DashboardController extends Controller
     * @Method("GET")
     * @Security("has_role('ROLE_USER')")
     */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, IAuthorizationService $auth)
     {
         $user = $this->getUser();
         $missingProfileData = '';
@@ -55,7 +56,6 @@ class DashboardController extends Controller
         $showAdminRegistrationSwitch=false;
         $adminRegistrationInfoText='';
         $adminRegistrationButtonIcon='';
-        $auth = $this->get('app.auth');
         if($auth->MayChangeSettings()){
             $settings = $this->get('app.settings');
             $showAdminRegistrationSwitch=true;

@@ -1,7 +1,7 @@
 <?php
 namespace AppBundle\Service;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use AppBundle\Entity\Commitment;
@@ -10,8 +10,12 @@ use AppBundle\Entity\Event;
 use AppBundle\Entity\Question;
 use AppBundle\Entity\User;
 
-class Authorization
+class AuthorizationService implements IAuthorizationService
 {
+    //TODO Remove the constant keys for value and message.
+    //TODO Remove all occurences AuthorizationService::XY
+    //TODO Use getter for keys instead, use them in interface
+    //TODO Remove "use AppBundle\Service\AuthorizationService;" in controllers
     /**
      * Constant key to access the value field in the return
      * array of the method mayDelete(Event)
@@ -27,7 +31,7 @@ class Authorization
     const MESSAGE = 'Message';
 
     /**
-     * @var Doctrine\ORM\EntityManager
+     * @var Doctrine\ORM\EntityManagerInterface
      */
     protected $entityManager;
     protected $tokenStorage;
@@ -39,7 +43,7 @@ class Authorization
     protected $user;
 
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         TokenStorage $ts,
         AuthorizationChecker $autch
     )
@@ -103,26 +107,26 @@ class Authorization
      * and returns an array if so or not and a message why.
      * @param  Event  $event The event.
      * @return array Array of two fields, stating if the event may be
-     * shown or not and why. Use Authorization::VALUE and
-     * Authorization::MESSAGE to access the fields of the array
+     * shown or not and why. Use AuthorizationService::VALUE and
+     * AuthorizationService::MESSAGE to access the fields of the array
      */
     public function mayShowEventDetail(Event $event)
     {
         $returnValue = array();
 
         if ($this->maySeeAllEvents()) {
-            $returnValue[Authorization::VALUE] = true;
-            $returnValue[Authorization::MESSAGE] = 'Der Benutzer darf alle Events sehen.';
+            $returnValue[AuthorizationService::VALUE] = true;
+            $returnValue[AuthorizationService::MESSAGE] = 'Der Benutzer darf alle Events sehen.';
         }
         else if ($event->getIsForAssociationMembers() && (!$this->isAssociationMember()))
         {
-            $returnValue[Authorization::VALUE] = false;
-            $returnValue[Authorization::MESSAGE] = 'Dieser Event ist nur für Vereinsmitglieder sichtbar, der Benutzer ist aber nicht Vereinsmitglied.';
+            $returnValue[AuthorizationService::VALUE] = false;
+            $returnValue[AuthorizationService::MESSAGE] = 'Dieser Event ist nur für Vereinsmitglieder sichtbar, der Benutzer ist aber nicht Vereinsmitglied.';
         }
         else
         {
-            $returnValue[Authorization::VALUE] = true;
-            $returnValue[Authorization::MESSAGE] = 'Der Benutzer darf diesen Event sehen.';
+            $returnValue[AuthorizationService::VALUE] = true;
+            $returnValue[AuthorizationService::MESSAGE] = 'Der Benutzer darf diesen Event sehen.';
         }
         return $returnValue;
     }
@@ -132,24 +136,24 @@ class Authorization
      * and if the given event may be deleted at all.
      * @param  Event  $event The event
      * @return array Array of two fields, stating if the event may be
-     * deleted or not and why. Use Authorization::VALUE and
-     * Authorization::MESSAGE to access the fields of the array
+     * deleted or not and why. Use AuthorizationService::VALUE and
+     * AuthorizationService::MESSAGE to access the fields of the array
      */
     public function mayDelete(Event $event)
     {
         $returnValue = array();
         // check event locked:
         if($event->getLocked()==1){
-            $returnValue[Authorization::VALUE] = false;
-            $returnValue[Authorization::MESSAGE] = 'Event "'.$event.'" ist gesperrt und kann nicht gelöscht werden.';
+            $returnValue[AuthorizationService::VALUE] = false;
+            $returnValue[AuthorizationService::MESSAGE] = 'Event "'.$event.'" ist gesperrt und kann nicht gelöscht werden.';
             return $returnValue;
         }
 
         foreach ($event->getDepartments() as $department ) {
             $commitments = $department->getCommitments();
             if($commitments && $commitments->count()){
-                $returnValue[Authorization::VALUE] = false;
-                $returnValue[Authorization::MESSAGE] = 'Event "'.$event.'" hat bereits Hölfer und kann nicht mehr gelöscht werden.';
+                $returnValue[AuthorizationService::VALUE] = false;
+                $returnValue[AuthorizationService::MESSAGE] = 'Event "'.$event.'" hat bereits Hölfer und kann nicht mehr gelöscht werden.';
                 return $returnValue;
             }
         }
@@ -157,13 +161,13 @@ class Authorization
         //$user = $securityContext->getToken()->getUser();
         if(!$this->isGranted('ROLE_ADMIN'))
         {
-            $returnValue[Authorization::VALUE] = false;
-            $returnValue[Authorization::MESSAGE] = 'Nur Administratoren dürfen Events löschen.';
+            $returnValue[AuthorizationService::VALUE] = false;
+            $returnValue[AuthorizationService::MESSAGE] = 'Nur Administratoren dürfen Events löschen.';
             return $returnValue;
         }
 
-        $returnValue[Authorization::VALUE] = true;
-        $returnValue[Authorization::MESSAGE] = 'OK';
+        $returnValue[AuthorizationService::VALUE] = true;
+        $returnValue[AuthorizationService::MESSAGE] = 'OK';
         return $returnValue;
     }
 
@@ -310,7 +314,7 @@ class Authorization
         return $this->isGranted('ROLE_ADMIN');
     }
 
-    // TODO: add comment, use naming conventions.
+    // TODO: add comment, use naming conventions. See also IAuthorizationService
     public function MayChangeSettings()
     {
         return $this->isGranted('ROLE_ADMIN');
