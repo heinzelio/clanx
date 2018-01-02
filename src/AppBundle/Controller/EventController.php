@@ -33,6 +33,7 @@ use AppBundle\Form\ShirtSizeType;
 use AppBundle\Service\IAuthorizationService;
 use AppBundle\Service\AuthorizationService;
 use AppBundle\Service\IEventService;
+use AppBundle\Service\IExportService;
 use AppBundle\Service\IDepartmentService;
 use AppBundle\Service\IMailBuilderService;
 
@@ -454,7 +455,8 @@ class EventController extends Controller
     public function downloadAction(
         Request $request,
         Event $event,
-        IAuthorizationService $auth
+        IAuthorizationService $auth,
+        IExportService $exportService
     )
     {
         $trans = $this->get('translator');
@@ -558,7 +560,6 @@ class EventController extends Controller
             }
         }
 
-        $exportService = $this->get('app.export');
         $response = $this->render('export_raw.twig',array(
             'content' => $exportService->getCsvText($rows)
         ));

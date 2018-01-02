@@ -18,6 +18,7 @@ use AppBundle\Entity\Mail;
 use AppBundle\Entity\RedirectInfo;
 use AppBundle\Form\DepartmentType;
 use AppBundle\Service\IEventService;
+use AppBundle\Service\IExportService;
 use AppBundle\Service\IAuthorizationService;
 
 /**
@@ -564,7 +565,8 @@ class DepartmentController extends Controller
     public function downloadAction(
         Request $request,
         Department $department,
-        IAuthorizationService $auth
+        IAuthorizationService $auth,
+        IExportService $exportService
     )
     {
         $trans = $this->get('translator');
@@ -647,7 +649,6 @@ class DepartmentController extends Controller
             array_push($rows,$row);
         }
 
-        $exportService = $this->get('app.export');
         $response = $this->render('export_raw.twig',array(
             'content' => $exportService->getCsvText($rows)
         ));

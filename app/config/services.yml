@@ -66,6 +66,9 @@ services:
     AppBundle\Service\MailBuilderService:
         arguments: ["@twig"]
 
+    AppBundle\Service\ExportService:
+        class: AppBundle\Service\ExportService
+
     # TODO: switch all these services to autowired services
 
 
@@ -91,7 +94,3 @@ services:
         public: true
         class: AppBundle\Service\SettingsService
         arguments: ["@doctrine.orm.entity_manager"]
-
-    app.export:
-        public: true
-        class: AppBundle\Service\ExportService

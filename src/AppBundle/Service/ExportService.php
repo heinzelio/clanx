@@ -1,7 +1,7 @@
 <?php
 namespace AppBundle\Service;
 
-class ExportService
+class ExportService implements IExportService
 {
     /**
      * Transforms a 2d string array into a character separated values text
