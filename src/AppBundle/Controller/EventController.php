@@ -34,6 +34,7 @@ use AppBundle\Service\IAuthorizationService;
 use AppBundle\Service\AuthorizationService;
 use AppBundle\Service\IEventService;
 use AppBundle\Service\IDepartmentService;
+use AppBundle\Service\IMailBuilderService;
 
 /**
  * Event controller.
@@ -126,7 +127,8 @@ class EventController extends Controller
         Request $request,
         Event $event,
         IEventService $eventSvc,
-        IAuthorizationService $auth
+        IAuthorizationService $auth,
+        IMailBuilderService $mailBuilder
     )
     {
         $trans = $this->get('translator');
@@ -142,7 +144,7 @@ class EventController extends Controller
         if($auth->mayEnroll($event)){
             $formVM = $eventSvc->getCommitmentFormViewModel($event); //CommitmentViewModel
             $enrollForm = $this->createEnrollForm($formVM); //Symfony\Component\Form\Form
-            $this->handleEnrollForm($request, $enrollForm, $formVM, $event);
+            $this->handleEnrollForm($request, $enrollForm, $formVM, $event, $mailBuilder);
         }
 
         //EventShowViewModel
@@ -178,7 +180,13 @@ class EventController extends Controller
         return $form;
     }
 
-    public function handleEnrollForm(Request $request, Form $enrollForm, CommitmentViewModel $formVM, Event $event)
+    private function handleEnrollForm(
+        Request $request,
+        Form $enrollForm,
+        CommitmentViewModel $formVM,
+        Event $event,
+        IMailBuilderService $mailBuilder
+    )
     {
         $enrollForm->handleRequest($request);
         if(!$enrollForm->isSubmitted())
@@ -190,7 +198,7 @@ class EventController extends Controller
             $commitment = $commitmentService->saveCommitment($event, $formVM);
             if ($commitment != null) {
                 //TODO finish here
-                $this->sendMail($commitment);
+                $this->sendMail($commitment, $mailBuilder);
                 $this->addFlash('success','flash.enroll_succeeded');
             } else {
                 $this->addFlash('warning','flash.enroll_failed');
@@ -283,13 +291,12 @@ class EventController extends Controller
      * Send the commitment comfirmation mayMail
      * @param  Commitment $commitment
      */
-    private function sendMail($commitment)
+    private function sendMail($commitment, IMailBuilderService $mailBuilder)
     {
         if (!$commitment) {
             return;
         }
 
-        $mailBuilder = $this->get('app.mail_builder');
         $mailer = $this->get('mailer');
         $message = $mailBuilder->buildCommitmentConfirmation($commitment);
         $mailer->send($message);

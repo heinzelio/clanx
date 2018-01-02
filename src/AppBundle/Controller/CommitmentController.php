@@ -18,6 +18,7 @@ use AppBundle\ViewModel\Commitment\CommitmentViewModel;
 use AppBundle\Form\Commitment\CommitmentType;
 use AppBundle\Service\IEventService;
 use AppBundle\Service\IAuthorizationService;
+use AppBundle\Service\IMailBuilderService;
 
 /**
  * Commitment controller.
@@ -37,7 +38,9 @@ class CommitmentController extends Controller
         Request $request,
         Commitment $commitment,
         IEventService $eventService,
-        IAuthorizationService $auth)
+        IAuthorizationService $auth,
+        IMailBuilderService $mailBuilder
+    )
     {
         $department = $commitment->getDepartment(); // may be null!
         $event = $commitment->getEvent();
@@ -72,8 +75,6 @@ class CommitmentController extends Controller
             {
                 $text = $editForm->get('message')->getData();
                 $operator = $this->getUser();
-
-                $mailBuilder = $this->get('app.mail_builder');
                 $message = $mailBuilder->buildCommitmentVolunteerNotification($text,$commitment,$operator);
                 $this->get('mailer')->send($message);
 
@@ -121,7 +122,9 @@ class CommitmentController extends Controller
     public function deleteAction(
         Request $request,
         Commitment $commitment,
-        IAuthorizationService $auth)
+        IAuthorizationService $auth,
+        IMailBuilderService $mailBuilder
+    )
     {
         $department = $commitment->getDepartment();
         $event = $commitment->getEvent();
@@ -154,7 +157,6 @@ class CommitmentController extends Controller
                 $text = $form->get('message')->getData();
                 $operator = $this->getUser();
 
-                $mailBuilder = $this->get('app.mail_builder');
                 $message = $mailBuilder->buildCommitmentVolunteerNotification($text,$commitment,$operator);
                 $this->get('mailer')->send($message);
 

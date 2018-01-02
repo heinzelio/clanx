@@ -7,7 +7,7 @@ use AppBundle\ViewModel\Email\CommitmentConfirmationViewModel;
 use AppBundle\Entity\Commitment;
 use AppBundle\Entity\User;
 
-class MailBuilderService
+class MailBuilderService implements IMailBuilderService
 {
 
     /**
@@ -167,30 +167,6 @@ class MailBuilderService
         return $this;
     }
 
-    /**
-     * Throws an exception, if a value is null.
-     * @param mixed $value
-     */
-    public function AssertNotNull($value)
-    {
-        if ($value==null) {
-            //TODO Localize
-            throw new \Exception("Not sufficient data to build a message", 1);
-        }
-    }
-
-    /**
-     * Throws an exception, if a value is null.
-     * @param mixed $value
-     */
-    public function AssertNotNullOrEmpty($value)
-    {
-        if ($value==null || $value=="") {
-            //TODO Localize
-            throw new \Exception("Not sufficient data to build a message", 1);
-        }
-    }
-
     public function buildCommitmentConfirmation(Commitment $commitment)
     {
         $this->AssertNotNull($commitment);
@@ -294,6 +270,30 @@ class MailBuilderService
             $this->twig->render($this->getHtmlTemplate(), $this->getHtmlTemplateValues()),
             $this->twig->render($this->getTextTemplate(), $this->getTextTemplateValues())
         );
+    }
+
+    /**
+     * Throws an exception, if a value is null.
+     * @param mixed $value
+     */
+    private function AssertNotNull($value)
+    {
+        if ($value==null) {
+            //TODO Localize
+            throw new \Exception("Not sufficient data to build a message", 1);
+        }
+    }
+
+    /**
+     * Throws an exception, if a value is null.
+     * @param mixed $value
+     */
+    private function AssertNotNullOrEmpty($value)
+    {
+        if ($value==null || $value=="") {
+            //TODO Localize
+            throw new \Exception("Not sufficient data to build a message", 1);
+        }
     }
 
     private function buildMessageInternal($subject, $from, $to, $bodyHtml, $bodyText)

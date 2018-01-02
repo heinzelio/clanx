@@ -1,16 +1,9 @@
 <?php
 namespace AppBundle\Service;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\QueryBuilder;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Commitment ;
-use AppBundle\Entity\Answer ;
 use AppBundle\ViewModel\Commitment\CommitmentViewModel;
-use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
-use AppBundle\ViewModel\Commitment\TextQuestionViewModel;
-use AppBundle\ViewModel\Commitment\SelectionQuestionViewModel;
-use AppBundle\ViewModel\Event\EventStatisticsViewModel;
 use AppBundle\ViewModel\Event\EventShowViewModel;
 
 /**
