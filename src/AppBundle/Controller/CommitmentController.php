@@ -16,8 +16,9 @@ use AppBundle\Entity\Department;
 use AppBundle\Entity\Event;
 use AppBundle\ViewModel\Commitment\CommitmentViewModel;
 use AppBundle\Form\Commitment\CommitmentType;
-use AppBundle\Service\IEventService;
 use AppBundle\Service\IAuthorizationService;
+use AppBundle\Service\ICommitmentService;
+use AppBundle\Service\IEventService;
 use AppBundle\Service\IMailBuilderService;
 
 /**
@@ -39,7 +40,8 @@ class CommitmentController extends Controller
         Commitment $commitment,
         IEventService $eventService,
         IAuthorizationService $auth,
-        IMailBuilderService $mailBuilder
+        IMailBuilderService $mailBuilder,
+        ICommitmentService $commitmentService
     )
     {
         $department = $commitment->getDepartment(); // may be null!
@@ -81,7 +83,6 @@ class CommitmentController extends Controller
                 $mailFlashMsg = $commitment->getUser()." wurde benachrichtigt.";
             }
 
-            $commitmentService = $this->get('app.commitment');
             $success = $commitmentService->updateCommitment($formVM, $commitment);
 
             //TODO: Localization
@@ -123,7 +124,8 @@ class CommitmentController extends Controller
         Request $request,
         Commitment $commitment,
         IAuthorizationService $auth,
-        IMailBuilderService $mailBuilder
+        IMailBuilderService $mailBuilder,
+        ICommitmentService $commitmentService
     )
     {
         $department = $commitment->getDepartment();
@@ -163,7 +165,6 @@ class CommitmentController extends Controller
                 $mailFlashMsg = $commitment->getUser()." wurde benachrichtigt.";
             }
 
-            $commitmentService = $this->get('app.commitment');
             $success = $commitmentService->deleteCommitment($commitment);
 
             //TODO: Localization

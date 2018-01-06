@@ -29,12 +29,11 @@ class UserController extends Controller
      * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function indexAction(Request $request)
+    public function indexAction(
+        Request $request,IUserService $userService)
     {
         $trans = $this->get('translator');
         $trans->setLocale('de'); // TODO: use real localization here.
-
-        $userService = $this->get('app.user');
 
         $users = $userService->getAllUsers();
         $vm = $userService->getIndexViewModel();

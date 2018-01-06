@@ -37,7 +37,7 @@ class EventService implements IEventService
     protected $departmentService;
 
     /**
-     * @var AppBundle\Service\CommitmentService
+     * @var AppBundle\Service\ICommitmentService
      */
     protected $commitmentService;
 
@@ -50,7 +50,7 @@ class EventService implements IEventService
         EntityManager $em,
         IAuthorizationService $auth,
         IDepartmentService $deptService,
-        CommitmentService $cmmtService,
+        ICommitmentService $cmmtService,
         IQuestionService $questionService
     )
     {

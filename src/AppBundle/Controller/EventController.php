@@ -32,6 +32,7 @@ use AppBundle\Form\EventCreateType;
 use AppBundle\Form\ShirtSizeType;
 use AppBundle\Service\AuthorizationService;
 use AppBundle\Service\IAuthorizationService;
+use AppBundle\Service\ICommitmentService;
 use AppBundle\Service\IDepartmentService;
 use AppBundle\Service\IEventService;
 use AppBundle\Service\IExportService;
@@ -129,7 +130,8 @@ class EventController extends Controller
         Event $event,
         IEventService $eventSvc,
         IAuthorizationService $auth,
-        IMailBuilderService $mailBuilder
+        IMailBuilderService $mailBuilder,
+        ICommitmentService $commitmentService
     ) {
         $trans = $this->get('translator');
         $trans->setLocale('de'); // TODO: use real localization here.
@@ -143,7 +145,7 @@ class EventController extends Controller
 
         if ($auth->mayEnroll($event)) {
             $formVM = $eventSvc->getCommitmentFormViewModel($event); //CommitmentViewModel
-            $enrollForm = $this->createEnrollForm($formVM); //Symfony\Component\Form\Form
+            $enrollForm = $this->createEnrollForm($formVM, $commitmentService); //Symfony\Component\Form\Form
             $this->handleEnrollForm($request, $enrollForm, $formVM, $event, $mailBuilder);
         }
 
@@ -161,8 +163,10 @@ class EventController extends Controller
      * @param  CommitmentViewModel $vm
      * @return Symfony\Component\Form\Form
      */
-    public function createEnrollForm(CommitmentViewModel $vm)
-    {
+    private function createEnrollForm(
+        CommitmentViewModel $vm,
+        ICommitmentService $commitmentService
+    ) {
         $options = array(
             CommitmentType::DEPARTMENT_CHOICES_KEY => $vm->getDepartments(),
             CommitmentType::USE_DEPARTMENTS_KEY => $vm->hasDepartments(),
@@ -192,7 +196,6 @@ class EventController extends Controller
             return;
         }
         if ($enrollForm->isValid()) {
-            $commitmentService = $this->get('app.commitment');
             $commitment = $commitmentService->saveCommitment($event, $formVM);
             if ($commitment != null) {
                 //TODO finish here
@@ -317,7 +320,8 @@ class EventController extends Controller
     public function invite(
         Request $request,
         Event $event,
-        IAuthorizationService $auth
+        IAuthorizationService $auth,
+        IUserService $userService
     ) {
         $session = $request->getSession();
         $mayInvite = $auth->maySendInvitation($event);
@@ -330,16 +334,14 @@ class EventController extends Controller
         $mailData = new Mail();
         $eventUrl = $this->generateUrl(
             'event_show',
-                                 array('id' => $event->getId()),
-                                 UrlGeneratorInterface::ABSOLUTE_URL
-                             );
+            array('id' => $event->getId()),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
 
         $mailData->setSubject($event->getName() . " - Einladung zum mitmachen!")
             ->setSender($this->getUser()->getEmail())
-            ->setText('Link: '.$eventUrl)
-            ;
+            ->setText('Link: '.$eventUrl);
 
-        $userService = $this->get('app.user');
         if ($event->getIsForAssociationMembers()) {
             $users = $userService->getAllAssociationMembers();
         } else {
@@ -378,14 +380,13 @@ class EventController extends Controller
         $mailData = new Mail();
         $eventUrl = $this->generateUrl(
             'event_show',
-                                 array('id' => $event->getId()),
-                                 UrlGeneratorInterface::ABSOLUTE_URL
-                             );
+            array('id' => $event->getId()),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
 
         $mailData->setSubject($event->getName() . " Hölferinfo")
              ->setSender($this->getUser()->getEmail())
-             ->setText('Link: '.$eventUrl)
-             ;
+             ->setText('Link: '.$eventUrl);
 
         foreach ($event->getCommitments() as $cmnt) {
             $usr = $cmnt->getUser();

@@ -43,7 +43,7 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@AppBundle\\Service\\IAuthorizationService"
             - "@AppBundle\\Service\\IDepartmentService"
-            - "@app.commitment"
+            - "@AppBundle\\Service\\IcommitmentService"
             - "@AppBundle\\Service\\IQuestionService"
 
     AppBundle\EventListener\UserRegistrationListener:
@@ -85,14 +85,8 @@ services:
     AppBundle\Service\QuestionService:
         arguments: ["@doctrine.orm.entity_manager"]
 
-    # TODO: switch all these services to autowired services
-
-    app.commitment:
-        public: true
-        class: AppBundle\Service\CommitmentService
+    AppBundle\Service\CommitmentService:
         arguments: ["@AppBundle\\Service\\IAuthorizationService", "@doctrine.orm.entity_manager", "@logger"]
 
-    app.user:
-        public: true
-        class: AppBundle\Service\UserService
+    AppBundle\Service\UserService:
         arguments: ["@doctrine.orm.entity_manager", "@translator"]
