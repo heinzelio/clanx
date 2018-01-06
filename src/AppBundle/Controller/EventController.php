@@ -38,6 +38,7 @@ use AppBundle\Service\IEventService;
 use AppBundle\Service\IExportService;
 use AppBundle\Service\IMailBuilderService;
 use AppBundle\Service\IQuestionService;
+use AppBundle\Service\IUserService;
 
 /**
  * Event controller.

@@ -7,7 +7,7 @@ use AppBundle\Entity\Event;
 use AppBundle\Entity\User;
 use AppBundle\ViewModel\User\UserIndex;
 
-class UserService
+class UserService implements IUserService
 {
     /**
      * @var Doctrine\ORM\EntityManager

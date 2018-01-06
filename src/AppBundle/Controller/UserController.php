@@ -14,6 +14,7 @@ use AppBundle\Entity\RedirectInfo;
 use AppBundle\Entity\User;
 use AppBundle\Form\BulkType;
 use AppBundle\Form\UserType;
+use AppBundle\Service\IUserService;
 
 /**
  * User controller.
