@@ -66,9 +66,6 @@ services:
     AppBundle\Service\MailBuilderService:
         arguments: ["@twig"]
 
-    AppBundle\Service\ExportService:
-        class: AppBundle\Service\ExportService
-
     AppBundle\Service\SettingsService:
         arguments: ["@doctrine.orm.entity_manager"]
 
