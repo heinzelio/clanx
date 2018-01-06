@@ -30,12 +30,13 @@ use AppBundle\Form\Commitment\CommitmentType;
 use AppBundle\Form\Commitment\TextQuestionViewModel;
 use AppBundle\Form\EventCreateType;
 use AppBundle\Form\ShirtSizeType;
-use AppBundle\Service\IAuthorizationService;
 use AppBundle\Service\AuthorizationService;
+use AppBundle\Service\IAuthorizationService;
+use AppBundle\Service\IDepartmentService;
 use AppBundle\Service\IEventService;
 use AppBundle\Service\IExportService;
-use AppBundle\Service\IDepartmentService;
 use AppBundle\Service\IMailBuilderService;
+use AppBundle\Service\IQuestionService;
 
 /**
  * Event controller.
@@ -90,8 +91,7 @@ class EventController extends Controller
             $em->persist($defaultDpt);
 
             $dptInput = $form->get('departments')->getData();
-            if($dptInput)
-            {
+            if ($dptInput) {
                 $dptNames = explode("\n", $dptInput);
 
                 foreach ($dptNames as $dptName) {
@@ -103,7 +103,7 @@ class EventController extends Controller
             }
 
             $em->flush();
-            $this->addFlash('success','flash.successfully_saved');
+            $this->addFlash('success', 'flash.successfully_saved');
             return $this->redirectToRoute('event_show', array('id' => $event->getId()));
         }
 
@@ -130,19 +130,18 @@ class EventController extends Controller
         IEventService $eventSvc,
         IAuthorizationService $auth,
         IMailBuilderService $mailBuilder
-    )
-    {
+    ) {
         $trans = $this->get('translator');
         $trans->setLocale('de'); // TODO: use real localization here.
 
 
         $authResult = $auth->mayShowEventDetail($event);
-        if(!$authResult[AuthorizationService::VALUE]){
+        if (!$authResult[AuthorizationService::VALUE]) {
             $this->addFlash('danger', $authResult[AuthorizationService::MESSAGE]);
             return $this->redirectToRoute('event_index');
         }
 
-        if($auth->mayEnroll($event)){
+        if ($auth->mayEnroll($event)) {
             $formVM = $eventSvc->getCommitmentFormViewModel($event); //CommitmentViewModel
             $enrollForm = $this->createEnrollForm($formVM); //Symfony\Component\Form\Form
             $this->handleEnrollForm($request, $enrollForm, $formVM, $event, $mailBuilder);
@@ -187,11 +186,9 @@ class EventController extends Controller
         CommitmentViewModel $formVM,
         Event $event,
         IMailBuilderService $mailBuilder
-    )
-    {
+    ) {
         $enrollForm->handleRequest($request);
-        if(!$enrollForm->isSubmitted())
-        {
+        if (!$enrollForm->isSubmitted()) {
             return;
         }
         if ($enrollForm->isValid()) {
@@ -200,16 +197,16 @@ class EventController extends Controller
             if ($commitment != null) {
                 //TODO finish here
                 $this->sendMail($commitment, $mailBuilder);
-                $this->addFlash('success','flash.enroll_succeeded');
+                $this->addFlash('success', 'flash.enroll_succeeded');
             } else {
-                $this->addFlash('warning','flash.enroll_failed');
+                $this->addFlash('warning', 'flash.enroll_failed');
             }
 
             return $this->redirectToRoute('event_show', array(
                 'id' => $event->getId(),
             ));
         } else {
-            $this->addFlash('danger','flash.enroll_required_data_missing');
+            $this->addFlash('danger', 'flash.enroll_required_data_missing');
         }
     }
 
@@ -321,18 +318,18 @@ class EventController extends Controller
         Request $request,
         Event $event,
         IAuthorizationService $auth
-    )
-    {
+    ) {
         $session = $request->getSession();
         $mayInvite = $auth->maySendInvitation($event);
 
         if (!$mayInvite) {
             $this->addFlash('warning', 'Du darfst keine Einladungen versenden.');
-            return $this->redirectToRoute('event_show',array('id'=>$event->getId(),));
+            return $this->redirectToRoute('event_show', array('id'=>$event->getId(),));
         }
 
         $mailData = new Mail();
-        $eventUrl = $this->generateUrl('event_show',
+        $eventUrl = $this->generateUrl(
+            'event_show',
                                  array('id' => $event->getId()),
                                  UrlGeneratorInterface::ABSOLUTE_URL
                              );
@@ -365,7 +362,6 @@ class EventController extends Controller
         $session->set(RedirectInfo::SESSION_KEY, $backLink);
 
         return $this->redirectToRoute('mail_edit');
-
     }
 
     /**
@@ -380,7 +376,8 @@ class EventController extends Controller
         $session = $request->getSession();
 
         $mailData = new Mail();
-        $eventUrl = $this->generateUrl('event_show',
+        $eventUrl = $this->generateUrl(
+            'event_show',
                                  array('id' => $event->getId()),
                                  UrlGeneratorInterface::ABSOLUTE_URL
                              );
@@ -396,10 +393,9 @@ class EventController extends Controller
             $name = $usr->getForename().' '.$usr->getSurname();
             $mailData->addBcc($mail, $name);
         }
-        foreach ($event->getCompanions() as $companion ) {
+        foreach ($event->getCompanions() as $companion) {
             $mail = $companion->getEmail();
-            if($mail)
-            {
+            if ($mail) {
                 $mailData->addBcc($mail);
             }
         }
@@ -433,7 +429,7 @@ class EventController extends Controller
         $backLink = new RedirectInfo();
         $backLink->setRouteName('event_show')
                  ->setArguments(array('id'=>$event->getId()));
-        $session->set(RedirectInfo::SESSION_KEY,$backLink);
+        $session->set(RedirectInfo::SESSION_KEY, $backLink);
 
         $mailData = new Mail();
         $mailData->setSubject('Frage betreffend '.$event->getName())
@@ -456,21 +452,19 @@ class EventController extends Controller
         Request $request,
         Event $event,
         IAuthorizationService $auth,
-        IExportService $exportService
-    )
-    {
+        IExportService $exportService,
+        IQuestionService $questionService
+    ) {
         $trans = $this->get('translator');
         $trans->setLocale('de'); // TODO: use real localization here.
-        if(!$auth->mayDownloadFromEvent($event)){
+        if (!$auth->mayDownloadFromEvent($event)) {
             $this->addFlash('warning', 'flash.authorization_denied');
-            return $this->redirectToRoute('event_show',array(
+            return $this->redirectToRoute('event_show', array(
                 'id'=>$event->getId(),
             ));
         }
 
         // todo: make common function for event download and department download
-
-        $questionService = $this->get('app.question');
 
         $questions = $questionService->getQuestionsSorted($event);
 
@@ -492,9 +486,9 @@ class EventController extends Controller
             );
 
             foreach ($questions as $qvm) {
-                array_push($head,$qvm->getText());
+                array_push($head, $qvm->getText());
             }
-            array_push($rows,$head);
+            array_push($rows, $head);
 
             foreach ($department->getCommitments() as $commitment) {
                 $user=$commitment->getUser();
@@ -513,15 +507,14 @@ class EventController extends Controller
                     $user->getIsRegular()==1?"Ja":"Nein"
                 );
                 foreach ($questionService->getQuestionsAndAnswersSorted($commitment) as $q) {
-                    array_push($row,$q->getAnswer());
+                    array_push($row, $q->getAnswer());
                 }
-                array_push($rows,$row);
+                array_push($rows, $row);
             }
-            array_push($rows,array());
+            array_push($rows, array());
 
             $companions = $department->getCompanions();
-            if(count($companions)>0)
-            {
+            if (count($companions)>0) {
                 $head2 = array(
                     'Nicht registrierte Hölfer im Ressort',
                     'Name',
@@ -537,7 +530,7 @@ class EventController extends Controller
                     '' ,
                     'Bemerkung',
                 );
-                array_push($rows,$head2);
+                array_push($rows, $head2);
                 foreach ($companions as $companion) {
                     $row = array(
                         (string)$department,
@@ -554,13 +547,13 @@ class EventController extends Controller
                         '' ,
                         $commitment->getRemark() ,
                     );
-                    array_push($rows,$row);
+                    array_push($rows, $row);
                 }
-                array_push($rows,array());
+                array_push($rows, array());
             }
         }
 
-        $response = $this->render('export_raw.twig',array(
+        $response = $this->render('export_raw.twig', array(
             'content' => $exportService->getCsvText($rows)
         ));
         $response->headers->set('Content-Type', 'text/csv');
@@ -577,10 +570,13 @@ class EventController extends Controller
      * @Method({"GET","POST"})
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function copyAction(Request $request, Event $event, IEventService $eventSvc, IDepartmentService $depSvc)
-    {
-        $questionSvc = $this->get('app.question');
-
+    public function copyAction(
+        Request $request,
+        Event $event,
+        IEventService $eventSvc,
+        IDepartmentService $depSvc,
+        IQuestionService $questionService
+    ) {
         $newEvent = $eventSvc->getCopy($event);
         $newDepartments = $depSvc->getCopyOfEvent($event);
         $newQuestions = $questionSvc->getCopyOfEvent($event);
@@ -592,16 +588,15 @@ class EventController extends Controller
             foreach ($newDepartments as $department) {
                 $em->persist($department);
             }
-            foreach ($newQuestions as $question ) {
+            foreach ($newQuestions as $question) {
                 $em->persist($question);
             }
             $em->flush();
 
-            $this->addFlash('success','flash.successfully_saved');
-
+            $this->addFlash('success', 'flash.successfully_saved');
         } catch (Exception $e) {
-            $this->addFlash('danger','flash.copy_failed_error');
-            $this->addFlash('danger',$e->getMessage());
+            $this->addFlash('danger', 'flash.copy_failed_error');
+            $this->addFlash('danger', $e->getMessage());
         }
 
         return $this->redirectToRoute('event_edit', array('id' => $newEvent->getId()));
@@ -620,11 +615,9 @@ class EventController extends Controller
         ob_start();
         $df = fopen("php://output", 'w');
         //add BOM to fix UTF-8 in Excel
-        fputs($df, $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) ));
-        fputcsv($df, $arrayRow, $delimiter,$enclosure);
+        fputs($df, $bom =(chr(0xEF) . chr(0xBB) . chr(0xBF)));
+        fputcsv($df, $arrayRow, $delimiter, $enclosure);
         fclose($df);
         return ob_get_clean();
     }
-
-
 }

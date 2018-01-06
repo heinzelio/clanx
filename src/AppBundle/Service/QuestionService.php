@@ -9,12 +9,12 @@ use AppBundle\Entity\Answer;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Department;
 use AppBundle\Entity\Commitment;
-use AppBundle\ViewModel\Commitment\QuestionViewModelBase;
+use AppBundle\ViewModel\Commitment\BaseQuestionViewModel;
 use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
 use AppBundle\ViewModel\Commitment\TextQuestionViewModel;
 use AppBundle\ViewModel\Commitment\SelectionQuestionViewModel;
 
-class QuestionService
+class QuestionService implements IQuestionService
 {
     /**
      * @var Doctrine\ORM\EntityManager
@@ -56,7 +56,7 @@ class QuestionService
     /**
      * gets an array of questions of the event, sorted by the id.
      * @param  Event  $event
-     * @return QuestionViewModelBase[]
+     * @return BaseQuestionViewModel[]
      */
     public function getQuestionsSorted(Event $event)
     {
@@ -71,12 +71,12 @@ class QuestionService
     /**
      * gets an array of questions with answers of the event, sorted by the id.
      * @param  Event  $event
-     * @return QuestionViewModelBase[]
+     * @return BaseQuestionViewModel[]
      */
     public function getQuestionsAndAnswersSorted(Commitment $commitment)
     {
         $arr = array();
-        foreach($commitment->getAnswers() as $a){
+        foreach ($commitment->getAnswers() as $a) {
             $q = $a->getQuestion();
             $arr[$q->getId()] = $this->getQuestionViewModel($q, $a);
         }
@@ -110,7 +110,7 @@ class QuestionService
         foreach ($answerStats as $key => $value) {
             if ($key===1) {
                 $ret["Ja"] = $value;
-            } else if ($key === 0) {
+            } elseif ($key === 0) {
                 $ret["Nein"] = $value;
             } else {
                 $ret[$key] = $value;
@@ -170,7 +170,7 @@ class QuestionService
             $newQuestion->setData($question->getData());
             $newQuestion->setOptional($question->getOptional());
             $newQuestion->setAggregate($question->getAggregate());
-            array_push($newQuestions,$newQuestion);
+            array_push($newQuestions, $newQuestion);
         }
         return $newQuestions;
     }
@@ -185,7 +185,7 @@ class QuestionService
     private function getMeaningfulAnswer(Answer $answer, Question $question)
     {
         //TODO: use localization
-        if($question->getType() == YesNoQuestionViewModel::getTypeString()){
+        if ($question->getType() == YesNoQuestionViewModel::getTypeString()) {
             if ($answer->getAnswer()=="1") {
                 return "Ja";
             } else {

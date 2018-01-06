@@ -42,7 +42,7 @@ class EventService implements IEventService
     protected $commitmentService;
 
     /**
-     * @var QuestionService
+     * @var IQuestionService
      */
     protected $questionService;
 
@@ -51,7 +51,7 @@ class EventService implements IEventService
         IAuthorizationService $auth,
         IDepartmentService $deptService,
         CommitmentService $cmmtService,
-        QuestionService $questionService
+        IQuestionService $questionService
     )
     {
         $this->entityManager = $em;

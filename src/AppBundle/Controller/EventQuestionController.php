@@ -16,9 +16,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Department;
 use AppBundle\Entity\Commitment;
+use AppBundle\Service\IAuthorizationService;
+use AppBundle\Service\IQuestionService;
 use AppBundle\ViewModel\Event\QuestionListViewModel;
 use AppBundle\ViewModel\Event\QuestionViewModel;
-use AppBundle\Service\IAuthorizationService;
 
 /**
  * Partial event question controller.
@@ -66,9 +67,8 @@ class EventQuestionController extends Controller
      * @Security("has_role('ROLE_ADMIN')")
      * @ParamConverter("event", class="AppBundle:Event", options={"id" = "event_id"})
      */
-    public function newQuestionAction(Event $event, $type='T')
+    public function newQuestionAction(Event $event, IQuestionService $questionService, $type='T')
     {
-        $questionService = $this->get('app.question');
         try {
             $questionService->CreateNew($event, $type);
             $this->addFlash('success','flash.question_created');

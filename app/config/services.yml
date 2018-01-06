@@ -39,10 +39,17 @@ services:
     #TODO: remove arguments when all services are autowired
 
     AppBundle\Service\EventService:
-        arguments: ["@doctrine.orm.entity_manager", "@AppBundle\\Service\\IAuthorizationService", "@AppBundle\\Service\\IDepartmentService", "@app.commitment", "@app.question"]
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@AppBundle\\Service\\IAuthorizationService"
+            - "@AppBundle\\Service\\IDepartmentService"
+            - "@app.commitment"
+            - "@AppBundle\\Service\\IQuestionService"
 
     AppBundle\EventListener\UserRegistrationListener:
-        arguments: ["@doctrine.orm.entity_manager", "@router"]
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
         tags:
             - { name: kernel.event_subscriber }
 
@@ -52,21 +59,30 @@ services:
             - { name: form.type, alias: app_user_profile }
 
     AppBundle\Service\DepartmentService:
-        arguments: ["@AppBundle\\Service\\IAuthorizationService", "@doctrine.orm.entity_manager"]
+        arguments:
+            - "@AppBundle\\Service\\IAuthorizationService"
+            - "@doctrine.orm.entity_manager"
 
     AppBundle\Service\MenuService:
-        arguments: ["@AppBundle\\Service\\IAuthorizationService"]
+        arguments:
+            - "@AppBundle\\Service\\IAuthorizationService"
 
     AppBundle\Service\Flash\FlashService:
         arguments: ["@session"]
 
     AppBundle\Service\AuthorizationService:
-        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@security.authorization_checker"]
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@security.token_storage"
+            - "@security.authorization_checker"
 
     AppBundle\Service\MailBuilderService:
         arguments: ["@twig"]
 
     AppBundle\Service\SettingsService:
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    AppBundle\Service\QuestionService:
         arguments: ["@doctrine.orm.entity_manager"]
 
     # TODO: switch all these services to autowired services
@@ -80,8 +96,3 @@ services:
         public: true
         class: AppBundle\Service\UserService
         arguments: ["@doctrine.orm.entity_manager", "@translator"]
-
-    app.question:
-        public: true
-        class: AppBundle\Service\QuestionService
-        arguments: ["@doctrine.orm.entity_manager"]

@@ -20,6 +20,7 @@ use AppBundle\Form\DepartmentType;
 use AppBundle\Service\IEventService;
 use AppBundle\Service\IExportService;
 use AppBundle\Service\IAuthorizationService;
+use AppBundle\Service\IQuestionService;
 
 /**
  * Department controller.
@@ -566,7 +567,8 @@ class DepartmentController extends Controller
         Request $request,
         Department $department,
         IAuthorizationService $auth,
-        IExportService $exportService
+        IExportService $exportService,
+        IQuestionService $questionService
     )
     {
         $trans = $this->get('translator');
@@ -584,8 +586,6 @@ class DepartmentController extends Controller
                 'id'=>$department->getId(),
             ));
         }
-
-        $questionService = $this->get('app.question');
 
         $questions = $questionService->getQuestionsSorted($department->getEvent());
 
