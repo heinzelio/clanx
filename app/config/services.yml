@@ -28,15 +28,12 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    # Service Legacy Alias! TODO: remove when everything is refactored
-    # app.event: '@AppBundle\Service\EventService'
-    # user_register_listener: '@AppBundle\EventListener\UserRegistrationListener'
-    # app.form.profile: '@AppBundle\Form\ProfileFormType'
-    # app.department: '@AppBundle\Service\DepartmentService'
-    # app.auth: '@AppBundle\Service\AuthorizationService'
-    # app.mail_builder: '@AppBundle\Service\MailBuilderService'
-
-    #TODO: remove arguments when all services are autowired
+    #TODO this service override the one from FosUserBundle, since it is not yet ready for symfony 4.0
+    #TODO Remove it as soon as FosUserBundle is updated.
+    fos_user.profile.form.factory:
+        class: 'FOS\UserBundle\Form\Factory\FormFactory'
+        arguments: ["@form.factory", '%fos_user.profile.form.name%', '%fos_user.profile.form.type%', '%fos_user.profile.form.validation_groups%']
+        public: true
 
     AppBundle\Service\EventService:
         arguments:
