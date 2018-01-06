@@ -38,7 +38,7 @@ class AdminController extends Controller
             $settings->toggleCanRegister();
          } catch (Exception $e) {
             $type = 'danger';
-            $translated = $trans->trans('flash.flash.save_failed_error',
+            $translated = $trans->trans('flash.save_failed_error',
                 array('%error%' => $e->getMessage),'flash'
             );
         }
