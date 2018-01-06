@@ -21,7 +21,6 @@
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.2",
         "doctrine/orm": "^2.5",
-        "friendsofsymfony/user-bundle": "~2.0 -- TODO: use this again when FOS is ready for Sym4",
         "friendsofsymfony/user-bundle": "dev-master",
         "sensio/framework-extra-bundle": "^3.0.2",
         "symfony/monolog-bundle": "^3.0.2",
