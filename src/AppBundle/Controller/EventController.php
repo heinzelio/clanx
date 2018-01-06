@@ -18,6 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Swift_Mailer;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Commitment;
 use AppBundle\Entity\Department;
@@ -132,7 +133,8 @@ class EventController extends Controller
         IEventService $eventSvc,
         IAuthorizationService $auth,
         IMailBuilderService $mailBuilder,
-        ICommitmentService $commitmentService
+        ICommitmentService $commitmentService,
+        Swift_Mailer $mailer
     ) {
         $trans = $this->get('translator');
         $trans->setLocale('de'); // TODO: use real localization here.
@@ -147,7 +149,7 @@ class EventController extends Controller
         if ($auth->mayEnroll($event)) {
             $formVM = $eventSvc->getCommitmentFormViewModel($event); //CommitmentViewModel
             $enrollForm = $this->createEnrollForm($formVM, $commitmentService); //Symfony\Component\Form\Form
-            $this->handleEnrollForm($request, $enrollForm, $formVM, $event, $mailBuilder);
+            $this->handleEnrollForm($request, $enrollForm, $formVM, $event, $mailBuilder, $mailer);
         }
 
         //EventShowViewModel
@@ -190,7 +192,8 @@ class EventController extends Controller
         Form $enrollForm,
         CommitmentViewModel $formVM,
         Event $event,
-        IMailBuilderService $mailBuilder
+        IMailBuilderService $mailBuilder,
+        Swift_Mailer $mailer
     ) {
         $enrollForm->handleRequest($request);
         if (!$enrollForm->isSubmitted()) {
@@ -200,7 +203,7 @@ class EventController extends Controller
             $commitment = $commitmentService->saveCommitment($event, $formVM);
             if ($commitment != null) {
                 //TODO finish here
-                $this->sendMail($commitment, $mailBuilder);
+                $this->sendMail($commitment, $mailBuilder, $mailer);
                 $this->addFlash('success', 'flash.enroll_succeeded');
             } else {
                 $this->addFlash('warning', 'flash.enroll_failed');
@@ -293,13 +296,12 @@ class EventController extends Controller
      * Send the commitment comfirmation mayMail
      * @param  Commitment $commitment
      */
-    private function sendMail($commitment, IMailBuilderService $mailBuilder)
+    private function sendMail($commitment, IMailBuilderService $mailBuilder, Swift_Mailer $mailer)
     {
         if (!$commitment) {
             return;
         }
 
-        $mailer = $this->get('mailer');
         $message = $mailBuilder->buildCommitmentConfirmation($commitment);
         $mailer->send($message);
 

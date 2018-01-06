@@ -43,7 +43,7 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@AppBundle\\Service\\IAuthorizationService"
             - "@AppBundle\\Service\\IDepartmentService"
-            - "@AppBundle\\Service\\IcommitmentService"
+            - "@AppBundle\\Service\\ICommitmentService"
             - "@AppBundle\\Service\\IQuestionService"
 
     AppBundle\EventListener\UserRegistrationListener:

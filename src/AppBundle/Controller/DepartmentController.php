@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Swift_Mailer;
 use AppBundle\Entity\Department;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\User;
@@ -296,7 +297,7 @@ class DepartmentController extends Controller
      * @Security("has_role('ROLE_USER')")
      * @ParamConverter("volunteer", class="AppBundle:User", options={"id" = "user_id"})
      */
-    public function moveVolunteerAction(Request $request, Department $department, User $volunteer)
+    public function moveVolunteerAction(Request $request, Department $department, User $volunteer, Swift_Mailer $mailer)
     {
         $event = $department->getEvent();
         $operator=$this->getUser();
@@ -330,7 +331,7 @@ class DepartmentController extends Controller
             $em->flush();
 
             $text = $form->get('message')->getData();
-            $numSent = $this->sendMail($text,$newDepartment,$oldDepartment,$operator,$volunteer);
+            $numSent = $this->sendMail($text,$newDepartment,$oldDepartment,$operator,$volunteer, $mailer);
 
             $flashMsg = $volunteer.' wurde verschoben nach "'.$cmt->getDepartment()->getName().'" - ';
             if($numSent>0){
@@ -383,7 +384,7 @@ class DepartmentController extends Controller
         ;
     }
 
-    private function sendMail($text, $newDepartment, $oldDepartment, $operator, $volunteer)
+    private function sendMail($text, $newDepartment, $oldDepartment, $operator, $volunteer, $mailer)
     {
         $event = $newDepartment->getEvent();
         $message = \Swift_Message::newInstance();
@@ -421,7 +422,7 @@ class DepartmentController extends Controller
                 'text/plain'
             )
         ;
-        return $this->get('mailer')->send($message);
+        return $mailer->send($message);
 
     }
 

@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Swift_Mailer;
 use AppBundle\Entity\Commitment;
 use AppBundle\Entity\Department;
 use AppBundle\Entity\Event;
@@ -41,7 +42,8 @@ class CommitmentController extends Controller
         IEventService $eventService,
         IAuthorizationService $auth,
         IMailBuilderService $mailBuilder,
-        ICommitmentService $commitmentService
+        ICommitmentService $commitmentService,
+        Swift_Mailer $mailer
     )
     {
         $department = $commitment->getDepartment(); // may be null!
@@ -78,7 +80,7 @@ class CommitmentController extends Controller
                 $text = $editForm->get('message')->getData();
                 $operator = $this->getUser();
                 $message = $mailBuilder->buildCommitmentVolunteerNotification($text,$commitment,$operator);
-                $this->get('mailer')->send($message);
+                $mailer->send($message);
 
                 $mailFlashMsg = $commitment->getUser()." wurde benachrichtigt.";
             }
@@ -125,7 +127,8 @@ class CommitmentController extends Controller
         Commitment $commitment,
         IAuthorizationService $auth,
         IMailBuilderService $mailBuilder,
-        ICommitmentService $commitmentService
+        ICommitmentService $commitmentService,
+        Swift_Mailer $mailer
     )
     {
         $department = $commitment->getDepartment();
@@ -160,7 +163,7 @@ class CommitmentController extends Controller
                 $operator = $this->getUser();
 
                 $message = $mailBuilder->buildCommitmentVolunteerNotification($text,$commitment,$operator);
-                $this->get('mailer')->send($message);
+                $mailer->send($message);
 
                 $mailFlashMsg = $commitment->getUser()." wurde benachrichtigt.";
             }

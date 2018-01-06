@@ -59,7 +59,9 @@ class YesNoQuestionViewModel extends BaseQuestionViewModel
      * Gets the string that identifies this question type in the database.
      * @return [type] [description]
      */
-    public function getTypeString(){return "F";}
+    public function getTypeString(){return YesNoQuestionViewModel::staticGetTypeString();}
+
+    public static function staticGetTypeString(){return "F";}
 
     /**
      * @return string '1', if the answer is 'yes', otherwise '0'

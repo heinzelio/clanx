@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Swift_Mailer;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Mail;
 use AppBundle\Entity\RedirectInfo;
@@ -56,7 +57,7 @@ class MailController extends Controller
      * @Method("POST")
      * @Security("has_role('ROLE_USER')")
      */
-    public function sendAction(Request $request)
+    public function sendAction(Request $request, Swift_Mailer $mailer)
     {
         $session = $request->getSession();
         $mailData = $session->remove(Mail::SESSION_KEY);
@@ -100,7 +101,6 @@ class MailController extends Controller
                             'Forename' => $this->getUser()->getForename(),
                     )), 'text/html');
 
-            $mailer = $this->get('mailer');
             $numSent = $mailer->send($message);
             $mailer->send($ackMessage);
 

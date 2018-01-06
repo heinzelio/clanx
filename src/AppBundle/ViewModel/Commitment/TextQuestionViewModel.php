@@ -32,7 +32,9 @@ class TextQuestionViewModel extends BaseQuestionViewModel
      * Gets the string that identifies this question type in the database.
      * @return [type] [description]
      */
-    public function getTypeString(){return "T";}
+    public function getTypeString(){return TextQuestionViewModel::staticGetTypeString();}
+
+    public static function staticGetTypeString(){return "T";}
 
     /**
      * @return string The answer text

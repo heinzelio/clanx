@@ -32,7 +32,9 @@ class SelectionQuestionViewModel extends BaseQuestionViewModel
      * Gets the string that identifies this question type in the database.
      * @return [type] [description]
      */
-    public function getTypeString(){return "S";}
+    public function getTypeString(){return SelectionQuestionViewModel::staticGetTypeString();}
+
+    public static function staticGetTypeString(){return "S";}
 
     /**
      * @param string $answer

@@ -41,13 +41,13 @@ class QuestionService implements IQuestionService
     public function getQuestionViewModel(Question $q, Answer $a=null)
     {
         switch ($q->getType()) {
-            case YesNoQuestionViewModel::getTypeString():
+            case YesNoQuestionViewModel::staticGetTypeString():
                 return new YesNoQuestionViewModel($q, $a);
 
-            case SelectionQuestionViewModel::getTypeString():
+            case SelectionQuestionViewModel::staticGetTypeString():
                 return new SelectionQuestionViewModel($q, $a);
 
-            case TextQuestionViewModel::getTypeString():
+            case TextQuestionViewModel::staticGetTypeString():
             default:
                 return new TextQuestionViewModel($q, $a);
         }
@@ -185,7 +185,7 @@ class QuestionService implements IQuestionService
     private function getMeaningfulAnswer(Answer $answer, Question $question)
     {
         //TODO: use localization
-        if ($question->getType() == YesNoQuestionViewModel::getTypeString()) {
+        if ($question->getType() == YesNoQuestionViewModel::staticGetTypeString()) {
             if ($answer->getAnswer()=="1") {
                 return "Ja";
             } else {
