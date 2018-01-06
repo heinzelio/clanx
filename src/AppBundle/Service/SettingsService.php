@@ -4,7 +4,7 @@ namespace AppBundle\Service;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Setting;
 
-class SettingsService
+class SettingsService implements ISettingsService
 {
     /**
      * @var Doctrine\ORM\EntityManager

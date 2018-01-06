@@ -69,16 +69,15 @@ services:
     AppBundle\Service\ExportService:
         class: AppBundle\Service\ExportService
 
+    AppBundle\Service\SettingsService:
+        arguments: ["@doctrine.orm.entity_manager"]
+
     # TODO: switch all these services to autowired services
-
-
 
     app.commitment:
         public: true
         class: AppBundle\Service\CommitmentService
         arguments: ["@AppBundle\\Service\\IAuthorizationService", "@doctrine.orm.entity_manager", "@logger"]
-
-
 
     app.user:
         public: true
@@ -88,9 +87,4 @@ services:
     app.question:
         public: true
         class: AppBundle\Service\QuestionService
-        arguments: ["@doctrine.orm.entity_manager"]
-
-    app.settings:
-        public: true
-        class: AppBundle\Service\SettingsService
         arguments: ["@doctrine.orm.entity_manager"]

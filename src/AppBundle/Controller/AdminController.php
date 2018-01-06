@@ -14,6 +14,7 @@ use AppBundle\Entity\Event;
 use AppBundle\Entity\Department;
 use AppBundle\Entity\Commitment;
 use AppBundle\Entity\LegacyUser;
+use AppBundle\Service\ISettingsService;
 
 /**
  * Dashboard controller.
@@ -26,7 +27,7 @@ class AdminController extends Controller
     * @Method({"GET"})
     * @Security("has_role('ROLE_ADMIN')")
     */
-    public function toggleDenyRegistrationAction(Request $request)
+    public function toggleDenyRegistrationAction(Request $request, ISettingsService $settings)
     {
         $trans = $this->get('translator');
         $trans->setLocale('de'); // TODO: use real localization here.
@@ -34,7 +35,6 @@ class AdminController extends Controller
         $translated = $trans->trans('flash.successfully_saved',array(),'flash');
         $type = 'success';
         try {
-            $settings = $this->get('app.Settings');
             $settings->toggleCanRegister();
          } catch (Exception $e) {
             $type = 'danger';

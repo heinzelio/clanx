@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\RedirectInfo;
 use AppBundle\Entity\Mail;
 use AppBundle\Service\IAuthorizationService;
+use AppBundle\Service\ISettingsService;
 
 /**
  * Dashboard controller.
@@ -23,7 +24,7 @@ class DashboardController extends Controller
     * @Method("GET")
     * @Security("has_role('ROLE_USER')")
     */
-    public function indexAction(Request $request, IAuthorizationService $auth)
+    public function indexAction(Request $request, IAuthorizationService $auth, ISettingsService $settings)
     {
         $user = $this->getUser();
         $missingProfileData = '';
@@ -57,7 +58,6 @@ class DashboardController extends Controller
         $adminRegistrationInfoText='';
         $adminRegistrationButtonIcon='';
         if($auth->MayChangeSettings()){
-            $settings = $this->get('app.settings');
             $showAdminRegistrationSwitch=true;
             if ($settings->canRegister()) {
                 $adminRegistrationInfoText='Neue Benutzer zugelassen.';
