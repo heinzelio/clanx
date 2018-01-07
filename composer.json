@@ -27,6 +27,7 @@
         "doctrine/orm": "^2.5",
         "friendsofsymfony/user-bundle": "dev-master",
         "sensio/framework-extra-bundle": "^3.0.2",
+        "symfony/asset": "^4.0",
         "symfony/console": "^4.0",
         "symfony/flex": "^1.0",
         "symfony/form": "^4.0",

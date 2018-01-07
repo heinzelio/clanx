@@ -3,23 +3,6 @@
 parameters:
     locale: 'de'
 
-#TODO check if this may be removed, when fosUserBundle is properly migrated
-fos_user:
-    db_driver: orm
-    firewall_name: main
-    user_class: AppBundle\Entity\User
-
-    from_email:
-        # ALL different emails use this adress and name:
-        address:        no-reply@clanx.ch
-        sender_name:    ClanxHölferDB
-    registration:
-        confirmation:
-            enabled:    true
-    profile:
-      form:
-        type: AppBundle\Form\ProfileFormType
-
 services:
     # default configuration for services in *this* file
     _defaults:
