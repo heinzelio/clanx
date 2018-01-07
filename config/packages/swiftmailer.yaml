@@ -7,4 +7,3 @@ swiftmailer:
     encryption: ssl
     #TODO: One day we are going to use "url" instead all the above.
     #url: '%env(MAILER_URL)%'
-    spool: { type: 'memory' }
