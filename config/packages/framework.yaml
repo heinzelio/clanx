@@ -1,15 +1,20 @@
 framework:
     secret: '%env(APP_SECRET)%'
     #default_locale: en
-    #csrf_protection: ~
+    csrf_protection: ~
     #http_method_override: true
 
     # uncomment this entire section to enable sessions
-    #session:
-    #    # With this config, PHP's native session handling is used
-    #    handler_id: ~
+    session:
+       # With this config, PHP's native session handling is used
+       handler_id: ~
 
     #esi: ~
     #fragments: ~
     php_errors:
         log: true
+
+    #TODO Should not be used anymore, but fos/userbundle needs it...
+    #TODO https://knpuniversity.com/screencast/symfony4-upgrade/framework-finish#play
+    templating:
+        engines: ['twig']
