@@ -23,6 +23,7 @@
         "doctrine/orm": "^2.5",
         "friendsofsymfony/user-bundle": "dev-master",
         "sensio/framework-extra-bundle": "^3.0.2",
+        "symfony/flex": "^1.0",
         "symfony/monolog-bundle": "^3.0.2",
         "symfony/polyfill-apcu": "^1.0",
         "symfony/swiftmailer-bundle": "^3.1",

@@ -17,3 +17,8 @@
 /sql/out.tab
 /sql/run.bat
 /sql/sandbox.sql
+
+###> symfony/phpunit-bridge ###
+.phpunit
+/phpunit.xml
+###< symfony/phpunit-bridge ###
