@@ -7,25 +7,9 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 
 framework:
-    templating:
-        engines: ['twig']
-    trusted_hosts:   ~
-    fragments:       ~
-    http_method_override: true
     assets: ~
 
-# Twig Configuration
-twig:
-    debug:            "%kernel.debug%"
-    strict_variables: "%kernel.debug%"
-    form_themes:
-        # Forms are automatically constructed.
-        # With this switch, we can use BOOTSTRAP (Yay!)
-        # (we can even go further! see https://symfony.com/doc/current/book/forms.html#id1)
-        - bootstrap_3_layout.html.twig
-        #- bootstrap_3_horizontal_layout.html.twig
-    globals:
-        flash: "@AppBundle\\Service\\Flash\\FlashService"
+# Twig Configuration: C:\Users\chrig\Documents\dev\clanx.git\config\packages\twig.yaml
 
 # Doctrine Configuration
 doctrine:
