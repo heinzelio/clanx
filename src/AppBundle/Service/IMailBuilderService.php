@@ -1,8 +1,8 @@
 <?php
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\Commitment;
-use AppBundle\Entity\User;
+use App\Entity\Commitment;
+use App\Entity\User;
 
 interface IMailBuilderService
 {

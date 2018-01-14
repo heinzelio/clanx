@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,13 +13,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\Department;
-use AppBundle\Entity\Commitment;
-use AppBundle\Service\IAuthorizationService;
-use AppBundle\Service\IQuestionService;
-use AppBundle\ViewModel\Event\QuestionListViewModel;
-use AppBundle\ViewModel\Event\QuestionViewModel;
+use App\Entity\Event;
+use App\Entity\Department;
+use App\Entity\Commitment;
+use App\Service\IAuthorizationService;
+use App\Service\IQuestionService;
+use App\ViewModel\Event\QuestionListViewModel;
+use App\ViewModel\Event\QuestionViewModel;
 
 /**
  * Partial event question controller.

@@ -1,10 +1,10 @@
 <?php
-namespace AppBundle\Service;
+namespace App\Service;
 
 
-use AppBundle\Entity\Commitment;
-use AppBundle\Entity\Event;
-use AppBundle\ViewModel\Commitment\CommitmentViewModel;
+use App\Entity\Commitment;
+use App\Entity\Event;
+use App\ViewModel\Commitment\CommitmentViewModel;
 
 interface ICommitmentService
 {

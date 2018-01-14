@@ -1,14 +1,14 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\Translator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\Commitment;
-use AppBundle\Service\IAuthorizationService;
+use App\Entity\Event;
+use App\Entity\Commitment;
+use App\Service\IAuthorizationService;
 
 /**
  * Partial event commitment controller.

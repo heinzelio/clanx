@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -9,12 +9,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Doctrine\Common\Collections\Criteria;
-use AppBundle\Entity\User;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\Department;
-use AppBundle\Entity\Commitment;
-use AppBundle\Entity\LegacyUser;
-use AppBundle\Service\ISettingsService;
+use App\Entity\User;
+use App\Entity\Event;
+use App\Entity\Department;
+use App\Entity\Commitment;
+use App\Entity\LegacyUser;
+use App\Service\ISettingsService;
 
 /**
  * Dashboard controller.

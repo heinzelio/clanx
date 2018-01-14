@@ -1,8 +1,8 @@
 <?php
-namespace AppBundle\Service;
+namespace App\Service;
 
 use Doctrine\ORM\EntityManager;
-use AppBundle\Entity\Event;
+use App\Entity\Event;
 
 interface IMenuService
 {

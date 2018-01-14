@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -12,15 +12,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Swift_Mailer;
-use AppBundle\Entity\Commitment;
-use AppBundle\Entity\Department;
-use AppBundle\Entity\Event;
-use AppBundle\ViewModel\Commitment\CommitmentViewModel;
-use AppBundle\Form\Commitment\CommitmentType;
-use AppBundle\Service\IAuthorizationService;
-use AppBundle\Service\ICommitmentService;
-use AppBundle\Service\IEventService;
-use AppBundle\Service\IMailBuilderService;
+use App\Entity\Commitment;
+use App\Entity\Department;
+use App\Entity\Event;
+use App\ViewModel\Commitment\CommitmentViewModel;
+use App\Form\Commitment\CommitmentType;
+use App\Service\IAuthorizationService;
+use App\Service\ICommitmentService;
+use App\Service\IEventService;
+use App\Service\IMailBuilderService;
 
 /**
  * Commitment controller.

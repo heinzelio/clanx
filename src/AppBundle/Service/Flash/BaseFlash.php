@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle\Service\Flash;
+namespace App\Service\Flash;
 
 abstract class BaseFlash
 {

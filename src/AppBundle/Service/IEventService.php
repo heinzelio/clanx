@@ -1,10 +1,10 @@
 <?php
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\Event;
-use AppBundle\Entity\Commitment ;
-use AppBundle\ViewModel\Commitment\CommitmentViewModel;
-use AppBundle\ViewModel\Event\EventShowViewModel;
+use App\Entity\Event;
+use App\Entity\Commitment ;
+use App\ViewModel\Commitment\CommitmentViewModel;
+use App\ViewModel\Event\EventShowViewModel;
 
 /**
  *

@@ -1,9 +1,9 @@
 <?php
-namespace AppBundle\Service;
+namespace App\Service;
 
 use Doctrine\ORM\EntityManager;
-use AppBundle\Service\IAuthorizationService;
-use AppBundle\Entity\Event;
+use App\Service\IAuthorizationService;
+use App\Entity\Event;
 
 class MenuService implements IMenuService
 {

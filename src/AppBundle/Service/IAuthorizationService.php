@@ -1,14 +1,14 @@
 <?php
-namespace AppBundle\Service;
+namespace App\Service;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
-use AppBundle\Entity\Commitment;
-use AppBundle\Entity\Department;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\Question;
-use AppBundle\Entity\User;
+use App\Entity\Commitment;
+use App\Entity\Department;
+use App\Entity\Event;
+use App\Entity\Question;
+use App\Entity\User;
 
 interface IAuthorizationService
 {

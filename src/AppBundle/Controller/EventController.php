@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -19,27 +19,27 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Swift_Mailer;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\Commitment;
-use AppBundle\Entity\Department;
-use AppBundle\Entity\User;
-use AppBundle\Entity\RedirectInfo;
-use AppBundle\Entity\Mail;
-use AppBundle\ViewModel\Commitment\CommitmentViewModel;
-use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
-use AppBundle\Form\Commitment\CommitmentType;
-use AppBundle\Form\Commitment\TextQuestionViewModel;
-use AppBundle\Form\EventCreateType;
-use AppBundle\Form\ShirtSizeType;
-use AppBundle\Service\AuthorizationService;
-use AppBundle\Service\IAuthorizationService;
-use AppBundle\Service\ICommitmentService;
-use AppBundle\Service\IDepartmentService;
-use AppBundle\Service\IEventService;
-use AppBundle\Service\IExportService;
-use AppBundle\Service\IMailBuilderService;
-use AppBundle\Service\IQuestionService;
-use AppBundle\Service\IUserService;
+use App\Entity\Event;
+use App\Entity\Commitment;
+use App\Entity\Department;
+use App\Entity\User;
+use App\Entity\RedirectInfo;
+use App\Entity\Mail;
+use App\ViewModel\Commitment\CommitmentViewModel;
+use App\ViewModel\Commitment\YesNoQuestionViewModel;
+use App\Form\Commitment\CommitmentType;
+use App\Form\Commitment\TextQuestionViewModel;
+use App\Form\EventCreateType;
+use App\Form\ShirtSizeType;
+use App\Service\AuthorizationService;
+use App\Service\IAuthorizationService;
+use App\Service\ICommitmentService;
+use App\Service\IDepartmentService;
+use App\Service\IEventService;
+use App\Service\IExportService;
+use App\Service\IMailBuilderService;
+use App\Service\IQuestionService;
+use App\Service\IUserService;
 
 /**
  * Event controller.

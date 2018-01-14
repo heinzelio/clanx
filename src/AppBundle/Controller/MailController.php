@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -9,10 +9,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Swift_Mailer;
-use AppBundle\Entity\User;
-use AppBundle\Entity\Mail;
-use AppBundle\Entity\RedirectInfo;
-use AppBundle\Form\Mail2Type;
+use App\Entity\User;
+use App\Entity\Mail;
+use App\Entity\RedirectInfo;
+use App\Form\Mail2Type;
 
 /**
  * Mail controller.

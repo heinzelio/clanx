@@ -1,8 +1,8 @@
 <?php
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\Event;
-use AppBundle\Entity\Department;
+use App\Entity\Event;
+use App\Entity\Department;
 
 interface IDepartmentService
 {

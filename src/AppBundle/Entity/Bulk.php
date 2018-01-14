@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
-use AppBundle\Entity\BulkEntry;
+use App\Entity\BulkEntry;
 
 class Bulk
 {

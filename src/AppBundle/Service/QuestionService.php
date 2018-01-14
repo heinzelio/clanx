@@ -1,18 +1,18 @@
 <?php
-namespace AppBundle\Service;
+namespace App\Service;
 
 use Symfony\Component\DependencyInjection\Container;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use AppBundle\Entity\Question;
-use AppBundle\Entity\Answer;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\Department;
-use AppBundle\Entity\Commitment;
-use AppBundle\ViewModel\Commitment\BaseQuestionViewModel;
-use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
-use AppBundle\ViewModel\Commitment\TextQuestionViewModel;
-use AppBundle\ViewModel\Commitment\SelectionQuestionViewModel;
+use App\Entity\Question;
+use App\Entity\Answer;
+use App\Entity\Event;
+use App\Entity\Department;
+use App\Entity\Commitment;
+use App\ViewModel\Commitment\BaseQuestionViewModel;
+use App\ViewModel\Commitment\YesNoQuestionViewModel;
+use App\ViewModel\Commitment\TextQuestionViewModel;
+use App\ViewModel\Commitment\SelectionQuestionViewModel;
 
 class QuestionService implements IQuestionService
 {

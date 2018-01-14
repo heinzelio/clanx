@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Commitment;
+namespace App\Form\Commitment;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;

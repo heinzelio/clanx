@@ -1,14 +1,14 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use AppBundle\Entity\Event;
-use AppBundle\Service\IEventService;
-use AppBundle\Service\IMenuService;
+use App\Entity\Event;
+use App\Service\IEventService;
+use App\Service\IMenuService;
 
 /**
  * Event controller.

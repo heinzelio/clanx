@@ -1,8 +1,8 @@
 <?php
-namespace AppBundle\Service\Flash;
+namespace App\Service\Flash;
 
 use Symfony\Component\HttpFoundation\Session\Session;
-use AppBundle\Service;
+use App\Service;
 
 class FlashService
 {

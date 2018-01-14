@@ -1,7 +1,7 @@
 <?php
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\ViewModel\User\UserIndex;
+use App\ViewModel\User\UserIndex;
 
 interface IUserService
 {

@@ -1,15 +1,15 @@
 <?php
-namespace AppBundle\Service;
+namespace App\Service;
 
-use AppBundle\Entity\Answer;
-use AppBundle\Entity\Commitment;
-use AppBundle\Entity\Department;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\Question;
-use AppBundle\ViewModel\Commitment\BaseQuestionViewModel;
-use AppBundle\ViewModel\Commitment\SelectionQuestionViewModel;
-use AppBundle\ViewModel\Commitment\TextQuestionViewModel;
-use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
+use App\Entity\Answer;
+use App\Entity\Commitment;
+use App\Entity\Department;
+use App\Entity\Event;
+use App\Entity\Question;
+use App\ViewModel\Commitment\BaseQuestionViewModel;
+use App\ViewModel\Commitment\SelectionQuestionViewModel;
+use App\ViewModel\Commitment\TextQuestionViewModel;
+use App\ViewModel\Commitment\YesNoQuestionViewModel;
 
 interface IQuestionService
 {

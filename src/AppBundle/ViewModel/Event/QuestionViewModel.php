@@ -1,7 +1,7 @@
 <?php
-namespace AppBundle\ViewModel\Event;
+namespace App\ViewModel\Event;
 
-use AppBundle\Entity\Question;
+use App\Entity\Question;
 
 /**
  * ViewModel for one question.

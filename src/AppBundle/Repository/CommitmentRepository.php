@@ -1,7 +1,7 @@
 <?php
 
 // src/AppBundle/Repository/CommitmentRepository.php
-namespace AppBundle\Repository;
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 

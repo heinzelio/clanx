@@ -1,11 +1,11 @@
 <?php
-namespace AppBundle\Service;
+namespace App\Service;
 
 use Doctrine\ORM\EntityManager;
 use Twig_Environment;
-use AppBundle\ViewModel\Email\CommitmentConfirmationViewModel;
-use AppBundle\Entity\Commitment;
-use AppBundle\Entity\User;
+use App\ViewModel\Email\CommitmentConfirmationViewModel;
+use App\Entity\Commitment;
+use App\Entity\User;
 
 class MailBuilderService implements IMailBuilderService
 {

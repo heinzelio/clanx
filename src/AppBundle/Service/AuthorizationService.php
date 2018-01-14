@@ -1,21 +1,21 @@
 <?php
-namespace AppBundle\Service;
+namespace App\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
-use AppBundle\Entity\Commitment;
-use AppBundle\Entity\Department;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\Question;
-use AppBundle\Entity\User;
+use App\Entity\Commitment;
+use App\Entity\Department;
+use App\Entity\Event;
+use App\Entity\Question;
+use App\Entity\User;
 
 class AuthorizationService implements IAuthorizationService
 {
     //TODO Remove the constant keys for value and message.
     //TODO Remove all occurences AuthorizationService::XY
     //TODO Use getter for keys instead, use them in interface
-    //TODO Remove "use AppBundle\Service\AuthorizationService;" in controllers
+    //TODO Remove "use App\Service\AuthorizationService;" in controllers
     /**
      * Constant key to access the value field in the return
      * array of the method mayDelete(Event)

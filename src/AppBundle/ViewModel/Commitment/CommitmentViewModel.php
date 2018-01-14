@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\ViewModel\Commitment;
+namespace App\ViewModel\Commitment;
 
-use AppBundle\Entity\Department;
-use AppBundle\Entity\User;
+use App\Entity\Department;
+use App\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 

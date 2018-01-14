@@ -1,8 +1,8 @@
 <?php
-namespace AppBundle\Service;
+namespace App\Service;
 
 use Doctrine\ORM\EntityManager;
-use AppBundle\Entity\Setting;
+use App\Entity\Setting;
 
 class SettingsService implements ISettingsService
 {

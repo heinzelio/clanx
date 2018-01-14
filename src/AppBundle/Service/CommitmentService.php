@@ -1,13 +1,13 @@
 <?php
-namespace AppBundle\Service;
+namespace App\Service;
 
 // use Symfony\Bridge\Monolog\Logger; // TODO: Logger not working on PROD env on hostpoint. figure out why
 use Doctrine\ORM\EntityManager;
-use AppBundle\Service\IAuthorizationService;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\Commitment;
-use AppBundle\Entity\Answer;
-use AppBundle\ViewModel\Commitment\CommitmentViewModel;
+use App\Service\IAuthorizationService;
+use App\Entity\Event;
+use App\Entity\Commitment;
+use App\Entity\Answer;
+use App\ViewModel\Commitment\CommitmentViewModel;
 
 class CommitmentService implements ICommitmentService
 {

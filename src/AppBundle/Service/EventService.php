@@ -1,17 +1,17 @@
 <?php
-namespace AppBundle\Service;
+namespace App\Service;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\Commitment ;
-use AppBundle\Entity\Answer ;
-use AppBundle\ViewModel\Commitment\CommitmentViewModel;
-use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
-use AppBundle\ViewModel\Commitment\TextQuestionViewModel;
-use AppBundle\ViewModel\Commitment\SelectionQuestionViewModel;
-use AppBundle\ViewModel\Event\EventStatisticsViewModel;
-use AppBundle\ViewModel\Event\EventShowViewModel;
+use App\Entity\Event;
+use App\Entity\Commitment ;
+use App\Entity\Answer ;
+use App\ViewModel\Commitment\CommitmentViewModel;
+use App\ViewModel\Commitment\YesNoQuestionViewModel;
+use App\ViewModel\Commitment\TextQuestionViewModel;
+use App\ViewModel\Commitment\SelectionQuestionViewModel;
+use App\ViewModel\Event\EventStatisticsViewModel;
+use App\ViewModel\Event\EventShowViewModel;
 
 class EventService implements IEventService
 {

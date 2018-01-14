@@ -1,20 +1,20 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use AppBundle\Entity\Bulk;
-use AppBundle\Entity\BulkEntry;
-use AppBundle\Entity\Mail;
-use AppBundle\Entity\RedirectInfo;
-use AppBundle\Entity\User;
-use AppBundle\Form\BulkType;
-use AppBundle\Form\UserType;
-use AppBundle\Service\IUserService;
+use App\Entity\Bulk;
+use App\Entity\BulkEntry;
+use App\Entity\Mail;
+use App\Entity\RedirectInfo;
+use App\Entity\User;
+use App\Form\BulkType;
+use App\Form\UserType;
+use App\Service\IUserService;
 
 /**
  * User controller.

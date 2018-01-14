@@ -1,13 +1,13 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use AppBundle\Entity\Question;
-use AppBundle\Form\QuestionType;
+use App\Entity\Question;
+use App\Form\QuestionType;
 
 /**
  * Question controller.

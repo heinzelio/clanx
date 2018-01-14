@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -8,11 +8,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use AppBundle\Entity\User;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\Department;
-use AppBundle\Entity\Commitment;
-use AppBundle\Entity\LegacyUser;
+use App\Entity\User;
+use App\Entity\Event;
+use App\Entity\Department;
+use App\Entity\Commitment;
+use App\Entity\LegacyUser;
 
 /**
  * Dashboard controller.

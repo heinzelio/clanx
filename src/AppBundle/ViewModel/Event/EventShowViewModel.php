@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\ViewModel\Event;
+namespace App\ViewModel\Event;
 
 /**
  * View model for the view event\show.twig.html

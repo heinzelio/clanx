@@ -1,12 +1,12 @@
 <?php
 
-namespace AppBundle\ViewModel\User;
+namespace App\ViewModel\User;
 
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\FormView;
-use AppBundle\Entity\User;
-use AppBundle\Entity\Bulk;
-use AppBundle\Entity\BulkEntry;
+use App\Entity\User;
+use App\Entity\Bulk;
+use App\Entity\BulkEntry;
 /**
  * Contains all that the has to be shown on the User Index page
  */

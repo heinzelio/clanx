@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,14 +12,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\Department;
-use AppBundle\Entity\Commitment;
-use AppBundle\ViewModel\Commitment\YesNoQuestionViewModel;
-use AppBundle\ViewModel\Commitment\CommitmentViewModel;
-use AppBundle\Form\Commitment\CommitmentType;
-use AppBundle\Form\Commitment\TextQuestionViewModel;
-use AppBundle\Service\IAuthorizationService;
+use App\Entity\Event;
+use App\Entity\Department;
+use App\Entity\Commitment;
+use App\ViewModel\Commitment\YesNoQuestionViewModel;
+use App\ViewModel\Commitment\CommitmentViewModel;
+use App\Form\Commitment\CommitmentType;
+use App\Form\Commitment\TextQuestionViewModel;
+use App\Service\IAuthorizationService;
 
 /**
  * Partial event commitment controller.

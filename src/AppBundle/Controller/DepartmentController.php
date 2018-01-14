@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -12,16 +12,16 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Swift_Mailer;
-use AppBundle\Entity\Department;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\User;
-use AppBundle\Entity\Mail;
-use AppBundle\Entity\RedirectInfo;
-use AppBundle\Form\DepartmentType;
-use AppBundle\Service\IEventService;
-use AppBundle\Service\IExportService;
-use AppBundle\Service\IAuthorizationService;
-use AppBundle\Service\IQuestionService;
+use App\Entity\Department;
+use App\Entity\Event;
+use App\Entity\User;
+use App\Entity\Mail;
+use App\Entity\RedirectInfo;
+use App\Form\DepartmentType;
+use App\Service\IEventService;
+use App\Service\IExportService;
+use App\Service\IAuthorizationService;
+use App\Service\IQuestionService;
 
 /**
  * Department controller.

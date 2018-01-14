@@ -1,10 +1,10 @@
 <?php
-namespace AppBundle\Service;
+namespace App\Service;
 
 use Doctrine\ORM\EntityManager;
-use AppBundle\Service\IAuthorizationService;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\Department;
+use App\Service\IAuthorizationService;
+use App\Entity\Event;
+use App\Entity\Department;
 
 class DepartmentService implements IDepartmentService
 {

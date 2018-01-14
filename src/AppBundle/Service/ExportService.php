@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle\Service;
+namespace App\Service;
 
 class ExportService implements IExportService
 {

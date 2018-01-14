@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle\ViewModel\Event;
+namespace App\ViewModel\Event;
 
 class EventStatisticsViewModel
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\ViewModel\User;
+namespace App\ViewModel\User;
 
-use AppBundle\Entity\User;
+use App\Entity\User;
 
 /**
  * Contains data to show on one line on the user Index

@@ -1,9 +1,9 @@
 <?php
-namespace AppBundle\ViewModel\Email;
+namespace App\ViewModel\Email;
 
-use AppBundle\Entity\User;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\Department;
+use App\Entity\User;
+use App\Entity\Event;
+use App\Entity\Department;
 
 class CommitmentConfirmationViewModel
 {

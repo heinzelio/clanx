@@ -1,12 +1,12 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\Department;
-use AppBundle\Entity\User;
-use AppBundle\Entity\Answer;
+use App\Entity\Event;
+use App\Entity\Department;
+use App\Entity\User;
+use App\Entity\Answer;
 
 /**
  * Commitment

@@ -1,11 +1,11 @@
 <?php
-namespace AppBundle\Service;
+namespace App\Service;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Translation\TranslatorInterface;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\User;
-use AppBundle\ViewModel\User\UserIndex;
+use App\Entity\Event;
+use App\Entity\User;
+use App\ViewModel\User\UserIndex;
 
 class UserService implements IUserService
 {

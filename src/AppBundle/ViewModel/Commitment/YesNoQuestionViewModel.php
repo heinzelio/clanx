@@ -1,10 +1,10 @@
 <?php
-namespace AppBundle\ViewModel\Commitment;
+namespace App\ViewModel\Commitment;
 
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use AppBundle\Entity\Question;
-use AppBundle\Entity\Answer;
+use App\Entity\Question;
+use App\Entity\Answer;
 
 /**
  * yes/no question data to show on the commitment form
