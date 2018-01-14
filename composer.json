@@ -5,13 +5,11 @@
     "description": "The \"Symfony Standard Edition\" distribution",
     "autoload": {
         "psr-4": {
-            "AppBundle\\": "src/AppBundle",
             "App\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Appbundle\\": "tests/AppBundle",
             "App\\Tests\\": "tests/"
         }
     },

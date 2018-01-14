@@ -89,7 +89,7 @@
                             </td>
                              <td colspan="42"> <!--Magic! (basically means: colspan="all") -->
                                 {{ form_widget(view_model.bulkFormView.action) }}
-                                <a onclick="Clanx.AppBundle.Form.submitAndLock(form_bulk_actions,this);"
+                                <a onclick="clanx.app.Form.submitAndLock(form_bulk_actions,this);"
                                     class="btn btn-primary"
                                     data-toggle="tooltip"
                                     title="{{'tip.execute_bulk_action'|trans}}">
@@ -136,7 +136,7 @@
     <script src="{{ asset('bootstrap-table/locale/bootstrap-table-en-US.js')}}"></script>
     <script>
         $(document).ready(function() {
-            Clanx.AppBundle.Bulk.initialize('input[name="select_all"]');
+            clanx.app.Bulk.initialize('input[name="select_all"]');
         });
     </script>
 {% endblock %}

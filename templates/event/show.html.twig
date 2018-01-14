@@ -149,16 +149,16 @@
                 <!-- footer -->
             </div>
             <!-- panel -->
-            {{ render(controller('AppBundle:EventStatistics:index', { 'id':
+            {{ render(controller('App\Controller\EventStatisticsController::indexAction', { 'id':
             view_model.event.id })) }}
-            {{ render(controller('AppBundle:EventVolunteers:index', { 'id':
+            {{ render(controller('App\Controller\EventVolunteersController::indexAction', { 'id':
             view_model.event.id })) }}
         </div>
         <!-- col -->
         <div class="col-md-6">
 
             {% for commitment in view_model.commitments %}
-                {{ render(controller('AppBundle:EventCommitment:showCommitment',
+                {{ render(controller('App\Controller\EventCommitmentController::showCommitmentAction',
                 {'id': commitment.id}))}}
             {% endfor %}
 
@@ -169,7 +169,7 @@
                     </div>
                     <div class="panel-body">
                         <p>
-                            {# find details of this form in AppBundle\Form\Commitment\CommitmentType #}
+                            {# find details of this form in \Form\Commitment\CommitmentType #}
                             {{ form_start(view_model.enrollForm, {
                                 'name': 'enroll_form',
                                 'action': path('event_show',{'id': view_model.event.id}),
@@ -184,7 +184,7 @@
                     </div>
                     <div class="panel-footer">
                         <a class="btn btn-primary"
-                            onclick="Clanx.AppBundle.Form.submitAndLock(enroll_form,this);"
+                            onclick="clanx.app.Form.submitAndLock(enroll_form,this);"
                             data-toggle="tooltip"
                             title="{{ 'tip.save_commitment'|trans({}, 'enroll') }}">
                             <span class="fa fa-floppy-o"></span>

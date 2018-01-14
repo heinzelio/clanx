@@ -16,28 +16,13 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/*'
-        exclude: '../src/{Entity,Migrations,Tests,AppBundle}'
+        exclude: '../src/{Entity,Migrations,Tests}'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
-
-    #TODO Remove when finished
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
-    AppBundle\: #namespace
-        resource: '../src/AppBundle/*'
-        exclude: '../src/AppBundle/{Entity,Migrations,Tests}'
-
-    # controllers are imported separately to make sure services can be injected
-    # as action arguments even if you don't extend any base controller class
-    AppBundle\Controller\:
-        resource: '../src/AppBundle/Controller/*'
-        public: true
-        tags: ['controller.service_arguments']
-    #TODO End Remove
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
@@ -49,60 +34,60 @@ services:
         arguments: ["@form.factory", '%fos_user.profile.form.name%', '%fos_user.profile.form.type%', '%fos_user.profile.form.validation_groups%']
         public: true
 
-    AppBundle\Service\EventService:
+    App\Service\EventService:
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@AppBundle\\Service\\IAuthorizationService"
-            - "@AppBundle\\Service\\IDepartmentService"
-            - "@AppBundle\\Service\\ICommitmentService"
-            - "@AppBundle\\Service\\IQuestionService"
+            - "@App\\Service\\IAuthorizationService"
+            - "@App\\Service\\IDepartmentService"
+            - "@App\\Service\\ICommitmentService"
+            - "@App\\Service\\IQuestionService"
 
-    AppBundle\EventListener\UserRegistrationListener:
+    App\EventListener\UserRegistrationListener:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@router"
         tags:
             - { name: kernel.event_subscriber }
 
-    AppBundle\Form\ProfileFormType:
-        arguments: ["\\AppBundle\\Entity\\User"] # keep this.
+    App\Form\ProfileFormType:
+        arguments: ["\\App\\Entity\\User"] # keep this.
         tags:
             - { name: form.type, alias: app_user_profile }
 
-    AppBundle\Service\DepartmentService:
+    App\Service\DepartmentService:
         arguments:
-            - "@AppBundle\\Service\\IAuthorizationService"
+            - "@App\\Service\\IAuthorizationService"
             - "@doctrine.orm.entity_manager"
 
-    AppBundle\Service\MenuService:
+    App\Service\MenuService:
         arguments:
-            - "@AppBundle\\Service\\IAuthorizationService"
+            - "@App\\Service\\IAuthorizationService"
 
-    AppBundle\Service\Flash\FlashService:
+    App\Service\Flash\FlashService:
         arguments: ["@session"]
 
-    AppBundle\Service\AuthorizationService:
+    App\Service\AuthorizationService:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@security.token_storage"
             - "@security.authorization_checker"
 
-    AppBundle\Service\MailBuilderService:
+    App\Service\MailBuilderService:
         arguments: ["@twig"]
 
-    AppBundle\Service\SettingsService:
+    App\Service\SettingsService:
         arguments: ["@doctrine.orm.entity_manager"]
 
-    AppBundle\Service\QuestionService:
+    App\Service\QuestionService:
         arguments: ["@doctrine.orm.entity_manager"]
 
-    AppBundle\Service\CommitmentService:
+    App\Service\CommitmentService:
         arguments:
-            - "@AppBundle\\Service\\IAuthorizationService"
+            - "@App\\Service\\IAuthorizationService"
             - "@doctrine.orm.entity_manager"
             - "@logger"
 
-    AppBundle\Service\UserService:
+    App\Service\UserService:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@translator"

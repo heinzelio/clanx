@@ -11,4 +11,4 @@ twig:
         #- bootstrap_3_horizontal_layout.html.twig
     globals:
         #TODO enable this again
-        #flash: "@AppBundle\\Service\\Flash\\FlashService"
+        flash: "@App\\Service\\Flash\\FlashService"

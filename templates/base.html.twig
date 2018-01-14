@@ -37,14 +37,14 @@
       <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 
       <!-- this is our own js code -->
-      <script src="{{ asset('js/clanx.appbundle.js')}}"></script>
+      <script src="{{ asset('js/clanx.app.js')}}"></script>
 
       <script type="text/javascript">
         //https://github.com/stevekwan/best-practices/blob/master/javascript/best-practices.md#anonymously-scope-javascript-if-youre-never-going-to-call-it-elsewhere
         (function(){
             $(document).ready(function() {
                 // I think we have tooltips on each page. so lets make this global.
-                Clanx.AppBundle.Tooltip.initialize();
+                clanx.app.Tooltip.initialize();
             });
         })();
       </script>

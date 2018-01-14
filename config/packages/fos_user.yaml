@@ -1,7 +1,7 @@
 fos_user:
     db_driver: orm
     firewall_name: main
-    user_class: AppBundle\Entity\User
+    user_class: App\Entity\User
 
     from_email:
         # ALL different emails use this adress and name:
@@ -12,4 +12,4 @@ fos_user:
             enabled:    true
     profile:
       form:
-        type: AppBundle\Form\ProfileFormType
+        type: App\Form\ProfileFormType

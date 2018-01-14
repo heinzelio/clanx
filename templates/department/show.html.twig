@@ -177,7 +177,7 @@ Ressort: {{ department.name }}
                                     name="{{formName}}"
                                     method="post">
                                         <input type="hidden" name="_method" value="DELETE" />
-                                        <a onclick="Clanx.AppBundle.Form.submitAndLock({{formName}},this);"
+                                        <a onclick="clanx.app.Form.submitAndLock({{formName}},this);"
                                             class="btn btn-default"
                                             data-toggle="tooltip"
                                             title="Lösche den Hölfer {{companion.name}}.">
@@ -281,7 +281,7 @@ Ressort: {{ department.name }}
                 Zurück
         </a>
         {% if may_delete %}
-            <a onclick="Clanx.AppBundle.Form.submitAndLock(form_department_delete,this);"
+            <a onclick="clanx.app.Form.submitAndLock(form_department_delete,this);"
                 class="btn btn-danger"
                 data-toggle="tooltip"
                 title="{{'tip.delete_from_database'|trans}} (Geht nur, solange keine Hölfer zugewiesen sind.)">
@@ -297,7 +297,7 @@ Ressort: {{ department.name }}
 </div><!-- col -->
 <div class="col-md-6">
     {{ render(controller(
-        'AppBundle:Companion:new',
+        'App\Controller\CompanionController::newAction',
         { 'id': department.id }
     )) }}
 </div><!-- col -->
