@@ -39,12 +39,12 @@
     </div>
     <div class="col-md-6">
         {% if event.departments %}
-            {{ render(controller('App\Controller\EventDepartmentController::listDepartmentsAction', { 'id': event.id })) }}
+            {{ render(controller('App\\Controller\\EventDepartmentController::listDepartmentsAction', { 'id': event.id })) }}
         {% elseif event.commitments %}
-            {{ render(controller('App\Controller\EventCommitmentController::listCommitmentAction', { 'id': event.id })) }}
+            {{ render(controller('App\\Controller\\EventCommitmentController::listCommitmentAction', { 'id': event.id })) }}
         {% endif %}
 
-        {{ render(controller('App\Controller\EventQuestionController::questionsListAction', { 'id': event.id })) }}
+        {{ render(controller('App\\Controller\\EventQuestionController::questionsListAction', { 'id': event.id })) }}
 
 
     </div>

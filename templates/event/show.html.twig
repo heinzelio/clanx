@@ -149,16 +149,16 @@
                 <!-- footer -->
             </div>
             <!-- panel -->
-            {{ render(controller('App\Controller\EventStatisticsController::indexAction', { 'id':
+            {{ render(controller('App\\Controller\\EventStatisticsController::indexAction', { 'id':
             view_model.event.id })) }}
-            {{ render(controller('App\Controller\EventVolunteersController::indexAction', { 'id':
+            {{ render(controller('App\\Controller\\EventVolunteersController::indexAction', { 'id':
             view_model.event.id })) }}
         </div>
         <!-- col -->
         <div class="col-md-6">
 
             {% for commitment in view_model.commitments %}
-                {{ render(controller('App\Controller\EventCommitmentController::showCommitmentAction',
+                {{ render(controller('App\\Controller\\EventCommitmentController::showCommitmentAction',
                 {'id': commitment.id}))}}
             {% endfor %}
 
