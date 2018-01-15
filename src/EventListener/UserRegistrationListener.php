@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\LegacyUser;
+use App\Entity\Setting;
 
 /**
  * Listener to customize the registration flow.

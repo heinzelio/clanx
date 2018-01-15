@@ -19,16 +19,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Swift_Mailer;
-use App\Entity\Event;
 use App\Entity\Commitment;
 use App\Entity\Department;
-use App\Entity\User;
-use App\Entity\RedirectInfo;
+use App\Entity\Event;
 use App\Entity\Mail;
+use App\Entity\Question;
+use App\Entity\RedirectInfo;
+use App\Entity\User;
 use App\ViewModel\Commitment\CommitmentViewModel;
-use App\ViewModel\Commitment\YesNoQuestionViewModel;
 use App\Form\Commitment\CommitmentType;
-use App\Form\Commitment\TextQuestionViewModel;
 use App\Form\EventCreateType;
 use App\Form\ShirtSizeType;
 use App\Service\AuthorizationService;
@@ -176,7 +175,7 @@ class EventController extends Controller
             CommitmentType::USE_VOLUNTEER_NOTIFICATION_KEY => false,
         );
 
-        $form = $this->createForm('App\Form\Commitment\CommitmentType', $vm, $options);
+        $form = $this->createForm(CommitmentType::class, $vm, $options);
 
         foreach ($vm->getQuestions() as $q) {
             $attributes = array();
@@ -579,7 +578,7 @@ class EventController extends Controller
         Event $event,
         IEventService $eventSvc,
         IDepartmentService $depSvc,
-        IQuestionService $questionService
+        IQuestionService $questionSvc
     ) {
         $newEvent = $eventSvc->getCopy($event);
         $newDepartments = $depSvc->getCopyOfEvent($event);

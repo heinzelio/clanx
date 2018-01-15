@@ -11,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\ViewModel\Commitment\CommitmentViewModel;
+use App\Entity\Department;
 
 class CommitmentType extends AbstractType
 {
