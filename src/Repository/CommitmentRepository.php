@@ -1,11 +1,17 @@
 <?php
 namespace App\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
+
 use App\Entity\Commitment;
 
-class CommitmentRepository extends EntityRepository
+class CommitmentRepository extends ServiceEntityRepository
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Commitment::class);
+    }
     // not used anymore...
     // still here for documentation purposes
     public function countFor($event)

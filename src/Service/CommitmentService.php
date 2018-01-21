@@ -3,11 +3,13 @@ namespace App\Service;
 
 // use Symfony\Bridge\Monolog\Logger; // TODO: Logger not working on PROD env on hostpoint. figure out why
 use Doctrine\ORM\EntityManager;
-use App\Service\IAuthorizationService;
-use App\Entity\Event;
-use App\Entity\Commitment;
+
 use App\Entity\Answer;
+use App\Entity\Commitment;
+use App\Entity\Event;
 use App\Entity\Question;
+use App\Repository\CommitmentRepository;
+use App\Service\IAuthorizationService;
 use App\ViewModel\Commitment\CommitmentViewModel;
 
 class CommitmentService implements ICommitmentService
@@ -16,10 +18,12 @@ class CommitmentService implements ICommitmentService
      * @var Doctrine\ORM\EntityManager
      */
     protected $entityManager;
+
     /**
      * @var App\Service\IAuthorizationService
      */
     protected $authorization;
+
     /**
      * The repository for the Commitment entity
      * @var App\Repository\CommitmentRepository
@@ -34,17 +38,18 @@ class CommitmentService implements ICommitmentService
     /**
      * @param IAuthorizationService $auth
      * @param EntityManager $em
-     * @param object $logger
+     * @param CommitmentRepository $repository
      */
     public function __construct(
         IAuthorizationService $auth,
-        EntityManager $em//,
+        EntityManager $em,
+        CommitmentRepository $repository
         // Logger $logger // TODO: Logger not working on PROD env on hostpoint. figure out why
     )
     {
         $this->authorization = $auth;
         $this->entityManager = $em;
-        $this->repo = $em->getRepository(Commitment::class);
+        $this->repo = $repository;
         // $this->logger = $logger; // TODO: Logger not working on PROD env on hostpoint. figure out why
     }
 

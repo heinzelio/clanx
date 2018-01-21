@@ -85,7 +85,7 @@ services:
         arguments:
             - "@App\\Service\\IAuthorizationService"
             - "@doctrine.orm.entity_manager"
-            - "@logger"
+            - "@App\\Repository\\CommitmentRepository"
 
     App\Service\UserService:
         arguments:

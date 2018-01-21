@@ -2,16 +2,17 @@
 
 namespace App\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Swift_Mailer;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 use App\Entity\Commitment;
 use App\Entity\Department;
 use App\Entity\Event;
@@ -19,9 +20,10 @@ use App\Entity\Mail;
 use App\Entity\RedirectInfo;
 use App\Entity\User;
 use App\Form\DepartmentType;
+use App\Repository\CommitmentRepository;
+use App\Service\IAuthorizationService;
 use App\Service\IEventService;
 use App\Service\IExportService;
-use App\Service\IAuthorizationService;
 use App\Service\IQuestionService;
 
 /**
@@ -298,7 +300,11 @@ class DepartmentController extends Controller
      * @Security("has_role('ROLE_USER')")
      * @ParamConverter("volunteer", class=User::class, options={"id" = "user_id"})
      */
-    public function moveVolunteerAction(Request $request, Department $department, User $volunteer, Swift_Mailer $mailer)
+    public function moveVolunteerAction(Request $request,
+    Department $department,
+    User $volunteer,
+    Swift_Mailer $mailer,
+    CommitmentRepository $cmtRepo)
     {
         $event = $department->getEvent();
         $operator=$this->getUser();
@@ -318,8 +324,6 @@ class DepartmentController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $cmtRepo = $em->getRepository(Commitment::class);
             $cmt = $cmtRepo->findOneBy(array(
                 'department'=>$department,
                 'user'=>$volunteer
