@@ -1,5 +1,5 @@
 
-// call functions like this: clanx.app.anotherFancyFunction();
+// call functions like this: Clanx.App.anotherFancyFunction();
 var Clanx = Clanx || {
     App:{
         Tooltip:{
