@@ -10,11 +10,6 @@
       <meta name="description" content="{% block description %}{% endblock %}">
       <meta name="author" content="LayoutIt!">
 
-      <!-- use jquery on each page -->
-      <link href="{{ asset('css/jquery-ui.min.css') }}" rel="stylesheet">
-      <link href="{{ asset('css/jquery-ui.structure.min.css') }}" rel="stylesheet">
-      <link href="{{ asset('css/jquery-ui.theme.min.css') }}" rel="stylesheet">
-
       <!-- use bootstrap on each page -->
       <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
 
@@ -22,32 +17,12 @@
       <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
 
       <!-- this is our global stylesheet that we use on each page -->
-      <link href="{{ asset('css/global.css') }}" rel="stylesheet">
+      <link rel="stylesheet" href="{{ asset('build/app.css') }}">
 
       <!-- add custom stylesheets for each page separately: -->
       {% block stylesheets %}{% endblock %}
 
       <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}" />
-
-      <!-- use jquery on each page -->
-      <script src="{{ asset('js/jquery-2.2.3.min.js') }}"></script>
-      <script src="{{ asset('js/jquery-ui.min.js')}}"></script>
-
-      <!-- use bootstrap on each page -->
-      <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-
-      <!-- this is our own js code -->
-      <script src="{{ asset('js/clanx.app.js')}}"></script>
-
-      <script type="text/javascript">
-        //https://github.com/stevekwan/best-practices/blob/master/javascript/best-practices.md#anonymously-scope-javascript-if-youre-never-going-to-call-it-elsewhere
-        (function(){
-            $(document).ready(function() {
-                // I think we have tooltips on each page. so lets make this global.
-                Clanx.App.Tooltip.initialize();
-            });
-        })();
-      </script>
 
       <!-- add custom scripts for each page separately: -->
       {% block javascripts %}{% endblock %}
@@ -58,4 +33,6 @@
 
         {% endblock %}
     </body>
+
+    <script src="{{ asset('build/app.js') }}"></script>
 </html>
