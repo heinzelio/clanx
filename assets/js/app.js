@@ -6,7 +6,6 @@ require('bootstrap-sass');
 
 const Tooltip = require('./tooltip.js');
 const Form = require('./form.js');
-const Link = require('./link.js');
 const Bulk = require('./bulk.js');
 
 
