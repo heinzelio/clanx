@@ -304,7 +304,7 @@ class MailBuilderService implements IMailBuilderService
         $this->AssertNotNullOrEmpty($bodyHtml);
         $this->AssertNotNullOrEmpty($bodyText);
 
-        $message = \Swift_Message::newInstance();
+        $message = new \Swift_Message();
         $message->setSubject($subject)
             ->setFrom($from)
             ->setTo($to)

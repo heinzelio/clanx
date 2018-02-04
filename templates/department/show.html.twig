@@ -177,8 +177,8 @@ Ressort: {{ department.name }}
                                     name="{{formName}}"
                                     method="post">
                                         <input type="hidden" name="_method" value="DELETE" />
-                                        <a onclick="Clanx.App.Form.submitAndLock({{formName}},this);"
-                                            class="btn btn-default"
+                                        <a data-clanx-form-name="{{formName}}"
+                                            class="btn btn-primary clanx-submit"
                                             data-toggle="tooltip"
                                             title="Lösche den Hölfer {{companion.name}}.">
                                             <span class="fa fa-trash-o"></span>
@@ -281,8 +281,8 @@ Ressort: {{ department.name }}
                 Zurück
         </a>
         {% if may_delete %}
-            <a onclick="Clanx.App.Form.submitAndLock(form_department_delete,this);"
-                class="btn btn-danger"
+            <a data-clanx-form-name="form_department_delete"
+                class="btn btn-danger clanx-submit"
                 data-toggle="tooltip"
                 title="{{'tip.delete_from_database'|trans}} (Geht nur, solange keine Hölfer zugewiesen sind.)">
                 <span class="fa fa-trash-o"></span>

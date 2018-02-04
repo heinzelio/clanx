@@ -13,4 +13,5 @@ const Bulk = require('./bulk.js');
 $(document).ready(function() {
     Tooltip.initialize();
     Bulk.initialize();
+    Form.initialize();
 });

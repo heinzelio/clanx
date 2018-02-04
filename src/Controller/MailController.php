@@ -66,8 +66,8 @@ class MailController extends Controller
 
         if ($mailForm->isSubmitted() && $mailForm->isValid())
         {
-            $message = \Swift_Message::newInstance();
-            $ackMessage = \Swift_Message::newInstance();
+            $message = new \Swift_Message();
+            $ackMessage = new \Swift_Message();
             $message->setSubject($mailData->getSubject())
                 ->setFrom($mailData->getSender())
                 ->addPart(

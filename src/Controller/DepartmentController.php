@@ -330,6 +330,7 @@ class DepartmentController extends Controller
             ));
             $oldDepartment = $cmt->getDepartment();
             $newDepartmentId = $form->get('department')->getData();
+            $em = $this->getDoctrine()->getManager();
             $newDepartment = $em->getRepository(Department::class)->findOneById($newDepartmentId);
             $cmt->setDepartment($newDepartment);
             $em->persist($cmt);
@@ -392,7 +393,7 @@ class DepartmentController extends Controller
     private function sendMail($text, $newDepartment, $oldDepartment, $operator, $volunteer, $mailer)
     {
         $event = $newDepartment->getEvent();
-        $message = \Swift_Message::newInstance();
+        $message = new \Swift_Message();
         $message->setSubject('Dein Einsatz am '.(string)$event.' - Ressortänderung!')
             ->setFrom($operator->getEmail())
             ->setTo($volunteer->getEmail())

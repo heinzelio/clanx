@@ -20,8 +20,8 @@
             {{ form_end(mail_form)}}
         </div><!-- body -->
         <div class="panel-footer">
-            <a class="btn btn-primary"
-                onclick="Clanx.App.Form.submitAndLock(form_mail_edit,this);"
+            <a data-clanx-form-name="form_mail_edit"
+                class="btn btn-primary clanx-submit"
                 data-toggle="tooltip"
                 title="Sende das Email jetzt an alle Empfänger.">
                 <span class="fa fa-envelope-o"></span>

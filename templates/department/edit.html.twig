@@ -20,8 +20,8 @@
         {{ form_end(delete_form) }}
     </div>
     <div class="panel-footer">
-        <a onclick="Clanx.App.Form.submitAndLock(form_department_edit,this);"
-            class="btn btn-primary"
+        <a data-clanx-form-name="form_department_edit"
+            class="btn btn-primary clanx-submit"
             data-toggle="tooltip"
             title="Änderungen übernehmen und in der Datenbank speichern.">
             <span class="fa fa-floppy-o"></span>
@@ -35,8 +35,8 @@
             Abbrechen
         </a>
         {% if may_delete %}
-            <a onclick="Clanx.App.Form.submitAndLock(form_department_delete,this);"
-                class="btn btn-danger"
+            <a data-clanx-form-name="form_department_delete"
+                class="btn btn-danger clanx-submit"
                 data-toggle="tooltip"
                 title="{{'tip.delete_from_database'|trans}} (Geht nur, solange keine Hölfer zugewiesen sind.)">
                 <span class="fa fa-trash-o"></span>

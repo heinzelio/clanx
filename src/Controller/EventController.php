@@ -148,7 +148,7 @@ class EventController extends Controller
         if ($auth->mayEnroll($event)) {
             $formVM = $eventSvc->getCommitmentFormViewModel($event); //CommitmentViewModel
             $enrollForm = $this->createEnrollForm($formVM, $commitmentService); //Symfony\Component\Form\Form
-            $this->handleEnrollForm($request, $enrollForm, $formVM, $event, $mailBuilder, $mailer);
+            $this->handleEnrollForm($request, $enrollForm, $formVM, $event, $mailBuilder, $commitmentService, $mailer);
         }
 
         //EventShowViewModel
@@ -192,6 +192,7 @@ class EventController extends Controller
         CommitmentViewModel $formVM,
         Event $event,
         IMailBuilderService $mailBuilder,
+        ICommitmentService $commitmentService,
         Swift_Mailer $mailer
     ) {
         $enrollForm->handleRequest($request);

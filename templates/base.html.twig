@@ -24,8 +24,10 @@
 
       <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}" />
 
+<!-- TODO: Remove this as soon as commitment.edit is refactored -->
       <!-- add custom scripts for each page separately: -->
       {% block javascripts %}{% endblock %}
+      <script src="{{ asset('build/app.js') }}"></script>
 
     </head>
     <body>
@@ -33,6 +35,4 @@
 
         {% endblock %}
     </body>
-
-    <script src="{{ asset('build/app.js') }}"></script>
 </html>

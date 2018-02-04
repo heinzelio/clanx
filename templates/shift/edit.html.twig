@@ -21,8 +21,8 @@
             {{ form_end(delete_form) }}
         </div>
         <div class="panel-footer">
-            <a onclick="Clanx.App.Form.submitAndLock(form_shift_edit,this);"
-                class="btn btn-primary"
+            <a data-clanx-form-name="form_shift_edit"
+                class="btn btn-primary clanx-submit"
                 data-toggle="tooltip"
                 title="Änderungen übernehmen und in der Datenbank speichern.">
                 <span class="fa fa-floppy-o"></span>
@@ -35,8 +35,8 @@
                 <span class="fa fa-times"></span>
                 Abbrechen
             </a>
-            <a onclick="Clanx.App.Form.submitAndLock(form_shift_delete,this);"
-                class="btn btn-danger"
+            <a data-clanx-form-name="form_shift_delete"
+                class="btn btn-danger clanx-submit"
                 data-toggle="tooltip"
                 title="Diese Schicht aus der Datenbank löschen.">
                 <span class="fa fa-trash-o"></span>

@@ -183,8 +183,8 @@
                         </p>
                     </div>
                     <div class="panel-footer">
-                        <a class="btn btn-primary"
-                            onclick="Clanx.App.Form.submitAndLock(enroll_form,this);"
+                        <a data-clanx-form-name="enroll_form"
+                            class="btn btn-primary clanx-submit"
                             data-toggle="tooltip"
                             title="{{ 'tip.save_commitment'|trans({}, 'enroll') }}">
                             <span class="fa fa-floppy-o"></span>

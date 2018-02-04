@@ -16,8 +16,8 @@
                 {{ form_end(edit_form) }}
             </div>
             <div class="panel-footer">
-                <a class="btn btn-primary"
-                    onclick="Clanx.App.Form.submitAndLock(form_event_edit,this);"
+                <a data-clanx-form-name="form_event_edit"
+                    class="btn btn-primary clanx-submit"
                     data-toggle="tooltip"
                     title="{{'tip.save_and_return1'|trans({'%entity%':event.name,})}}">
                     <span class="fa fa-floppy-o"></span>

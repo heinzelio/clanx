@@ -4,6 +4,8 @@ namespace App\Repository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
+use App\Entity\Companion;
+
 class CompanionRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)

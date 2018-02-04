@@ -22,8 +22,8 @@
 
         </div>
         <div class="panel-footer">
-            <a onclick="Clanx.App.Form.submitAndLock(form_question_edit,this);"
-                class="btn btn-primary"
+            <a data-clanx-form-name="form_question_edit"
+                class="btn btn-primary clanx-submit"
                 data-toggle="tooltip"
                 title="{{'tip.save_changes_to_database'|trans}}">
                 <span class="fa fa-floppy-o"></span>
@@ -37,8 +37,8 @@
                 {{'btn.cancel'|trans}}
             </a>
             {% if may_delete %}
-                <a onclick="Clanx.App.Form.submitAndLock(form_question_delete,this);"
-                    class="btn btn-danger"
+                <a data-clanx-form-name="form_question_delete"
+                    class="btn btn-danger clanx-submit"
                     data-toggle="tooltip"
                     title="{{'tip.delete_from_database'|trans}}">
                     <span class="fa fa-trash-o"></span>

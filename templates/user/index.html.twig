@@ -12,10 +12,7 @@
                 {% form_theme view_model.bulkFormView 'form/bulk_theme.html.twig' %}
                 {{ form_start(view_model.bulkFormView, {'name': 'form_bulk_actions', 'attr': {'class': 'form-inline'}}) }}
                 <!-- Table -->
-                <table
-                    data-toggle="table"
-                    data-sort-name="surname"
-                    data-search="true">
+                <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>
@@ -91,8 +88,8 @@
                             </td>
                              <td colspan="42"> <!--Magic! (basically means: colspan="all") -->
                                 {{ form_widget(view_model.bulkFormView.action) }}
-                                <a onclick="Clanx.App.Form.submitAndLock(form_bulk_actions,this);"
-                                    class="btn btn-primary"
+                                <a data-clanx-form-name="form_bulk_actions"
+                                    class="btn btn-primary clanx-submit"
                                     data-toggle="tooltip"
                                     title="{{'tip.execute_bulk_action'|trans}}">
                                     <span class="fa fa-cogs"></span>
@@ -126,19 +123,4 @@
             <!-- Panel -->
         </div>
     </div>
-{% endblock %}
-
-{% block stylesheets %}
-    <link href="{{ asset('bootstrap-table/bootstrap-table.min.css') }}" rel="stylesheet">
-{% endblock %}
-
-{% block javascripts %}
-    <script src="{{ asset('bootstrap-table/bootstrap-table.min.js')}}"></script>
-    <script src="{{ asset('bootstrap-table/locale/bootstrap-table-de-DE.js')}}"></script>
-    <script src="{{ asset('bootstrap-table/locale/bootstrap-table-en-US.js')}}"></script>
-    <script>
-        $(document).ready(function() {
-            Clanx.App.Bulk.initialize('input[name="select_all"]');
-        });
-    </script>
 {% endblock %}

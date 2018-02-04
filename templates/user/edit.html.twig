@@ -18,8 +18,8 @@
         {{ form_end(edit_form) }}
     </div>
     <div class="panel-footer">
-        <a class="btn btn-primary"
-            onclick="Clanx.App.Form.submitAndLock(form_user_edit,this);"
+        <a data-clanx-form-name="form_user_edit"
+            class="btn btn-primary clanx-submit"
             data-toggle="tooltip"
             title="Änderungen übernehmen und in der Datenbank speichern.">
             <span class="fa fa-floppy-o"></span>

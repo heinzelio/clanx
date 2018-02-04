@@ -18,8 +18,8 @@
         {{ form_end(edit_form) }}
     </div>
     <div class="panel-footer">
-        <a class="btn btn-primary"
-            onclick="Clanx.App.Form.submitAndLock(form_commitment_edit,this);"
+        <a data-clanx-form-name="form_commitment_edit"
+            class="btn btn-primary clanx-submit"
             data-toggle="tooltip"
             title="Änderungen übernehmen und in der Datenbank speichern. Der Hölfer wird benachrichtigt.">
             <span class="fa fa-floppy-o"></span>
@@ -46,8 +46,8 @@
             </a>
         {% endif %}
 
-        <a onclick="Clanx.App.Form.submitAndLock(form_commitment_delete,this);"
-            class="btn btn-danger"
+        <a data-clanx-form-name="form_commitment_delete"
+            class="btn btn-danger clanx-submit"
             data-toggle="tooltip"
             title="Lösche den Eintrag. Der Hölfer wird benachrichtigt.">
             <span class="fa fa-trash"></span>
@@ -62,6 +62,7 @@
 {% endblock %}
 
 {% block javascripts %}
+<!-- TODO: Refactor this and remove block -->
 <script>
     $(document).ready(function(){
 
