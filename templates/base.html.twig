@@ -6,21 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
 
       <title>{% block title %}Clanx Hölfer DB{% endblock %}</title>
-
       <meta name="description" content="{% block description %}{% endblock %}">
-      <meta name="author" content="LayoutIt!">
-
-      <!-- use bootstrap on each page -->
-      <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-
-      <!-- use fa on each page -->
-      <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
-
-      <!-- this is our global stylesheet that we use on each page -->
-      <link rel="stylesheet" href="{{ asset('build/app.css') }}">
-
-      <!-- add custom stylesheets for each page separately: -->
-      {% block stylesheets %}{% endblock %}
 
       <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}" />
 

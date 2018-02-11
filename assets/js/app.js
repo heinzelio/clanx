@@ -1,8 +1,11 @@
-require('../css/app.scss');
 // loads the jquery package from node_modules
 var $ = require('jquery');
-require('bootstrap-sass');
+require('bootstrap');
 
+require('bootstrap/dist/css/bootstrap.css');
+require('font-awesome/css/font-awesome.css');
+
+require('../css/app.css');
 
 const Tooltip = require('./tooltip.js');
 const Form = require('./form.js');
