@@ -25,6 +25,9 @@ security:
             anonymous:    true
             logout_on_user_change: true
 
+            remember_me:
+                secret: '%env(APP_SECRET)%'
+
     access_control:
         # we normally do access control with annotations in the controllers.
         #- { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: "%secure_channel%" }
