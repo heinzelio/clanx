@@ -1,3 +1,33 @@
+Beginning with 2018-02-17, we use Doctrine Migrations Bundle
+for maintaining database version!
+
+You need to run until update 18 on your existing database to create the
+migrations table and
+insert your state. After that, this scripts are not needed anymore.
+However they remain here for documentation purposes.
+
+If you start with an empty database, just call on the shell the
+following commands:
+$ php .\bin\console doctrine:database:create
+$ php .\bin\console doctrine:migrations:migrate
+
+
+The process then goes like this:
+- create a new field on your entity
+- or create a new entity
+- on shell, run
+$ php ./bin/console doctrine:migrations:diff
+- you get a new migrations file.
+- run
+$ php ./bin/console doctrine:migrations:migrate
+
+If you checkout changes from git, first run on your shell
+$ php ./bin/console doctrine:migrations:migrate
+
+
+----------------------------------
+ARCHIVE
+----------------------------------
 Run a sql update or undo file:
 
 [Win]+[R], cmd /K "cd C:\Users\chriglburri\Documents\dev\clanx.git\sql"
