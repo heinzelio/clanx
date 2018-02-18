@@ -4,12 +4,33 @@ namespace App\Migration;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version20180217190022 extends AbstractMigration
+class Version20180217190022 extends AbstractMigration implements ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
+    public function preUp(Schema $schema)
+    {
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+
+        $dbNameCol = "dbName";
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $query = "SELECT DATABASE() AS ".$dbNameCol;
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute();
+        $row = $stmt->fetch(); // we know that we get exactly one row.
+        $dbName = $row[$dbNameCol];
+
+        $this->addSql('ALTER DATABASE '.$dbName.' CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci');
+        $this->addSql('ALTER TABLE `migration_versions` CONVERT TO CHARACTER SET utf8mb4 collate utf8mb4_general_ci');
+    }
+
     public function up(Schema $schema)
     {
         // this up() migration is auto-generated, please modify it to your needs
@@ -19,7 +40,6 @@ class Version20180217190022 extends AbstractMigration
         // $this->addSql('ALTER DATABASE clanx CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci');
         // It does not work with the dynamic database name.
         // Make sure you fix your database manually
-        $this->addSql('ALTER TABLE `migration_versions` CONVERT TO CHARACTER SET utf8mb4 collate utf8mb4_general_ci');
 
         $this->addSql('CREATE TABLE answer (id INT AUTO_INCREMENT NOT NULL, question_id INT DEFAULT NULL, commitment_id INT DEFAULT NULL, answer VARCHAR(1000) DEFAULT NULL, INDEX question_key (question_id), INDEX commitment_key (commitment_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 collate utf8mb4_general_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE commitment (id INT AUTO_INCREMENT NOT NULL, department_id INT DEFAULT NULL, event_id INT DEFAULT NULL, user_id INT DEFAULT NULL, remark VARCHAR(1000) DEFAULT NULL, possible_start VARCHAR(200) DEFAULT NULL, shirt_size VARCHAR(10) DEFAULT NULL, need_train_ticket TINYINT(1) NOT NULL, INDEX user_key (user_id), INDEX event_key (event_id), INDEX department_key (department_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 collate utf8mb4_general_ci ENGINE = InnoDB');
@@ -48,21 +68,6 @@ class Version20180217190022 extends AbstractMigration
         $this->addSql('ALTER TABLE shift ADD CONSTRAINT FK_A50B3B45AE80F5DF FOREIGN KEY (department_id) REFERENCES department (id)');
 
         $this->addSql('INSERT INTO `setting` (`can_register`) VALUES (1)');
-
-        $name = 'admin';
-        $mail = 'clanxadmin@mailinator.com';
-        $salt = 'szb7i5rkh340oogcck0ccsswwos84s';
-        $pwd = '$2y$13$SrVTOBVIOaWyy4owPbHZaObggMPfwksKvHvwMXWJgp//X/WIkIlCK';
-        $roles = 'a:1:{i:0;s:16:\"ROLE_SUPER_ADMIN\";}';
-
-        $insertUser = "INSERT INTO `user` ";
-        $insertUser .= "(`username`, `username_canonical`, `email`, `email_canonical`, `enabled`,  `salt`, `password`, `roles` , `gender`, `is_regular`, `is_association_member`, `is_protected`) ";
-        $insertUser .= "VALUES ('$name','$name'          , '$mail', '$mail'          ,  1       , '$salt', '$pwd'    , '$roles',  'm'    ,  0          ,  0                     ,  0 )";
-        $this->addSql($insertUser);
-        // This does not work. How can we inform the user about it?
-        $this->write('You have now a user with the username "$name"');
-        $this->write('The email is $mail');
-        $this->write('The passowrd is 1234');
     }
 
     public function down(Schema $schema)
