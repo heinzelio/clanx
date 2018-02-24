@@ -11,12 +11,18 @@
 !/var/sessions
 /var/sessions/*
 !var/sessions/.gitkeep
-!var/SymfonyRequirements.php
+!/var/SymfonyRequirements.php
 /vendor/
 /web/bundles/
 /sql/out.tab
 /sql/run.bat
 /sql/sandbox.sql
+
+#yarn
+/node_modules/
+
+#webpack
+/public/build/
 
 ###> symfony/phpunit-bridge ###
 .phpunit
@@ -29,8 +35,3 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
-
-###> symfony/webpack-encore-pack ###
-/node_modules/
-/public/build/
-###< symfony/webpack-encore-pack ###
