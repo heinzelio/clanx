@@ -60,7 +60,9 @@
         "symfony/polyfill-php56": "*"
     },
     "scripts": {
-        "auto-scripts": [],
+        "auto-scripts": {
+
+        },
         "post-install-cmd": [
             "@auto-scripts"
         ],
