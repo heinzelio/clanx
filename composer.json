@@ -35,6 +35,7 @@
         "symfony/monolog-bundle": "^3.0.2",
         "symfony/polyfill-apcu": "^1.0",
         "symfony/profiler-pack": "^1.0",
+        "symfony/requirements-checker": "^1.0",
         "symfony/security-bundle": "^4.0",
         "symfony/security-csrf": "^4.0",
         "symfony/swiftmailer-bundle": "^3.1",
@@ -61,7 +62,7 @@
     },
     "scripts": {
         "auto-scripts": {
-
+            "requirements-checker": "script"
         },
         "post-install-cmd": [
             "@auto-scripts"
