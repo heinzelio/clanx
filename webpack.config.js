@@ -10,8 +10,12 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'public', 'build'),
         filename: '[name].js',
-        publicPath: '/clanx4/build/'
+        publicPath: '/clanx_dev/build/'
         // We must change this for publishing
+        // Make it like this for test the deployment locally
+        //publicPath: '/clanx_deploy/build/'
+        // Make it like this for the server
+        //publicPath: '/build/'
     },
 
     module: {

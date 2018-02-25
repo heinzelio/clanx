@@ -1,25 +1,21 @@
 {
-    "devDependencies": {
-        "@symfony/webpack-encore": "^0.17.0",
-        "bootstrap-sass": "^3.3.7",
-        "font-awesome": "^4.7.0",
-        "jquery": "^3.3.1",
-        "node-sass": "^4.7.2",
-        "sass-loader": "^6.0.6",
-        "webpack-notifier": "^1.5.1"
-    },
+    "name": "clanx",
+    "version": "1.4.0",
+    "description": "clanx helfer db",
+    "author": "chrigl",
     "license": "UNLICENSED",
     "private": true,
     "scripts": {
-        "dev-server": "encore dev-server",
-        "dev": "encore dev",
-        "watch": "encore dev --watch",
-        "build": "encore production"
+        "watch": ".\\node_modules\\.bin\\webpack --watch",
+        "build": ".\\node_modules\\.bin\\webpack"
     },
     "dependencies": {
         "bootstrap": "3",
-        "css-loader": "^0.28.9",
-        "jquery-ui": "^1.12.1",
-        "style-loader": "^0.20.1"
+        "css-loader": "^0.28.10",
+        "file-loader": "^1.1.9",
+        "font-awesome": "^4.7.0",
+        "jquery": "3",
+        "style-loader": "^0.20.2",
+        "webpack": "3"
     }
 }

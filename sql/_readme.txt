@@ -11,6 +11,12 @@ following commands:
 $ php .\bin\console doctrine:database:create
 $ php .\bin\console doctrine:migrations:migrate
 
+Create a new admin user by calling:
+$ php .\bin\console fos:user:create
+
+then give it the role "ROLE_SUPER_ADMIN":
+php .\bin\console fos:user:promote
+
 
 The process then goes like this:
 - create a new field on your entity
@@ -26,7 +32,7 @@ $ php ./bin/console doctrine:migrations:migrate
 
 
 ----------------------------------
-ARCHIVE
+ARCHIVE (the following text is not relevant anymore)
 ----------------------------------
 Run a sql update or undo file:
 
