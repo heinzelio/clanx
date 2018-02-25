@@ -22,6 +22,7 @@ Write-Host "install all js dependencies and other assets..."
 yarn install --production
 #Webpack is usually not used in production. we add it anyway, for packing the assets.
 yarn add webpack
+yarn add webpack-cli
 
 [console]::ForegroundColor = "Magenta"
 Write-Host "pack the assets..."
