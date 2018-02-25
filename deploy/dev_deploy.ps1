@@ -53,7 +53,7 @@ Remove-Item -Force yarn-error.log
 Remove-Item -Force yarn.lock
 
 #Check the page if it runs locally
-Start-Process -FilePath "http://localhost/clanx_test/info/"
+Start-Process -FilePath "http://localhost/clanx_deploy/info/"
 
 # go back to where we came from
 [console]::ForegroundColor = $originColor
