@@ -6,7 +6,7 @@
 
 -- --> !!! SET your DATABASE NAME HERE !!!
 --             ↓↓↓↓↓
-ALTER DATABASE clanx CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+ALTER DATABASE MY_DB_NAME_PLEASE_CHANGE_ME CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 --             ↑↑↑↑↑
 ALTER TABLE `answer` CONVERT TO CHARACTER SET utf8mb4 collate utf8mb4_general_ci;
 ALTER TABLE `commitment` CONVERT TO CHARACTER SET utf8mb4 collate utf8mb4_general_ci;
@@ -19,6 +19,14 @@ ALTER TABLE `legacy_user` CONVERT TO CHARACTER SET utf8mb4 collate utf8mb4_gener
 ALTER TABLE `question` CONVERT TO CHARACTER SET utf8mb4 collate utf8mb4_general_ci;
 ALTER TABLE `setting` CONVERT TO CHARACTER SET utf8mb4 collate utf8mb4_general_ci;
 ALTER TABLE `shift` CONVERT TO CHARACTER SET utf8mb4 collate utf8mb4_general_ci;
+
+-- username_canonical and email_canonical have a uniqe index.
+-- On hostpoint, they can not be longer than 767 bytes.
+-- That are 191 utf8 chars, but we take 180. It's a nice number.
+ALTER TABLE `user` CHANGE `username` `username` VARCHAR(180) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
+ALTER TABLE `user` CHANGE `username_canonical` `username_canonical` VARCHAR(180) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
+ALTER TABLE `user` CHANGE `email` `email` VARCHAR(180) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
+ALTER TABLE `user` CHANGE `email_canonical` `email_canonical` VARCHAR(180) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
 ALTER TABLE `user` CONVERT TO CHARACTER SET utf8mb4 collate utf8mb4_general_ci;
 
 CREATE TABLE `migration_versions` (
