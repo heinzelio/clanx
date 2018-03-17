@@ -39,7 +39,7 @@ class EventCreateType extends EventType
                 'format' => 'dd.MM.yyyy', // sync with initializeDatepicker in form.js
                 'html5' => false,
                 'attr' => array('class'=>'datepicker regular'),
-                'label' => 'Startdatum',
+                'label' => 'Startdatum (Format: dd.mm.yyyy)',
                 'required' => true,
             ))
             ->add('sticky', CheckboxType::class, array(

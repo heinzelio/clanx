@@ -94,7 +94,7 @@ class ProfileFormType extends AbstractType
                 'format' => 'dd.MM.yyyy', // sync with initializeDatepicker in form.js
                 'html5' => false,
                 'attr' => array('class'=>'datepicker birthday'),
-                'label' => 'Geburtsdatum',
+                'label' => 'Geburtsdatum (Format: dd.mm.yyyy)',
                 'required' => false,
             ))
             ->add('street', null, array(
