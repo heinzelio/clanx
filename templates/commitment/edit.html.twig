@@ -1,0 +1,79 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %}
+    Einsatz bearbeiten
+{% endblock %}
+
+{% block workspace %}
+<div class="row">
+<div class="col-md-6 col-md-offset-3">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Einsatz von {{volunteer}}: <mark>„{{ department }}“</mark><br />
+        <small>am Event <mark>„{{ event }}“</mark></small>
+    </div>
+    <div class="panel-body">
+        {{ form_start(edit_form, {'name': 'form_commitment_edit'}) }}
+            {{ form_widget(edit_form) }}
+        {{ form_end(edit_form) }}
+    </div>
+    <div class="panel-footer">
+        <a data-clanx-form-name="form_commitment_edit"
+            class="btn btn-primary clanx-submit"
+            data-toggle="tooltip"
+            title="Änderungen übernehmen und in der Datenbank speichern. Der Hölfer wird benachrichtigt.">
+            <span class="fa fa-floppy-o"></span>
+            Speichern
+        </a>
+
+        <!-- TODO: better solve this with referers (request.getReferer. or so.) -->
+        <!-- see https://github.com/chriglburri/clanx/issues/118 -->
+        {% if department %}
+            <a class="btn btn-default"
+                href="{{ path('department_show',{'id':department.id}) }}"
+                data-toggle="tooltip"
+                title="Nicht speichern und zurück zu {{department}}">
+                <span class="fa fa-times"></span>
+                Abbrechen
+            </a>
+        {% else %}
+            <a class="btn btn-default"
+                href="{{ path('event_edit',{'id':event.id}) }}"
+                data-toggle="tooltip"
+                title="Nicht speichern und zurück zu {{event}}">
+                <span class="fa fa-times"></span>
+                Abbrechen
+            </a>
+        {% endif %}
+
+        <a data-clanx-form-name="form_commitment_delete"
+            class="btn btn-danger clanx-submit"
+            data-toggle="tooltip"
+            title="Lösche den Eintrag. Der Hölfer wird benachrichtigt.">
+            <span class="fa fa-trash"></span>
+            Löschen
+        </a>
+        {{ form_start(delete_form, {'name': 'form_commitment_delete'}) }}
+        {{ form_end(delete_form) }}
+    </div>
+</div> <!--panel-->
+</div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<!-- TODO: Refactor this and remove block -->
+<script>
+    $(document).ready(function(){
+
+        // have a look at createDeleteForm in CommitmentController.
+        // Use parts of the edit form also in the delete form.
+        $(".clx-commitment-message").on('keyup',function() {
+            $('.clx-commitment-delete-message').val($(this).val());
+        });
+        $(".clx-commitment-noMessage").on('change',function() {
+            $('.clx-commitment-delete-noMessage').val($(this).val());
+        });
+    });
+</script>
+{% endblock %}

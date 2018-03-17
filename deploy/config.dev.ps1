@@ -1,0 +1,7 @@
+$deploymentDirectory = "clanx.deploy"
+$githubUrl = "https://github.com/chriglburri/clanx"
+$branch = "dev"
+$composerEnv = "--no-dev"
+$yarnEnv = "--production"
+$editorPath = "C:\Program Files\EditPlus\editplus.exe"
+$cacheWarumupEnv = "--env=prod"

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+
+      <title>{% block title %}Clanx Hölfer DB{% endblock %}</title>
+      <meta name="description" content="{% block description %}{% endblock %}">
+
+      <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}" />
+
+<!-- TODO: Remove this as soon as commitment.edit is refactored -->
+      <!-- add custom scripts for each page separately: -->
+      {% block javascripts %}{% endblock %}
+      <script src="{{ asset('build/app.js') }}"></script>
+
+    </head>
+    <body>
+        {% block body %}
+
+        {% endblock %}
+    </body>
+</html>

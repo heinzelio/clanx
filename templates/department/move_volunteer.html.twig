@@ -1,0 +1,40 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %}
+    Hölfer verschieben
+{% endblock %}
+
+{% block workspace %}
+<div class="row">
+<div class="col-md-4">
+<div class="panel panel-default">
+    <div class="panel-heading">
+    Verschiebe <mark>{{ user }}</mark>
+    </div>
+    <div class="panel-body">
+    Verschiebe den Hölfer aus dem Ressort <mark>{{ department.name }}</mark>
+    in folgendes Ressort:
+        {{ form_start(move_form, {'name': 'form_volunteer_move'}) }}
+        {{ form_widget(move_form) }}
+        {{ form_end(move_form) }}
+    </div>
+    <div class="panel-footer">
+        <a data-clanx-form-name="form_volunteer_move"
+            class="btn btn-primary clanx-submit"
+            data-toggle="tooltip"
+            title="Die neue Zuweisung in der Datenbank speichern.">
+            <span class="fa fa-floppy-o"></span>
+            Speichern
+        </a>
+        <a class="btn btn-default"
+            href="{{ path('department_show',{'id':department.id}) }}"
+            data-toggle="tooltip"
+            title="Nicht speichern und zurück zu {{department.name}} gehen.">
+            <span class="fa fa-times"></span>
+            Abbrechen
+        </a>
+    </div>
+</div>
+</div>
+</div>
+{% endblock %}

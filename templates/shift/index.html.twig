@@ -1,0 +1,80 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %}
+    Schichten
+{% endblock %}
+
+{% block workspace %}
+<div class="row">
+<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-heading"><h3>Schichten im Ressort <mark>{{department.name}}</mark></h3></div>
+        <div class="panel-body">
+
+            {% if shifts|length >0 %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Start</th>
+                            <th>Ende</th>
+                            <th>Dauer</th>
+                            <th>Mindestgrösse</th>
+                            <th>Maximalgrösse</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for shift in shifts %}
+                        <tr>
+                            <td>{{ shift }}</td>
+                            <td>{{ shift.start|date('d.m.Y H:i') }}</td>
+                            <td>
+                                {% if shift.end %}
+                                    {{ shift.end|date('d.m.Y H:i') }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{shift.timeDiff}}
+                            </td>
+                            <td>{{ shift.mandatorySize }}</td>
+                            <td>{{ shift.maximumSize }}</td>
+                            <td>
+                                <a class="btn btn-default"
+                                   href="{{ path('shift_edit', { 'id': shift.id }) }}"
+                                   data-toggle="tooltip"
+                                   title="Bearbeite Daten der Schicht"
+                                >
+                                    <span class="fa fa-pencil"></span>
+                                    Bearbeiten
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            {% else %}
+                <p>
+                    <strong>Noch keine Schichten definiert.</strong>
+                </p>
+                <p>
+                    Klicke unten auf "Erstellen" um eine Schicht zu erstellen"
+                </p>
+            {% endif %}
+
+</div> <!-- Body -->
+<div class="panel-footer">
+    <a class="btn btn-default"
+        href="{{ path('shift_new_for_department',{'department_id':department.id}) }}"
+        data-toggle="tooltip"
+        title="Neue Schicht definieren."
+    >
+        <span class="fa fa-plus"></span>
+        Erstellen
+    </a>
+</div>
+</div> <!-- Panel -->
+</div>
+</div>
+{% endblock %}

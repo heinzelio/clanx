@@ -1,4 +1,4 @@
--- execute this if version is =14 !
+-- execute this if version is =15 !
 DROP TABLE `setting`;
 
 UPDATE info set version = 14;

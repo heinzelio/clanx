@@ -1,0 +1,77 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %} Send Mail
+{% endblock %}
+
+{% block workspace %}
+
+<div class="row">
+<div class="col-md-7">
+    <div class="panel panel-primary">
+        <div class="panel-heading">Mail schreiben
+        </div> <!-- heading -->
+        <div class="panel-body">
+            {{ form_start(mail_form, {
+                'action': path('mail_send'),
+                'method': 'POST',
+                'name': 'form_mail_edit'
+            }) }}
+                {{form_widget(mail_form) }}
+            {{ form_end(mail_form)}}
+        </div><!-- body -->
+        <div class="panel-footer">
+            <a data-clanx-form-name="form_mail_edit"
+                class="btn btn-primary clanx-submit"
+                data-toggle="tooltip"
+                title="Sende das Email jetzt an alle Empfänger.">
+                <span class="fa fa-envelope-o"></span>
+                Senden
+            </a>
+            <a class="btn btn-default"
+                href="{{ path('mail_abort') }}"
+                data-toggle="tooltip"
+                title="Verwerfe das Email und kehre zurück zur vorherigen Seite">
+                <span class="fa fa-times"></span>
+                Abbrechen
+            </a>
+        </div> <!-- footer -->
+    </div>
+
+</div><!-- col -->
+<div class="col-md-5">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Metadaten
+        </div>
+        <div class="panel-body">
+            {% if mail.recipient %}
+                <p><strong>Emfänger:</strong> <mark>{{mail.recipient}}</mark></p>
+            {% endif %}
+
+            {% if mail.sender %}
+                <p><strong>Sender:</strong> <mark>{{mail.sender}}</mark>
+            {% endif %}
+            {% if mail.ccs %}
+                <p><strong>CC:</strong></p>
+                <ul>
+                    {% for adr,name in mail.ccs %}
+                    <li>{{ name }} &lt;{{adr}}&gt;</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if mail.bccs %}
+                <p><strong>BCC:</strong></p>
+                <ul>
+                    {% for adr,name in mail.bccs %}
+                    <li>{{ name }} &lt;{{adr}}&gt;</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+        </div><!-- body -->
+    </div><!-- panel -->
+</div><!-- col -->
+</div><!-- row -->
+
+{% endblock %}

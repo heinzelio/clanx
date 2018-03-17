@@ -1,0 +1,304 @@
+{% extends 'base_nav.html.twig' %}
+
+{% set chief = department.chiefUser %}
+{% set deputy = department.deputyUser %}
+
+{% block title %}
+Ressort: {{ department.name }}
+{% endblock %}
+
+{% block workspace %}
+<div class="row">
+<div class="col-md-6">
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        {% set vars = {'department': department} %}
+        {% include 'department/header.html.twig' with vars only %}
+    </div>
+    <div class="panel-body">
+        {% if department.requirement %}
+            <p><strong>Anforderung</strong></p>
+            <p>{{department.requirement}}</p>
+        {% endif %}
+        {% if chief %}
+            <p><strong>Ressortleiter:</strong> {{ chief}}</p>
+        {% endif %}
+        {% if deputy %}
+            <p><strong>Stellvertreter:</strong> {{ deputy}}</p>
+        {% endif %}
+        <p><strong>
+            {{commitments|length}}
+            {% if commitments|length ==1 %}
+                eingeschriebener
+            {% else %}
+                eingeschriebene
+            {% endif %}
+             Hölfer im Ressort:
+        </strong></p>
+        <table class="table">
+        <tbody>
+            <!-- commitments are of type "CommitmentViewModel" -->
+            {% for cmt in commitments %}
+            <tr>
+                {% set vol = cmt.user %}
+                {% set ctVolIsChief = chief and vol.id == chief.id %}
+                {% set ctVolIsDeputy = deputy and vol.id == deputy.id %}
+                <td>
+                    {% if ctVolIsChief or ctVolIsDeputy %}
+                        <strong>{{ vol }}</strong>{# this calls User.__toString(). Pretty neat. #}
+                    {% else %}
+                        {{ vol }} {# this calls User.__toString(). Pretty neat. #}
+                    {% endif %}
+                    {% if vol.isRegular %}
+                        <span class="fa fa-repeat"
+                            data-toggle="tooltip"
+                            title="{{vol}} ist Stammhölfer"
+                            ></span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_OK')%}
+                        <a class="btn btn-default"
+                            href="{{ path('department_redirect_mail_to',{
+                                    'id':department.id,
+                                    'user_id':vol.id})}}"
+                            data-toggle="tooltip"
+                            title="{{vol}} ein Email schreiben.">
+                            <span class="fa fa-envelope-o"></span>
+                        </a>
+                        {% if vol.phone %}
+                            <a class="btn btn-default"
+                                href="tel:{{vol.phone}}"
+                                data-toggle="tooltip"
+                                title="{{vol.phone}} (Auf dem Mobiltelefon hier klicken um anzurufen.)"
+                                >
+                                <span class="fa fa-phone-square fa-lg"></span>
+                            </a>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if user_is_chief or user_is_deputy or is_granted('ROLE_ADMIN') %}
+                        <a class="btn btn-default"
+                            href="{{path('department_move_volunteer',{'id':department.id,'user_id':vol.id})}}"
+                            data-toggle="tooltip"
+                            title="{{vol}} einem anderen Ressort zuweisen.">
+                            <span class="fa fa-external-link"></span>
+                            Verschieben
+                        </a>
+                        <a class="btn btn-default"
+                            href="{{path('commitment_edit',{'id':cmt.id})}}"
+                            data-toggle="tooltip"
+                            title="Ändere oder lösche den Eintragung von {{vol}}.">
+                            <span class="fa fa-pencil"></span>
+                        </a>
+                    {% endif %}
+                    {% if user_is_chief or user_is_deputy or is_granted('ROLE_ADMIN') or is_granted('ROLE_OK') %}
+
+                        {% for q in cmt.questions %}
+                            {% if q.answer is not null and q.answer is not empty %}
+                                <span class="fa fa-commenting-o fa-lg"
+                                    data-toggle="tooltip"
+                                    data-html="true"
+                                    title="<b>{{q.text}}</b><br><br><i>{{q.answer}}</i>">
+                                    {#You can make line breaks thanks to "data-html" #}
+                                </span>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+        {% if companions|length >0 %}
+            <p><strong>
+                {{companions|length}}
+                nicht
+                {% if companions|length ==1 %}
+                    registrierter
+                {% else %}
+                    registrierte
+                {% endif %}
+                 Hölfer im Ressort:
+            </strong></p>
+            <table class="table">
+                <tbody>
+                    {% for companion in companions %}
+                        <tr>
+                            <td>
+                                {{companion.name}}
+                                {% if companion.isRegular %}
+                                <span class="fa fa-repeat"
+                                    data-toggle="tooltip"
+                                    title="{{companion}} ist Stammhölfer"
+                                    ></span>
+                                {% endif %}
+                            </td>
+                            {% if user_is_chief or user_is_deputy or is_granted('ROLE_ADMIN') or is_granted('ROLE_OK') %}
+
+                                <td>
+                                    <!-- TODO: We can not send mails to companions... yet!-->
+                                    <!--
+                                        <a class="btn btn-default"
+                                            href="{{ path('department_redirect_mail_to',{
+                                                    'id':department.id,
+                                                    'user_id':companion.id})}}"
+                                            data-toggle="tooltip"
+                                            title="{{companion}} ein Email schreiben.">
+                                            <span class="fa fa-envelope-o"></span>
+                                        </a>
+                                    -->
+
+                                    {% if companion.email %}
+                                        <span class="fa fa-envelope-o fa-lg"
+                                            data-toggle="tooltip"
+                                            title="{{companion.email}}"></span>
+                                    {% endif %}
+                                    {% if companion.phone %}
+                                        <a class="btn btn-default"
+                                            href="tel:{{companion.phone}}"
+                                            data-toggle="tooltip"
+                                            title="{{companion.phone}} (Auf dem Mobiltelefon hier klicken um anzurufen.)"
+                                            >
+                                            <span class="fa fa-phone-square fa-lg"></span>
+                                        </a>
+                                    {% endif %}
+                                    {% if companion.remark %}
+                                        <span class="fa fa-commenting-o fa-lg"
+                                            data-toggle="tooltip"
+                                            title="{{companion.remark}}"></span>
+                                    {% endif %}
+                                </td>
+                                <td>
+
+                                    {% set formName = "form_comp_del_" ~ companion.id %}
+                                    <form class=""
+                                    action="{{path('companion_delete',{'id':companion.id})}}"
+                                    name="{{formName}}"
+                                    method="post">
+                                        <input type="hidden" name="_method" value="DELETE" />
+                                        <a data-clanx-form-name="{{formName}}"
+                                            class="btn btn-primary clanx-submit"
+                                            data-toggle="tooltip"
+                                            title="Lösche den Hölfer {{companion.name}}.">
+                                            <span class="fa fa-trash-o"></span>
+                                        </a>
+                                    </form>
+                                </td>
+
+                            {% endif %}
+                            <!-- admin of chief or deputy -->
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+    </div>
+    <div class="panel-footer">
+        {{ form_start(delete_form, {'name': 'form_department_delete'}) }}
+        {{ form_end(delete_form) }}
+
+        {% if is_granted('ROLE_ADMIN') %}
+
+            <a class="btn btn-primary" type="button"
+                href="{{ path('department_edit', { 'id': department.id }) }}"
+                data-toggle="tooltip"
+                title="Bearbeite alle Eigenschaften des Ressorts {{department.name}}.">
+                <span class="fa fa-pencil"></span>
+                Bearbeiten</a>
+
+        {% else %}
+            {% if user_is_chief %}
+
+                <a class="btn btn-default"
+                    href="{{ path('department_edit_light',{'id':department.id}) }}"
+                    data-toggle="tooltip"
+                    title="Bearbeite Anforderung, Stellvertreter des Ressorts
+                        {{department.name}} oder sperre es."
+                    >
+                    <span class="fa fa-pencil"></span>
+                    Bearbeiten
+                </a>
+
+            {% endif %}
+        {% endif %}
+
+        {% if user_is_chief or user_is_deputy or is_granted('ROLE_ADMIN') %}
+            <a class="btn btn-default"
+                href="{{ path('department_mail_volunteers', {
+                'id':department.id
+                }) }}"
+                data-toggle="tooltip"
+                title="Schreibe ein Email an alle Hölfer aus diesem Ressort."
+                >
+                <span class="fa fa-envelope-o"></span>
+                <span class="fa fa-users"></span>
+                Email
+            </a>
+
+            <a class="btn btn-default"
+                href="{{ path('department_print_all', {'id': department.id}) }}"
+                data-toggle="tooltip"
+                title="Drucke von diesem Ressort alle Hölfer mit allen Daten."
+                target="_blank"
+                >
+                <span class="fa fa-print"></span>
+                Drucken
+            </a>
+            <a class="btn btn-default"
+                href="{{ path('department_download', {'id': department.id}) }}"
+                data-toggle="tooltip"
+                title="Download Liste aller Hölfer in diesem Ressort."
+                >
+                <span class="fa fa-download"></span>
+                Download
+            </a>
+        {% endif %}
+
+        {% if is_granted('ROLE_OK') or is_granted('ROLE_ADMIN') %}
+            <!-- Feature not ready yet -->
+            {% if 1==0 %}
+                <a
+                    class="btn btn-default"
+                    href="{{path('shift_index_of_department',{'department_id':department.id})}}"
+                    data-toggle="tooltip"
+                    title="Zeige Liste aller Schichten vom Ressort {{department.name}}"
+                >
+                        <span class="fa fa-clock-o"></span>
+                        Schichten
+                </a>
+            {% endif %}
+        {% endif %}
+
+        <a
+            class="btn btn-default" type="button"
+            href="{{ path('event_show',{'id':event.id}) }}"
+            data-toggle="tooltip"
+            title="Zurück zum Event {{event.name}} gehen."
+        >
+                <span class="fa fa-times"></span>
+                Zurück
+        </a>
+        {% if may_delete %}
+            <a data-clanx-form-name="form_department_delete"
+                class="btn btn-danger clanx-submit"
+                data-toggle="tooltip"
+                title="{{'tip.delete_from_database'|trans}} (Geht nur, solange keine Hölfer zugewiesen sind.)">
+                <span class="fa fa-trash-o"></span>
+                {{'btn.delete'|trans}}
+            </a>
+        {% endif %}
+    </div><!-- footer -->
+</div><!-- panel -->
+
+
+
+</div><!-- col -->
+<div class="col-md-6">
+    {{ render(controller('App\\Controller\\CompanionController::newAction',
+        { 'id': department.id }
+    )) }}
+</div><!-- col -->
+</div><!-- row -->
+{% endblock %}

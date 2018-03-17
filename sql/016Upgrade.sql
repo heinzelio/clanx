@@ -9,7 +9,7 @@ UPDATE user SET is_regular = 1 WHERE ID IN
     INNER JOIN event e
     ON c.event_id = e.id
     WHERE e.name LIKE 'CHANGE THIS !!!'
-)
+);
 
 UPDATE info set version = 16;
 SELECT version from info;

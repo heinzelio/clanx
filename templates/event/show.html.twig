@@ -1,0 +1,202 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %}
+    {{ view_model.event.name }}
+{% endblock %}
+
+{% block workspace %}
+
+    <div class="row">
+        <div class="col-md-6">
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    {% set vars = {'event' : view_model.event} %}
+                    {% include 'event/header.html.twig' with vars only %}
+                </div>
+                <div class="panel-body">
+                    <p>
+                        Der Event
+                        <strong>{{ view_model.event.name }}</strong>
+                        {% if view_model.event.isForAssociationMembers %}
+                            (nur für Vereinsmitglieder)
+                        {% endif %}
+                        findet am
+                        {% if view_model.event.date %}
+                            {{ view_model.event.date|date('d. M. Y') }}
+                        {% endif %}
+                        statt.</p>
+                    <p class="small">
+                        {{ view_model.event.description|nl2br}}
+                    </p>
+                    <p>Bis jetzt eingetragene Hölfer:
+                        {{ view_model.enrolledCount }}</p>
+
+                    {% if view_model.myDepartmentsAsChief %}
+                        <p>Du bist Ressortleiter:
+                            {% for dpt in view_model.myDepartmentsAsChief %}
+                                <br/>
+                                <a
+                                    href="{{ path('department_show',{'id':dpt.Id}) }}"
+                                    class="btn btn-default"
+                                    data-toggle="tooltip"
+                                    title="Zeige Details des Ressorts {{dpt.name}}.">
+                                    <span class="fa fa-eye"></span>
+                                    {{ dpt.name }}
+                                </a>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+
+                    {% if view_model.myDepartmentsAsDeputy %}
+                        <p>Du bist stellvertretender Ressortleiter:
+                            {% for dpt in view_model.myDepartmentsAsDeputy %}
+                                <br/>
+                                <a
+                                    href="{{ path('department_show',{'id':dpt.Id}) }}"
+                                    class="btn btn-default"
+                                    data-toggle="tooltip"
+                                    title="Zeige Details des Ressorts {{dpt.name}}">
+                                    <span class="fa fa-eye"></span>
+                                    {{ dpt.name }}
+                                </a>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                </div>
+                <div class="panel-footer">
+
+                    <a
+                        class="btn btn-default"
+                        href="{{ path('event_index') }}"
+                        data-toggle="tooltip"
+                        title="Gehe zurück zur Eventübersicht">
+                        <span class="fa fa-times"></span>
+                        Abbrechen
+                    </a>
+
+                    {% if view_model.mayMail %}
+                        <a
+                            class="btn btn-default"
+                            href="{{ path ('event_mail_enrolled', {'id': view_model.event.id})}}"
+                            data-toggle="tooltip"
+                            title="Schreibe ein Email an alle Hölfer von diesem Event.">
+                            <span class="fa fa-envelope-o"></span>
+                            Email schreiben
+                        </a>
+                        <a
+                            class="btn btn-default"
+                            href="{{ path ('event_invite', {'id': view_model.event.id})}}"
+                            data-toggle="tooltip"
+                            {% if view_model.event.isForAssociationMembers %}
+                                title="Lade alle Vereinsmitglieder ein."
+                            {% else %}
+                                title="Lade alle registrierten Benutzer ein."
+                            {% endif %}>
+                            <span class="fa fa-envelope-o"></span>
+                            Einladen
+                        </a>
+                    {% endif %}
+
+                    {% if view_model.mayEdit %}
+                        <a
+                            class="btn btn-default"
+                            href="{{ path('event_edit', { 'id': view_model.event.id }) }}"
+                            data-toggle="tooltip"
+                            title="Details von {{view_model.event.name}} bearbeiten.">
+                            <span class="fa fa-pencil"></span>
+                            Bearbeiten
+                        </a>
+                    {% endif %}
+
+                    {% if view_model.mayDelete %}
+                        {{ form_start(view_model.deleteForm) }}
+                        <input
+                            class="btn btn-danger"
+                            type="submit"
+                            value="Löschen"
+                            onclick="return confirm('{{view_model.event.name}} wirklich löschen?')"
+                            data-toggle="tooltip"
+                            title="Den Event {{view_model.event.name}} aus der Datenbank löschen."/>
+                        {{ form_end(view_model.deleteForm) }}
+                    {% endif %}
+                    <!-- {{view_model.mayDeleteMessage}} -->
+
+                    {% if view_model.mayDownload %}
+                        <a
+                            class="btn btn-default"
+                            href="{{ path('event_download', {'id': view_model.event.id}) }}"
+                            data-toggle="tooltip"
+                            title="Download Liste aller Hölfer von diesem Event.">
+                            <span class="fa fa-download"></span>
+                            Download
+                        </a>
+                    {% endif %}
+
+                    {% if view_model.mayCopy %}
+                        <a
+                            class="btn btn-default"
+                            href="{{ path('event_copy', {'id': view_model.event.id}) }}"
+                            data-toggle="tooltip"
+                            title="Erstelle eine Kopie mit allen Ressorts und allen Fragen.
+                            Hölfer werden NICHT kopiert. Der neue Event ist unsichtbar.">
+                            <span class="fa fa-copy"></span>
+                            Kopieren
+                        </a>
+                    {% endif %}
+
+                </div>
+                <!-- footer -->
+            </div>
+            <!-- panel -->
+            {{ render(controller('App\\Controller\\EventStatisticsController::indexAction', { 'id':
+            view_model.event.id })) }}
+            {{ render(controller('App\\Controller\\EventVolunteersController::indexAction', { 'id':
+            view_model.event.id })) }}
+        </div>
+        <!-- col -->
+        <div class="col-md-6">
+
+            {% for commitment in view_model.commitments %}
+                {{ render(controller('App\\Controller\\EventCommitmentController::showCommitmentAction',
+                {'id': commitment.id}))}}
+            {% endfor %}
+
+            {% if view_model.mayEnroll %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        {{ 'title.enroll'|trans({}, 'enroll') }}
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            {# find details of this form in \Form\Commitment\CommitmentType #}
+                            {{ form_start(view_model.enrollForm, {
+                                'name': 'enroll_form',
+                                'action': path('event_show',{'id': view_model.event.id}),
+                                }) }}
+                            {{ form_errors(view_model.enrollForm) }}
+
+                            {{ form_widget(view_model.enrollForm) }}
+
+                            {{ form_end(view_model.enrollForm) }}
+
+                        </p>
+                    </div>
+                    <div class="panel-footer">
+                        <a data-clanx-form-name="enroll_form"
+                            class="btn btn-primary clanx-submit"
+                            data-toggle="tooltip"
+                            title="{{ 'tip.save_commitment'|trans({}, 'enroll') }}">
+                            <span class="fa fa-floppy-o"></span>
+                            {{'btn.save'|trans}}
+                        </a>
+
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+        <!-- col -->
+    </div>
+    <!-- row -->
+{% endblock %}

@@ -1,0 +1,93 @@
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: 'de'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false       # Allows optimizing the container by removing unused services; this also means
+                            # fetching services directly from the container via $container->get() won't work.
+                            # The best practice is to be explicit about your dependencies anyway.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{Entity,Migrations,Tests}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    #TODO this service override the one from FosUserBundle, since it is not yet ready for symfony 4.0
+    #TODO Remove it as soon as FosUserBundle is updated.
+    fos_user.profile.form.factory:
+        class: 'FOS\UserBundle\Form\Factory\FormFactory'
+        arguments: ["@form.factory", '%fos_user.profile.form.name%', '%fos_user.profile.form.type%', '%fos_user.profile.form.validation_groups%']
+        public: true
+
+    App\Service\EventService:
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@App\\Service\\IAuthorizationService"
+            - "@App\\Service\\IDepartmentService"
+            - "@App\\Service\\ICommitmentService"
+            - "@App\\Service\\IQuestionService"
+
+    App\EventListener\UserRegistrationListener:
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+        tags:
+            - { name: kernel.event_subscriber }
+
+    App\Form\ProfileFormType:
+        arguments: ["\\App\\Entity\\User"] # keep this.
+        tags:
+            - { name: form.type, alias: app_user_profile }
+
+    App\Service\DepartmentService:
+        arguments:
+            - "@App\\Service\\IAuthorizationService"
+            - "@doctrine.orm.entity_manager"
+
+    App\Service\MenuService:
+        arguments:
+            - "@App\\Service\\IAuthorizationService"
+
+    App\Service\Flash\FlashService:
+        arguments: ["@session"]
+
+    App\Service\AuthorizationService:
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@security.token_storage"
+            - "@security.authorization_checker"
+
+    App\Service\MailBuilderService:
+        arguments: ["@twig"]
+
+    App\Service\SettingsService:
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    App\Service\QuestionService:
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    App\Service\CommitmentService:
+        arguments:
+            - "@App\\Service\\IAuthorizationService"
+            - "@doctrine.orm.entity_manager"
+            - "@App\\Repository\\CommitmentRepository"
+
+    App\Service\UserService:
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@translator"

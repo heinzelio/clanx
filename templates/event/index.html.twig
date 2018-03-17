@@ -1,0 +1,68 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %}
+    Eventliste
+{% endblock %}
+
+{% block workspace %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-primary">
+        <div class="panel-heading">Anstehende</div>
+        <div class="panel-body">
+            {% for event in upcomingEvents %}
+                <p>
+                    <a
+                        {% if event.sticky %}
+                            class="btn btn-danger"
+                        {% else %}
+                            class="btn btn-default"
+                        {% endif %}
+                        href="{{ path('event_show', { 'id': event.id }) }}"
+                        data-toggle="tooltip"
+                        title="Details öffnen">
+                        <span class="fa fa-eye"></span>
+                        {{ event.name }}
+                    </a>
+                    ({% if event.date %}{{ event.date|date('d. M. Y') }}{% endif %})
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a class="btn btn-default"
+                            href="{{ path('event_edit', {'id':event.id}) }}"
+                            data-toggle="tooltip"
+                            title="Details von '{{event.name}}' bearbeiten">
+                            <span class="fa fa-pencil"></span>
+                        </a>
+                    {% endif %}
+                </p>
+            {% endfor %}
+        </div><!--body-->
+        <div class="panel-footer">
+            {% if is_granted('ROLE_ADMIN') %}
+                <a class="btn btn-default"
+                    href="{{ path('event_new') }}"
+                    data-toggle="tooltip"
+                    title="Neuer Event erstellen">
+                    <span class="fa fa-plus"></span>
+                    Erstellen
+                </a>
+            {% endif %}
+        </div><!--footer-->
+        </div><!--panel-->
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+        <div class="panel-heading">Vergangene</div>
+        <div class="panel-body">
+            <ul>
+                {% for event in passedEvents %}
+                    <li>
+                        <a href="{{ path('event_show', { 'id': event.id }) }}">{{ event.name }}</a>
+                        ({% if event.date %}{{ event.date|date('d. M. Y') }}{% endif %})
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div> <!--panel-->
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %}Neuer Event erstellen{% endblock %}
+
+{% block workspace %}
+<div class="row">
+<div class="col-md-4">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Neuer Event erstellen
+    </div>
+    <div class="panel-body">
+        {{ form_start(form, {'name': 'form_event_new'}) }}
+            {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+    <div class="panel-footer">
+        <a data-clanx-form-name="form_event_new"
+            class="btn btn-primary clanx-submit"
+            data-toggle="tooltip"
+            title="Den Event in der Datenbank anlegen.">
+            <span class="fa fa-floppy-o"></span>
+            Speichern
+        </a>
+        <a class="btn btn-default"
+            href="{{ path('event_index') }}"
+            data-toggle="tooltip"
+            title="Nicht speichern und zurück zur Übersicht gehen.">
+            Abbrechen
+        </a>
+    </div>
+</div><!-- panel -->
+</div>
+</div>
+{% endblock %}

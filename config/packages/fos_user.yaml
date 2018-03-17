@@ -1,0 +1,15 @@
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: App\Entity\User
+
+    from_email:
+        # ALL different emails use this adress and name:
+        address:        no-reply@clanx.ch
+        sender_name:    ClanxHölferDB
+    registration:
+        confirmation:
+            enabled:    true
+    profile:
+      form:
+        type: App\Form\ProfileFormType

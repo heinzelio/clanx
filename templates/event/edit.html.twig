@@ -1,0 +1,48 @@
+{% extends 'base_nav.html.twig' %}
+
+{% block title %} Event bearbeiten {% endblock %}
+
+{% block workspace %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                {% set vars = {'event' : event} %}
+                {% include 'event/header.html.twig' with vars only %}
+            </div>
+            <div class="panel-body">
+                {{ form_start(edit_form, {'name': 'form_event_edit'}) }}
+                    {{form_widget(edit_form) }}
+                {{ form_end(edit_form) }}
+            </div>
+            <div class="panel-footer">
+                <a data-clanx-form-name="form_event_edit"
+                    class="btn btn-primary clanx-submit"
+                    data-toggle="tooltip"
+                    title="{{'tip.save_and_return1'|trans({'%entity%':event.name,})}}">
+                    <span class="fa fa-floppy-o"></span>
+                    {{'btn.save'|trans}}
+                </a>
+                <a class="btn btn-default"
+                    href="{{ path('event_show',{'id':event.id}) }}"
+                    data-toggle="tooltip"
+                    title="{{'tip.cancel_and_return1'|trans({'%entity%':event.name,})}}">
+                    <span class="fa fa-times"></span>
+                    {{'btn.cancel'|trans}}
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        {% if event.departments %}
+            {{ render(controller('App\\Controller\\EventDepartmentController::listDepartmentsAction', { 'id': event.id })) }}
+        {% elseif event.commitments %}
+            {{ render(controller('App\\Controller\\EventCommitmentController::listCommitmentAction', { 'id': event.id })) }}
+        {% endif %}
+
+        {{ render(controller('App\\Controller\\EventQuestionController::questionsListAction', { 'id': event.id })) }}
+
+
+    </div>
+</div>
+{% endblock %}
