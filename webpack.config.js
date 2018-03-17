@@ -15,7 +15,7 @@ module.exports = {
         // Make it like this for test the deployment locally
         //publicPath: '/clanx_deploy/build/'
         // Make it like this for the server
-        //publicPath: '/build/'
+        //publicPath: '/public/build/'
     },
 
     module: {
