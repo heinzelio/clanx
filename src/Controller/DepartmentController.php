@@ -575,7 +575,7 @@ class DepartmentController extends Controller
         Department $department,
         IAuthorizationService $auth,
         IExportService $exportService,
-        IQuestionService $questionService
+        IEventService $eventService
     )
     {
         $trans = $this->get('translator');
@@ -594,67 +594,7 @@ class DepartmentController extends Controller
             ));
         }
 
-        $questions = $questionService->getQuestionsSorted($department->getEvent());
-
-        $rows = array();
-        $head = array(
-            'Vorname',
-            'Nachname',
-            'Geschlecht',
-            'Geb.Datum',
-            'Strasse',
-            'PLZ',
-            'Ort',
-            'Email',
-            'Telefon',
-            'Beruf',
-            'Stammhölfer');
-        $event = $department->getEvent();
-
-        foreach ($questions as $qvm) {
-            array_push($head,$qvm->getText());
-        }
-        array_push($rows,$head);
-
-        foreach ($department->getCommitments() as $commitment) {
-            $user=$commitment->getUser();
-            $row = array(
-                $user->getForename() ,
-                $user->getSurname() ,
-                $user->getGender() ,
-                $user->getDateOfBirth()?$user->getDateOfBirth()->format('d.m.Y'):"" ,
-                $user->getStreet() ,
-                $user->getZip() ,
-                $user->getCity() ,
-                $user->getEmail() ,
-                $user->getPhone() ,
-                $user->getOccupation() ,
-                $user->getIsRegular()==1?"Ja":"Nein"
-            );
-            foreach ($questionService->getQuestionsAndAnswersSorted($commitment) as $q) {
-                array_push($row,$q->getAnswer());
-            }
-            array_push($rows,$row);
-        }
-        array_push($rows,array());
-        $head2 = array(
-            'Name',
-            'Email',
-            'Telefon',
-            'Stammhölfer',
-            'Bemerkung',
-        );
-        array_push($rows,$head2);
-        foreach ($department->getCompanions() as $companion) {
-            $row = array(
-                $companion->getName() ,
-                $companion->getEmail() ,
-                $companion->getPhone() ,
-                $companion->getIsRegular()==1?"Ja":"Nein" ,
-                $commitment->getRemark() ,
-            );
-            array_push($rows,$row);
-        }
+        $rows = $eventService->getRowsForDownloadDepartment($department);
 
         $response = $this->render('export_raw.twig',array(
             'content' => $exportService->getCsvText($rows)

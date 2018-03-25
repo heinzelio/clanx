@@ -311,6 +311,16 @@ class EventService implements IEventService
         }
     }
 
+    public function getRowsForDownloadDepartment($department)
+    {
+        return $this->getRowsForDownload_internal($department->getEvent(), $department->getId(), true);
+    }
+
+    public function getRowsForDownload($event)
+    {
+        return $this->getRowsForDownload_internal($event);
+    }
+
     /**
      * returns a query expression to filter the assiciationMember field.
      * When the user may see all events, the expression is simply '1=1',
@@ -347,6 +357,126 @@ class EventService implements IEventService
             $qb->setParameter($paramName, 1);
             return $qb->expr()->eq($alias . '.isVisible',$paramName);
         }
+    }
+
+    private function getRowsForDownload_internal($event, $departmentFilterId=0, $doFilterDepartments=false)
+    {
+        $rows = array();
+        // Part 1: add all registered volunteers
+        foreach ($event->getCommitments() as $commitment) {
+            if($this->shouldSkipDepartment($commitment->getDepartment(),$departmentFilterId,$doFilterDepartments)){
+                continue;
+            }
+            $user=$commitment->getUser();
+            $row = array(
+                (string)$commitment->getDepartment(),
+                'Ja', // registered volunteeres
+                $user->getSurname() ,
+                $user->getForename() ,
+                $user->getGender() ,
+                $user->getDateOfBirth()?$user->getDateOfBirth()->format('d.m.Y'):"" ,
+                $user->getStreet() ,
+                $user->getZip() ,
+                $user->getCity() ,
+                $user->getEmail() ,
+                $user->getPhone() ,
+                $user->getOccupation() ,
+                $user->getIsRegular()==1?"Ja":"Nein"
+            );
+            foreach ($this->questionService->getQuestionsAndAnswersSorted($commitment) as $q) {
+                array_push($row, $q->getAnswer());
+            }
+            array_push($rows, $row);
+        }
+        // Part 2 add all companions
+        foreach ($event->getDepartments() as $department) {
+            if($this->shouldSkipDepartment($department,$departmentFilterId,$doFilterDepartments)){
+                continue;
+            }
+            $companions = $department->getCompanions();
+            foreach ($companions as $companion) {
+                $row = array(
+                    (string)$department,
+                    'Nein', // not registered, companion
+                    $companion->getName() ,
+                    '' ,
+                    '' ,
+                    '' ,
+                    '' ,
+                    '' ,
+                    '' ,
+                    $companion->getEmail() ,
+                    $companion->getPhone() ,
+                    $companion->getIsRegular()==1?"Ja":"Nein" ,
+                    '' ,
+                    $commitment->getRemark() ,
+                );
+                array_push($rows, $row);
+            }
+        }
+        // Part 3: sort
+        uasort($rows, array($this, 'compareDownloadRows'));
+
+        // Part 4: add header
+        $questions = $this->questionService->getQuestionsSorted($event);
+        $head = array(
+            'Ressort',
+            'Registrierter Helfer',
+            'Nachname',
+            'Vorname',
+            'Geschlecht',
+            'Geb.Datum',
+            'Strasse',
+            'PLZ',
+            'Ort',
+            'Email',
+            'Telefon',
+            'Beruf',
+            'Stammhölfer',
+        );
+        foreach ($questions as $questionViewModel) {
+            array_push($head, $questionViewModel->getText());
+        }
+        array_unshift($rows, $head);
+
+        return $rows;
+    }
+
+    private function shouldSkipDepartment($department, $filterId, $doFilter)
+    {
+        if(!$doFilter){
+            return false;
+        }
+        if($department == null){
+            return false;
+        }
+        if($department->getId() != $filterId){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * returns the comparison for the sorting of the download rows
+     * @param  array $row      the one row
+     * @param  array $otherRow the other row
+     * @return integer comparison (-1,0,1)
+     */
+    private function compareDownloadRows($row,$otherRow)
+    {
+        $departmentCompared = strcasecmp($row[0], $otherRow[0]);
+        $typeCompared = strcasecmp($row[1], $otherRow[1]);
+        $nameCompared = strcasecmp($row[2], $otherRow[2]);
+
+        if($departmentCompared != 0) {
+            return $departmentCompared;
+        }
+
+        if($typeCompared != 0){
+            return $typeCompared;
+        }
+
+        return $nameCompared;
     }
 }
 

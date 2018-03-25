@@ -457,7 +457,7 @@ class EventController extends Controller
         Event $event,
         IAuthorizationService $auth,
         IExportService $exportService,
-        IQuestionService $questionService
+        IEventService $eventService
     ) {
         $trans = $this->get('translator');
         $trans->setLocale('de'); // TODO: use real localization here.
@@ -469,99 +469,13 @@ class EventController extends Controller
         }
 
         // todo: make common function for event download and department download
-
-        $questions = $questionService->getQuestionsSorted($event);
-
-        $rows = array();
-        foreach ($event->getDepartments() as $department) {
-            $head = array(
-                'Registriete Hölfer im Ressort',
-                'Vorname',
-                'Nachname',
-                'Geschlecht',
-                'Geb.Datum',
-                'Strasse',
-                'PLZ',
-                'Ort',
-                'Email',
-                'Telefon',
-                'Beruf',
-                'Stammhölfer',
-            );
-
-            foreach ($questions as $qvm) {
-                array_push($head, $qvm->getText());
-            }
-            array_push($rows, $head);
-
-            foreach ($department->getCommitments() as $commitment) {
-                $user=$commitment->getUser();
-                $row = array(
-                    (string)$department,
-                    $user->getForename() ,
-                    $user->getSurname() ,
-                    $user->getGender() ,
-                    $user->getDateOfBirth()?$user->getDateOfBirth()->format('d.m.Y'):"" ,
-                    $user->getStreet() ,
-                    $user->getZip() ,
-                    $user->getCity() ,
-                    $user->getEmail() ,
-                    $user->getPhone() ,
-                    $user->getOccupation() ,
-                    $user->getIsRegular()==1?"Ja":"Nein"
-                );
-                foreach ($questionService->getQuestionsAndAnswersSorted($commitment) as $q) {
-                    array_push($row, $q->getAnswer());
-                }
-                array_push($rows, $row);
-            }
-            array_push($rows, array());
-
-            $companions = $department->getCompanions();
-            if (count($companions)>0) {
-                $head2 = array(
-                    'Nicht registrierte Hölfer im Ressort',
-                    'Name',
-                    '' ,
-                    '' ,
-                    '' ,
-                    '' ,
-                    '' ,
-                    '' ,
-                    'Email',
-                    'Telefon',
-                    'Stammhölfer',
-                    '' ,
-                    'Bemerkung',
-                );
-                array_push($rows, $head2);
-                foreach ($companions as $companion) {
-                    $row = array(
-                        (string)$department,
-                        $companion->getName() ,
-                        '' ,
-                        '' ,
-                        '' ,
-                        '' ,
-                        '' ,
-                        '' ,
-                        $companion->getEmail() ,
-                        $companion->getPhone() ,
-                        $companion->getIsRegular()==1?"Ja":"Nein" ,
-                        '' ,
-                        $commitment->getRemark() ,
-                    );
-                    array_push($rows, $row);
-                }
-                array_push($rows, array());
-            }
-        }
+        $rows = $eventService->getRowsForDownload($event);
 
         $response = $this->render('export_raw.twig', array(
             'content' => $exportService->getCsvText($rows)
         ));
         $response->headers->set('Content-Type', 'text/csv');
-        $fileName = 'Helfer_'.$department->getName().'_'.$department->getEvent()->getName().'.csv';
+        $fileName = 'Helfer_'.$event->getName().'.csv';
         $response->headers->set('Content-Disposition', 'attachment; filename="'.$fileName.'"');
         return $response;
     }

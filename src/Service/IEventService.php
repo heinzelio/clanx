@@ -77,4 +77,9 @@ interface IEventService
      * @param array $questions
      */
     public function setRelations(Event $event, $departments=array(), $questions=array());
+
+    public function getRowsForDownloadDepartment($department);
+
+    public function getRowsForDownload($event);
+
 }
