@@ -88,19 +88,19 @@ class User extends BaseUser
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_regular", type="boolean", nullable=false)
+     * @ORM\Column(name="is_regular", type="boolean", nullable=false, options={"default" = 0})
      */
     private $isRegular = false;
 
     /**
      * @var boolean
-     * @ORM\Column(name="is_association_member", type="boolean", nullable=false)
+     * @ORM\Column(name="is_association_member", type="boolean", nullable=false, options={"default" = 0})
      */
     private $isAssociationMember = false;
 
     /**
      * @var boolean
-     * @ORM\Column(name="is_protected", type="boolean", nullable=false)
+     * @ORM\Column(name="is_protected", type="boolean", nullable=false, options={"default" = 0})
      */
     private $isProtected = false;
 
