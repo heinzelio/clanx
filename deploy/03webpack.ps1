@@ -7,7 +7,7 @@ param(
 $location = Get-Location
 Write-Verbose "Location: $location"
 
-$configFilePath = "$projectPath\deploy\config.$env.ps1"
+$configFilePath = "$projectPath\deploy\config.ps1"
 Write-Verbose "ConfigFilePath: $configFilePath"
 . $configFilePath
 

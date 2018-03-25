@@ -7,7 +7,7 @@ param(
 $location = Get-Location
 Write-Verbose "Location: $location"
 
-$configFilePath = "$projectPath\deploy\config.$env.ps1"
+$configFilePath = "$projectPath\deploy\config.ps1"
 Write-Verbose "ConfigFilePath: $configFilePath"
 . $configFilePath
 
@@ -17,7 +17,7 @@ Write-Verbose "DeploymentDirectoryPath: $deploymentDirectoryPath"
 
 [console]::ForegroundColor = "Blue"
 Write-Verbose "warm up the cache..."
-php .\bin\console cache:warmup $cacheWarumupEnv
+php .\bin\console cache:warmup --env=prod
 
 [console]::ForegroundColor = "Green"
 Write-Host "remove dev files..."
@@ -40,8 +40,11 @@ Remove-Item -Force webpack.config.js
 Remove-Item -Force yarn-error.log -ErrorAction SilentlyContinue
 Remove-Item -Force yarn.lock
 
-#Check the page if it runs locally
-Start-Process -FilePath "http://localhost/clanx_deploy/info/"
+If($env -eq 'dev')
+{
+    #Check the page if it runs locally
+    Start-Process -FilePath "http://localhost/clanx_deploy/info/"
+}
 
 cd $location
 Write-Verbose "...DONE!"

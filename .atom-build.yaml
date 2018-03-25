@@ -20,7 +20,7 @@ cwd: "{PROJECT_PATH}/deploy/"
 #keymap: <keymap string>
 #atomCommandName: namespace:command
 targets:
-    _01.CleanAndLoad.DEV:
+    DEV.01.CleanAndLoad:
         cmd: "powershell"
         args:
           - "-File"
@@ -33,7 +33,7 @@ targets:
         sh: false
         #<current working directory for `cmd`>
         cwd: "{PROJECT_PATH}/deploy/"
-    _02.Build.DEV:
+    DEV.02.Build:
         cmd: "powershell"
         args:
           - "-File"
@@ -46,7 +46,7 @@ targets:
         sh: false
         #<current working directory for `cmd`>
         cwd: "{PROJECT_PATH}/deploy/"
-    _03.Webpack.DEV:
+    DEV.03.Webpack:
         cmd: "powershell"
         args:
           - "-File"
@@ -59,13 +59,65 @@ targets:
         sh: false
         #<current working directory for `cmd`>
         cwd: "{PROJECT_PATH}/deploy/"
-    _04.FinishAndCleanup.DEV:
+    DEV.04.FinishAndCleanup:
         cmd: "powershell"
         args:
           - "-File"
           - "{PROJECT_PATH}/deploy/04finishAndCleanup.ps1"
           - "-env"
           - "dev"
+          - "-projectPath"
+          - "{PROJECT_PATH}"
+          - "-Verbose"
+        sh: false
+        #<current working directory for `cmd`>
+        cwd: "{PROJECT_PATH}/deploy/"
+    PROD.01.CleanAndLoad:
+        cmd: "powershell"
+        args:
+          - "-File"
+          - "{PROJECT_PATH}/deploy/01cleanAndLoad.ps1"
+          - "-env"
+          - "prod"
+          - "-projectPath"
+          - "{PROJECT_PATH}"
+          - "-Verbose"
+        sh: false
+        #<current working directory for `cmd`>
+        cwd: "{PROJECT_PATH}/deploy/"
+    PROD.02.Build:
+        cmd: "powershell"
+        args:
+          - "-File"
+          - "{PROJECT_PATH}/deploy/02build.ps1"
+          - "-env"
+          - "prod"
+          - "-projectPath"
+          - "{PROJECT_PATH}"
+          - "-Verbose"
+        sh: false
+        #<current working directory for `cmd`>
+        cwd: "{PROJECT_PATH}/deploy/"
+    PROD.03.Webpack:
+        cmd: "powershell"
+        args:
+          - "-File"
+          - "{PROJECT_PATH}/deploy/03webpack.ps1"
+          - "-env"
+          - "prod"
+          - "-projectPath"
+          - "{PROJECT_PATH}"
+          - "-Verbose"
+        sh: false
+        #<current working directory for `cmd`>
+        cwd: "{PROJECT_PATH}/deploy/"
+    PROD.04.FinishAndCleanup:
+        cmd: "powershell"
+        args:
+          - "-File"
+          - "{PROJECT_PATH}/deploy/04finishAndCleanup.ps1"
+          - "-env"
+          - "prod"
           - "-projectPath"
           - "{PROJECT_PATH}"
           - "-Verbose"

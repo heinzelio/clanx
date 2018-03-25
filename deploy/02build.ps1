@@ -7,11 +7,12 @@ param(
 $location = Get-Location
 Write-Verbose "Location: $location"
 
-$configFilePath = "$projectPath\deploy\config.$env.ps1"
+$configFilePath = "$projectPath\deploy\config.ps1"
 Write-Verbose "ConfigFilePath: $configFilePath"
 . $configFilePath
 
-cd $projectPath\..\$deploymentDirectory
+$deploymentDirectoryPath = "$projectPath\..\$deploymentDirectory"
+cd $deploymentDirectoryPath
 
 #This is just for the first release to sym4.0. Later we don't have any sql files.
 [console]::ForegroundColor = "Red"
@@ -29,11 +30,11 @@ Start-Process -Wait $editorPath $envFilePath
 
 [console]::ForegroundColor = "Yellow"
 Write-Verbose "install all php dependencies. This takes a while..."
-composer install $composerEnv --optimize-autoloader
+composer install --no-dev --optimize-autoloader
 
 [console]::ForegroundColor = "Cyan"
 Write-Verbose "install all js dependencies and other assets..."
-yarn install $yarnEnv
+yarn install --production
 yarn add webpack@3
 
 cd $location

@@ -7,7 +7,7 @@ param(
 $location = Get-Location
 Write-Verbose "Location: $location"
 
-$configFilePath = "$projectPath\deploy\config.$env.ps1"
+$configFilePath = "$projectPath\deploy\config.ps1"
 Write-Verbose "ConfigFilePath: $configFilePath"
 . $configFilePath
 
@@ -15,9 +15,24 @@ $deploymentDirectoryPath = "$projectPath\..\$deploymentDirectory"
 Write-Verbose "DeploymentDirectoryPath: $deploymentDirectoryPath"
 
 [console]::ForegroundColor = "Green"
-Write-Verbose "Load project from github: branch $branch..."
+Write-Verbose "Load project from github..."
 
 Remove-Item -Force -Recurse $deploymentDirectoryPath -ErrorAction SilentlyContinue
-git clone --depth 1 -b $branch $githubUrl $deploymentDirectory
+git clone $githubUrl $deploymentDirectory
+
+cd $deploymentDirectoryPath
+If($env -eq 'prod'){
+    git checkout master
+    $latest = git describe --tags
+    git checkout tags/$latest
+    Write-Verbose "Latest version is $latest"
+}
+Else
+{
+    git checkout dev
+}
+
+cd $location
+
 
 Write-Verbose "...DONE!"
