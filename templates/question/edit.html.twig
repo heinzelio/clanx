@@ -39,6 +39,7 @@
             {% if may_delete %}
                 <a data-clanx-form-name="form_question_delete"
                     class="btn btn-danger clanx-submit"
+                    data-clanx-confirm-request="{{'message.delete_really'|trans}}"
                     data-toggle="tooltip"
                     title="{{'tip.delete_from_database'|trans}}">
                     <span class="fa fa-trash-o"></span>

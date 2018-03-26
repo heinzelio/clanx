@@ -8,6 +8,15 @@ var Form = {
         for (var i = 0; i < links.length; i++) {
             var link = $(links[i]); // Make the DOM element into a jquery elment
             link.click(function() {
+                var confirmRequest = $(this).attr('data-clanx-confirm-request');
+                if(confirmRequest)
+                {
+                    var confirmed = confirm(confirmRequest);
+                    if(!confirmed)
+                    {
+                        return;
+                    }
+                }
                 $(this).addClass('disabled');
                 var formName = $(this).attr('data-clanx-form-name');
                 var form = $('form[name="' + formName + '"]');

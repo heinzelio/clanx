@@ -26,3 +26,5 @@ tip.delete_from_database: Lösche aus der Datenbank
 tip.change_details_of: Details von "%entity%" bearbeiten
 tip.view_details_of: Details von "%entity%" anzeigen
 tip.execute_bulk_action: Für jeden ausgewählten Eintrag diese Aktion ausführen
+
+message.delete_really: Wirklick löschen?
