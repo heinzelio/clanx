@@ -20,6 +20,10 @@ cwd: "{PROJECT_PATH}/deploy/"
 #keymap: <keymap string>
 #atomCommandName: namespace:command
 targets:
+    00.Webpack:
+        cmd: "{PROJECT_PATH}/node_modules/.bin/webpack"
+        sh: false
+        cwd: "{PROJECT_PATH}"
     DEV.01.CleanAndLoad:
         cmd: "powershell"
         args:
