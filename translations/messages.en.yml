@@ -10,6 +10,7 @@ btn.cancel: Cancel
 btn.delete: Delete
 btn.new: Create new
 btn.execute_bulk_action: Execute
+btn.edit: Edit
 
 lbl.yes: Yes
 lbl.no: No
@@ -28,3 +29,5 @@ tip.view_details_of: View details of "%entity%"
 tip.execute_bulk_action: Execute this action for each selected entry
 
 message.delete_really: Do you really want to delete this?
+
+title.functions: Functions

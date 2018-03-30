@@ -1,15 +1,15 @@
 {% extends 'base_nav.html.twig' %}
 
 {% block title %}
-    Benutzer bearbeiten
+    {{'lbl.edit_user'|trans({},'user') }}
 {% endblock %}
 
 {% block workspace %}
 <div class="row">
-<div class="col-md-6 col-md-offset-3">
+<div class="col-md-6">
 <div class="panel panel-default">
     <div class="panel-heading">
-        Benutzer bearbeiten
+        {{'lbl.edit_user'|trans({},'user') }}
     </div>
 
     <div class="panel-body">
@@ -21,58 +21,80 @@
         <a data-clanx-form-name="form_user_edit"
             class="btn btn-primary clanx-submit"
             data-toggle="tooltip"
-            title="Änderungen übernehmen und in der Datenbank speichern.">
+            title="{{'tip.save_changes_to_database'|trans}}">
             <span class="fa fa-floppy-o"></span>
-            Speichern</a>
-        {% if may_demote %}
-            <a class="btn btn-default"
-                href="{{ path('user_demote', { 'id': user.id })}}"
-                data-toggle="tooltip"
-                title="Diesen Benutzer wieder zu einen Benutzer ohne spezielle Rechte machen.">
-                <span class="fa fa-star"></span>
-                <span class="fa fa-times"></span>
-                Adminrechte wegnehmen</a>
-        {% endif %}
-        {% if may_promote_admin %}
-            <a class="btn btn-default"
-                href="{{ path('user_promote_admin', { 'id': user.id })}}"
-                data-toggle="tooltip"
-                title="Diesem Benutzer Administrationsrechte erteilen. (Administratoren können Daten manipulieren und löschen.)">
-                <span class="fa fa-star"></span>
-                Zum Admin machen</a>
-        {% endif %}
-        {% if may_promote_super_admin %}
-            <a class="btn btn-default"
-                href="{{ path('user_promote_superadmin', { 'id': user.id })}}"
-                data-toggle="tooltip"
-                title="Diesen Benutzer zum SA machen. (Ich hoffe, du weisst was du tust.)">
-                <span class="fa fa-star-o"></span>
-                Zum Superadmin machen</a>
-        {% endif %}
-        {% if may_promote_committee %}
-            <a class="btn btn-default"
-                href="{{ path('user_promote_committee', { 'id': user.id })}}"
-                data-toggle="tooltip"
-                title="Diesen Benutzer zum OK-Mitglied machen.">
-                <span class="fa fa-plus-square-o"></span>
-                Zum OK Mitglied machen
-            </a>
-        {% endif %}
-        {% if may_demote_committee %}
-            <a class="btn btn-default"
-                href="{{ path('user_demote_committee', { 'id': user.id })}}"
-                data-toggle="tooltip"
-                title="Diesen Benutzer aus dem OK entfernen.">
-                <span class="fa fa-minus-square-o"></span>
-                Aus OK entfernen
-            </a>
-        {% endif %}
+            {{'btn.save'|trans }}</a>
         <a class="btn btn-default"
             href="{{ path('user_index') }}"
             data-toggle="tooltip"
-            title="Nicht speichern und zurück zur Übersicht gehen.">
+            title="{{ 'tip.cancel_and_return0'|trans }}">
             <span class="fa fa-times"></span>
-            Abbrechen</a>
+            {{ 'btn.cancel'|trans }}</a>
+    </div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        {{ 'title.functions'|trans }}
+    </div>
+    <div class="pane panel-body">
+        {% if may_demote %}
+            <div>
+                <a class="btn btn-default"
+                    href="{{ path('user_demote', { 'id': user.id })}}"
+                    data-toggle="tooltip"
+                    title="Diesen Benutzer wieder zu einen Benutzer ohne spezielle Rechte machen.">
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-times"></span>
+                    Adminrechte wegnehmen
+                </a>
+            </div>
+        {% endif %}
+        {% if may_promote_admin %}
+            <div>
+                <a class="btn btn-default"
+                    href="{{ path('user_promote_admin', { 'id': user.id })}}"
+                    data-toggle="tooltip"
+                    title="Diesem Benutzer Administrationsrechte erteilen. (Administratoren können Daten manipulieren und löschen.)">
+                    <span class="fa fa-star"></span>
+                    Zum Admin machen
+                </a>
+            </div>
+        {% endif %}
+        {% if may_promote_super_admin %}
+            <div>
+                <a class="btn btn-default"
+                    href="{{ path('user_promote_superadmin', { 'id': user.id })}}"
+                    data-toggle="tooltip"
+                    title="Diesen Benutzer zum SA machen. (Ich hoffe, du weisst was du tust.)">
+                    <span class="fa fa-star-o"></span>
+                    Zum Superadmin machen
+                </a>
+            </div>
+        {% endif %}
+        {% if may_promote_committee %}
+            <div>
+                <a class="btn btn-default"
+                    href="{{ path('user_promote_committee', { 'id': user.id })}}"
+                    data-toggle="tooltip"
+                    title="Diesen Benutzer zum OK-Mitglied machen.">
+                    <span class="fa fa-plus-square-o"></span>
+                    Zum OK Mitglied machen
+                </a>
+            </div>
+        {% endif %}
+        {% if may_demote_committee %}
+            <div>
+                <a class="btn btn-default"
+                    href="{{ path('user_demote_committee', { 'id': user.id })}}"
+                    data-toggle="tooltip"
+                    title="Diesen Benutzer aus dem OK entfernen.">
+                    <span class="fa fa-minus-square-o"></span>
+                    Aus OK entfernen
+                </a>
+            </div>
+        {% endif %}
     </div>
 </div>
 </div>

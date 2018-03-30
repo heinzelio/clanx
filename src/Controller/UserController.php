@@ -88,7 +88,7 @@ class UserController extends Controller
             $em->persist($user);
             $em->flush();
 
-            return $this->redirectToRoute('user_show', array('id' => $user->getId()));
+            return $this->redirectToRoute('user_index', array('id' => $user->getId()));
         }
 
 
@@ -212,7 +212,7 @@ class UserController extends Controller
         $user->addRole("ROLE_ADMIN");
         $em->persist($user);
         $em->flush();
-        return $this->redirectToRoute('user_show', array('id' => $user->getId()));
+        return $this->redirectToRoute('user_edit', array('id' => $user->getId()));
     }
 
     /**
@@ -229,7 +229,7 @@ class UserController extends Controller
         $user->removeRole("ROLE_SUPER_ADMIN");
         $em->persist($user);
         $em->flush();
-        return $this->redirectToRoute('user_show', array('id' => $user->getId()));
+        return $this->redirectToRoute('user_edit', array('id' => $user->getId()));
     }
 
     /**
@@ -245,7 +245,7 @@ class UserController extends Controller
         $user->setRoles(array("ROLE_SUPER_ADMIN")    );
         $em->persist($user);
         $em->flush();
-        return $this->redirectToRoute('user_show', array('id' => $user->getId()));
+        return $this->redirectToRoute('user_edit', array('id' => $user->getId()));
     }
 
 
@@ -262,7 +262,7 @@ class UserController extends Controller
         $user->addRole("ROLE_OK");
         $em->persist($user);
         $em->flush();
-        return $this->redirectToRoute('user_show', array('id' => $user->getId()));
+        return $this->redirectToRoute('user_edit', array('id' => $user->getId()));
     }
 
     /**
@@ -278,7 +278,7 @@ class UserController extends Controller
         $user->removeRole("ROLE_OK");
         $em->persist($user);
         $em->flush();
-        return $this->redirectToRoute('user_show', array('id' => $user->getId()));
+        return $this->redirectToRoute('user_edit', array('id' => $user->getId()));
     }
 
     /**
@@ -301,6 +301,30 @@ class UserController extends Controller
                 $u->getForename().' '.$u->getSurname()
             );
         }
+        $redirectInfo = new redirectInfo();
+        $redirectInfo->setRouteName('user_index');
+        $redirectInfo->setArguments(array());
+        $session->set(Mail::SESSION_KEY, $mailData);
+        $session->set(RedirectInfo::SESSION_KEY, $redirectInfo);
+
+        return $this->redirectToRoute('mail_edit');
+    }
+
+    /**
+     * Send a mail to all users.
+     *
+     * @Route("/{id}/sendmail", name="user_sendmail")
+     * @Method("GET")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function sendmail(Request $request, User $user)
+    {
+        $session = $request->getSession();
+
+        $mailData = new Mail();
+        $mailData->setRecipient($user->getEmail());
+        $mailData->setSender($this->getUser()->getEmail());
+
         $redirectInfo = new redirectInfo();
         $redirectInfo->setRouteName('user_index');
         $redirectInfo->setArguments(array());

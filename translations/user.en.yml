@@ -1,8 +1,22 @@
+# Use messages from this file like this:
+# {{'lbl.name'|trans({},'user') }}
 
+lbl.user: User
+lbl.id: Id
 lbl.name: Name
 lbl.forename: Forename
 lbl.surname: Surname
+lbl.email: Email
+lbl.username: Username
+lbl.gender: Gender
+lbl.male: Male
+lbl.female: Female
+lbl.date_of_birth: DateOfBirth
+lbl.address: address
+lbl.zip: ZIP
 lbl.city: City
+lbl.country: Country
+lbl.phone: Phone
 lbl.occupation_speciality: Occupation, Speciality
 lbl.role: Role
 lbl.is_regular: Is regular volunteer
@@ -11,5 +25,6 @@ lbl.is_association_member: Is association member
 lbl.toggle_member: Toggle member flag
 lbl.toggle_regular: Toggle regular flag
 lbl.send_mail: Send email
+lbl.edit_user: Edit user
 
 title.user_index: User overview

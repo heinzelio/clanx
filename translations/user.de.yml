@@ -6,10 +6,25 @@
 # IN TWIG:
 # {{ 'Hello %name%'|trans({'Schorsch'},'enroll') }}
 
+# Use messages from this file like this:
+# {{'lbl.name'|trans({},'user') }}
+
+lbl.user: Benutzer
+lbl.id: Id
 lbl.name: Name
 lbl.forename: Vorname
 lbl.surname: Nachname
+lbl.email: Email
+lbl.username: Username
+lbl.gender: Geschlecht
+lbl.male: Mann
+lbl.female: Frau
+lbl.date_of_birth: Geb.Datum
+lbl.address: Adresse
+lbl.zip: PLZ
 lbl.city: Ort
+lbl.country: Land
+lbl.phone: Telefon
 lbl.occupation_speciality: Beruf, Spezialität
 lbl.role: Rolle
 lbl.is_regular: Ist Stammhölfer
@@ -18,5 +33,7 @@ lbl.is_association_member: Ist Vereinsmitglied
 lbl.toggle_member: Umschalten Mitgliederflag
 lbl.toggle_regular: Umschalten Stammhölferflag
 lbl.send_mail: Sende Email
+lbl.edit_user: Benutzer bearbeiten
+
 
 title.user_index: Benutzerübersicht

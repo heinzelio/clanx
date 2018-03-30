@@ -19,15 +19,19 @@ class UserType extends AbstractType
     {
         //TODO: Localization
         $builder
+            ->add('username', null, array(
+                'label'=>'Username',
+                'disabled' => true
+            ))
+            ->add('email', null, array(
+                'label'=>'Email',
+                'disabled' => true
+            ))
             ->add('forename', null, array(
                 'label'=>'Vorname'
             ))
             ->add('surname', null, array(
                 'label'=>'Nachname'
-            ))
-            ->add('isAssociationMember', CheckboxType::class, array(
-                    'label'    => 'Ist Vereinsmitglied?',
-                    'required' => false,
             ))
             ->add('gender', GenderType::class, array(
                 'label'=>'Geschlecht'
@@ -65,6 +69,10 @@ class UserType extends AbstractType
             ))
             ->add('isRegular', CheckboxType::class, array(
                     'label'    => 'Ist Stammhölfer?',
+                    'required' => false,
+            ))
+            ->add('isAssociationMember', CheckboxType::class, array(
+                    'label'    => 'Ist Vereinsmitglied?',
                     'required' => false,
             ))
             ->add('isProtected', CheckboxType::class, array(

@@ -29,6 +29,7 @@
                             </th>
                             <th data-field="surname" data-sortable="true">{{'lbl.surname'|trans({},'user') }}</th>
                             <th data-field="forename" data-sortable="true">{{'lbl.forename'|trans({},'user') }}</th>
+                            <th data-field="email" data-sortable="true">{{'lbl.email'|trans({},'user') }}</th>
                             <th>{{'lbl.city'|trans({}, 'user')}}</th>
                             <th>{{'lbl.occupation_speciality'|trans({}, 'user')}}</th>
                             <th>{{'lbl.role'|trans({}, 'user')}}</th>
@@ -54,6 +55,13 @@
                                 <td>{{ form_widget(formView) }}</td>
                                 <td>{{ user.surname }}</td>
                                 <td>{{ user.forename }}</td>
+                                <td>
+                                    <a class="btn btn-default btn-xs"
+                                        href="{{ path('user_sendmail', { 'id': user.id }) }}">
+                                        <span class="fa fa-envelope-o"></span>
+                                    </a>
+                                    {{ user.email }}
+                                </td>
                                 <td>{{ user.city }}</td>
                                 {% set truncateAfter = 30 %}
                                 <td>{{ user.occupation[:truncateAfter]}}{% if user.occupation|length > truncateAfter %}&hellip;{% endif %}</td>
