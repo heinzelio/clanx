@@ -244,7 +244,7 @@ class MailBuilderService implements IMailBuilderService
             );
 
         //TODO Localize
-        $this->setSubject('Dein Einsatz am '.(string)$event.' - Änderung!')
+        $this->setSubject('Deine Anmeldung am '.(string)$event.' - Änderung!')
             ->setFrom(array($operator->getEmail() => $operator))
             ->setTo($volunteer->getEmail())
             ->setHtmlTemplate('emails\commitment_changed.html.twig')

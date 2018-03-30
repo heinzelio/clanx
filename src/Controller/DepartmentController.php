@@ -394,7 +394,7 @@ class DepartmentController extends Controller
     {
         $event = $newDepartment->getEvent();
         $message = new \Swift_Message();
-        $message->setSubject('Dein Einsatz am '.(string)$event.' - Ressortänderung!')
+        $message->setSubject('Deine Anmeldung am '.(string)$event.' - Ressortänderung!')
             ->setFrom($operator->getEmail())
             ->setTo($volunteer->getEmail())
             ->setBody(
@@ -454,7 +454,7 @@ class DepartmentController extends Controller
         $session->set(RedirectInfo::SESSION_KEY,$backLink);
 
         $mailData = new Mail();
-        $mailData->setSubject('Dein Einsatz am '.$department->getEvent()->getName())
+        $mailData->setSubject('Deine Anmeldung am '.$department->getEvent()->getName())
              ->setRecipient($recipient->getEmail())
              ->setSender($this->getUser()->getEmail());
 
