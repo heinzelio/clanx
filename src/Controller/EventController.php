@@ -29,7 +29,6 @@ use App\Entity\User;
 use App\ViewModel\Commitment\CommitmentViewModel;
 use App\Form\Commitment\CommitmentType;
 use App\Form\EventCreateType;
-use App\Form\ShirtSizeType;
 use App\Service\AuthorizationService;
 use App\Service\IAuthorizationService;
 use App\Service\ICommitmentService;
