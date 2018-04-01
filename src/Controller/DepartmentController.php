@@ -24,6 +24,7 @@ use App\Repository\CommitmentRepository;
 use App\Service\IAuthorizationService;
 use App\Service\IEventService;
 use App\Service\IExportService;
+use App\Service\IMailBuilderService;
 use App\Service\IQuestionService;
 
 /**
@@ -300,11 +301,14 @@ class DepartmentController extends Controller
      * @Security("has_role('ROLE_USER')")
      * @ParamConverter("volunteer", class=User::class, options={"id" = "user_id"})
      */
-    public function moveVolunteerAction(Request $request,
-    Department $department,
-    User $volunteer,
-    Swift_Mailer $mailer,
-    CommitmentRepository $cmtRepo)
+    public function moveVolunteerAction(
+        Request $request,
+        Department $department,
+        User $volunteer,
+        Swift_Mailer $mailer,
+        CommitmentRepository $cmtRepo,
+        IMailBuilderService $mailBuilder
+    )
     {
         $event = $department->getEvent();
         $operator=$this->getUser();
@@ -336,8 +340,10 @@ class DepartmentController extends Controller
             $em->persist($cmt);
             $em->flush();
 
-            $text = $form->get('message')->getData();
-            $numSent = $this->sendMail($text,$newDepartment,$oldDepartment,$operator,$volunteer, $mailer);
+            $messageToVolunteer = $form->get('message')->getData();
+            $message = $mailBuilder->buildDepartmentChangeNotification(
+                $messageToVolunteer,$newDepartment,$oldDepartment,$operator,$volunteer);
+            $numSent = $mailer->send($message);
 
             $flashMsg = $volunteer.' wurde verschoben nach "'.$cmt->getDepartment()->getName().'" - ';
             if($numSent>0){
@@ -388,48 +394,6 @@ class DepartmentController extends Controller
             ->setMethod('POST')
             ->getForm()
         ;
-    }
-
-    private function sendMail($text, $newDepartment, $oldDepartment, $operator, $volunteer, $mailer)
-    {
-        $event = $newDepartment->getEvent();
-        $message = new \Swift_Message();
-        $message->setSubject('Deine Anmeldung am '.(string)$event.' - Ressortänderung!')
-            ->setFrom($operator->getEmail())
-            ->setTo($volunteer->getEmail())
-            ->setBody(
-                $this->renderView(
-                    // app/Resources/views/emails/department_changed.html.twig
-                    'emails/department_changed.html.twig',
-                    array(
-                        'text' => $text,
-                        'newDepartment' => $newDepartment,
-                        'oldDepartment' => $oldDepartment,
-                        'event' => $newDepartment->getEvent(),
-                        'operator' => $operator,
-                        'volunteer' => $volunteer,
-                    )
-                ),
-                'text/html'
-            )
-            ->addPart(
-                $this->renderView(
-                    // app/Resources/views/emails/department_changed.txt.twig
-                    'emails/department_changed.txt.twig',
-                    array(
-                        'text' => $text,
-                        'newDepartment' => $newDepartment,
-                        'oldDepartment' => $oldDepartment,
-                        'event' => $newDepartment->getEvent(),
-                        'operator' => $operator,
-                        'volunteer' => $volunteer,
-                    )
-                ),
-                'text/plain'
-            )
-        ;
-        return $mailer->send($message);
-
     }
 
     /**

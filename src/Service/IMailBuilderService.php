@@ -2,6 +2,7 @@
 namespace App\Service;
 
 use App\Entity\Commitment;
+use App\Entity\Department;
 use App\Entity\User;
 
 interface IMailBuilderService
@@ -87,7 +88,19 @@ interface IMailBuilderService
 
     public function buildNotificationToChief(Commitment $commitment);
 
-    public function buildCommitmentVolunteerNotification($text,Commitment $commitment, User $operator);
+    public function buildCommitmentVolunteerNotification(
+        $text,
+        Commitment $commitment,
+        User $operator
+    );
+
+    public function buildDepartmentChangeNotification(
+        $messageToVolunteer,
+        Department $newDepartment,
+        Department $oldDepartment,
+        User $operator,
+        User $volunteer
+    );
 
     public function buildMessage();
 }

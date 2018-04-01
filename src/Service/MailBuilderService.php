@@ -5,6 +5,7 @@ use Doctrine\ORM\EntityManager;
 use Twig_Environment;
 use App\ViewModel\Email\CommitmentConfirmationViewModel;
 use App\Entity\Commitment;
+use App\Entity\Department;
 use App\Entity\User;
 
 class MailBuilderService implements IMailBuilderService
@@ -253,7 +254,36 @@ class MailBuilderService implements IMailBuilderService
             ->setTextTemplateValues($templateValues);
 
         return $this->buildMessage();
+    }
 
+    public function buildDepartmentChangeNotification(
+        $messageToVolunteer,
+        Department $newDepartment,
+        Department $oldDepartment,
+        User $operator,
+        User $volunteer
+    )
+    {
+        $event = $newDepartment->getEvent();
+
+        $templateValues = array(
+            'text' => $messageToVolunteer,
+            'newDepartment' => $newDepartment,
+            'oldDepartment' => $oldDepartment,
+            'event' => $event,
+            'operator' => $operator,
+            'volunteer' => $volunteer,
+        );
+
+        $this->setSubject('Deine Anmeldung am '.(string)$event.' - Ressortänderung!')
+            ->setFrom(array($operator->getEmail() => $operator))
+            ->setTo($volunteer->getEmail())
+            ->setHtmlTemplate('emails/department_changed.html.twig')
+            ->setHtmlTemplateValues($templateValues)
+            ->setTextTemplate('emails/department_changed.txt.twig')
+            ->setTextTemplateValues($templateValues);
+
+        return $this->buildMessage();
     }
 
     public function buildMessage()
