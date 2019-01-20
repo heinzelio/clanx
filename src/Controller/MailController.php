@@ -38,6 +38,7 @@ class MailController extends Controller
             $mailData->setSubject('Betreff')->setText('Text');
             $session->set(Mail::SESSION_KEY, $mail);
         }
+
         $sender = $mailData->getSender();
         if(!$mailData->getSender())
         {
@@ -69,7 +70,11 @@ class MailController extends Controller
             $message = new \Swift_Message();
             $ackMessage = new \Swift_Message();
             $message->setSubject($mailData->getSubject())
+                // ->setFrom(array('no-reply@clanx.ch' => 'Clanx Hölfer DB'))
                 ->setFrom($mailData->getSender())
+                ->setSender($mailData->getSender())
+                ->setReturnPath($mailData->getSender())
+                ->setReplyTo($mailData->getSender())
                 ->addPart(
                     $mailData->getText(),
                     'text/plain');
@@ -93,6 +98,7 @@ class MailController extends Controller
 
             $ackMessage
                 ->setFrom(array('no-reply@clanx.ch' => 'Clanx Hölfer DB'))
+                ->setSender(array('no-reply@clanx.ch' => 'Clanx Hölfer DB'))
                 ->setTo($this->getUser()->getEmail())
                 ->setSubject($mailData->getSubject())
                 ->setBody(

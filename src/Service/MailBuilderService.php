@@ -20,10 +20,10 @@ class MailBuilderService implements IMailBuilderService
      */
     private $subject;
     /**
-     * this array must be in the form (sender@mail.com => senderName)
-     * @var array
+     * email address as a string.
+     * @var string
      */
-    private $from;
+    private $sender;
     /**
      * email address as a string.
      * @var string
@@ -79,17 +79,17 @@ class MailBuilderService implements IMailBuilderService
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getFrom(){ return $this->from; }
+    public function getSender(){ return $this->sender; }
 
     /**
-     * @param array from
+     * @param array sender
      * @return self
      */
-    public function setFrom(array $from)
+    public function setSender(string $sender)
     {
-        $this->from = $from;
+        $this->sender = $sender;
         return $this;
     }
 
@@ -187,7 +187,7 @@ class MailBuilderService implements IMailBuilderService
 
         //TODO Localize
         $this->setSubject($event.' Anmeldungsbestätigung')
-            ->setFrom(array('no-reply@clanx.ch'=>'Clanx Hölfer DB'))
+            ->setSender('no-reply@clanx.ch')
             ->setTo($user->getEmail())
             ->setHtmlTemplate('emails\commitmentConfirmation.html.twig')
             ->setHtmlTemplateValues($templateValues)
@@ -216,7 +216,7 @@ class MailBuilderService implements IMailBuilderService
 
         //TODO Localize
         $this->setSubject('Neue Hölferanmeldung im Ressort '.$dep->getName())
-            ->setFrom(array($user->getEmail() => $user))
+            ->setSender($user->getEmail())
             ->setTo($chiefUser->getEmail())
             ->setHtmlTemplate('emails\commitmentNotificationToChief.html.twig')
             ->setHtmlTemplateValues($templateValues)
@@ -246,7 +246,7 @@ class MailBuilderService implements IMailBuilderService
 
         //TODO Localize
         $this->setSubject('Deine Anmeldung am '.(string)$event.' - Änderung!')
-            ->setFrom(array($operator->getEmail() => $operator))
+            ->setSender($operator->getEmail())
             ->setTo($volunteer->getEmail())
             ->setHtmlTemplate('emails\commitment_changed.html.twig')
             ->setHtmlTemplateValues($templateValues)
@@ -276,7 +276,7 @@ class MailBuilderService implements IMailBuilderService
         );
 
         $this->setSubject('Deine Anmeldung am '.(string)$event.' - Ressortänderung!')
-            ->setFrom(array($operator->getEmail() => $operator))
+            ->setSender($operator->getEmail())
             ->setTo($volunteer->getEmail())
             ->setHtmlTemplate('emails/department_changed.html.twig')
             ->setHtmlTemplateValues($templateValues)
@@ -295,7 +295,7 @@ class MailBuilderService implements IMailBuilderService
 
         return $this->buildMessageInternal(
             $this->getSubject(),
-            $this->getFrom(),
+            $this->getSender(),
             $this->getTo(),
             $this->twig->render($this->getHtmlTemplate(), $this->getHtmlTemplateValues()),
             $this->twig->render($this->getTextTemplate(), $this->getTextTemplateValues())
@@ -326,17 +326,18 @@ class MailBuilderService implements IMailBuilderService
         }
     }
 
-    private function buildMessageInternal($subject, $from, $to, $bodyHtml, $bodyText)
+    private function buildMessageInternal($subject, $sender, $to, $bodyHtml, $bodyText)
     {
         $this->AssertNotNullOrEmpty($subject);
-        $this->AssertNotNullOrEmpty($from);
+        $this->AssertNotNullOrEmpty($sender);
         $this->AssertNotNullOrEmpty($to);
         $this->AssertNotNullOrEmpty($bodyHtml);
         $this->AssertNotNullOrEmpty($bodyText);
 
         $message = new \Swift_Message();
         $message->setSubject($subject)
-            ->setFrom($from)
+            ->setFrom('no-reply@clanx.ch', 'Clanx Hölfer DB')
+            ->setSender($sender)
             ->setTo($to)
             ->setBody($bodyHtml, 'text/html')
             ->addPart($bodyText, 'text/plain')

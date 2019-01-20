@@ -19,15 +19,15 @@ interface IMailBuilderService
     public function setSubject($subject);
 
     /**
-     * @return array
+     * @return string
      */
-    public function getFrom();
+    public function getSender();
 
     /**
-     * @param array from
+     * @param string sender
      * @return self
      */
-    public function setFrom(array $from);
+    public function setSender(string $sender);
 
     /**
      * @return string
