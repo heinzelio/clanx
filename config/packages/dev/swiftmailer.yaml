@@ -2,3 +2,8 @@
 swiftmailer:
     # while testing send all mails to this address.
     delivery_address: clanx@mailinator.com
+    delivery_whitelist:
+        # all email addresses matching these regexes will be delivered
+        # like normal, as well as being sent to dev@example.com
+        - '/^clanxer[0-9]@mailinator\.com$/'
+        - '/^clanxer[0-9][0-9]@mailinator\.com$/'

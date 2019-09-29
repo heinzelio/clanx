@@ -292,7 +292,7 @@ class UserController extends Controller
     {
         $session = $request->getSession();
         $em = $this->getDoctrine()->getManager();
-        $users = $em->getRepository(User::class)->findAll();
+        $users = $em->getRepository(User::class)->findBy(array('enabled' => 1));
 
         $mailData = new Mail();
         foreach ($users as $u) {
