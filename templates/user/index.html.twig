@@ -117,7 +117,7 @@
                 <div class="panel-footer">
                     <a class="btn btn-default" href="{{ path('user_mail_all') }}"
                         data-toggle="tooltip"
-                        title="{{'text.write_mail_to_all'|trans({}, 'user')}}">
+                        title="{{'tip.write_mail_to_all'|trans({}, 'user')}}">
                         <span class="fa fa-envelope-o"></span>
                         Email
                     </a>
@@ -125,13 +125,13 @@
                     {% if is_granted('ROLE_SUPER_ADMIN') %}
                         <a class="btn btn-danger" href="{{ path('admin_upload_data') }}"
                             data-toggle="tooltip"
-                            title="{{'text.upload_legacy_user_data'|trans({}, 'user')}}">
+                            title="{{'tip.upload_legacy_user_data'|trans({}, 'user')}}">
                             <span class="fa fa-upload fa-2x"></span>
                             Upload legacy user data</a>
                         <a class="btn btn-danger"
                             href="{{ path('admin_make_test_data',{'from':0,'to':20}) }}"
                             data-toggle="tooltip"
-                            title="{{'text.render_anonymous'|trans({}, 'user')}}">
+                            title="{{'tip.render_anonymous'|trans({}, 'user')}}">
                             <span class="fa fa-bomb fa-2x"></span>
                             <span class="fa fa-user-secret fa-2x"></span>
                             Randomize data for tests</a>

@@ -106,6 +106,7 @@ class UserController extends Controller
             'may_demote' => $mayDemote,
             'may_promote_committee' => $mayPromoteCommittee,
             'may_demote_committee' => $mayDemoteCommittee,
+            'is_enabled' => $user->isEnabled(),
         ));
     }
 
@@ -332,5 +333,38 @@ class UserController extends Controller
         $session->set(RedirectInfo::SESSION_KEY, $redirectInfo);
 
         return $this->redirectToRoute('mail_edit');
+    }
+
+    /**
+     * Deactivate a user
+     *
+     * @Route("/{id}/deactivate", name="user_deactivate")
+     * @Method("GET")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function deactivateAction(Request $request, User $user)
+    {
+        $this->setUserEnabled($user, false);
+        return $this->redirectToRoute('user_edit', array('id' => $user->getId()));
+    }
+    /**
+     * Activate a user
+     *
+     * @Route("/{id}/activate", name="user_activate")
+     * @Method("GET")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function activateAction(Request $request, User $user)
+    {
+        $this->setUserEnabled($user, true);
+        return $this->redirectToRoute('user_edit', array('id' => $user->getId()));
+    }
+
+    private function setUserEnabled(User $user, bool $enabled)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user->setEnabled($enabled);
+        $em->persist($user);
+        $em->flush();
     }
 }

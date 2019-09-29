@@ -27,9 +27,13 @@ lbl.toggle_member: Toggle member flag
 lbl.toggle_regular: Toggle regular flag
 lbl.send_mail: Send email
 lbl.edit_user: Edit user
+lbl.deactivate: Deactivate user
+lbl.activate: Activate user
 
 title.user_index: User overview
 
-text.write_mail_to_all: Write an email to all active users.
-text.upload_legacy_user_data: Upload user data from a legacy system (csv only.)
-text.render_anonymous: Replace personal data with pseudo data for testing (can not be made undone.)
+tip.write_mail_to_all: Write an email to all active users.
+tip.upload_legacy_user_data: Upload user data from a legacy system (csv only.)
+tip.render_anonymous: Replace personal data with pseudo data for testing (can not be made undone.)
+tip.deactivate: User can not login anymore and recieves no emails.
+tip.activate: User can login again and recieves emails.
