@@ -21,6 +21,7 @@ lbl.occupation_speciality: Occupation, Speciality
 lbl.role: Role
 lbl.is_regular: Is regular volunteer
 lbl.is_association_member: Is association member
+lbl.is_disabled: Is not active
 
 lbl.toggle_member: Toggle member flag
 lbl.toggle_regular: Toggle regular flag
@@ -28,3 +29,7 @@ lbl.send_mail: Send email
 lbl.edit_user: Edit user
 
 title.user_index: User overview
+
+text.write_mail_to_all: Write an email to all active users.
+text.upload_legacy_user_data: Upload user data from a legacy system (csv only.)
+text.render_anonymous: Replace personal data with pseudo data for testing (can not be made undone.)
