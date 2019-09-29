@@ -95,6 +95,27 @@
                 </a>
             </div>
         {% endif %}
+        {% if is_enabled %}
+        <div>
+            <a class="btn btn-danger"
+                href="{{ path('user_deactivate', { 'id': user.id })}}"
+                data-toggle="tooltip"
+                title="{{'tip.deactivate'|trans({},'user') }}">
+                <span class="fa fa-times-circle "></span>
+                {{'lbl.deactivate'|trans({},'user') }}
+            </a>
+        </div>
+        {% else %}
+        <div>
+            <a class="btn btn-info"
+                href="{{ path('user_activate', { 'id': user.id })}}"
+                data-toggle="tooltip"
+                title="{{'tip.activate'|trans({},'user') }}">
+                <span class="fa fa-check-circle"></span>
+                {{'lbl.activate'|trans({},'user') }}
+            </a>
+        </div>
+        {% endif %}
     </div>
 </div>
 </div>

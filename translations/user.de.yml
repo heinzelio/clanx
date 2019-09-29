@@ -29,11 +29,19 @@ lbl.occupation_speciality: Beruf, Spezialität
 lbl.role: Rolle
 lbl.is_regular: Ist Stammhölfer
 lbl.is_association_member: Ist Vereinsmitglied
+lbl.is_disabled: Ist nicht aktiv
 
 lbl.toggle_member: Umschalten Mitgliederflag
 lbl.toggle_regular: Umschalten Stammhölferflag
 lbl.send_mail: Sende Email
 lbl.edit_user: Benutzer bearbeiten
-
+lbl.deactivate: Benutzer deaktivieren
+lbl.activate: Benutzer aktivieren
 
 title.user_index: Benutzerübersicht
+
+tip.write_mail_to_all: Schreibe ein Email an alle aktiven Benutzer.
+tip.upload_legacy_user_data: Benutzerdaten vom früheren System hochladen (csv Format erwartet.)
+tip.render_anonymous: Ersetze persönliche Daten durch Pseudodaten für Testzwecke (nicht umkehrbar!)
+tip.deactivate: Benutzer kann sich nicht mehr einloggen und erhält keine Emails mehr.
+tip.activate: Benutzer kann sich wieder einloggen und erhält Emails.
