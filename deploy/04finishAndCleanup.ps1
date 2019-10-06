@@ -1,22 +1,32 @@
 param(
     [Parameter(Mandatory=$true)]
-    [string]$env,
-    [Parameter(Mandatory=$true)][string]$projectPath
+    [string]$env
 )
 
 $location = Get-Location
-Write-Verbose "Location: $location"
+if (-not(Test-Path -Path "./deploy")){
+    cd ..
+    if (-not(Test-Path "./deploy")){
+        cd $location
+        Write-Error "Directory /deploy does not exist. Please cd into the root of the project." -ErrorAction Stop
+    }
+}
 
-$configFilePath = "$projectPath\deploy\config.ps1"
+if($env -ne "prod" -and $env -ne "dev"){
+        cd $location
+        Write-Error "Paremeter env must be either prod or dev" -ErrorAction Stop
+}
+
+$configFilePath = ".\deploy\config.ps1"
 Write-Verbose "ConfigFilePath: $configFilePath"
 . $configFilePath
 
-cd $projectPath\..\$deploymentDirectory
-$deploymentDirectoryPath = Get-Location
-Write-Verbose "DeploymentDirectoryPath: $deploymentDirectoryPath"
+$deploymentDirectoryPath = Resolve-Path "..\$deploymentDirectoryName"
+Write-Verbose "deploymentDirectoryPath: $deploymentDirectoryPath"
+cd $deploymentDirectoryPath
 
 [console]::ForegroundColor = "Blue"
-Write-Verbose "warm up the cache..."
+Write-Host "warm up the cache..."
 php .\bin\console cache:warmup --env=prod
 
 [console]::ForegroundColor = "Green"

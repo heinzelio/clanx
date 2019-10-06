@@ -12,15 +12,10 @@ if (-not(Test-Path -Path "./deploy")){
     }
 }
 
-
-
 if($env -ne "prod" -and $env -ne "dev"){
         cd $location
         Write-Error "Paremeter env must be either prod or dev" -ErrorAction Stop
 }
-
-$location = Get-Location
-Write-Verbose "Location: $location"
 
 $configFilePath = ".\deploy\config.ps1"
 Write-Verbose "ConfigFilePath: $configFilePath"
