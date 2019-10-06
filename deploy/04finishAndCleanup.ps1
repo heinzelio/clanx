@@ -43,7 +43,7 @@ Remove-Item -Force yarn.lock
 If($env -eq 'dev')
 {
     #Check the page if it runs locally
-    Start-Process -FilePath "http://localhost/clanx_deploy/info/"
+    Start-Process -FilePath "http://localhost:81/clanx_deploy/info/"
 }
 
 cd $location
