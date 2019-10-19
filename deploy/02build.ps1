@@ -1,8 +1,8 @@
 $location = Get-Location
 if (-not(Test-Path -Path "./deploy")){
-    cd ..
+    Set-Location ..
     if (-not(Test-Path "./deploy")){
-        cd $location
+        Set-Location $location
         Write-Error "Directory /deploy does not exist. Please cd into the root of the project." -ErrorAction Stop
     }
 }
@@ -13,7 +13,7 @@ Write-Verbose "ConfigFilePath: $configFilePath"
 
 $deploymentDirectoryPath = Resolve-Path "..\$deploymentDirectoryName"
 Write-Verbose "deploymentDirectoryPath: $deploymentDirectoryPath"
-cd $deploymentDirectoryPath
+Set-Location $deploymentDirectoryPath
 
 #This is just for the first release to sym4.0. Later we don't have any sql files.
 [console]::ForegroundColor = "Red"
@@ -38,5 +38,5 @@ Write-Verbose "install all js dependencies and other assets..."
 yarn install --production
 yarn add webpack@3
 
-cd $location
+Set-Location $location
 Write-Verbose "...DONE!"

@@ -5,15 +5,15 @@ param(
 
 $location = Get-Location
 if (-not(Test-Path -Path "./deploy")){
-    cd ..
+    Set-Location ..
     if (-not(Test-Path "./deploy")){
-        cd $location
+        Set-Location $location
         Write-Error "Directory /deploy does not exist. Please cd into the root of the project." -ErrorAction Stop
     }
 }
 
 if($env -ne "prod" -and $env -ne "dev"){
-        cd $location
+        Set-Location $location
         Write-Error "Paremeter env must be either prod or dev" -ErrorAction Stop
 }
 
@@ -23,7 +23,7 @@ Write-Verbose "ConfigFilePath: $configFilePath"
 
 $deploymentDirectoryPath = Resolve-Path "..\$deploymentDirectoryName"
 Write-Verbose "deploymentDirectoryPath: $deploymentDirectoryPath"
-cd $deploymentDirectoryPath
+Set-Location $deploymentDirectoryPath
 
 [console]::ForegroundColor = "Blue"
 Write-Host "warm up the cache..."
@@ -56,5 +56,5 @@ If($env -eq 'dev')
     Start-Process -FilePath "http://localhost:81/clanx_deploy/info/"
 }
 
-cd $location
+Set-Location $location
 Write-Verbose "...DONE!"

@@ -5,15 +5,15 @@ param(
 
 $location = Get-Location
 if (-not(Test-Path -Path "./deploy")){
-    cd ..
+    Set-Location ..
     if (-not(Test-Path "./deploy")){
-        cd $location
+        Set-Location $location
         Write-Error "Directory /deploy does not exist. Please cd into the root of the project." -ErrorAction Stop
     }
 }
 
 if($env -ne "prod" -and $env -ne "dev"){
-        cd $location
+    Set-Location $location
         Write-Error "Paremeter env must be either prod or dev" -ErrorAction Stop
 }
 
@@ -31,7 +31,7 @@ Remove-Item -Force -Recurse $deploymentDirectoryPath -ErrorAction SilentlyContin
 Write-Verbose "Load project from github..."
 git clone $githubUrl $deploymentDirectoryPath
 
-cd $deploymentDirectoryPath
+Set-Location $deploymentDirectoryPath
 If($env -eq 'prod'){
     Write-Verbose "checkout latest version from master branch"
     git checkout master
@@ -45,7 +45,7 @@ Else
     git checkout dev
 }
 
-cd $location
+Set-Location $location
 
 
 Write-Verbose "...DONE!"
