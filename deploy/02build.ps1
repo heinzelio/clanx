@@ -1,29 +1,30 @@
-param(
-    [Parameter(Mandatory=$true)]
-    [string]$env,
-    [Parameter(Mandatory=$true)][string]$projectPath
-)
-
 $location = Get-Location
-Write-Verbose "Location: $location"
+if (-not(Test-Path -Path "./deploy")){
+    cd ..
+    if (-not(Test-Path "./deploy")){
+        cd $location
+        Write-Error "Directory /deploy does not exist. Please cd into the root of the project." -ErrorAction Stop
+    }
+}
 
-$configFilePath = "$projectPath\deploy\config.ps1"
+$configFilePath = ".\deploy\config.ps1"
 Write-Verbose "ConfigFilePath: $configFilePath"
 . $configFilePath
 
-$deploymentDirectoryPath = "$projectPath\..\$deploymentDirectory"
+$deploymentDirectoryPath = Resolve-Path "..\$deploymentDirectoryName"
+Write-Verbose "deploymentDirectoryPath: $deploymentDirectoryPath"
 cd $deploymentDirectoryPath
 
 #This is just for the first release to sym4.0. Later we don't have any sql files.
 [console]::ForegroundColor = "Red"
-Write-Verbose "Before we contiune, update 'database name' in 018Update.sql!"
-Write-Verbose "hit enter, edit, save and close the window to continue"
+Write-Host "Before we contiune, update 'database name' in 018Update.sql!"
+Write-Host "hit enter, edit, save and close the window to continue"
 PAUSE #
 $sqlFilePath = "$deploymentDirectoryPath\sql\018Update.sql"
 Start-Process -Wait $editorPath $sqlFilePath
 
-Write-Verbose "Before we contiune, update 'connection string' and 'smpt' in .env!"
-Write-Verbose "hit enter, edit, save and close the window to continue"
+Write-Host "Before we contiune, update 'connection string' and 'smpt' in .env!"
+Write-Host "hit enter, edit, save and close the window to continue"
 PAUSE #
 $envFilePath = "$deploymentDirectoryPath\.env"
 Start-Process -Wait $editorPath $envFilePath

@@ -1,27 +1,39 @@
 param(
     [Parameter(Mandatory=$true)]
-    [string]$env,
-    [Parameter(Mandatory=$true)][string]$projectPath
+    [string]$env
 )
 
 $location = Get-Location
-Write-Verbose "Location: $location"
+if (-not(Test-Path -Path "./deploy")){
+    cd ..
+    if (-not(Test-Path "./deploy")){
+        cd $location
+        Write-Error "Directory /deploy does not exist. Please cd into the root of the project." -ErrorAction Stop
+    }
+}
 
-$configFilePath = "$projectPath\deploy\config.ps1"
+if($env -ne "prod" -and $env -ne "dev"){
+        cd $location
+        Write-Error "Paremeter env must be either prod or dev" -ErrorAction Stop
+}
+
+$configFilePath = ".\deploy\config.ps1"
 Write-Verbose "ConfigFilePath: $configFilePath"
 . $configFilePath
 
-$deploymentDirectoryPath = "$projectPath\..\$deploymentDirectory"
-Write-Verbose "DeploymentDirectoryPath: $deploymentDirectoryPath"
+$deploymentDirectoryPath = Resolve-Path "..\$deploymentDirectoryName"
+Write-Verbose "deploymentDirectoryPath: $deploymentDirectoryPath"
+
+Write-Verbose "cleanup deploymentDirectoryPath"
+Remove-Item -Force -Recurse $deploymentDirectoryPath -ErrorAction SilentlyContinue
 
 [console]::ForegroundColor = "Green"
 Write-Verbose "Load project from github..."
-
-Remove-Item -Force -Recurse $deploymentDirectoryPath -ErrorAction SilentlyContinue
-git clone $githubUrl $deploymentDirectory
+git clone $githubUrl $deploymentDirectoryPath
 
 cd $deploymentDirectoryPath
 If($env -eq 'prod'){
+    Write-Verbose "checkout latest version from master branch"
     git checkout master
     $latest = git describe --tags
     git checkout tags/$latest
@@ -29,6 +41,7 @@ If($env -eq 'prod'){
 }
 Else
 {
+    Write-Verbose "checkout latest commit from dev branch"
     git checkout dev
 }
 
