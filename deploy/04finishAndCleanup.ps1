@@ -41,7 +41,7 @@ Remove-Item -Force .gitignore
 #Remove-Item -Force composer.json
 Remove-Item -Force composer.lock
 Remove-Item -Force mklink.bat
-Remove-Item -Force package-lock.json
+Remove-Item -Force package-lock.json -ErrorAction Ignore
 Remove-Item -Force package.json
 Remove-Item -Force phpunit.xml.dist
 Remove-Item -Force README.md

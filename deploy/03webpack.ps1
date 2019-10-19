@@ -1,3 +1,8 @@
+param(
+    [Parameter(Mandatory=$true)]
+    [string]$env
+)
+
 $location = Get-Location
 if (-not(Test-Path -Path "./deploy")){
     cd ..
@@ -7,12 +12,18 @@ if (-not(Test-Path -Path "./deploy")){
     }
 }
 
+if($env -ne "prod" -and $env -ne "dev"){
+        cd $location
+        Write-Error "Paremeter env must be either prod or dev" -ErrorAction Stop
+}
+
 $configFilePath = ".\deploy\config.ps1"
 Write-Verbose "ConfigFilePath: $configFilePath"
 . $configFilePath
 
 $deploymentDirectoryPath = Resolve-Path "..\$deploymentDirectoryName"
 Write-Verbose "deploymentDirectoryPath: $deploymentDirectoryPath"
+cd $deploymentDirectoryPath
 
 [console]::ForegroundColor = "Red"
 Write-Host "Before we contiune, update 'publicpath' in webpack.config.js!"
@@ -23,7 +34,12 @@ Start-Process -Wait $editorPath $webpackConfigFilePath
 
 [console]::ForegroundColor = "Magenta"
 Write-Host "pack the assets..."
-.\node_modules\.bin\webpack
+If($env -eq 'dev')
+{
+    .\node_modules\.bin\webpack -d --verbose
+}elseif ($env -eq 'prod') {
+    .\node_modules\.bin\webpack -p
+}
 
 cd $location
 Write-Verbose "...DONE!"

@@ -35,3 +35,4 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+/package-lock.json

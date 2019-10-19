@@ -18,6 +18,9 @@
         "npm": "^6.8.0",
         "popper.js": "^1.15.0",
         "style-loader": "^1.0.0",
-        "webpack": "4.41.0"
+        "webpack": "^4.41.0"
+    },
+    "devDependencies": {
+        "webpack-cli": "^3.3.9"
     }
 }

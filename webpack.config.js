@@ -10,6 +10,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'public', 'build'),
         filename: '[name].js',
+        // "publicPath" is what is used as a path in the generated files. It is a path the Webserver can resolve
         publicPath: '/clanx_dev/build/'
         // We must change this for publishing
         // Make it like this for test the deployment locally
