@@ -36,3 +36,4 @@
 /vendor/
 ###< symfony/framework-bundle ###
 /package-lock.json
+/.vscode/tasks.json
