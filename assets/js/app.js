@@ -1,5 +1,5 @@
 // loads the jquery package from node_modules
-var $ = require('jquery');
+// var $ = require('jquery');
 require('bootstrap');
 
 require('bootstrap/dist/css/bootstrap.css');

@@ -61,6 +61,10 @@ module.exports = {
         new webpack.ProvidePlugin({
             jQuery: 'jquery', //bummer. bootstrap relies on global jquery variable.
             $: 'jquery',
+            "window.jQuery": 'jquery',
+            tether: 'tether',
+            Tether: 'tether',
+            'window.Tether': 'tether',
         })
     ],
 
