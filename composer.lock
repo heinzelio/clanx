@@ -7,7 +7,7 @@
     "content-hash": "78b91a37587534b2bae728e399b7e67a",
     "packages": [
         {
-            "name": "doctrine/annotations",
+            "name": "doctrine/annotations", 
             "version": "v1.6.0",
             "source": {
                 "type": "git",
