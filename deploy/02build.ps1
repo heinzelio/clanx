@@ -15,18 +15,14 @@ $deploymentDirectoryPath = Resolve-Path "..\$deploymentDirectoryName"
 Write-Verbose "deploymentDirectoryPath: $deploymentDirectoryPath"
 Set-Location $deploymentDirectoryPath
 
-#This is just for the first release to sym4.0. Later we don't have any sql files.
-[console]::ForegroundColor = "Red"
-Write-Host "Before we contiune, update 'database name' in 018Update.sql!"
-Write-Host "hit enter, edit, save and close the window to continue"
-PAUSE #
-$sqlFilePath = "$deploymentDirectoryPath\sql\018Update.sql"
-Start-Process -Wait $editorPath $sqlFilePath
-
 Write-Host "Before we contiune, update 'connection string' and 'smpt' in .env!"
 Write-Host "hit enter, edit, save and close the window to continue"
 PAUSE #
 $envFilePath = "$deploymentDirectoryPath\.env"
+"# this is the .env file" | Out-File -Encoding "UTF8" $envFilePath
+Add-Content $envFilePath "";
+Add-Content $envFilePath "# You can copy the content of the .env.dist or .env.local file,";
+Add-Content $envFilePath "# Or you can copy the content of existing local or serverside .env files.";
 Start-Process -Wait $editorPath $envFilePath
 
 [console]::ForegroundColor = "Yellow"
@@ -35,8 +31,8 @@ composer install --no-dev --optimize-autoloader
 
 [console]::ForegroundColor = "Cyan"
 Write-Verbose "install all js dependencies and other assets..."
+# TODO Replace yarn with npm
 yarn install --production
-yarn add webpack@3
 
 Set-Location $location
 Write-Verbose "...DONE!"

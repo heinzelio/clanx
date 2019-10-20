@@ -25,9 +25,10 @@ $deploymentDirectoryPath = Resolve-Path "..\$deploymentDirectoryName"
 Write-Verbose "deploymentDirectoryPath: $deploymentDirectoryPath"
 Set-Location $deploymentDirectoryPath
 
-[console]::ForegroundColor = "Blue"
-Write-Host "warm up the cache..."
-php .\bin\console cache:warmup --env=prod
+# With sym4 it is not needed anymore
+#[console]::ForegroundColor = "Blue"
+#Write-Host "warm up the cache..."
+#php .\bin\console cache:warmup --env=prod
 
 [console]::ForegroundColor = "Green"
 Write-Host "remove dev files..."
@@ -49,6 +50,9 @@ Remove-Item -Force symfony.lock
 Remove-Item -Force webpack.config.js
 Remove-Item -Force yarn-error.log -ErrorAction SilentlyContinue
 Remove-Item -Force yarn.lock
+
+# TODO: remove test, deploy, *.bak, env.dist, env.local
+
 
 If($env -eq 'dev')
 {

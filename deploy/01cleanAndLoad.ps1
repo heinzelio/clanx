@@ -30,6 +30,7 @@ Remove-Item -Force -Recurse $deploymentDirectoryPath -ErrorAction SilentlyContin
 [console]::ForegroundColor = "Green"
 Write-Verbose "Load project from github..."
 git clone $githubUrl $deploymentDirectoryPath
+Remove-Item $deploymentDirectoryPath/.git
 
 Set-Location $deploymentDirectoryPath
 If($env -eq 'prod'){
