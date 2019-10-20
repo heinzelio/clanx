@@ -32,6 +32,10 @@ PAUSE #
 $webpackConfigFilePath = "$deploymentDirectoryPath\webpack.config.js"
 Start-Process -Wait $editorPath $webpackConfigFilePath
 
+# TODO Replace yarn with npm
+yarn add webpack@3
+yarn add webpack-cli@1
+
 [console]::ForegroundColor = "Magenta"
 Write-Host "pack the assets..."
 If($env -eq 'dev')
